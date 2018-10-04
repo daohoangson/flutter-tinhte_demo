@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_html_view/flutter_html_view.dart';
 
 import 'package:tinhte_demo/api/model/post.dart';
 import 'package:tinhte_demo/api/model/links.dart';
+import 'package:tinhte_html_widget/html_widget.dart';
 import 'api.dart';
 
 class PostsWidget extends StatefulWidget {
@@ -112,7 +112,10 @@ class _PostsWidgetState extends State<PostsWidget> {
               textAlign: TextAlign.left,
             ),
           ),
-          HtmlView(data: post.postBodyHtml),
+          HtmlWidget(
+            baseUrl: 'http://tinhte.vn/',
+            html: post.postBodyHtml
+          ),
           ButtonTheme.bar(
             child: ButtonBar(
               children: <Widget>[

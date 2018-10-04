@@ -10,8 +10,11 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    final api = Api('https://tinhte.vn/appforo/index.php', '', '');
+    api.httpHeaders['Api-Bb-Code-Chr'] = '1';
+
     return ApiInheritedWidget(
-      api: Api('https://tinhte.vn/appforo/index.php', '', ''),
+      api: api,
       child: MaterialApp(
         title: 'Tinh tế Demo',
         theme: ThemeData(

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import 'package:tinhte_demo/api/model/thread.dart';
@@ -155,8 +156,8 @@ class _ThreadsWidgetState extends State<ThreadsWidget> {
         children: <Widget>[
           AspectRatio(
             aspectRatio: 594/368,
-            child: Image.network(
-              thread.threadImage.link,
+            child: CachedNetworkImage(
+              imageUrl: thread.threadImage.link,
               fit: BoxFit.cover,
             ),
           ),

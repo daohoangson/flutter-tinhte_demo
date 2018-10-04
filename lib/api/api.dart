@@ -9,12 +9,13 @@ import 'model/oauth_token.dart';
 part 'internal/api.dart';
 
 class Api {
+
+  final Client httpClient = Client();
+  final Map<String, String> httpHeaders = Map();
+
   final String _apiRoot;
   final String _clientId;
   final String _clientSecret;
-
-  final Client _httpClient = Client();
-  final Map<String, String> _httpHeaders = Map();
 
   Batch _batch;
 
@@ -35,7 +36,7 @@ class Api {
   }
 
   close() {
-    _httpClient.close();
+    httpClient.close();
   }
 
   BatchController newBatch() {
@@ -103,10 +104,10 @@ class Api {
       return _batch.newJob(method, path, bodyFields);
     }
 
-    return _sendRequest(_httpClient, method, buildUrl(path),
+    return _sendRequest(httpClient, method, buildUrl(path),
         bodyFields: bodyFields,
         bodyJson: bodyJson,
-        headers: _httpHeaders,
+        headers: httpHeaders,
         parseJson: parseJson);
   }
 }
