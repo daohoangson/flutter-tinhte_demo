@@ -16,8 +16,8 @@ class PostsWidget extends StatefulWidget {
 
 class _PostsWidgetState extends State<PostsWidget> {
   bool isFetching = false;
-  final scrollController = new ScrollController();
-  final List<Post> posts = new List();
+  final scrollController = ScrollController();
+  final List<Post> posts = List();
   String url;
 
   _PostsWidgetState(this.url);
@@ -47,7 +47,7 @@ class _PostsWidgetState extends State<PostsWidget> {
       fetch();
     }
 
-    return new ListView.builder(
+    return ListView.builder(
       controller: scrollController,
       itemBuilder: (context, i) {
         if (i == posts.length) {
@@ -65,7 +65,7 @@ class _PostsWidgetState extends State<PostsWidget> {
     }
     setState(() => isFetching = true);
     
-    List<Post> newPosts = new List();
+    List<Post> newPosts = List();
     String newUrl;
 
     final api = ApiInheritedWidget.of(context).api;
@@ -89,42 +89,42 @@ class _PostsWidgetState extends State<PostsWidget> {
   }
 
   Widget _buildProgressIndicator() {
-    return new Padding(
+    return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: new Center(
-        child: new Opacity(
+      child: Center(
+        child: Opacity(
           opacity: isFetching ? 1.0 : 0.0,
-          child: new CircularProgressIndicator(),
+          child: CircularProgressIndicator(),
         ),
       ),
     );
   }
 
   Widget _buildRow(Post post) {
-    return new Card(
-      child: new Column(
+    return Card(
+      child: Column(
         children: <Widget>[
-          new Container(
+          Container(
             padding: const EdgeInsets.all(5.0),
-            child: new Text(
+            child: Text(
               post.posterUsername,
-              style: new TextStyle(fontWeight: FontWeight.bold),
+              style: TextStyle(fontWeight: FontWeight.bold),
               textAlign: TextAlign.left,
             ),
           ),
-          new HtmlView(data: post.postBodyHtml),
-          new ButtonTheme.bar(
-            child: new ButtonBar(
+          HtmlView(data: post.postBodyHtml),
+          ButtonTheme.bar(
+            child: ButtonBar(
               children: <Widget>[
-                new FlatButton(
+                FlatButton(
                   child: const Text('LIKE'),
                   onPressed: () { /* ... */ },
                 ),
-                new FlatButton(
+                FlatButton(
                   child: const Text('COMMENT'),
                   onPressed: () { /* ... */ },
                 ),
-                new FlatButton(
+                FlatButton(
                   child: const Text('SHARE'),
                   onPressed: () { /* ... */ },
                 ),

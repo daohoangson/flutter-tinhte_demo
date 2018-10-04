@@ -4,8 +4,8 @@ import 'dart:async';
 import '../model/batch_job.dart';
 
 class Batch {
-  final Completer _completer = new Completer();
-  final List<BatchJob> _jobs = new List();
+  final Completer _completer = Completer();
+  final List<BatchJob> _jobs = List();
 
   int get length => _jobs.length;
   Future get future => _completer.future;
@@ -16,7 +16,7 @@ class Batch {
 
   Future newJob(String method, String uri, Map<String, String> params) {
     final String id = 'job' + (_jobs.length + 1).toString();
-    BatchJob job = new BatchJob(id, method, uri, params);
+    BatchJob job = BatchJob(id, method, uri, params);
     _jobs.add(job);
 
     return job.future;
@@ -24,13 +24,13 @@ class Batch {
 
   bool handleResponse(json) {
     Map<String, dynamic> jsonAsMap =
-        json is Map<String, dynamic> ? json : new Map();
+        json is Map<String, dynamic> ? json : Map();
     Map<String, dynamic> jsonJobs =
-        jsonAsMap.containsKey('jobs') ? jsonAsMap['jobs'] : new Map();
+        jsonAsMap.containsKey('jobs') ? jsonAsMap['jobs'] : Map();
 
     _jobs.forEach((job) {
       Map<String, dynamic> jsonJob =
-          jsonJobs.containsKey(job.id) ? jsonJobs[job.id] : new Map();
+          jsonJobs.containsKey(job.id) ? jsonJobs[job.id] : Map();
       String jobResult = jsonJob.containsKey('_job_result')
           ? jsonJob['_job_result']
           : 'Error: no job result';

@@ -10,7 +10,7 @@ Future _sendRequest(Client client, String method, String url,
     Map<String, String> headers,
     bool parseJson}) async {
   _requestCount++;
-  final request = new Request(method, Uri.parse(url));
+  final request = Request(method, Uri.parse(url));
   if (headers != null) {
     request.headers.addAll(headers);
   }
@@ -38,12 +38,12 @@ Response _throwExceptionOnError(Response response) {
 
   Map j = json.decode(response.body);
   if (j.containsKey('error_description')) {
-    throw new Exception(j['error_description']);
+    throw Exception(j['error_description']);
   }
   if (j.containsKey('errors')) {
-    final errors = new List<String>.from(j['errors']);
-    throw new Exception(errors.join(', '));
+    final errors = List<String>.from(j['errors']);
+    throw Exception(errors.join(', '));
   }
 
-  throw new Exception('Unknown error');
+  throw Exception('Unknown error');
 }

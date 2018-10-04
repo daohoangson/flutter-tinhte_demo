@@ -13,8 +13,8 @@ class Api {
   final String _clientId;
   final String _clientSecret;
 
-  final Client _httpClient = new Client();
-  final Map<String, String> _httpHeaders = new Map();
+  final Client _httpClient = Client();
+  final Map<String, String> _httpHeaders = Map();
 
   Batch _batch;
 
@@ -22,7 +22,7 @@ class Api {
   int get requestCount => _requestCount;
 
   Api(String apiRoot, this._clientId, this._clientSecret)
-      : _apiRoot = apiRoot.replaceAll(new RegExp(r'/$'), '');
+      : _apiRoot = apiRoot.replaceAll(RegExp(r'/$'), '');
 
   String buildUrl(String path) {
     if (path.startsWith('http')) {
@@ -40,12 +40,12 @@ class Api {
 
   BatchController newBatch() {
     if (_batch == null) {
-      final batch = new Batch();
+      final batch = Batch();
       _batch = batch;
-      return new BatchController(batch, () => _fetchBatch(batch));
+      return BatchController(batch, () => _fetchBatch(batch));
     }
 
-    return new BatchController(_batch, () => Future.value(false));
+    return BatchController(_batch, () => Future.value(false));
   }
 
   Future<OauthToken> login(String username, String password) async {

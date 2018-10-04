@@ -16,8 +16,8 @@ class ThreadsWidget extends StatefulWidget {
 
 class _ThreadsWidgetState extends State<ThreadsWidget> {
   bool isFetching = false;
-  final scrollController = new ScrollController();
-  final List<Thread> threads = new List();
+  final scrollController = ScrollController();
+  final List<Thread> threads = List();
   String url;
 
   _ThreadsWidgetState(this.url);
@@ -47,7 +47,7 @@ class _ThreadsWidgetState extends State<ThreadsWidget> {
       fetch();
     }
 
-    return new ListView.builder(
+    return ListView.builder(
       controller: scrollController,
       itemBuilder: (context, i) {
         if (i == threads.length) {
@@ -65,7 +65,7 @@ class _ThreadsWidgetState extends State<ThreadsWidget> {
     }
     setState(() => isFetching = true);
     
-    List<Thread> newThreads = new List();
+    List<Thread> newThreads = List();
     String newUrl;
 
     final api = ApiInheritedWidget.of(context).api;
@@ -89,63 +89,91 @@ class _ThreadsWidgetState extends State<ThreadsWidget> {
   }
 
   Widget _buildProgressIndicator() {
-    return new Padding(
+    return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: new Center(
-        child: new Opacity(
+      child: Center(
+        child: Opacity(
           opacity: isFetching ? 1.0 : 0.0,
-          child: new CircularProgressIndicator(),
+          child: CircularProgressIndicator(),
         ),
       ),
     );
   }
 
   Widget _buildRow(Thread thread) {
-    return new Card(
-      child: new Column(
+    if (thread.threadImage != null) {
+      return _buildRowWithImage(thread);
+    } else {
+      return _buildRowWithoutImage(thread);
+    }
+  }
+
+  Widget _buildRowButtons(Thread thread) {
+    return ButtonTheme.bar(
+      child: ButtonBar(
         children: <Widget>[
-          thread.threadImage != null ? AspectRatio(
-            aspectRatio: 16/9,
-            child: new Image.network(
+          FlatButton(
+            child: const Text('LIKE'),
+            onPressed: () { /* ... */ },
+          ),
+          FlatButton(
+            child: const Text('COMMENT'),
+            onPressed: () { /* ... */ },
+          ),
+          FlatButton(
+            child: const Text('SHARE'),
+            onPressed: () { /* ... */ },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRowListTile(Thread thread) {
+    return ListTile(
+      title: Text(
+        thread.threadTitle,
+        maxLines: 3,
+        overflow: TextOverflow.ellipsis,
+      ),
+      subtitle: Text(
+        thread.firstPost.postBodyPlainText,
+        maxLines: 5,
+        overflow: TextOverflow.ellipsis,
+      ),
+      onTap: () => 
+        Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ThreadScreen(thread: thread)),
+      ),
+    );
+  }
+
+  Widget _buildRowWithImage(Thread thread) {
+    return Card(
+      child: Column(
+        children: <Widget>[
+          AspectRatio(
+            aspectRatio: 594/368,
+            child: Image.network(
               thread.threadImage.link,
               fit: BoxFit.cover,
             ),
-          ) : null,
-          new ListTile(
-            title: new Text(
-              thread.threadTitle,
-              maxLines: 3,
-              overflow: TextOverflow.ellipsis,
-            ),
-            subtitle: new Text(
-              thread.firstPost.postBodyPlainText,
-              maxLines: 5,
-              overflow: TextOverflow.ellipsis,
-            ),
-            onTap: () => 
-              Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => ThreadScreen(thread: thread)),
-            ),
           ),
-          new ButtonTheme.bar(
-            child: new ButtonBar(
-              children: <Widget>[
-                new FlatButton(
-                  child: const Text('LIKE'),
-                  onPressed: () { /* ... */ },
-                ),
-                new FlatButton(
-                  child: const Text('COMMENT'),
-                  onPressed: () { /* ... */ },
-                ),
-                new FlatButton(
-                  child: const Text('SHARE'),
-                  onPressed: () { /* ... */ },
-                ),
-              ],
-            ),
-          ),
+          _buildRowListTile(thread),
+          _buildRowButtons(thread),
+        ],
+        mainAxisSize: MainAxisSize.min,
+      ),
+    );
+  }
+
+  Widget _buildRowWithoutImage(Thread thread) {
+    return Card(
+      child: Column(
+        children: <Widget>[
+          _buildRowListTile(thread),
+          _buildRowButtons(thread),
         ],
         mainAxisSize: MainAxisSize.min,
       ),

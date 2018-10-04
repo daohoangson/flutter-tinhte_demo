@@ -12,7 +12,7 @@ class BatchJob {
   final Map<String, String> params;
 
   @JsonKey(ignore: true)
-  final Completer completer = new Completer();
+  final Completer completer = Completer();
 
   Future get future => completer.future;
 

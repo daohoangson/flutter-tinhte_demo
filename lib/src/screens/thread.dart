@@ -9,18 +9,18 @@ class ThreadScreen extends StatefulWidget {
   ThreadScreen({Key key, this.thread}) : super(key: key);
 
   @override
-  _ThreadScreenState createState() => new _ThreadScreenState();
+  _ThreadScreenState createState() => _ThreadScreenState();
 }
 
 class _ThreadScreenState extends State<ThreadScreen> {
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: new AppBar(
-        title: new Text(widget.thread.threadTitle),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.thread.threadTitle),
       ),
-      body: new Center(
-          child: new PostsWidget("posts?thread_id=${widget.thread.threadId}&limit=3"),
+      body: Center(
+          child: PostsWidget("posts?thread_id=${widget.thread.threadId}&limit=3"),
       ),
     );
   }
