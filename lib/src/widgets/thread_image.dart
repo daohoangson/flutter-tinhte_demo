@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 
 import 'package:tinhte_demo/api/model/thread.dart';
 
+const ThreadImageAspectRatio = 594 / 368;
+
 class ThreadImageWidget extends StatelessWidget {
   final ThreadImage image;
 
@@ -10,10 +12,13 @@ class ThreadImageWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => AspectRatio(
-        aspectRatio: 594 / 368,
-        child: CachedNetworkImage(
-          imageUrl: image.link,
-          fit: BoxFit.cover,
+        aspectRatio: ThreadImageAspectRatio,
+        child: Hero(
+          tag: "threadImageHero-${image.link}",
+          child: CachedNetworkImage(
+            imageUrl: image.link,
+            fit: BoxFit.cover,
+          ),
         ),
       );
 }

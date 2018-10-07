@@ -6,7 +6,6 @@ import 'package:tinhte_demo/api/model/post.dart';
 import 'package:tinhte_demo/api/model/thread.dart';
 import 'api.dart';
 import 'html.dart';
-import 'thread_image.dart';
 
 class PostsWidget extends StatefulWidget {
   final String path;
@@ -20,30 +19,10 @@ class PostsWidget extends StatefulWidget {
 
 class _PostsWidgetState extends State<PostsWidget> {
   bool isFetching = false;
-  final scrollController = ScrollController();
   final List<Post> posts = List();
   String url;
 
   _PostsWidgetState(this.url);
-
-  @override
-  void initState() {
-    super.initState();
-
-    scrollController.addListener(() {
-      if (scrollController.position.pixels ==
-          scrollController.position.maxScrollExtent) {
-        fetch();
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    scrollController.dispose();
-
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,15 +30,22 @@ class _PostsWidgetState extends State<PostsWidget> {
       fetch();
     }
 
-    return ListView.builder(
-      controller: scrollController,
-      itemBuilder: (context, i) {
-        if (i == posts.length) {
-          return _buildProgressIndicator();
+    return NotificationListener<ScrollNotification>(
+      child: ListView.builder(
+        controller: PrimaryScrollController.of(context),
+        itemBuilder: (context, i) {
+          if (i == posts.length) {
+            return _buildProgressIndicator();
+          }
+          return _buildRow(posts[i]);
+        },
+        itemCount: posts.length + 1,
+      ),
+      onNotification: (scrollInfo) {
+        if (scrollInfo.metrics.pixels == scrollInfo.metrics.maxScrollExtent) {
+          fetch();
         }
-        return _buildRow(posts[i]);
       },
-      itemCount: posts.length + 1,
     );
   }
 
@@ -123,51 +109,41 @@ class _PostsWidgetState extends State<PostsWidget> {
         ),
       );
 
-  Widget _buildRow(Post post) {
-    final List<Widget> children = List();
-
-    if (post.postIsFirstPost &&
-        post.postId == widget.thread?.firstPost?.postId) {
-      final thread = widget.thread;
-
-      if (thread.threadImage != null) {
-        children.add(ThreadImageWidget(image: thread.threadImage));
-      }
-    }
-
-    children.addAll(<Widget>[
-      Padding(
-        padding: const EdgeInsets.all(5.0),
-        child: RichText(
-          text: TextSpan(
-            children: <TextSpan>[
-              TextSpan(
-                style: TextStyle(
-                  color: Theme.of(context).accentColor,
-                  fontWeight: FontWeight.bold,
-                ),
-                text: post.posterUsername,
+  Widget _buildRow(Post post) => Card(
+        child: Column(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(5.0),
+              child: RichText(
+                text: _buildPostTextSpan(post),
               ),
-              TextSpan(text: ' • '),
-              TextSpan(
-                  style: TextStyle(
-                    color: Theme.of(context).disabledColor,
-                  ),
-                  text: timeago.format(new DateTime.fromMillisecondsSinceEpoch(
-                      post.postCreateDate * 1000))),
-            ],
-            style: DefaultTextStyle.of(context).style,
-          ),
+            ),
+            HtmlWidget(html: post.postBodyHtml),
+          ],
+          crossAxisAlignment: CrossAxisAlignment.start,
         ),
-      ),
-      HtmlWidget(html: post.postBodyHtml),
-    ]);
+      );
 
-    return Card(
-      child: Column(
-        children: children,
-        crossAxisAlignment: CrossAxisAlignment.start,
-      ),
-    );
-  }
+  String _buildPostCreateDate(Post post) => timeago.format(
+      new DateTime.fromMillisecondsSinceEpoch(post.postCreateDate * 1000));
+
+  TextSpan _buildPostTextSpan(Post post) => TextSpan(
+        children: <TextSpan>[
+          TextSpan(
+            style: TextStyle(
+              color: Theme.of(context).accentColor,
+              fontWeight: FontWeight.bold,
+            ),
+            text: post.posterUsername,
+          ),
+          TextSpan(text: ' • '),
+          TextSpan(
+            style: TextStyle(
+              color: Theme.of(context).disabledColor,
+            ),
+            text: _buildPostCreateDate(post),
+          ),
+        ],
+        style: DefaultTextStyle.of(context).style,
+      );
 }
