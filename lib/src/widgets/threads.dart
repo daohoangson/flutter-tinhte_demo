@@ -1,15 +1,15 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import 'package:tinhte_demo/api/model/thread.dart';
 import 'package:tinhte_demo/api/model/links.dart';
+import '../screens/thread_view.dart';
 import 'api.dart';
-import '../screens/thread.dart';
+import 'thread_image.dart';
 
 class ThreadsWidget extends StatefulWidget {
   final String path;
 
-  ThreadsWidget(this.path);
+  ThreadsWidget({Key key, this.path}) : super(key: key);
 
   @override
   _ThreadsWidgetState createState() => _ThreadsWidgetState(this.path);
@@ -44,9 +44,7 @@ class _ThreadsWidgetState extends State<ThreadsWidget> {
 
   @override
   Widget build(BuildContext context) {
-    if (threads.length == 0) {
-      fetch();
-    }
+    if (threads.length == 0) fetch();
 
     return ListView.builder(
       controller: scrollController,
@@ -65,119 +63,80 @@ class _ThreadsWidgetState extends State<ThreadsWidget> {
       return;
     }
     setState(() => isFetching = true);
-    
+
     List<Thread> newThreads = List();
-    String newUrl;
+    String nextUrl;
 
     final api = ApiInheritedWidget.of(context).api;
     final json = await api.getJson(url);
     final jsonMap = json as Map<String, dynamic>;
     if (jsonMap.containsKey('threads')) {
       final jsonThreads = json['threads'] as List<dynamic>;
-      jsonThreads.forEach((jsonThread) => threads.add(Thread.fromJson(jsonThread)));
+      jsonThreads
+          .forEach((jsonThread) => newThreads.add(Thread.fromJson(jsonThread)));
     }
 
     if (jsonMap.containsKey('links')) {
       final links = Links.fromJson(json['links']);
-      newUrl = links.next;
+      nextUrl = links.next;
     }
 
     setState(() {
       isFetching = false;
       threads.addAll(newThreads);
-      url = newUrl;
+      url = nextUrl;
     });
   }
 
-  Widget _buildProgressIndicator() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Center(
-        child: Opacity(
-          opacity: isFetching ? 1.0 : 0.0,
-          child: CircularProgressIndicator(),
+  Widget _buildProgressIndicator() => Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Center(
+          child: Opacity(
+            opacity: isFetching ? 1.0 : 0.0,
+            child: CircularProgressIndicator(),
+          ),
         ),
-      ),
-    );
-  }
+      );
 
   Widget _buildRow(Thread thread) {
+    final List<Widget> children = List();
+
     if (thread.threadImage != null) {
-      return _buildRowWithImage(thread);
-    } else {
-      return _buildRowWithoutImage(thread);
+      children.add(ThreadImageWidget(image: thread.threadImage));
     }
-  }
 
-  Widget _buildRowButtons(Thread thread) {
-    return ButtonTheme.bar(
-      child: ButtonBar(
-        children: <Widget>[
-          FlatButton(
-            child: const Text('LIKE'),
-            onPressed: () { /* ... */ },
-          ),
-          FlatButton(
-            child: const Text('COMMENT'),
-            onPressed: () { /* ... */ },
-          ),
-          FlatButton(
-            child: const Text('SHARE'),
-            onPressed: () { /* ... */ },
-          ),
-        ],
+    children.addAll(<Widget>[
+      Padding(
+        padding: const EdgeInsets.all(5.0),
+        child: Text(
+          thread.threadTitle,
+          style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+          maxLines: 3,
+          overflow: TextOverflow.ellipsis,
+        ),
       ),
-    );
-  }
+      Padding(
+        padding: const EdgeInsets.all(5.0),
+        child: Text(
+          thread.firstPost.postBodyPlainText,
+          maxLines: 5,
+          overflow: TextOverflow.ellipsis,
+        ),
+      ),
+    ]);
 
-  Widget _buildRowListTile(Thread thread) {
-    return ListTile(
-      title: Text(
-        thread.threadTitle,
-        maxLines: 3,
-        overflow: TextOverflow.ellipsis,
+    return GestureDetector(
+      child: Card(
+        child: Column(
+          children: children,
+          crossAxisAlignment: CrossAxisAlignment.start,
+        ),
       ),
-      subtitle: Text(
-        thread.firstPost.postBodyPlainText,
-        maxLines: 5,
-        overflow: TextOverflow.ellipsis,
-      ),
-      onTap: () => 
-        Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => ThreadScreen(thread: thread)),
-      ),
-    );
-  }
-
-  Widget _buildRowWithImage(Thread thread) {
-    return Card(
-      child: Column(
-        children: <Widget>[
-          AspectRatio(
-            aspectRatio: 594/368,
-            child: CachedNetworkImage(
-              imageUrl: thread.threadImage.link,
-              fit: BoxFit.cover,
-            ),
+      onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => ThreadViewScreen(thread: thread)),
           ),
-          _buildRowListTile(thread),
-          _buildRowButtons(thread),
-        ],
-        mainAxisSize: MainAxisSize.min,
-      ),
-    );
-  }
-
-  Widget _buildRowWithoutImage(Thread thread) {
-    return Card(
-      child: Column(
-        children: <Widget>[
-          _buildRowListTile(thread),
-          _buildRowButtons(thread),
-        ],
-        mainAxisSize: MainAxisSize.min,
-      ),
     );
   }
 }

@@ -6,6 +6,15 @@ import 'post.dart';
 
 part 'thread.g.dart';
 
+Map<String, String> _threadTagsFromJson(json) {
+  if (json is List) {
+    // php returns empty json array if thread has no tags...
+    return null;
+  }
+
+  return Map<String, String>.from(json);
+}
+
 @JsonSerializable(fieldRename: FieldRename.snake)
 class Thread {
   bool creatorHasVerifiedBadge;
@@ -20,7 +29,10 @@ class Thread {
   bool threadIsPublished;
   bool threadIsSticky;
   int threadPostCount;
+
+  @JsonKey(fromJson: _threadTagsFromJson)
   Map<String, String> threadTags;
+
   String threadTitle;
   int threadUpdateDate;
   int threadViewCount;

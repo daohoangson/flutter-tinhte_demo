@@ -17,8 +17,10 @@ dependencies:
     sdk: flutter
   http: 0.11.3+17
   json_annotation: ^1.0.0
+  timeago: ^2.0.8
   tinhte_html_widget:
     path: ./packages/html_widget
+  url_launcher: ^4.0.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
