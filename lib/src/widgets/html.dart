@@ -5,6 +5,13 @@ import 'package:tinhte_html_widget/widget_factory.dart';
 final wf = WidgetFactory(
   config: Config(
     baseUrl: Uri.parse('https://tinhte.vn'),
+    parseElementCallback: (e) {
+      if (e.className == 'bbCodeBlock bbCodeQuote') {
+        return false;
+      }
+
+      return true;
+    },
   )
 );
 
