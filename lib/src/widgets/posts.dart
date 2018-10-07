@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:tinhte_demo/api/model/post.dart';
 import 'package:tinhte_demo/api/model/links.dart';
-import 'package:tinhte_html_widget/html_widget.dart';
 import 'api.dart';
+import 'html.dart';
 
 class PostsWidget extends StatefulWidget {
   final String path;
@@ -112,10 +112,7 @@ class _PostsWidgetState extends State<PostsWidget> {
               textAlign: TextAlign.left,
             ),
           ),
-          HtmlWidget(
-            baseUrl: 'http://tinhte.vn/',
-            html: post.postBodyHtml
-          ),
+          HtmlWidget(post.postBodyHtml),
           ButtonTheme.bar(
             child: ButtonBar(
               children: <Widget>[
