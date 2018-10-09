@@ -11,12 +11,6 @@ class ThreadViewScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final title = Text(
-      thread.threadTitle,
-      maxLines: 1,
-      overflow: TextOverflow.ellipsis,
-      textAlign: TextAlign.start,
-    );
     final body = PostsWidget(
       path: "posts?thread_id=${thread.threadId}",
       thread: thread,
@@ -24,7 +18,6 @@ class ThreadViewScreen extends StatelessWidget {
 
     if (thread?.threadImage == null) {
       return Scaffold(
-        appBar: AppBar(title: title),
         body: body,
       );
     }
@@ -34,10 +27,9 @@ class ThreadViewScreen extends StatelessWidget {
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
           return <Widget>[
             SliverAppBar(
-              expandedHeight: MediaQuery.of(context).size.width / ThreadImageAspectRatio,
+              expandedHeight:
+                  MediaQuery.of(context).size.width / ThreadImageAspectRatio - kToolbarHeight,
               flexibleSpace: FlexibleSpaceBar(
-                centerTitle: false,
-                title: title,
                 background: ThreadImageWidget(image: thread.threadImage),
               ),
             ),

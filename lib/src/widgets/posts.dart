@@ -109,20 +109,41 @@ class _PostsWidgetState extends State<PostsWidget> {
         ),
       );
 
-  Widget _buildRow(Post post) => Card(
-        child: Column(
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(5.0),
-              child: RichText(
-                text: _buildPostTextSpan(post),
-              ),
-            ),
-            HtmlWidget(html: post.postBodyHtml),
-          ],
-          crossAxisAlignment: CrossAxisAlignment.start,
+  Widget _buildRow(Post post) {
+    final List<Widget> children = List();
+
+    final threadTitle = widget.thread?.threadTitle;
+    if (post.postIsFirstPost && threadTitle?.isNotEmpty == true) {
+      children.add(Padding(
+        padding: const EdgeInsets.all(5.0),
+        child: Text(
+          threadTitle,
+          maxLines: null,
+          style: TextStyle(
+            fontSize: 20.0,
+            fontWeight: FontWeight.bold,
+          ),
         ),
-      );
+      ));
+    }
+
+    children.addAll(<Widget>[
+      Padding(
+        padding: const EdgeInsets.all(5.0),
+        child: RichText(
+          text: _buildPostTextSpan(post),
+        ),
+      ),
+      HtmlWidget(html: post.postBodyHtml),
+    ]);
+
+    return Card(
+      child: Column(
+        children: children,
+        crossAxisAlignment: CrossAxisAlignment.start,
+      ),
+    );
+  }
 
   String _buildPostCreateDate(Post post) => timeago.format(
       new DateTime.fromMillisecondsSinceEpoch(post.postCreateDate * 1000));

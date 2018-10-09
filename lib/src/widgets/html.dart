@@ -16,7 +16,18 @@ final wf = WidgetFactory(
   },
 ));
 
-class HtmlWidget extends packaged.HtmlWidget {
-  HtmlWidget({Key key, @required String html})
-      : super(key: key, html: html, widgetFactory: wf);
+class HtmlWidget extends StatelessWidget {
+  final String html;
+  HtmlWidget({Key key, @required this.html}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) => DefaultTextStyle(
+        child: packaged.HtmlWidget(
+          html: html,
+          widgetFactory: wf,
+        ),
+        style: DefaultTextStyle.of(context).style.copyWith(
+          fontSize: 16.0,
+        ),
+      );
 }
