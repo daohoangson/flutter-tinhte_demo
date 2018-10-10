@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -116,7 +117,7 @@ class _PostsWidgetState extends State<PostsWidget> {
     final threadTitle = widget.thread?.threadTitle;
     if (post.postIsFirstPost && threadTitle?.isNotEmpty == true) {
       children.add(Padding(
-        padding: const EdgeInsets.all(5.0),
+        padding: const EdgeInsets.all(10.0),
         child: Text(
           threadTitle,
           maxLines: null,
@@ -130,24 +131,50 @@ class _PostsWidgetState extends State<PostsWidget> {
 
     children.addAll(<Widget>[
       Padding(
-        padding: const EdgeInsets.all(5.0),
+        padding: const EdgeInsets.only(right: 10.0, left: 10.0),
         child: RichText(
           text: _buildPostTextSpan(post),
         ),
       ),
-      HtmlWidget(html: post.postBodyHtml),
+      HtmlWidget(
+        html: post.postBodyHtml,
+        isFirstPost: post.postIsFirstPost,
+      ),
     ]);
 
-    return Card(
-      child: Column(
-        children: children,
+    final main = Column(
+      children: children,
+      crossAxisAlignment: CrossAxisAlignment.start,
+    );
+
+    Widget built;
+    if (post.postIsFirstPost) {
+      built = main;
+    } else {
+      built = Row(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(left: 10.0),
+            child: CircleAvatar(
+              backgroundImage:
+                  CachedNetworkImageProvider(post.links.posterAvatar),
+              radius: 18.0,
+            ),
+          ),
+          Expanded(child: main),
+        ],
         crossAxisAlignment: CrossAxisAlignment.start,
-      ),
+      );
+    }
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 20.0),
+      child: built,
     );
   }
 
-  String _buildPostCreateDate(Post post) => timeago.format(
-      new DateTime.fromMillisecondsSinceEpoch(post.postCreateDate * 1000));
+  String _buildPostCreateDate(Post post) => timeago
+      .format(DateTime.fromMillisecondsSinceEpoch(post.postCreateDate * 1000));
 
   TextSpan _buildPostTextSpan(Post post) => TextSpan(
         children: <TextSpan>[
@@ -167,7 +194,7 @@ class _PostsWidgetState extends State<PostsWidget> {
           ),
         ],
         style: DefaultTextStyle.of(context).style.copyWith(
-          fontSize: 12.0,
-        ),
+              fontSize: 12.0,
+            ),
       );
 }

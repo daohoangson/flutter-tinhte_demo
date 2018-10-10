@@ -132,11 +132,7 @@ class _ThreadsWidgetState extends State<ThreadsWidget> {
           crossAxisAlignment: CrossAxisAlignment.start,
         ),
       ),
-      onTap: () => Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => ThreadViewScreen(thread: thread)),
-          ),
+      onTap: () => pushThreadViewScreen(context, thread),
     );
   }
 }

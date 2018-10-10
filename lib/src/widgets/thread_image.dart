@@ -11,14 +11,29 @@ class ThreadImageWidget extends StatelessWidget {
   ThreadImageWidget({Key key, @required this.image}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => AspectRatio(
-        aspectRatio: ThreadImageAspectRatio,
-        child: Hero(
-          tag: "threadImageHero-${image.link}",
-          child: CachedNetworkImage(
-            imageUrl: image.link,
-            fit: BoxFit.cover,
-          ),
+  Widget build(BuildContext context) {
+    final link = image?.link ?? '';
+
+    if (link.isEmpty) {
+      return DecoratedBox(
+        decoration: BoxDecoration(
+          color: Theme.of(context).backgroundColor,
+        ),
+        child: AspectRatio(
+          aspectRatio: ThreadImageAspectRatio,
         ),
       );
+    }
+
+    return AspectRatio(
+      aspectRatio: ThreadImageAspectRatio,
+      child: Hero(
+        tag: "threadImageHero-$link",
+        child: CachedNetworkImage(
+          imageUrl: link,
+          fit: BoxFit.cover,
+        ),
+      ),
+    );
+  }
 }

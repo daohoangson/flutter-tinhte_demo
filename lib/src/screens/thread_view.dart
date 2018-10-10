@@ -4,6 +4,15 @@ import 'package:tinhte_demo/api/model/thread.dart';
 import '../widgets/posts.dart';
 import '../widgets/thread_image.dart';
 
+void pushThreadViewScreen(BuildContext context, Thread thread) {
+  if (thread == null) return;
+
+  Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => ThreadViewScreen(thread: thread)),
+  );
+}
+
 class ThreadViewScreen extends StatelessWidget {
   final Thread thread;
 
@@ -12,7 +21,7 @@ class ThreadViewScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final body = PostsWidget(
-      path: "posts?thread_id=${thread.threadId}",
+      path: thread.links.posts,
       thread: thread,
     );
 
@@ -28,12 +37,13 @@ class ThreadViewScreen extends StatelessWidget {
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
           return <Widget>[
             SliverAppBar(
-              pinned: true,
               expandedHeight:
-                  MediaQuery.of(context).size.width / ThreadImageAspectRatio - kToolbarHeight,
+                  MediaQuery.of(context).size.width / ThreadImageAspectRatio -
+                      kToolbarHeight,
               flexibleSpace: FlexibleSpaceBar(
                 background: ThreadImageWidget(image: thread.threadImage),
               ),
+              pinned: true,
             ),
           ];
         },

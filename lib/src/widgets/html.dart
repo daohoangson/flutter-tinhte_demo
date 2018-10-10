@@ -1,33 +1,37 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 
 import 'package:tinhte_html_widget/config.dart';
 import 'package:tinhte_html_widget/html_widget.dart' as packaged;
 import 'package:tinhte_html_widget/widget_factory.dart';
 
-final wf = WidgetFactory(
-    config: Config(
-  baseUrl: Uri.parse('https://tinhte.vn'),
-  parseElementCallback: (e) {
-    if (e.className == 'bbCodeBlock bbCodeQuote') {
-      return false;
-    }
-
-    return true;
-  },
-));
-
 class HtmlWidget extends StatelessWidget {
   final String html;
-  HtmlWidget({Key key, @required this.html}) : super(key: key);
+  final bool isFirstPost;
+
+  HtmlWidget({Key key, @required this.html, this.isFirstPost = false})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) => DefaultTextStyle(
         child: packaged.HtmlWidget(
           html: html,
-          widgetFactory: wf,
+          widgetFactory: WidgetFactory(
+            config: Config(
+              baseUrl: Uri.parse('https://tinhte.vn'),
+              colorHyperlink: Theme.of(context).accentColor,
+              parseElementCallback: (e) {
+                if (e.className == 'bbCodeBlock bbCodeQuote') {
+                  return false;
+                }
+
+                return true;
+              },
+              textWidgetPadding: const EdgeInsets.all(10.0),
+            ),
+          ),
         ),
         style: DefaultTextStyle.of(context).style.copyWith(
-          fontSize: 16.0,
-        ),
+              fontSize: isFirstPost ? 16.0 : 15.0,
+            ),
       );
 }
