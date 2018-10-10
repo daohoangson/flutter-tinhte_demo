@@ -18,6 +18,7 @@ class ThreadViewScreen extends StatelessWidget {
 
     if (thread?.threadImage == null) {
       return Scaffold(
+        appBar: AppBar(),
         body: body,
       );
     }
@@ -27,6 +28,7 @@ class ThreadViewScreen extends StatelessWidget {
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
           return <Widget>[
             SliverAppBar(
+              pinned: true,
               expandedHeight:
                   MediaQuery.of(context).size.width / ThreadImageAspectRatio - kToolbarHeight,
               flexibleSpace: FlexibleSpaceBar(

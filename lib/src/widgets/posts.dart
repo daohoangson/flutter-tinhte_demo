@@ -40,6 +40,7 @@ class _PostsWidgetState extends State<PostsWidget> {
           return _buildRow(posts[i]);
         },
         itemCount: posts.length + 1,
+        padding: const EdgeInsets.all(0.0),
       ),
       onNotification: (scrollInfo) {
         if (scrollInfo.metrics.pixels == scrollInfo.metrics.maxScrollExtent) {
@@ -165,6 +166,8 @@ class _PostsWidgetState extends State<PostsWidget> {
             text: _buildPostCreateDate(post),
           ),
         ],
-        style: DefaultTextStyle.of(context).style,
+        style: DefaultTextStyle.of(context).style.copyWith(
+          fontSize: 12.0,
+        ),
       );
 }
