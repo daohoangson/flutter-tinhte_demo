@@ -8,8 +8,14 @@ import 'thread_image.dart';
 
 class ThreadsWidget extends StatefulWidget {
   final String path;
+  final List<Thread> _threads;
 
-  ThreadsWidget({Key key, this.path}) : super(key: key);
+  ThreadsWidget({
+    Key key,
+    this.path,
+    List<Thread> threads,
+  })  : _threads = threads ?? List(),
+        super(key: key);
 
   @override
   _ThreadsWidgetState createState() => _ThreadsWidgetState(this.path);
@@ -18,7 +24,6 @@ class ThreadsWidget extends StatefulWidget {
 class _ThreadsWidgetState extends State<ThreadsWidget> {
   bool isFetching = false;
   final scrollController = ScrollController();
-  final List<Thread> threads = List();
   String url;
 
   _ThreadsWidgetState(this.url);
@@ -44,17 +49,17 @@ class _ThreadsWidgetState extends State<ThreadsWidget> {
 
   @override
   Widget build(BuildContext context) {
-    if (threads.length == 0) fetch();
+    if (widget._threads.length == 0) fetch();
 
     return ListView.builder(
       controller: scrollController,
       itemBuilder: (context, i) {
-        if (i == threads.length) {
+        if (i == widget._threads.length) {
           return _buildProgressIndicator();
         }
-        return _buildRow(threads[i]);
+        return _buildRow(widget._threads[i]);
       },
-      itemCount: threads.length + 1,
+      itemCount: widget._threads.length + 1,
     );
   }
 
@@ -83,7 +88,7 @@ class _ThreadsWidgetState extends State<ThreadsWidget> {
 
     setState(() {
       isFetching = false;
-      threads.addAll(newThreads);
+      widget._threads.addAll(newThreads);
       url = nextUrl;
     });
   }

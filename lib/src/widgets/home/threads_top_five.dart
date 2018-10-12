@@ -2,8 +2,33 @@ import 'package:flutter/material.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 import 'package:tinhte_demo/api/model/thread.dart';
-import '../thread_view.dart';
-import '../../widgets/thread_image.dart';
+import '../../screens/thread_view.dart';
+import '../thread_image.dart';
+
+TextSpan buildThreadTextSpan(BuildContext context, Thread thread) => TextSpan(
+      children: <TextSpan>[
+        TextSpan(
+          style: TextStyle(
+            color: Theme.of(context).accentColor,
+            fontWeight: FontWeight.bold,
+          ),
+          text: thread?.creatorUsername ?? '',
+        ),
+        TextSpan(text: ' • '),
+        TextSpan(
+          style: TextStyle(
+            color: Theme.of(context).disabledColor,
+          ),
+          text: thread != null
+              ? timeago.format(DateTime.fromMillisecondsSinceEpoch(
+                  thread.threadCreateDate * 1000))
+              : '',
+        ),
+      ],
+      style: TextStyle(
+        fontSize: 12.0,
+      ),
+    );
 
 class ThreadsTopFiveWidget extends StatelessWidget {
   final List<Thread> threads;
@@ -37,10 +62,11 @@ class ThreadsTopFiveWidget extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(
-                    right: 10.0, bottom: 10.0, left: 10.0),
+                padding: const EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 10.0),
                 child: RichText(
-                  text: _buildPostTextSpan(context, thread),
+                  text: buildThreadTextSpan(context, thread),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ],
@@ -76,10 +102,9 @@ class ThreadsTopFiveWidget extends StatelessWidget {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(
-                          right: 5.0, bottom: 5.0, left: 5.0),
+                      padding: const EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 5.0),
                       child: RichText(
-                        text: _buildPostTextSpan(context, thread),
+                        text: buildThreadTextSpan(context, thread),
                       ),
                     ),
                   ],
@@ -90,31 +115,6 @@ class ThreadsTopFiveWidget extends StatelessWidget {
           ),
         ),
         onTap: () => pushThreadViewScreen(context, thread),
-      );
-
-  TextSpan _buildPostTextSpan(BuildContext context, Thread thread) => TextSpan(
-        children: <TextSpan>[
-          TextSpan(
-            style: TextStyle(
-              color: Theme.of(context).accentColor,
-              fontWeight: FontWeight.bold,
-            ),
-            text: thread?.creatorUsername ?? '',
-          ),
-          TextSpan(text: ' • '),
-          TextSpan(
-            style: TextStyle(
-              color: Theme.of(context).disabledColor,
-            ),
-            text: thread != null
-                ? timeago.format(DateTime.fromMillisecondsSinceEpoch(
-                    thread.threadCreateDate * 1000))
-                : '',
-          ),
-        ],
-        style: TextStyle(
-          fontSize: 12.0,
-        ),
       );
 
   Thread _getThread(int i) => i < threads.length ? threads[i] : null;

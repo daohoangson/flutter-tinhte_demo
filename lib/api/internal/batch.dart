@@ -4,15 +4,15 @@ import 'dart:async';
 import '../model/batch_job.dart';
 
 class Batch {
+  final String path;
   final Completer _completer = Completer();
   final List<BatchJob> _jobs = List();
 
+  String get bodyJson => json.encode(_jobs);
   int get length => _jobs.length;
   Future get future => _completer.future;
 
-  String buildBodyJson() {
-    return json.encode(_jobs);
-  }
+  Batch({this.path});
 
   Future newJob(String method, String uri, Map<String, String> params) {
     final String id = 'job' + (_jobs.length + 1).toString();

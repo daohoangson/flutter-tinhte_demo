@@ -3,8 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'batch_job.g.dart';
 
-@JsonSerializable(createToJson: false)
-@JsonSerializable()
+@JsonSerializable(createFactory: false)
 class BatchJob {
   final String id;
   final String method;
@@ -14,9 +13,9 @@ class BatchJob {
   @JsonKey(ignore: true)
   final Completer completer = Completer();
 
+  @JsonKey(ignore: true)
   Future get future => completer.future;
 
   BatchJob(this.id, this.method, this.uri, this.params);
-  factory BatchJob.fromJson(Map<String, dynamic> json) =>
-      _$BatchJobFromJson(json);
+  Map<String, dynamic> toJson() => _$BatchJobToJson(this);
 }

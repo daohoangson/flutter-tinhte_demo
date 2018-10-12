@@ -29,8 +29,8 @@ class ThreadImageWidget extends StatelessWidget {
       aspectRatio: ThreadImageAspectRatio,
       child: Hero(
         tag: "threadImageHero-$link",
-        child: CachedNetworkImage(
-          imageUrl: link,
+        child: Image(
+          image: CachedNetworkImageProvider(link),
           fit: BoxFit.cover,
         ),
       ),

@@ -5,11 +5,11 @@ import 'package:http/http.dart';
 import 'internal/batch.dart';
 import 'internal/batch_controller.dart';
 import 'model/oauth_token.dart';
+import 'crypto.dart';
 
 part 'internal/api.dart';
 
 class Api {
-
   final Client httpClient = Client();
   final Map<String, String> httpHeaders = Map();
 
@@ -35,18 +35,34 @@ class Api {
     return "${this._apiRoot}?$safePath";
   }
 
+  String buildOneTimeToken({
+    int userId = 0,
+    String accessToken = '',
+    int ttl = 3600,
+  }) {
+    final now = (DateTime.now().millisecondsSinceEpoch / 1000).floor();
+    final timestamp = now + ttl;
+    final once = md5("$userId$timestamp$accessToken$_clientSecret");
+    return "$userId,$timestamp,$once,$_clientId";
+  }
+
   close() {
     httpClient.close();
   }
 
-  BatchController newBatch() {
+  BatchController newBatch({String path = 'batch'}) {
     if (_batch == null) {
-      final batch = Batch();
+      final batch = Batch(path: path);
       _batch = batch;
       return BatchController(batch, () => _fetchBatch(batch));
     }
 
-    return BatchController(_batch, () => Future.value(false));
+    return BatchController(
+        _batch,
+        () => _batch.future.then(
+              (j) => Future.value(true),
+              onError: (e) => Future.value(false),
+            ));
   }
 
   Future<OauthToken> login(String username, String password) async {
@@ -93,8 +109,12 @@ class Api {
       return Future.value(false);
     }
 
-    final json = await sendRequest('POST', 'batch',
-        bodyJson: batch.buildBodyJson(), parseJson: true);
+    final json = await sendRequest(
+      'POST',
+      batch.path,
+      bodyJson: batch.bodyJson,
+      parseJson: true,
+    );
     return batch.handleResponse(json);
   }
 
