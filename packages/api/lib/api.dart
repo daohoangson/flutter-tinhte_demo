@@ -135,3 +135,10 @@ class Api {
         parseJson: parseJson);
   }
 }
+
+class ApiError {
+  final String message;
+
+  ApiError({String message, List<String> messages})
+      : message = messages != null ? messages.join(', ') : message;
+}

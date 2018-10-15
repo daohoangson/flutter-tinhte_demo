@@ -38,12 +38,12 @@ Response _throwExceptionOnError(Response response) {
 
   Map j = json.decode(response.body);
   if (j.containsKey('error_description')) {
-    throw Exception(j['error_description']);
+    throw ApiError(message: j['error_description']);
   }
   if (j.containsKey('errors')) {
     final errors = List<String>.from(j['errors']);
-    throw Exception(errors.join(', '));
+    throw ApiError(messages: errors);
   }
 
-  throw Exception('Unknown error');
+  throw ApiError();
 }
