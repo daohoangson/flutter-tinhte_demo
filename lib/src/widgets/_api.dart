@@ -1,9 +1,33 @@
+import 'dart:async';
 import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tinhte_api/api.dart';
+import 'package:tinhte_api/batch_controller.dart';
 import 'package:tinhte_api/oauth_token.dart';
 
+import '../screens/login.dart';
 import '../constants.dart';
+
+typedef void ApiAction(ApiData apiData);
+
+void prepareForApiAction(BuildContext context, ApiAction onReady,
+    {ApiAction onError}) async {
+  final apiData = ApiInheritedWidget.of(context);
+  final token = await apiData.tokenAsync;
+  if (token == null) {
+    final loggedIn = await pushLoginScreen(context);
+    if (loggedIn != true) {
+      if (onError != null) onError(apiData);
+      return;
+    }
+  }
+
+  try {
+    onReady(apiData);
+  } on ApiError {
+    return;
+  }
+}
 
 class ApiInheritedWidget extends StatefulWidget {
   final Api api;
@@ -23,24 +47,31 @@ class ApiInheritedWidget extends StatefulWidget {
 }
 
 class ApiData extends State<ApiInheritedWidget> {
-  Api get api => widget.api;
+  ApiWrapper get api => ApiWrapper(this);
 
   OauthToken _token;
-  OauthToken get token => _token;
-  set token(OauthToken value) {
-    SharedPreferences.getInstance().then((SharedPreferences prefs) {
-      prefs.setString(kPrefKeyTokenAccessToken, value?.accessToken);
-      prefs.setString(kPrefKeyTokenClientId, api.clientId);
-      prefs.setInt(kPrefKeyTokenExpiresAtMillisecondsSinceEpoch,
-          value?.expiresAt?.millisecondsSinceEpoch);
-      prefs.setString(kPrefKeyTokenRefreshToken, value?.refreshToken);
-      prefs.setString(kPrefKeyTokenScope, value?.scope);
-      prefs.setInt(kPrefKeyTokenUserId, value?.userId);
-      debugPrint("Saved token ${token?.accessToken}," +
-          " expires at ${token?.expiresAt}");
-    });
 
-    setState(() => _token = value);
+  OauthToken get token => _token;
+
+  Future<OauthToken> get tokenAsync async {
+    if (_token == null) return Future.value(null);
+    if (_token.expiresAt.isAfter(DateTime.now())) return _token;
+
+    // TODO: handle concurrent request for token better
+    // with the current implementation, tokenAsync caller will get `null`
+    // while it's being refreshed...
+    final refreshToken = _token.refreshToken;
+    _token = null;
+
+    try {
+      debugPrint('Token has been expired, refreshing now...');
+      final newToken = await widget.api.refreshToken(refreshToken);
+      _setToken(newToken);
+
+      return newToken;
+    } on ApiError {
+      return Future.value(null);
+    }
   }
 
   @override
@@ -49,7 +80,7 @@ class ApiData extends State<ApiInheritedWidget> {
 
     SharedPreferences.getInstance().then((SharedPreferences prefs) {
       final clientId = prefs.getString(kPrefKeyTokenClientId);
-      if (clientId != api.clientId) return;
+      if (clientId != widget.api.clientId) return;
 
       final accessToken = prefs.getString(kPrefKeyTokenAccessToken);
       final expiresAtMillisecondsSinceEpoch =
@@ -75,6 +106,53 @@ class ApiData extends State<ApiInheritedWidget> {
   @override
   Widget build(BuildContext context) =>
       _Inherited(child: widget.child, data: this);
+
+  void _setToken(OauthToken value) {
+    SharedPreferences.getInstance().then((SharedPreferences prefs) {
+      prefs.setString(kPrefKeyTokenAccessToken, value?.accessToken);
+      prefs.setString(kPrefKeyTokenClientId, widget.api.clientId);
+      prefs.setInt(kPrefKeyTokenExpiresAtMillisecondsSinceEpoch,
+          value?.expiresAt?.millisecondsSinceEpoch);
+      prefs.setString(kPrefKeyTokenRefreshToken, value?.refreshToken);
+      prefs.setString(kPrefKeyTokenScope, value?.scope);
+      prefs.setInt(kPrefKeyTokenUserId, value?.userId);
+      debugPrint("Saved token ${value?.accessToken}," +
+          " expires at ${value?.expiresAt}");
+    });
+
+    setState(() => _token = value);
+  }
+}
+
+class ApiWrapper {
+  final ApiData apiData;
+  final Api api;
+
+  ApiWrapper(this.apiData) : api = apiData.widget.api;
+
+  Future<dynamic> deleteJson(path) => api.deleteJson(_appendOauthToken(path));
+
+  Future<dynamic> getJson(path) => api.getJson(_appendOauthToken(path));
+
+  Future<OauthToken> login(String username, String password) =>
+      api.login(username, password).then((token) {
+        apiData._setToken(token);
+        return token;
+      });
+
+  logout() => apiData._setToken(null);
+
+  BatchController newBatch() => api.newBatch(path: _appendOauthToken('batch'));
+
+  Future<dynamic> postJson(path, {Map<String, String> bodyFields}) =>
+      api.postJson(_appendOauthToken(path), bodyFields: bodyFields);
+
+  String _appendOauthToken(String path) {
+    final token = apiData._token;
+    final accessToken = token?.accessToken ?? api.buildOneTimeToken();
+    final connector = path.contains('?') ? '&' : '?';
+    return "$path${connector}oauth_token=$accessToken";
+  }
 }
 
 class _Inherited extends InheritedWidget {

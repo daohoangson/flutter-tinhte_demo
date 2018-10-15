@@ -142,6 +142,7 @@ class _PostsWidgetState extends State<PostsWidget> {
         html: post.postBodyHtml,
         isFirstPost: post.postIsFirstPost,
       ),
+      _PostActionsWidget(post: post),
     ]);
 
     final main = Column(
@@ -199,4 +200,70 @@ class _PostsWidgetState extends State<PostsWidget> {
               fontSize: 12.0,
             ),
       );
+}
+
+class _PostActionsWidget extends StatefulWidget {
+  final Post post;
+  _PostActionsWidget({Key key, @required this.post}) : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() => _PostActionsWidgetState();
+}
+
+class _PostActionsWidgetState extends State<_PostActionsWidget> {
+  bool postIsLiked;
+  int postLikeCount;
+
+  @override
+  void initState() {
+    super.initState();
+
+    postIsLiked = widget.post.postIsLiked == true;
+    postLikeCount = widget.post.postLikeCount ?? 0;
+  }
+
+  @override
+  Widget build(BuildContext context) => Row(
+        children: <Widget>[
+          _buildButton(
+            postIsLiked ? 'Unlike' : 'Like',
+            () => postIsLiked ? _unlikePost() : _likePost(),
+            count: postLikeCount,
+          ),
+          _buildButton('Reply', () => null),
+        ],
+      );
+
+  Widget _buildButton(String text, GestureTapCallback onTap, {int count = 0}) =>
+      InkWell(
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+          child: Text(
+            (count > 0 ? "$count " : '') + text,
+            style: TextStyle(
+              color: Theme.of(context).accentColor,
+              fontSize: 12.0,
+            ),
+          ),
+        ),
+      );
+
+  _likePost() => prepareForApiAction(context, (apiData) async {
+        await apiData.api.postJson(widget.post.links.likes);
+
+        setState(() {
+          postIsLiked = true;
+          postLikeCount++;
+        });
+      });
+
+  _unlikePost() => prepareForApiAction(context, (apiData) async {
+        await apiData.api.deleteJson(widget.post.links.likes);
+
+        setState(() {
+          postIsLiked = false;
+          if (postLikeCount > 0) postLikeCount--;
+        });
+      });
 }

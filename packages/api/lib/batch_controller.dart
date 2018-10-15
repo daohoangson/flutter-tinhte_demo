@@ -1,5 +1,6 @@
 import 'dart:async';
-import 'batch.dart';
+
+import 'src/batch.dart';
 
 typedef Future<bool> FunctionFetch();
 

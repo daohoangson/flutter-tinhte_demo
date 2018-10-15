@@ -2,9 +2,9 @@ import 'dart:convert';
 import 'dart:async';
 import 'package:http/http.dart';
 
+import 'batch_controller.dart';
 import 'oauth_token.dart';
 import 'src/batch.dart';
-import 'src/batch_controller.dart';
 import 'src/crypto.dart';
 
 part 'src/api_internal.dart';

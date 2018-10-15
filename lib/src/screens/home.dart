@@ -65,7 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
           footer: token != null
               ? ListTile(
                   title: Text('Logout'),
-                  onTap: () => ApiInheritedWidget.of(context).token = null,
+                  onTap: () => ApiInheritedWidget.of(context).api.logout(),
                 )
               : null,
           header: HomeDrawerHeader(token: token),
@@ -80,8 +80,7 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() => isFetching = true);
 
     final api = ApiInheritedWidget.of(context).api;
-    final ott = api.buildOneTimeToken();
-    final b = api.newBatch(path: "batch?oauth_token=$ott");
+    final b = api.newBatch();
 
     api.getJson('lists/1/threads').then((json) {
       final List<Thread> newThreads = List();

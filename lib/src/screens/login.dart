@@ -3,8 +3,8 @@ import 'package:tinhte_api/api.dart';
 
 import '../widgets/_api.dart';
 
-void pushLoginScreen(BuildContext context) {
-  Navigator.push(
+Future<dynamic> pushLoginScreen(BuildContext context) {
+  return Navigator.push(
     context,
     MaterialPageRoute(builder: (context) => LoginScreen()),
   );
@@ -127,8 +127,7 @@ class _LoginScreenState extends State<LoginScreen> {
     aiw.api
         .login(username, password)
         .then((token) {
-          aiw.token = token;
-          Navigator.pop(context);
+          Navigator.pop(context, true);
         })
         .catchError((error) => _showDialogError(error))
         .whenComplete(() => setState(() => isLoggingIn = false));
