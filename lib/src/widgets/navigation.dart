@@ -4,7 +4,7 @@ import 'package:tinhte_api/navigation.dart' as navigation;
 
 import '../screens/forum_view.dart';
 import '../screens/navigation_element_view.dart';
-import 'api.dart';
+import '_api.dart';
 
 class NavigationWidget extends StatefulWidget {
   final String path;

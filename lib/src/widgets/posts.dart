@@ -5,7 +5,8 @@ import 'package:tinhte_api/links.dart';
 import 'package:tinhte_api/post.dart';
 import 'package:tinhte_api/thread.dart';
 
-import 'api.dart';
+import '_list_view.dart';
+import '_api.dart';
 import 'html.dart';
 
 class PostsWidget extends StatefulWidget {
@@ -42,7 +43,7 @@ class _PostsWidgetState extends State<PostsWidget> {
       controller: PrimaryScrollController.of(context),
       itemBuilder: (context, i) {
         if (i == posts.length) {
-          return _buildProgressIndicator();
+          return buildProgressIndicator(isFetching);
         }
         return _buildRow(posts[i]);
       },
@@ -111,16 +112,6 @@ class _PostsWidgetState extends State<PostsWidget> {
       url = newUrl;
     });
   }
-
-  Widget _buildProgressIndicator() => Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Center(
-          child: Opacity(
-            opacity: isFetching ? 1.0 : 0.0,
-            child: CircularProgressIndicator(),
-          ),
-        ),
-      );
 
   Widget _buildRow(Post post) {
     final List<Widget> children = List();

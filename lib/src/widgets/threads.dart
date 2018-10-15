@@ -1,10 +1,106 @@
 import 'package:flutter/material.dart';
+import 'package:timeago/timeago.dart' as timeago;
 import 'package:tinhte_api/links.dart';
 import 'package:tinhte_api/thread.dart';
 
 import '../screens/thread_view.dart';
-import 'api.dart';
+import '_list_view.dart';
+import '_api.dart';
 import 'thread_image.dart';
+
+Widget buildThreadRow(BuildContext context, Thread thread) {
+  final postBodyAndMetadata = Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: <Widget>[
+      Padding(
+        padding: const EdgeInsets.all(5.0),
+        child: Text(
+          thread.firstPost.postBodyPlainText,
+          maxLines: 3,
+          overflow: TextOverflow.ellipsis,
+        ),
+      ),
+      Padding(
+        padding: const EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 5.0),
+        child: RichText(
+          text: buildThreadTextSpan(context, thread),
+        ),
+      ),
+    ],
+  );
+
+  final bodyAndPossiblyImage = thread.threadImage != null
+      ? Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            SizedBox(
+              width: MediaQuery.of(context).size.width * .4,
+              child: ThreadImageWidget(image: thread?.threadImage),
+            ),
+            Expanded(child: postBodyAndMetadata),
+          ],
+        )
+      : postBodyAndMetadata;
+
+  return GestureDetector(
+    child: Card(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(5.0),
+            child: Text(
+              thread.threadTitle,
+              style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+            ),
+          ),
+          bodyAndPossiblyImage,
+        ],
+      ),
+    ),
+    onTap: () => pushThreadViewScreen(context, thread),
+  );
+}
+
+TextSpan buildThreadTextSpan(BuildContext context, Thread thread) {
+  List<TextSpan> spans = List();
+
+  spans.add(TextSpan(
+    style: TextStyle(
+      color: Theme.of(context).accentColor,
+      fontWeight: FontWeight.bold,
+    ),
+    text: thread?.creatorUsername ?? '',
+  ));
+
+  spans.addAll(<TextSpan>[
+    TextSpan(text: ' • '),
+    TextSpan(
+      style: TextStyle(
+        color: Theme.of(context).disabledColor,
+      ),
+      text: thread != null
+          ? timeago.format(DateTime.fromMillisecondsSinceEpoch(
+              thread.threadCreateDate * 1000))
+          : '',
+    ),
+  ]);
+
+  if (thread.threadIsSticky) {
+    spans.add(TextSpan(text: '  📌'));
+  }
+
+  if (thread.threadIsFollowed) {
+    spans.add(TextSpan(text: '  👁'));
+  }
+
+  return TextSpan(
+    children: spans,
+    style: TextStyle(
+      fontSize: 12.0,
+    ),
+  );
+}
 
 class ThreadsWidget extends StatefulWidget {
   final String path;
@@ -55,9 +151,9 @@ class _ThreadsWidgetState extends State<ThreadsWidget> {
       controller: scrollController,
       itemBuilder: (context, i) {
         if (i == widget._threads.length) {
-          return _buildProgressIndicator();
+          return buildProgressIndicator(isFetching);
         }
-        return _buildRow(widget._threads[i]);
+        return buildThreadRow(context, widget._threads[i]);
       },
       itemCount: widget._threads.length + 1,
     );
@@ -91,53 +187,5 @@ class _ThreadsWidgetState extends State<ThreadsWidget> {
       widget._threads.addAll(newThreads);
       url = nextUrl;
     });
-  }
-
-  Widget _buildProgressIndicator() => Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Center(
-          child: Opacity(
-            opacity: isFetching ? 1.0 : 0.0,
-            child: CircularProgressIndicator(),
-          ),
-        ),
-      );
-
-  Widget _buildRow(Thread thread) {
-    final List<Widget> children = List();
-
-    if (thread.threadImage != null) {
-      children.add(ThreadImageWidget(image: thread.threadImage));
-    }
-
-    children.addAll(<Widget>[
-      Padding(
-        padding: const EdgeInsets.all(5.0),
-        child: Text(
-          thread.threadTitle,
-          style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-          maxLines: 3,
-          overflow: TextOverflow.ellipsis,
-        ),
-      ),
-      Padding(
-        padding: const EdgeInsets.all(5.0),
-        child: Text(
-          thread.firstPost.postBodyPlainText,
-          maxLines: 5,
-          overflow: TextOverflow.ellipsis,
-        ),
-      ),
-    ]);
-
-    return GestureDetector(
-      child: Card(
-        child: Column(
-          children: children,
-          crossAxisAlignment: CrossAxisAlignment.start,
-        ),
-      ),
-      onTap: () => pushThreadViewScreen(context, thread),
-    );
   }
 }

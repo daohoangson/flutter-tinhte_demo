@@ -2,13 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:tinhte_api/feature_page.dart';
 import 'package:tinhte_api/thread.dart';
 
-import '../widgets/api.dart';
+import '../widgets/_api.dart';
 import '../widgets/home/feature_pages.dart';
 import '../widgets/home/header.dart';
 import '../widgets/home/threads_top_five.dart';
 import '../widgets/navigation.dart';
-import '../widgets/thread_image.dart';
-import 'thread_view.dart';
+import '../widgets/threads.dart';
 
 const threadWidgetStartingIndex = 2;
 
@@ -44,7 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
               return FeaturePagesWidget(pages: featurePages);
             default:
               final j = i - threadWidgetStartingIndex;
-              Widget widget = _buildThreadWidget(threadsBelow[j]);
+              Widget widget = buildThreadRow(context, threadsBelow[j]);
               if (j == 0) {
                 widget = Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -114,52 +113,4 @@ class _HomeScreenState extends State<HomeScreen> {
     await b.fetch();
     setState(() => isFetching = false);
   }
-
-  Widget _buildThreadWidget(Thread thread) => GestureDetector(
-        child: Card(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.all(5.0),
-                child: Text(
-                  thread.threadTitle,
-                  style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
-                ),
-              ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * .4,
-                    child: ThreadImageWidget(image: thread?.threadImage),
-                  ),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.all(5.0),
-                          child: Text(
-                            thread.firstPost.postBodyPlainText,
-                            maxLines: 3,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 5.0),
-                          child: RichText(
-                            text: buildThreadTextSpan(context, thread),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-        onTap: () => pushThreadViewScreen(context, thread),
-      );
 }

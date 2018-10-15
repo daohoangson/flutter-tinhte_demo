@@ -1,34 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:timeago/timeago.dart' as timeago;
 import 'package:tinhte_api/thread.dart';
 
 import '../../screens/thread_view.dart';
 import '../thread_image.dart';
-
-TextSpan buildThreadTextSpan(BuildContext context, Thread thread) => TextSpan(
-      children: <TextSpan>[
-        TextSpan(
-          style: TextStyle(
-            color: Theme.of(context).accentColor,
-            fontWeight: FontWeight.bold,
-          ),
-          text: thread?.creatorUsername ?? '',
-        ),
-        TextSpan(text: ' • '),
-        TextSpan(
-          style: TextStyle(
-            color: Theme.of(context).disabledColor,
-          ),
-          text: thread != null
-              ? timeago.format(DateTime.fromMillisecondsSinceEpoch(
-                  thread.threadCreateDate * 1000))
-              : '',
-        ),
-      ],
-      style: TextStyle(
-        fontSize: 12.0,
-      ),
-    );
+import '../threads.dart';
 
 class ThreadsTopFiveWidget extends StatelessWidget {
   final List<Thread> threads;
