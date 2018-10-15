@@ -12,6 +12,7 @@ touch "$_toolPath/.data/.packages"
 exec docker run --rm -it \
   -v "$_srcPath:/src" -w '/src' \
   -v "$_dataPath/.dart_tool:/src/.dart_tool" \
+  -v "$_dataPath/emptydir:/src/tool/.data" \
   -v "$_dataPath/.packages:/src/.packages" \
   -v "$_dataPath/.pub-cache:/root/.pub-cache" \
   google/dart bash
