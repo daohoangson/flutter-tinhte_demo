@@ -5,11 +5,19 @@ import 'package:tinhte_api/navigation.dart' as navigation;
 import '../screens/forum_view.dart';
 import '../screens/navigation_element_view.dart';
 import '_api.dart';
+import '_list_view.dart';
 
 class NavigationWidget extends StatefulWidget {
+  final Widget footer;
+  final Widget header;
   final String path;
 
-  NavigationWidget({Key key, @required this.path}) : super(key: key);
+  NavigationWidget({
+    this.footer,
+    this.header,
+    Key key,
+    @required this.path,
+  }) : super(key: key);
 
   @override
   _NavigationWidgetState createState() => _NavigationWidgetState();
@@ -27,18 +35,22 @@ class _NavigationWidgetState extends State<NavigationWidget> {
 
     return ListView.builder(
       itemBuilder: (context, i) {
-        if (i >= elements.length) {
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Center(
-              child: CircularProgressIndicator(),
-            ),
-          );
+        if (widget.header != null) {
+          if (i == 0) return widget.header;
+          i--;
         }
 
+        if (widget.footer != null) {
+          if (i == elements.length) return widget.footer;
+        }
+
+        if (i >= elements.length) return buildProgressIndicator(!hasFetched);
         return _buildRow(elements[i]);
       },
-      itemCount: elements.isEmpty ? 1 : elements.length,
+      itemCount: (widget.header != null ? 1 : 0) +
+          elements.length +
+          1 +
+          (widget.footer != null ? 1 : 0),
     );
   }
 

@@ -17,6 +17,7 @@ dependencies:
   crypto: ^2.0.6
   flutter:
     sdk: flutter
+  shared_preferences: ^0.4.3
   timeago: ^2.0.8
   tinhte_api:
     path: ./packages/api

@@ -12,8 +12,16 @@ class OauthToken {
   @JsonKey(fromJson: int.parse)
   final int expiresIn;
 
-  OauthToken(this.accessToken, this.expiresIn, this.refreshToken, this.scope,
-      this.userId);
+  @JsonKey(ignore: true)
+  final DateTime expiresAt;
+
+  OauthToken(
+    this.accessToken,
+    this.expiresIn,
+    this.refreshToken,
+    this.scope,
+    this.userId,
+  ) : expiresAt = DateTime.now().add(Duration(milliseconds: expiresIn * 1000));
   factory OauthToken.fromJson(Map<String, dynamic> json) =>
       _$OauthTokenFromJson(json);
 }

@@ -19,6 +19,7 @@ class Api {
 
   Batch _batch;
 
+  String get clientId => _clientId;
   Response get latestResponse => _latestResponse;
   int get requestCount => _requestCount;
 
