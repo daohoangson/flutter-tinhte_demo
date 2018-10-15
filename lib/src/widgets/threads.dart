@@ -86,11 +86,11 @@ TextSpan buildThreadTextSpan(BuildContext context, Thread thread) {
     ),
   ]);
 
-  if (thread.threadIsSticky) {
+  if (thread?.threadIsSticky == true) {
     spans.add(TextSpan(text: '  📌'));
   }
 
-  if (thread.threadIsFollowed) {
+  if (thread?.threadIsFollowed == true) {
     spans.add(TextSpan(text: '  👁'));
   }
 
