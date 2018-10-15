@@ -4,7 +4,7 @@ import 'package:tinhte_api/api.dart';
 import 'package:tinhte_api/post.dart';
 
 Future<Post> _getPostById(Api api, int postId) async {
-  final json = await api.getJson("posts/${postId}");
+  final json = await api.getJson("posts/$postId");
   return Post.fromJson(json['post']);
 }
 
