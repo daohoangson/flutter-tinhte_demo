@@ -9,10 +9,17 @@ import 'api.dart';
 import 'html.dart';
 
 class PostsWidget extends StatefulWidget {
+  final bool infinityScrolling;
   final String path;
   final Thread thread;
 
-  PostsWidget({Key key, @required this.path, this.thread}) : super(key: key);
+  PostsWidget({
+    Key key,
+    @required this.path,
+    this.thread,
+    bool infinityScrolling = true,
+  })  : this.infinityScrolling = infinityScrolling == true,
+        super(key: key);
 
   @override
   _PostsWidgetState createState() => _PostsWidgetState(this.path);
@@ -31,18 +38,22 @@ class _PostsWidgetState extends State<PostsWidget> {
       fetch();
     }
 
+    final listView = ListView.builder(
+      controller: PrimaryScrollController.of(context),
+      itemBuilder: (context, i) {
+        if (i == posts.length) {
+          return _buildProgressIndicator();
+        }
+        return _buildRow(posts[i]);
+      },
+      itemCount: posts.length + 1,
+      padding: const EdgeInsets.all(0.0),
+    );
+
+    if (!widget.infinityScrolling) return listView;
+
     return NotificationListener<ScrollNotification>(
-      child: ListView.builder(
-        controller: PrimaryScrollController.of(context),
-        itemBuilder: (context, i) {
-          if (i == posts.length) {
-            return _buildProgressIndicator();
-          }
-          return _buildRow(posts[i]);
-        },
-        itemCount: posts.length + 1,
-        padding: const EdgeInsets.all(0.0),
-      ),
+      child: listView,
       onNotification: (scrollInfo) {
         if (scrollInfo.metrics.pixels == scrollInfo.metrics.maxScrollExtent) {
           fetch();
