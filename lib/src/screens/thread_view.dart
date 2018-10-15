@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:tinhte_api/thread.dart';
 
-import 'package:tinhte_demo/api/model/thread.dart';
 import '../widgets/posts.dart';
 import '../widgets/thread_image.dart';
 

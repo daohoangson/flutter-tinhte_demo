@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import 'package:tinhte_demo/api/model/navigation.dart' as navigation;
+import 'package:tinhte_api/navigation.dart' as navigation;
 
 import '../screens/forum_view.dart';
 import '../screens/navigation_element_view.dart';

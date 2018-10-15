@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
-import 'package:tinhte_demo/api/api.dart';
+
+import 'package:tinhte_api/api.dart';
 
 class ApiInheritedWidget extends InheritedWidget {
   final Api api;

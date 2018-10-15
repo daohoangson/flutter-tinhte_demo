@@ -8,5 +8,6 @@ class ThreadPrefix {
   final String prefixTitle;
 
   ThreadPrefix(this.prefixId, this.prefixTitle);
-  factory ThreadPrefix.fromJson(Map<String, dynamic> json) => _$ThreadPrefixFromJson(json);
+  factory ThreadPrefix.fromJson(Map<String, dynamic> json) =>
+      _$ThreadPrefixFromJson(json);
 }

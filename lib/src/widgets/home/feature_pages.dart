@@ -1,8 +1,8 @@
 import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:tinhte_api/feature_page.dart';
 
-import 'package:tinhte_demo/api/model/feature_page.dart';
 import 'header.dart';
 
 const _columnWidth = .3;

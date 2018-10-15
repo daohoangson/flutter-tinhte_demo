@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import 'package:tinhte_demo/api/model/node.dart';
+import 'package:tinhte_api/node.dart';
 
 import '../widgets/threads.dart';
 

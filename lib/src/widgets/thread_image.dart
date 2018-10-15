@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-
-import 'package:tinhte_demo/api/model/thread.dart';
+import 'package:tinhte_api/thread.dart';
 
 const ThreadImageAspectRatio = 594 / 368;
 

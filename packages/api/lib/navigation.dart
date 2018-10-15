@@ -1,7 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import '_.dart';
 import 'node.dart';
+import 'src/_.dart';
 
 part 'navigation.g.dart';
 
@@ -28,7 +28,7 @@ class Element {
   factory Element.fromJson(Map<String, dynamic> json) {
     final e = _$ElementFromJson(json);
 
-    switch(e.navigationType) {
+    switch (e.navigationType) {
       case NavigationTypeCategory:
         e.node = Category.fromJson(json);
         break;
@@ -50,7 +50,8 @@ class ElementLinks {
   String subElements;
 
   ElementLinks();
-  factory ElementLinks.fromJson(Map<String, dynamic> json) => _$ElementLinksFromJson(json);
+  factory ElementLinks.fromJson(Map<String, dynamic> json) =>
+      _$ElementLinksFromJson(json);
 }
 
 @JsonSerializable(createToJson: false, fieldRename: FieldRename.snake)
@@ -69,7 +70,8 @@ class LinkForum extends Node {
   String get title => linkTitle;
 
   LinkForum(this.linkId);
-  factory LinkForum.fromJson(Map<String, dynamic> json) => _$LinkForumFromJson(json);
+  factory LinkForum.fromJson(Map<String, dynamic> json) =>
+      _$LinkForumFromJson(json);
 }
 
 @JsonSerializable(createToJson: false)
@@ -77,5 +79,6 @@ class LinkForumLinks {
   String target;
 
   LinkForumLinks();
-  factory LinkForumLinks.fromJson(Map<String, dynamic> json) => _$LinkForumLinksFromJson(json);
+  factory LinkForumLinks.fromJson(Map<String, dynamic> json) =>
+      _$LinkForumLinksFromJson(json);
 }

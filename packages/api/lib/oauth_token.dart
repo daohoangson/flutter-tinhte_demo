@@ -11,7 +11,7 @@ class OauthToken {
 
   @JsonKey(fromJson: int.parse)
   final int expiresIn;
- 
+
   OauthToken(this.accessToken, this.expiresIn, this.refreshToken, this.scope,
       this.userId);
   factory OauthToken.fromJson(Map<String, dynamic> json) =>

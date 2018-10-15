@@ -1,8 +1,8 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import '_.dart';
-import 'thread_prefix.dart';
 import 'post.dart';
+import 'src/_.dart';
+import 'thread_prefix.dart';
 
 part 'thread.g.dart';
 
@@ -49,7 +49,7 @@ class Thread {
 
   @JsonKey(toJson: none)
   List<ThreadPrefix> threadPrefixes;
-  
+
   @JsonKey(toJson: none)
   ThreadImage threadThumbnail;
 
@@ -70,7 +70,8 @@ class ThreadImage {
   final int width;
 
   ThreadImage(this.displayMode, this.height, this.link, this.width);
-  factory ThreadImage.fromJson(Map<String, dynamic> json) => _$ThreadImageFromJson(json);
+  factory ThreadImage.fromJson(Map<String, dynamic> json) =>
+      _$ThreadImageFromJson(json);
 }
 
 @JsonSerializable(createToJson: false)
@@ -101,7 +102,7 @@ class ThreadLinks {
   String permalink;
 
   String posts;
-  
+
   ThreadLinks();
   factory ThreadLinks.fromJson(Map<String, dynamic> json) =>
       _$ThreadLinksFromJson(json);
@@ -121,7 +122,7 @@ class ThreadPermissions {
   bool uploadAttachment;
 
   bool view;
-  
+
   ThreadPermissions();
   factory ThreadPermissions.fromJson(Map<String, dynamic> json) =>
       _$ThreadPermissionsFromJson(json);

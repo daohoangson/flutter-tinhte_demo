@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import '_.dart';
+import 'src/_.dart';
 
 part 'feature_page.g.dart';
 

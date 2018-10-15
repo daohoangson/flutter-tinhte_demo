@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:tinhte_demo/api/api.dart';
+import 'package:tinhte_api/api.dart';
 import 'src/screens/home.dart';
 import 'src/widgets/api.dart';
 

@@ -1,10 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:tinhte_api/links.dart';
+import 'package:tinhte_api/post.dart';
+import 'package:tinhte_api/thread.dart';
 
-import 'package:tinhte_demo/api/model/links.dart';
-import 'package:tinhte_demo/api/model/post.dart';
-import 'package:tinhte_demo/api/model/thread.dart';
 import 'api.dart';
 import 'html.dart';
 

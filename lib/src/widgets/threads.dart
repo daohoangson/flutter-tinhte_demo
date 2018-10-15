@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:tinhte_api/links.dart';
+import 'package:tinhte_api/thread.dart';
 
-import 'package:tinhte_demo/api/model/thread.dart';
-import 'package:tinhte_demo/api/model/links.dart';
 import '../screens/thread_view.dart';
 import 'api.dart';
 import 'thread_image.dart';

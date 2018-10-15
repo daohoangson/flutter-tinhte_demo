@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:tinhte_api/thread.dart';
 
-import 'package:tinhte_demo/api/model/thread.dart';
 import '../../screens/thread_view.dart';
 import '../thread_image.dart';
 

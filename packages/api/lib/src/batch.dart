@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:async';
 
-import '../model/batch_job.dart';
+import '../batch_job.dart';
 
 class Batch {
   final String path;

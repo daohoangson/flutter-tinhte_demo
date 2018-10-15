@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import 'package:tinhte_demo/api/model/navigation.dart' as navigation;
+import 'package:tinhte_api/navigation.dart' as navigation;
 
 import '../widgets/navigation.dart';
 

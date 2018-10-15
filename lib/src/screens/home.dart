@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:tinhte_api/feature_page.dart';
+import 'package:tinhte_api/thread.dart';
 
-import 'package:tinhte_demo/api/model/feature_page.dart';
-import 'package:tinhte_demo/api/model/thread.dart';
 import '../widgets/api.dart';
 import '../widgets/home/feature_pages.dart';
 import '../widgets/home/header.dart';
