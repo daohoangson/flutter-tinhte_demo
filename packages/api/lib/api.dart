@@ -106,6 +106,7 @@ class Api {
 
   Future<bool> _fetchBatch(Batch batch) async {
     if (batch.length == 0) {
+      _batch = null;
       return Future.value(false);
     }
 
@@ -115,7 +116,10 @@ class Api {
       bodyJson: batch.bodyJson,
       parseJson: true,
     );
-    return batch.handleResponse(json);
+    final handled = batch.handleResponse(json);
+
+    _batch = null;
+    return handled;
   }
 
   Future sendRequest(String method, String path,
