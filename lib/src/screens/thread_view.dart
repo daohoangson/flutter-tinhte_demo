@@ -1,4 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:timeago/timeago.dart' as timeago;
 import 'package:tinhte_api/thread.dart';
 
 import '../widgets/posts.dart';
@@ -26,9 +28,43 @@ class ThreadViewScreen extends StatelessWidget {
       thread: thread,
     );
 
+    final title = Row(
+      children: <Widget>[
+        CircleAvatar(
+          backgroundImage:
+              CachedNetworkImageProvider(thread.links.firstPosterAvatar),
+        ),
+        Expanded(
+          child: Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  thread.firstPost.posterUsername,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                Text(
+                  timeago.format(DateTime.fromMillisecondsSinceEpoch(
+                      thread.firstPost.postCreateDate * 1000)),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(fontSize: 12.0),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+
     if (thread?.threadImage == null) {
       return Scaffold(
-        appBar: AppBar(),
+        appBar: AppBar(
+          title: title,
+        ),
         body: body,
       );
     }
@@ -45,6 +81,7 @@ class ThreadViewScreen extends StatelessWidget {
                 background: ThreadImageWidget(image: thread.threadImage),
               ),
               pinned: true,
+              title: title,
             ),
           ];
         },

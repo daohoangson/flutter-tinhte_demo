@@ -116,12 +116,11 @@ class _PostsWidgetState extends State<PostsWidget> {
   Widget _buildRow(Post post) {
     final List<Widget> children = List();
 
-    final threadTitle = widget.thread?.threadTitle;
-    if (post.postIsFirstPost && threadTitle?.isNotEmpty == true) {
+    if (post.postIsFirstPost) {
       children.add(Padding(
         padding: const EdgeInsets.all(10.0),
         child: Text(
-          threadTitle,
+          widget.thread.threadTitle,
           maxLines: null,
           style: TextStyle(
             fontSize: 20.0,
@@ -129,15 +128,16 @@ class _PostsWidgetState extends State<PostsWidget> {
           ),
         ),
       ));
-    }
-
-    children.addAll(<Widget>[
-      Padding(
+    } else {
+      children.add(Padding(
         padding: const EdgeInsets.only(right: 10.0, left: 10.0),
         child: RichText(
           text: _buildPostTextSpan(post),
         ),
-      ),
+      ));
+    }
+
+    children.addAll(<Widget>[
       HtmlWidget(
         html: post.postBodyHtml,
         isFirstPost: post.postIsFirstPost,
