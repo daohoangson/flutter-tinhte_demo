@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
           theme: ThemeData(
             brightness: Brightness.dark,
           ),
-          home: HomeScreen(title: 'Tinh tế Home (demo)'),
+          home: SafeArea(child: HomeScreen(title: 'Tinh tế Home (demo)')),
         ));
   }
 }
