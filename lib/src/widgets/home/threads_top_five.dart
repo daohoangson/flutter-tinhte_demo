@@ -28,7 +28,12 @@ class ThreadsTopFiveWidget extends StatelessWidget {
         child: Card(
           child: Column(
             children: <Widget>[
-              ThreadImageWidget(image: thread?.threadImage),
+              ThreadImageWidget(
+                image: thread?.threadImage,
+                widgetOnNoImage: Center(
+                  child: CircularProgressIndicator(),
+                ),
+              ),
               Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: Text(

@@ -63,6 +63,7 @@ Widget buildThreadRow(BuildContext context, Thread thread) {
 }
 
 TextSpan buildThreadTextSpan(BuildContext context, Thread thread) {
+  if (thread == null) return TextSpan(text: '');
   List<TextSpan> spans = List();
 
   spans.add(TextSpan(
@@ -70,7 +71,7 @@ TextSpan buildThreadTextSpan(BuildContext context, Thread thread) {
       color: Theme.of(context).accentColor,
       fontWeight: FontWeight.bold,
     ),
-    text: thread?.creatorUsername ?? '',
+    text: thread.creatorUsername,
   ));
 
   spans.addAll(<TextSpan>[
@@ -79,18 +80,16 @@ TextSpan buildThreadTextSpan(BuildContext context, Thread thread) {
       style: TextStyle(
         color: Theme.of(context).disabledColor,
       ),
-      text: thread != null
-          ? timeago.format(DateTime.fromMillisecondsSinceEpoch(
-              thread.threadCreateDate * 1000))
-          : '',
+      text: timeago.format(
+          DateTime.fromMillisecondsSinceEpoch(thread.threadCreateDate * 1000)),
     ),
   ]);
 
-  if (thread?.threadIsSticky == true) {
+  if (thread.threadIsSticky == true) {
     spans.add(TextSpan(text: '  📌'));
   }
 
-  if (thread?.threadIsFollowed == true) {
+  if (thread.threadIsFollowed == true) {
     spans.add(TextSpan(text: '  👁'));
   }
 

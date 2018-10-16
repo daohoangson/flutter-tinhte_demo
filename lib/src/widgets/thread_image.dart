@@ -6,8 +6,13 @@ const ThreadImageAspectRatio = 594 / 368;
 
 class ThreadImageWidget extends StatelessWidget {
   final ThreadImage image;
+  final Widget widgetOnNoImage;
 
-  ThreadImageWidget({Key key, @required this.image}) : super(key: key);
+  ThreadImageWidget({
+    @required this.image,
+    Key key,
+    this.widgetOnNoImage,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,6 +25,7 @@ class ThreadImageWidget extends StatelessWidget {
         ),
         child: AspectRatio(
           aspectRatio: ThreadImageAspectRatio,
+          child: widgetOnNoImage,
         ),
       );
     }
