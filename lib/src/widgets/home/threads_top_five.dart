@@ -137,6 +137,8 @@ class ThreadsTopFiveWidget extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.all(5.0),
                       child: RichText(
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                         text: buildThreadTextSpan(context, thread),
                       ),
                     ),

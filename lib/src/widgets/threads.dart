@@ -28,7 +28,11 @@ Widget buildThreadRow(BuildContext context, Thread thread) {
         padding: const EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 5.0),
         child: LayoutBuilder(
           builder: (context, bc) {
-            final text = RichText(text: buildThreadTextSpan(context, thread));
+            final text = RichText(
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              text: buildThreadTextSpan(context, thread),
+            );
             if (bc.maxWidth < 600.0) return text;
 
             return Row(
