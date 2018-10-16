@@ -35,7 +35,10 @@ Widget buildThreadRow(BuildContext context, Thread thread) {
           children: <Widget>[
             SizedBox(
               width: MediaQuery.of(context).size.width * .4,
-              child: ThreadImageWidget(image: thread?.threadImage),
+              child: ThreadImageWidget(
+                image: thread?.threadImage,
+                threadId: thread?.threadId,
+              ),
             ),
             Expanded(child: postBodyAndMetadata),
           ],

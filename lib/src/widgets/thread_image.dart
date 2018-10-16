@@ -5,12 +5,14 @@ import 'package:tinhte_api/thread.dart';
 const ThreadImageAspectRatio = 594 / 368;
 
 class ThreadImageWidget extends StatelessWidget {
+  final int threadId;
   final ThreadImage image;
   final Widget widgetOnNoImage;
 
   ThreadImageWidget({
     @required this.image,
     Key key,
+    @required this.threadId,
     this.widgetOnNoImage,
   }) : super(key: key);
 
@@ -30,15 +32,19 @@ class ThreadImageWidget extends StatelessWidget {
       );
     }
 
+    final img = Image(
+      image: CachedNetworkImageProvider(link),
+      fit: BoxFit.cover,
+    );
+
     return AspectRatio(
       aspectRatio: ThreadImageAspectRatio,
-      child: Hero(
-        tag: "threadImageHero-$link",
-        child: Image(
-          image: CachedNetworkImageProvider(link),
-          fit: BoxFit.cover,
-        ),
-      ),
+      child: threadId != null
+          ? Hero(
+              tag: "threadImageHero--$threadId",
+              child: img,
+            )
+          : img,
     );
   }
 }

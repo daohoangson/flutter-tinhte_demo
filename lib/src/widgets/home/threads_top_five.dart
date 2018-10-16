@@ -33,6 +33,7 @@ class ThreadsTopFiveWidget extends StatelessWidget {
                 widgetOnNoImage: Center(
                   child: CircularProgressIndicator(),
                 ),
+                threadId: thread?.threadId,
               ),
               Padding(
                 padding: const EdgeInsets.all(10.0),
@@ -63,8 +64,11 @@ class ThreadsTopFiveWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               SizedBox(
-                child: ThreadImageWidget(image: thread?.threadImage),
                 width: MediaQuery.of(context).size.width * .4,
+                child: ThreadImageWidget(
+                  image: thread?.threadImage,
+                  threadId: thread?.threadId,
+                ),
               ),
               Expanded(
                 child: Column(

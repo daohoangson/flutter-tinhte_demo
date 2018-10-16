@@ -78,7 +78,10 @@ class ThreadViewScreen extends StatelessWidget {
                   MediaQuery.of(context).size.width / ThreadImageAspectRatio -
                       kToolbarHeight,
               flexibleSpace: FlexibleSpaceBar(
-                background: ThreadImageWidget(image: thread.threadImage),
+                background: ThreadImageWidget(
+                  image: thread.threadImage,
+                  threadId: thread.threadId,
+                ),
               ),
               pinned: true,
               title: title,
