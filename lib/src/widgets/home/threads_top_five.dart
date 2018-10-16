@@ -11,43 +11,92 @@ class ThreadsTopFiveWidget extends StatelessWidget {
   ThreadsTopFiveWidget({Key key, @required this.threads}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        _buildFeatureThread(context, _getThread(0)),
-        _buildOtherThread(context, _getThread(1)),
-        _buildOtherThread(context, _getThread(2)),
-        _buildOtherThread(context, _getThread(3)),
-        _buildOtherThread(context, _getThread(4)),
-      ],
-    );
-  }
+  Widget build(BuildContext context) => LayoutBuilder(builder: (context, bc) {
+        final w = bc.maxWidth;
+        final b = w < 600.0;
+        if (b) {
+          return Column(
+            children: <Widget>[
+              _buildFeatureThread(
+                context,
+                _getThread(0),
+                renderIndicatorOnNoImage: true,
+              ),
+              _buildOtherThread(context, _getThread(1)),
+              _buildOtherThread(context, _getThread(2)),
+              _buildOtherThread(context, _getThread(3)),
+              _buildOtherThread(context, _getThread(4)),
+            ],
+          );
+        } else {
+          return Column(
+            children: <Widget>[
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Expanded(
+                    child: _buildFeatureThread(context, _getThread(0)),
+                  ),
+                  Expanded(
+                    child: _buildFeatureThread(context, _getThread(1)),
+                  ),
+                ],
+              ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Expanded(
+                    child: _buildFeatureThread(context, _getThread(2)),
+                  ),
+                  Expanded(
+                    child: _buildFeatureThread(context, _getThread(3)),
+                  ),
+                  Expanded(
+                    child: _buildFeatureThread(context, _getThread(4)),
+                  ),
+                ],
+              ),
+            ],
+          );
+        }
+      });
 
-  Widget _buildFeatureThread(BuildContext context, Thread thread) =>
+  Widget _buildFeatureThread(BuildContext context, Thread thread,
+          {bool renderIndicatorOnNoImage = false}) =>
       GestureDetector(
         child: Card(
           child: Column(
             children: <Widget>[
               ThreadImageWidget(
                 image: thread?.threadImage,
-                widgetOnNoImage: Center(
-                  child: CircularProgressIndicator(),
-                ),
                 threadId: thread?.threadId,
+                widgetOnNoImage: renderIndicatorOnNoImage
+                    ? Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : null,
               ),
               Padding(
                 padding: const EdgeInsets.all(10.0),
-                child: Text(
-                  thread?.threadTitle ?? '\n\n',
-                  style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+                child: SizedBox(
+                  height: 70.0,
+                  child: Text(
+                    thread?.threadTitle ?? '',
+                    maxLines: 3,
+                    style:
+                        TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+                  ),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 10.0),
-                child: RichText(
-                  text: buildThreadTextSpan(context, thread),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+                child: SizedBox(
+                  height: 15.0,
+                  child: RichText(
+                    text: buildThreadTextSpan(context, thread),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
               ),
             ],
@@ -64,11 +113,11 @@ class ThreadsTopFiveWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               SizedBox(
-                width: MediaQuery.of(context).size.width * .4,
                 child: ThreadImageWidget(
                   image: thread?.threadImage,
                   threadId: thread?.threadId,
                 ),
+                height: 90.0,
               ),
               Expanded(
                 child: Column(
@@ -86,7 +135,7 @@ class ThreadsTopFiveWidget extends StatelessWidget {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 5.0),
+                      padding: const EdgeInsets.all(5.0),
                       child: RichText(
                         text: buildThreadTextSpan(context, thread),
                       ),

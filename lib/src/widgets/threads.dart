@@ -34,11 +34,11 @@ Widget buildThreadRow(BuildContext context, Thread thread) {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             SizedBox(
-              width: MediaQuery.of(context).size.width * .4,
               child: ThreadImageWidget(
                 image: thread?.threadImage,
                 threadId: thread?.threadId,
               ),
+              height: 90.0,
             ),
             Expanded(child: postBodyAndMetadata),
           ],
