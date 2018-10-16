@@ -1,4 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:tinhte_api/links.dart';
 import 'package:tinhte_api/thread.dart';
@@ -7,6 +9,8 @@ import '../screens/thread_view.dart';
 import '_list_view.dart';
 import '_api.dart';
 import 'thread_image.dart';
+
+final numberFormatCompact = NumberFormat.compact();
 
 Widget buildThreadRow(BuildContext context, Thread thread) {
   final postBodyAndMetadata = Column(
@@ -22,8 +26,25 @@ Widget buildThreadRow(BuildContext context, Thread thread) {
       ),
       Padding(
         padding: const EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 5.0),
-        child: RichText(
-          text: buildThreadTextSpan(context, thread),
+        child: LayoutBuilder(
+          builder: (context, bc) {
+            final text = RichText(text: buildThreadTextSpan(context, thread));
+            if (bc.maxWidth < 600.0) return text;
+
+            return Row(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(right: 5.0),
+                  child: CircleAvatar(
+                    backgroundImage: CachedNetworkImageProvider(
+                        thread.links.firstPosterAvatar),
+                    maxRadius: 12.0,
+                  ),
+                ),
+                Expanded(child: text),
+              ],
+            );
+          },
         ),
       ),
     ],
@@ -77,16 +98,23 @@ TextSpan buildThreadTextSpan(BuildContext context, Thread thread) {
     text: thread.creatorUsername,
   ));
 
-  spans.addAll(<TextSpan>[
-    TextSpan(text: ' • '),
-    TextSpan(
+  final threadCreateDate = timeago.format(
+      DateTime.fromMillisecondsSinceEpoch(thread.threadCreateDate * 1000));
+  spans.add(TextSpan(
+    style: TextStyle(
+      color: Theme.of(context).disabledColor,
+    ),
+    text: "  $threadCreateDate",
+  ));
+
+  if (thread.threadViewCount > 1500) {
+    spans.add(TextSpan(
       style: TextStyle(
         color: Theme.of(context).disabledColor,
       ),
-      text: timeago.format(
-          DateTime.fromMillisecondsSinceEpoch(thread.threadCreateDate * 1000)),
-    ),
-  ]);
+      text: " - ${numberFormatCompact.format(thread.threadViewCount)} views",
+    ));
+  }
 
   if (thread.threadIsSticky == true) {
     spans.add(TextSpan(text: '  📌'));

@@ -1,10 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:timeago/timeago.dart' as timeago;
 import 'package:tinhte_api/links.dart';
 import 'package:tinhte_api/post.dart';
 import 'package:tinhte_api/thread.dart';
 
+import '../intl.dart';
 import '_list_view.dart';
 import '_api.dart';
 import 'html.dart';
@@ -114,10 +114,9 @@ class _PostsWidgetState extends State<PostsWidget> {
   }
 
   Widget _buildRow(Post post) {
-    final List<Widget> children = List();
-
+    Widget header;
     if (post.postIsFirstPost) {
-      children.add(Padding(
+      header = Padding(
         padding: const EdgeInsets.all(10.0),
         child: Text(
           widget.thread.threadTitle,
@@ -127,34 +126,36 @@ class _PostsWidgetState extends State<PostsWidget> {
             fontWeight: FontWeight.bold,
           ),
         ),
-      ));
+      );
     } else {
-      children.add(Padding(
+      header = Padding(
         padding: const EdgeInsets.only(right: 10.0, left: 10.0),
         child: RichText(
           text: _buildPostTextSpan(post),
         ),
-      ));
+      );
     }
 
-    children.addAll(<Widget>[
-      HtmlWidget(
-        html: post.postBodyHtml,
-        isFirstPost: post.postIsFirstPost,
-      ),
-      _PostActionsWidget(post: post),
-    ]);
-
-    final main = Column(
-      children: children,
-      crossAxisAlignment: CrossAxisAlignment.start,
+    final html = HtmlWidget(
+      html: post.postBodyHtml,
+      isFirstPost: post.postIsFirstPost,
     );
+
+    final actions = _PostActionsWidget(post: post);
 
     Widget built;
     if (post.postIsFirstPost) {
-      built = main;
+      built = Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          header,
+          html,
+          actions,
+        ],
+      );
     } else {
       built = Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.only(left: 10.0),
@@ -164,9 +165,34 @@ class _PostsWidgetState extends State<PostsWidget> {
               radius: 18.0,
             ),
           ),
-          Expanded(child: main),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(2.0),
+                      color: Theme.of(context).highlightColor,
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 10.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          header,
+                          html,
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                actions,
+              ],
+            ),
+          ),
         ],
-        crossAxisAlignment: CrossAxisAlignment.start,
       );
     }
 
@@ -175,9 +201,6 @@ class _PostsWidgetState extends State<PostsWidget> {
       child: built,
     );
   }
-
-  String _buildPostCreateDate(Post post) => timeago
-      .format(DateTime.fromMillisecondsSinceEpoch(post.postCreateDate * 1000));
 
   TextSpan _buildPostTextSpan(Post post) => TextSpan(
         children: <TextSpan>[
@@ -188,12 +211,11 @@ class _PostsWidgetState extends State<PostsWidget> {
             ),
             text: post.posterUsername,
           ),
-          TextSpan(text: ' • '),
           TextSpan(
             style: TextStyle(
               color: Theme.of(context).disabledColor,
             ),
-            text: _buildPostCreateDate(post),
+            text: "  ${formatTimestamp(post.postCreateDate)}",
           ),
         ],
         style: DefaultTextStyle.of(context).style.copyWith(
