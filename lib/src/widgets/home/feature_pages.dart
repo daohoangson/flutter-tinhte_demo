@@ -59,8 +59,8 @@ class FeaturePagesWidget extends StatelessWidget {
         child: AspectRatio(
           aspectRatio: _imageAspectRatio,
           child: fp?.links?.image?.isNotEmpty == true
-              ? Image(
-                  image: CachedNetworkImageProvider(fp.links.image),
+              ? CachedNetworkImage(
+                  imageUrl: fp.links.image,
                   fit: BoxFit.cover,
                 )
               : null,

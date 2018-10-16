@@ -35,11 +35,9 @@ class _HomeDrawerHeaderState extends State<HomeDrawerHeader> {
                 children: <Widget>[
                   Expanded(
                     child: CircleAvatar(
+                      backgroundImage:
+                          CachedNetworkImageProvider(user.links.avatarBig),
                       minRadius: 20.0,
-                      child: CachedNetworkImage(
-                        imageUrl: user.links.avatarBig,
-                        fit: BoxFit.cover,
-                      ),
                     ),
                   ),
                   Padding(

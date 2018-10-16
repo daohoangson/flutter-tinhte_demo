@@ -4,7 +4,7 @@ import 'package:tinhte_api/thread.dart';
 
 import '../intl.dart';
 import '../widgets/posts.dart';
-import '../widgets/thread_image.dart';
+import '../widgets/image.dart';
 
 void pushThreadViewScreen(BuildContext context, Thread thread) {
   if (thread == null) return;
@@ -74,7 +74,7 @@ class ThreadViewScreen extends StatelessWidget {
           return <Widget>[
             SliverAppBar(
               expandedHeight:
-                  MediaQuery.of(context).size.width / ThreadImageAspectRatio -
+                  MediaQuery.of(context).size.width / kThreadImageAspectRatio -
                       kToolbarHeight,
               flexibleSpace: FlexibleSpaceBar(
                 background: ThreadImageWidget(

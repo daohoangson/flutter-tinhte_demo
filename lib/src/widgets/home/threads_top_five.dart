@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tinhte_api/thread.dart';
 
 import '../../screens/thread_view.dart';
-import '../thread_image.dart';
+import '../image.dart';
 import '../threads.dart';
 
 class ThreadsTopFiveWidget extends StatelessWidget {

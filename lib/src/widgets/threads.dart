@@ -8,7 +8,7 @@ import 'package:tinhte_api/thread.dart';
 import '../screens/thread_view.dart';
 import '_list_view.dart';
 import '_api.dart';
-import 'thread_image.dart';
+import 'image.dart';
 
 final numberFormatCompact = NumberFormat.compact();
 
