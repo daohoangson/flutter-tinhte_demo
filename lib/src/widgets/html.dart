@@ -26,7 +26,6 @@ class HtmlWidget extends StatelessWidget {
 
                 return true;
               },
-              textWidgetPadding: const EdgeInsets.all(10.0),
             ),
           ),
         ),
