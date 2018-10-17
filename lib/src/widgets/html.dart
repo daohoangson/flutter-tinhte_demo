@@ -44,21 +44,19 @@ class _WidgetFactory extends WidgetFactory {
 
   @override
   Widget buildImageWidget(NodeImage image) {
-    if (image.src?.isNotEmpty == true &&
-        image.height != null &&
-        image.width != null) {
-      final proxyUrl = getProxyUrl(
-        image.src,
-        MediaQuery.of(context).size.width,
-        imageWidth: image.width,
+    final mqd = MediaQuery.of(context);
+    final proxyUrl = getResizedUrl(
+      boxWidth: mqd.devicePixelRatio * mqd.size.width,
+      imageHeight: image.height,
+      imageUrl: image.src,
+      imageWidth: image.width,
+    );
+    if (proxyUrl != null) {
+      image = NodeImage(
+        height: image.height,
+        src: proxyUrl,
+        width: image.width,
       );
-      if (proxyUrl != image.src) {
-        return super.buildImageWidget(NodeImage(
-          height: image.height,
-          src: proxyUrl,
-          width: image.width,
-        ));
-      }
     }
 
     return super.buildImageWidget(image);

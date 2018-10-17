@@ -5,33 +5,60 @@ import 'package:tinhte_api/thread.dart';
 
 const kThreadImageAspectRatio = 594 / 368;
 
-Widget buildImageWidget(String imageUrl) => LayoutBuilder(
+const _imageUrlPhoto2Prefix = 'https://photo2.tinhte.vn/';
+const _imageUrlImageproxy = 'https://data.tinhte.vn/imageproxy';
+const _imageUrlApiDataPrefix =
+    'https://tinhte.vn/appforo/index.php?attachments';
+
+String getResizedUrl({
+  double boxWidth,
+  @required int imageHeight,
+  @required String imageUrl,
+  @required int imageWidth,
+  int proxyPixelsMax = 5000000,
+}) {
+  if (boxWidth == null || imageUrl == null) return null;
+  if (imageHeight == null || imageWidth == null) return null;
+
+  final isPhoto2 = imageUrl.startsWith(_imageUrlPhoto2Prefix);
+  final isApiData = imageUrl.startsWith(_imageUrlApiDataPrefix);
+  if (!isPhoto2 && !isApiData) return null;
+
+  /// finds the nearest power-of-2 value for proxy width
+  /// e.g. boxWidth = 1000 -> log2(boxWidth) = 9.xxx -> proxyWidth = 2^10 = 1024
+  final proxyWidth = pow(2, (log(boxWidth) / ln2).ceil());
+  if (proxyWidth >= imageWidth) return null;
+
+  if (proxyPixelsMax > 0) {
+    final imageRatio = imageWidth / imageHeight;
+    final proxyHeight = (proxyWidth / imageRatio).floor();
+    if (proxyHeight * proxyWidth > proxyPixelsMax) return null;
+  }
+
+  debugPrint("$imageUrl (${imageWidth}x$imageHeight) -> w=$proxyWidth");
+  if (isPhoto2) return "$_imageUrlImageproxy/${proxyWidth}x/$imageUrl";
+  if (isApiData) return "$imageUrl&max_width=$proxyWidth";
+  return null;
+}
+
+Widget _buildImageWidget(String imageUrl, {num imageHeight, num imageWidth}) =>
+    LayoutBuilder(
       builder: (context, bc) {
-        final scale = MediaQuery.of(context).devicePixelRatio;
-        final boxWidth = scale * bc.maxWidth;
-        final proxyUrl = getProxyUrl(imageUrl, boxWidth);
+        final proxyUrl = getResizedUrl(
+          boxWidth: bc.maxWidth.isInfinite
+              ? null
+              : MediaQuery.of(context).devicePixelRatio * bc.maxWidth,
+          imageHeight: imageHeight,
+          imageUrl: imageUrl,
+          imageWidth: imageWidth,
+        );
 
         return CachedNetworkImage(
-          imageUrl: proxyUrl,
+          imageUrl: proxyUrl ?? imageUrl,
           fit: BoxFit.cover,
         );
       },
     );
-
-String getProxyUrl(String imageUrl, double boxWidth,
-    {num imageWidth = 2048.0}) {
-  if (boxWidth == null || boxWidth >= imageWidth) return imageUrl;
-  if (imageUrl?.isNotEmpty != true) return imageUrl;
-  if (!imageUrl.startsWith('https://photo2.tinhte.vn/')) return imageUrl;
-
-  // find the nearest power of 2 proxy width
-  // e.g. boxWidth = 1000 -> log2OfBoxWidth = 9.xxx -> proxyWidth = 2^10 = 1024
-  final log2OfBoxWidth = log(boxWidth) / ln2;
-  final proxyWidth = pow(2, log2OfBoxWidth.ceil());
-  if (proxyWidth >= imageWidth) return imageUrl;
-
-  return "https://data.tinhte.vn/imageproxy/${proxyWidth}x/$imageUrl";
-}
 
 class ThreadImageWidget extends StatelessWidget {
   final int threadId;
@@ -61,7 +88,11 @@ class ThreadImageWidget extends StatelessWidget {
       );
     }
 
-    final img = buildImageWidget(link);
+    final img = _buildImageWidget(
+      link,
+      imageHeight: image.height,
+      imageWidth: image.width,
+    );
 
     return AspectRatio(
       aspectRatio: kThreadImageAspectRatio,
