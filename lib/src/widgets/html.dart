@@ -5,6 +5,21 @@ import 'package:tinhte_html_widget/widget_factory.dart';
 
 import 'image.dart';
 
+final _smilies = {
+  'Smile': '🙂',
+  'Wink': '😉',
+  'Frown': '😔',
+  'Mad': '😡',
+  'Confused': '😕',
+  'Cool': '😎',
+  'Stick Out Tongue': '😝',
+  'Big Grin': '😁',
+  'Eek!': '🤪',
+  'Oops!': '🙈',
+  'Roll Eyes': '🙄',
+  'Er... what?': '😳',
+};
+
 class HtmlWidget extends StatelessWidget {
   final String html;
   final bool isFirstPost;
@@ -32,12 +47,20 @@ class _WidgetFactory extends WidgetFactory {
           config: Config(
             baseUrl: Uri.parse('https://tinhte.vn'),
             colorHyperlink: Theme.of(context).accentColor,
-            parseElementCallback: (e) {
-              if (e.className == 'bbCodeBlock bbCodeQuote') {
-                return false;
+            parseElementCallback: (e, meta) {
+              switch (e.className) {
+                case 'bbCodeBlock bbCodeQuote':
+                  meta = lazySet(meta, isNotRenderable: true);
+                  break;
+                case 'smilie':
+                  final title = e.attributes['data-title'];
+                  if (_smilies.containsKey(title)) {
+                    meta = lazyAddNode(meta, text: _smilies[title]);
+                  }
+                  break;
               }
 
-              return true;
+              return meta;
             },
           ),
         );
