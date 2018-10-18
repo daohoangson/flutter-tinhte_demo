@@ -17,14 +17,13 @@ dependencies:
   crypto: ^2.0.6
   flutter:
     sdk: flutter
+  flutter_widget_from_html:
+    path: ./packages/flutter_widget_from_html
   intl: ^0.15.7
   shared_preferences: ^0.4.3
   timeago: ^2.0.8
   tinhte_api:
     path: ./packages/api
-  tinhte_html_widget:
-    path: ./packages/html_widget
-  url_launcher: ^4.0.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

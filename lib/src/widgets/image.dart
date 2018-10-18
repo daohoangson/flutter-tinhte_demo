@@ -44,10 +44,9 @@ String getResizedUrl({
 Widget _buildImageWidget(String imageUrl, {num imageHeight, num imageWidth}) =>
     LayoutBuilder(
       builder: (context, bc) {
+        final mqd = MediaQuery.of(context);
         final proxyUrl = getResizedUrl(
-          boxWidth: bc.maxWidth.isInfinite
-              ? null
-              : MediaQuery.of(context).devicePixelRatio * bc.maxWidth,
+          boxWidth: mqd.devicePixelRatio * mqd.size.width,
           imageHeight: imageHeight,
           imageUrl: imageUrl,
           imageWidth: imageWidth,

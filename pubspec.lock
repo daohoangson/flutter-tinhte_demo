@@ -95,6 +95,20 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_widget_from_html:
+    dependency: "direct main"
+    description:
+      path: "packages/flutter_widget_from_html"
+      relative: true
+    source: path
+    version: "0.0.0"
+  flutter_widget_from_html_core:
+    dependency: transitive
+    description:
+      path: "packages/flutter_widget_from_html/packages/core"
+      relative: true
+    source: path
+    version: "0.0.0"
   front_end:
     dependency: transitive
     description:
@@ -394,13 +408,6 @@ packages:
       relative: true
     source: path
     version: "0.0.0"
-  tinhte_html_widget:
-    dependency: "direct main"
-    description:
-      path: "packages/html_widget"
-      relative: true
-    source: path
-    version: "0.0.0"
   typed_data:
     dependency: transitive
     description:
@@ -409,7 +416,7 @@ packages:
     source: hosted
     version: "1.1.6"
   url_launcher:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: url_launcher
       url: "https://pub.dartlang.org"

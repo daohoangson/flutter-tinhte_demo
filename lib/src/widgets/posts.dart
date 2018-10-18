@@ -136,8 +136,8 @@ class _PostsWidgetState extends State<PostsWidget> {
       );
     }
 
-    final html = HtmlWidget(
-      html: post.postBodyHtml,
+    final html = TinhteHtmlWidget(
+      post.postBodyHtml,
       isFirstPost: post.postIsFirstPost,
     );
 
