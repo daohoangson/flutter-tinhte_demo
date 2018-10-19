@@ -26,7 +26,7 @@ void main() {
       });
 
       test('fails with wrong password', () {
-        expect(api.login(username, 'xxx'), throwsException);
+        expect(api.login(username, 'xxx'), throwsA(TypeMatcher<ApiError>()));
       });
     });
 
