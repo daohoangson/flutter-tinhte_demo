@@ -4,6 +4,31 @@ import 'src/_.dart';
 
 part 'post.g.dart';
 
+List<Post> decodePostsAndTheirReplies(List<dynamic> jsonPosts) {
+  List<Post> posts = List();
+
+  jsonPosts.forEach((jsonPost) {
+    final post = Post.fromJson(jsonPost);
+
+    if (post.postReplyTo != null) {
+      for (final _post in posts) {
+        if (_post.postId == post.postReplyTo) {
+          for (final _postReply in _post.postReplies) {
+            if (_postReply.postId == post.postId) {
+              _postReply.post = post;
+              return;
+            }
+          }
+        }
+      }
+    }
+
+    posts.add(post);
+  });
+
+  return posts;
+}
+
 @JsonSerializable(fieldRename: FieldRename.snake)
 class Post {
   int postAttachmentCount;
@@ -31,6 +56,12 @@ class Post {
 
   @JsonKey(toJson: none)
   PostPermissions permissions;
+
+  @JsonKey(toJson: none)
+  List<PostReply> postReplies;
+  bool postHasOtherReplies;
+  int postReplyTo;
+  int postReplyDepth;
 
   Post(this.postId);
   factory Post.fromJson(Map<String, dynamic> json) => _$PostFromJson(json);
@@ -66,4 +97,21 @@ class PostPermissions {
   PostPermissions();
   factory PostPermissions.fromJson(Map<String, dynamic> json) =>
       _$PostPermissionsFromJson(json);
+}
+
+@JsonSerializable(createToJson: false, fieldRename: FieldRename.snake)
+class PostReply {
+  int from;
+  String link;
+  int postId;
+  int postReplyCount;
+  int postReplyTo;
+  int to;
+
+  @JsonKey(ignore: true)
+  Post post;
+
+  PostReply();
+  factory PostReply.fromJson(Map<String, dynamic> json) =>
+      _$PostReplyFromJson(json);
 }
