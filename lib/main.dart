@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final api = Api('https://tinhte.vn/appforo/index.php', '', '');
-    api.httpHeaders['Api-Bb-Code-Chr'] = '1';
+    api.httpHeaders['Api-Bb-Code-Chr'] = '!youtube';
     api.httpHeaders['Api-Post-Tree'] = '1';
 
     return ApiInheritedWidget(

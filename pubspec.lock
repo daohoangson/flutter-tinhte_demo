@@ -101,14 +101,21 @@ packages:
       path: "packages/flutter_widget_from_html"
       relative: true
     source: path
-    version: "0.0.0"
+    version: "0.1.0"
   flutter_widget_from_html_core:
     dependency: transitive
     description:
       path: "packages/flutter_widget_from_html/packages/core"
       relative: true
     source: path
-    version: "0.0.0"
+    version: "0.1.0"
+  flutter_youtube_player:
+    dependency: transitive
+    description:
+      path: "packages/flutter_widget_from_html/packages/youtube_player"
+      relative: true
+    source: path
+    version: "0.1.0"
   front_end:
     dependency: transitive
     description:
@@ -443,6 +450,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.8"
+  video_player:
+    dependency: transitive
+    description:
+      name: video_player
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.7.2"
   vm_service_client:
     dependency: transitive
     description:
