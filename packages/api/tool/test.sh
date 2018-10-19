@@ -1,3 +1,3 @@
 #!/bin/sh
 
-exec pub run test -r expanded
+exec flutter packages pub run test -r expanded

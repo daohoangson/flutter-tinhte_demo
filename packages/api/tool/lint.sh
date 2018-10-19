@@ -2,6 +2,6 @@
 
 set -e
 
-dartfmt -w .
+flutter format .
 
-dartanalyzer .
+flutter analyze .

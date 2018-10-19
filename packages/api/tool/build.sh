@@ -1,3 +1,3 @@
 #!/bin/sh
 
-exec pub run build_runner build
+exec flutter packages pub run build_runner build
