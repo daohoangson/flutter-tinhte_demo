@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tinhte_api/api.dart';
 import 'package:tinhte_api/batch_controller.dart';
 import 'package:tinhte_api/oauth_token.dart';
+import 'package:tinhte_api/user.dart';
 
 import '../screens/login.dart';
 import '../constants.dart';
@@ -13,7 +14,7 @@ typedef void ApiAction(ApiData apiData);
 void prepareForApiAction(BuildContext context, ApiAction onReady,
     {ApiAction onError}) async {
   final apiData = ApiInheritedWidget.of(context);
-  final token = await apiData.tokenAsync;
+  final token = await apiData._getOrRefreshToken();
   if (token == null) {
     final loggedIn = await pushLoginScreen(context);
     if (loggedIn != true) {
@@ -43,36 +44,18 @@ class ApiInheritedWidget extends StatefulWidget {
   State<ApiInheritedWidget> createState() => ApiData();
 
   static ApiData of(BuildContext context) =>
-      (context.inheritFromWidgetOfExactType(_Inherited) as _Inherited).data;
+      (context.inheritFromWidgetOfExactType(_ApiDataInheritedWidget)
+              as _ApiDataInheritedWidget)
+          .data;
 }
 
 class ApiData extends State<ApiInheritedWidget> {
   ApiWrapper get api => ApiWrapper(this);
 
   OauthToken _token;
-
-  OauthToken get token => _token;
-
-  Future<OauthToken> get tokenAsync async {
-    if (_token == null) return Future.value(null);
-    if (_token.expiresAt.isAfter(DateTime.now())) return _token;
-
-    // TODO: handle concurrent request for token better
-    // with the current implementation, tokenAsync caller will get `null`
-    // while it's being refreshed...
-    final refreshToken = _token.refreshToken;
-    _token = null;
-
-    try {
-      debugPrint('Token has been expired, refreshing now...');
-      final newToken = await widget.api.refreshToken(refreshToken);
-      _setToken(newToken);
-
-      return newToken;
-    } on ApiError {
-      return Future.value(null);
-    }
-  }
+  final List<ApiTokenListener> _tokenListeners = List();
+  User _user;
+  final List<ApiUserListener> _userListeners = List();
 
   @override
   void initState() {
@@ -105,7 +88,63 @@ class ApiData extends State<ApiInheritedWidget> {
 
   @override
   Widget build(BuildContext context) =>
-      _Inherited(child: widget.child, data: this);
+      _ApiDataInheritedWidget(child: widget.child, data: this);
+
+  void addApiTokenListener(ApiTokenListener listener) {
+    _tokenListeners.add(listener);
+
+    // notify right away when a new listener is added
+    listener(_token);
+  }
+
+  void addApiUserListener(ApiUserListener listener) {
+    _userListeners.add(listener);
+
+    // notify right away when a new listener is added
+    _fetchUser().then((user) => listener(_token, user));
+  }
+
+  void removeApiTokenListener(ApiTokenListener listener) {
+    _tokenListeners.remove(listener);
+  }
+
+  void removeApiUserListener(ApiUserListener listener) {
+    _userListeners.remove(listener);
+  }
+
+  Future<User> _fetchUser() async {
+    if (_token == null) return Future.value(null);
+    if (_user != null) return _user;
+
+    final usersMe = "users/me?oauth_token=${_token.accessToken}";
+    final json = await api.getJson(usersMe);
+    final m = json as Map<String, dynamic>;
+    final newUser = m.containsKey('user') ? User.fromJson(m['user']) : null;
+    _setUser(newUser);
+
+    return newUser;
+  }
+
+  Future<OauthToken> _getOrRefreshToken() async {
+    if (_token == null) return Future.value(null);
+    if (_token.expiresAt.isAfter(DateTime.now())) return _token;
+
+    // TODO: handle concurrent request for token better
+    // with the current implementation, our caller will get `null`
+    // while it's being refreshed...
+    final refreshToken = _token.refreshToken;
+    _token = null;
+
+    try {
+      debugPrint('Token has been expired, refreshing now...');
+      final newToken = await widget.api.refreshToken(refreshToken);
+      _setToken(newToken);
+
+      return newToken;
+    } on ApiError {
+      return Future.value(null);
+    }
+  }
 
   void _setToken(OauthToken value) {
     SharedPreferences.getInstance().then((SharedPreferences prefs) {
@@ -120,7 +159,35 @@ class ApiData extends State<ApiInheritedWidget> {
           " expires at ${value?.expiresAt}");
     });
 
+    for (final listener in _tokenListeners) {
+      try {
+        listener(value);
+      } catch (e) {
+        // print debug info then ignore
+        print("Token listener $listener error: $e");
+      }
+    }
+
     setState(() => _token = value);
+
+    if (value != null) {
+      _fetchUser();
+    } else {
+      _setUser(null);
+    }
+  }
+
+  void _setUser(User value) {
+    for (final listener in _userListeners) {
+      try {
+        listener(_token, value);
+      } catch (e) {
+        // print debug info then ignore
+        print("User listener $listener error: $e");
+      }
+    }
+
+    setState(() => _user = value);
   }
 }
 
@@ -155,15 +222,19 @@ class ApiWrapper {
   }
 }
 
-class _Inherited extends InheritedWidget {
+class _ApiDataInheritedWidget extends InheritedWidget {
   final ApiData data;
 
-  _Inherited({
+  _ApiDataInheritedWidget({
     Widget child,
     this.data,
     Key key,
   }) : super(child: child, key: key);
 
   @override
-  bool updateShouldNotify(_Inherited old) => true;
+  bool updateShouldNotify(_ApiDataInheritedWidget old) => true;
 }
+
+typedef void ApiTokenListener(OauthToken token);
+
+typedef void ApiUserListener(OauthToken token, User user);

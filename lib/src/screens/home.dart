@@ -3,7 +3,7 @@ import 'package:tinhte_api/feature_page.dart';
 import 'package:tinhte_api/thread.dart';
 
 import '../widgets/_api.dart';
-import '../widgets/home/drawer_header.dart';
+import '../widgets/home/drawer.dart';
 import '../widgets/home/feature_pages.dart';
 import '../widgets/home/header.dart';
 import '../widgets/home/threads_top_five.dart';
@@ -30,7 +30,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     if (threadsTopFive.length == 0) fetch();
-    final token = ApiInheritedWidget.of(context).token;
 
     return Scaffold(
       appBar: AppBar(
@@ -62,13 +61,8 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       drawer: Drawer(
         child: NavigationWidget(
-          footer: token != null
-              ? ListTile(
-                  title: Text('Logout'),
-                  onTap: () => ApiInheritedWidget.of(context).api.logout(),
-                )
-              : null,
-          header: HomeDrawerHeader(token: token),
+          footer: HomeDrawerFooter(),
+          header: HomeDrawerHeader(),
           path: 'navigation?parent=0',
         ),
       ),
