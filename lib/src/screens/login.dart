@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tinhte_api/api.dart';
 
 import '../widgets/_api.dart';
 
@@ -103,7 +102,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               : Theme.of(context).accentColor,
                         ),
                       ),
-                      onPressed: _onPressed,
+                      onPressed: _login,
                     ),
                   ),
                 ],
@@ -115,35 +114,18 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  void _onPressed() {
+  void _login() {
     if (isLoggingIn) return;
 
     final form = _formKey.currentState;
     if (!form.validate()) return;
     form.save();
 
-    final aiw = ApiInheritedWidget.of(context);
-
-    aiw.api
+    setState(() => isLoggingIn = true);
+    ApiInheritedWidget.of(context).api
         .login(username, password)
-        .then((token) {
-          Navigator.pop(context, true);
-        })
-        .catchError((error) => _showDialogError(error))
+        .then((token) => Navigator.pop(context, true))
+        .catchError((e) => showApiErrorDialog(context, 'Login error', e))
         .whenComplete(() => setState(() => isLoggingIn = false));
-  }
-
-  void _showDialogError(error) {
-    final message = (error is ApiError ? error.message : error.toString());
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: new Text('Login error'),
-          content: new Text(message),
-        );
-      },
-    );
   }
 }

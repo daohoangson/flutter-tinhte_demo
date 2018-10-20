@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tinhte_api/api.dart';
 import 'package:tinhte_api/batch_controller.dart';
@@ -29,6 +29,15 @@ void prepareForApiAction(BuildContext context, ApiAction onReady,
     return;
   }
 }
+
+Future showApiErrorDialog(BuildContext context, String title, error) =>
+    showDialog(
+      context: context,
+      builder: (c) => AlertDialog(
+            title: Text(title),
+            content: Text(error is ApiError ? error.message : error.toString()),
+          ),
+    );
 
 class ApiInheritedWidget extends StatefulWidget {
   final Api api;
@@ -104,13 +113,11 @@ class ApiData extends State<ApiInheritedWidget> {
     _fetchUser().then((user) => listener(_token, user));
   }
 
-  void removeApiTokenListener(ApiTokenListener listener) {
-    _tokenListeners.remove(listener);
-  }
+  void removeApiTokenListener(ApiTokenListener listener) =>
+      _tokenListeners.remove(listener);
 
-  void removeApiUserListener(ApiUserListener listener) {
-    _userListeners.remove(listener);
-  }
+  void removeApiUserListener(ApiUserListener listener) =>
+      _userListeners.remove(listener);
 
   Future<User> _fetchUser() async {
     if (_token == null) return Future.value(null);
@@ -164,7 +171,7 @@ class ApiData extends State<ApiInheritedWidget> {
         listener(value);
       } catch (e) {
         // print debug info then ignore
-        print("Token listener $listener error: $e");
+        debugPrint("Token listener $listener error: $e");
       }
     }
 
@@ -183,7 +190,7 @@ class ApiData extends State<ApiInheritedWidget> {
         listener(_token, value);
       } catch (e) {
         // print debug info then ignore
-        print("User listener $listener error: $e");
+        debugPrint("User listener $listener error: $e");
       }
     }
 

@@ -23,7 +23,6 @@ class ThreadViewScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final body = PostsWidget(
-      infinityScrolling: false,
       path: thread.links.posts + '&limit=100',
       thread: thread,
     );
