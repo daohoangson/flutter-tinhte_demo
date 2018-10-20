@@ -23,26 +23,30 @@ Future _sendRequest(Client client, String method, String url,
 
   _latestResponse = await Response.fromStream(await client.send(request));
 
+  print("$method $url -> $_latestResponse (${_latestResponse.statusCode})");
+
   if (parseJson) {
-    _throwExceptionOnError(_latestResponse);
-    return json.decode(_latestResponse.body);
+    final decodedJson = json.decode(_latestResponse.body);
+    _throwExceptionOnError(_latestResponse, decodedJson);
+    return decodedJson;
   }
 
   return _latestResponse;
 }
 
-Response _throwExceptionOnError(Response response) {
+void _throwExceptionOnError(Response response, j) {
   if (response.statusCode < 400) {
-    return response;
+    return;
   }
 
-  Map j = json.decode(response.body);
-  if (j.containsKey('error_description')) {
-    throw ApiError(message: j['error_description']);
-  }
-  if (j.containsKey('errors')) {
-    final errors = List<String>.from(j['errors']);
-    throw ApiError(messages: errors);
+  if (j is Map) {
+    if (j.containsKey('error_description')) {
+      throw ApiError(message: j['error_description']);
+    }
+    if (j.containsKey('errors')) {
+      final errors = List<String>.from(j['errors']);
+      throw ApiError(messages: errors);
+    }
   }
 
   throw ApiError();
