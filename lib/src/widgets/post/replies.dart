@@ -26,23 +26,24 @@ class _PostRepliesWidget extends StatefulWidget {
 class _PostRepliesWidgetState extends State<_PostRepliesWidget> {
   final List<Post> newPosts = List();
 
-  NewPostListener _listener;
-
-  @override
-  void initState() {
-    super.initState();
-    _listener = (post) => setState(() => newPosts.insert(0, post));
-  }
+  VoidCallback _removeListener;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    PostListInheritedWidget.of(context).addListener(_listener);
+
+    if (_removeListener != null) _removeListener();
+    _removeListener = PostListInheritedWidget.of(context)
+        .addListener((post) => setState(() => newPosts.insert(0, post)));
   }
 
   @override
   void deactivate() {
-    PostListInheritedWidget.of(context).removeListener(_listener);
+    if (_removeListener != null) {
+      _removeListener();
+      _removeListener = null;
+    }
+
     super.deactivate();
   }
 

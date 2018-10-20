@@ -99,25 +99,30 @@ class ApiData extends State<ApiInheritedWidget> {
   Widget build(BuildContext context) =>
       _ApiDataInheritedWidget(child: widget.child, data: this);
 
-  void addApiTokenListener(ApiTokenListener listener) {
+  VoidCallback addApiTokenListener(ApiTokenListener listener) {
     _tokenListeners.add(listener);
 
     // notify right away when a new listener is added
     listener(_token);
+
+    return () => _tokenListeners.remove(listener);
   }
 
-  void addApiUserListener(ApiUserListener listener) {
+  VoidCallback addApiUserListener(ApiUserListener listener) {
+    var __removed = false;
     _userListeners.add(listener);
 
     // notify right away when a new listener is added
-    _fetchUser().then((user) => listener(_token, user));
-  }
+    _fetchUser().then((user) {
+      if (__removed) return;
+      listener(_token, user);
+    });
 
-  void removeApiTokenListener(ApiTokenListener listener) =>
-      _tokenListeners.remove(listener);
-
-  void removeApiUserListener(ApiUserListener listener) =>
+    return () {
+      __removed = true;
       _userListeners.remove(listener);
+    };
+  }
 
   Future<User> _fetchUser() async {
     if (_token == null) return Future.value(null);

@@ -20,27 +20,29 @@ class _PostListWidgetState extends State<_PostListWidget> {
 
   Post _firstPost;
   bool _isFetching = false;
-  NewPostListener _listener;
+  VoidCallback _removeListener;
   String _url;
 
   _PostListWidgetState(this._url, this._firstPost);
 
   @override
-  void initState() {
-    super.initState();
-    _listener = (post) => setState(() => posts.insert(0, post));
-  }
-
-  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    PostListInheritedWidget.of(context).addListener(_listener);
+
+    if (_removeListener != null) _removeListener();
+    _removeListener = PostListInheritedWidget.of(context)
+        .addListener((post) => setState(() => posts.insert(0, post)));
+
     if (posts.length == 0) fetch();
   }
 
   @override
   void deactivate() {
-    PostListInheritedWidget.of(context).removeListener(_listener);
+    if (_removeListener != null) {
+      _removeListener();
+      _removeListener = null;
+    }
+
     super.deactivate();
   }
 

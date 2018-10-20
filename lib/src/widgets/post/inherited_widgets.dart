@@ -13,7 +13,11 @@ class PostListInheritedWidget extends InheritedWidget {
   @override
   bool updateShouldNotify(PostListInheritedWidget old) => true;
 
-  void addListener(NewPostListener listener) => _listeners.add(listener);
+  VoidCallback addListener(NewPostListener listener) {
+    _listeners.add(listener);
+
+    return () => _listeners.remove(listener);
+  }
 
   void notifyListeners(Post post) => _listeners.forEach((listener) {
         try {
@@ -23,8 +27,6 @@ class PostListInheritedWidget extends InheritedWidget {
           debugPrint("Token listener $listener error: $e");
         }
       });
-
-  void removeListener(NewPostListener listener) => _listeners.remove(listener);
 
   static PostListInheritedWidget of(BuildContext context) =>
       context.inheritFromWidgetOfExactType(PostListInheritedWidget);

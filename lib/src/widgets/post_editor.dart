@@ -28,28 +28,29 @@ class PostEditor extends StatefulWidget {
 class _PostEditorState extends State<PostEditor> {
   final formKey = GlobalKey<FormState>();
 
-  ApiUserListener _listener;
   bool _isPosting = false;
   String _postBody;
+  VoidCallback _removeListener;
   User _user;
 
   _PostEditorState(this._postBody);
 
   @override
-  void initState() {
-    super.initState();
-    _listener = (newToken, newUser) => setState(() => _user = newUser);
-  }
-
-  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    ApiInheritedWidget.of(context).addApiUserListener(_listener);
+
+    if (_removeListener != null) _removeListener();
+    _removeListener = ApiInheritedWidget.of(context).addApiUserListener(
+        (newToken, newUser) => setState(() => _user = newUser));
   }
 
   @override
   void deactivate() {
-    ApiInheritedWidget.of(context).removeApiUserListener(_listener);
+    if (_removeListener != null) {
+      _removeListener();
+      _removeListener = null;
+    }
+
     super.deactivate();
   }
 

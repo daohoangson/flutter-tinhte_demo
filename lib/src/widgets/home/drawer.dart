@@ -14,28 +14,29 @@ class HomeDrawerHeader extends StatefulWidget {
 }
 
 class _HomeDrawerHeaderState extends State<HomeDrawerHeader> {
-  ApiUserListener apiUserListener;
-  OauthToken token;
-  User user;
-
-  @override
-  void initState() {
-    super.initState();
-    apiUserListener = (newToken, newUser) => setState(() {
-          token = newToken;
-          user = newUser;
-        });
-  }
+  VoidCallback _removeListener;
+  OauthToken _token;
+  User _user;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    ApiInheritedWidget.of(context).addApiUserListener(apiUserListener);
+
+    if (_removeListener != null) _removeListener();
+    _removeListener = ApiInheritedWidget.of(context)
+        .addApiUserListener((newToken, newUser) => setState(() {
+              _token = newToken;
+              _user = newUser;
+            }));
   }
 
   @override
   void deactivate() {
-    ApiInheritedWidget.of(context).removeApiUserListener(apiUserListener);
+    if (_removeListener != null) {
+      _removeListener();
+      _removeListener = null;
+    }
+
     super.deactivate();
   }
 
@@ -44,12 +45,12 @@ class _HomeDrawerHeaderState extends State<HomeDrawerHeader> {
         decoration: BoxDecoration(
           color: Theme.of(context).highlightColor,
         ),
-        child: token == null
+        child: _token == null
             ? GestureDetector(
                 child: Text('Login'),
                 onTap: () => pushLoginScreen(context),
               )
-            : user == null
+            : _user == null
                 ? Text('Welcome back, we are loading user profile...')
                 : _buildVisitorPanel(),
       );
@@ -59,7 +60,8 @@ class _HomeDrawerHeaderState extends State<HomeDrawerHeader> {
         children: <Widget>[
           Expanded(
             child: CircleAvatar(
-              backgroundImage: CachedNetworkImageProvider(user.links.avatarBig),
+              backgroundImage:
+                  CachedNetworkImageProvider(_user.links.avatarBig),
               minRadius: 20.0,
             ),
           ),
@@ -71,14 +73,14 @@ class _HomeDrawerHeaderState extends State<HomeDrawerHeader> {
               text: TextSpan(
                 children: <TextSpan>[
                   TextSpan(
-                    text: user.username,
+                    text: _user.username,
                     style: TextStyle(
                       color: Theme.of(context).accentColor,
                       fontSize: 18.0,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  TextSpan(text: " ${user.rank.rankName}"),
+                  TextSpan(text: " ${_user.rank.rankName}"),
                 ],
               ),
             ),
@@ -95,29 +97,30 @@ class HomeDrawerFooter extends StatefulWidget {
 }
 
 class _HomeDrawerFooterState extends State<HomeDrawerFooter> {
-  ApiTokenListener apiTokenListener;
-  OauthToken token;
-
-  @override
-  void initState() {
-    super.initState();
-    apiTokenListener = (newToken) => setState(() => token = newToken);
-  }
+  VoidCallback _removeListener;
+  OauthToken _token;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    ApiInheritedWidget.of(context).addApiTokenListener(apiTokenListener);
+
+    if (_removeListener != null) _removeListener();
+    _removeListener = ApiInheritedWidget.of(context)
+        .addApiTokenListener((newToken) => setState(() => _token = newToken));
   }
 
   @override
   void deactivate() {
-    ApiInheritedWidget.of(context).removeApiTokenListener(apiTokenListener);
+    if (_removeListener != null) {
+      _removeListener();
+      _removeListener = null;
+    }
+
     super.deactivate();
   }
 
   @override
-  Widget build(BuildContext context) => token != null
+  Widget build(BuildContext context) => _token != null
       ? ListTile(
           title: Text('Logout'),
           onTap: () => ApiInheritedWidget.of(context).api.logout(),
