@@ -9,6 +9,8 @@ import 'package:tinhte_api/user.dart';
 import '../screens/login.dart';
 import '../constants.dart';
 
+final _oauthTokenRegEx = RegExp(r'oauth_token=.+(&|$)');
+
 typedef void ApiAction(ApiData apiData);
 
 void prepareForApiAction(BuildContext context, ApiAction onReady,
@@ -230,7 +232,7 @@ class ApiWrapper {
     final token = apiData._token;
     final accessToken = token?.accessToken ?? api.buildOneTimeToken();
     final connector = path.contains('?') ? '&' : '?';
-    return "$path${connector}oauth_token=$accessToken";
+    return "${path.replaceAll(_oauthTokenRegEx, '')}${connector}oauth_token=$accessToken";
   }
 }
 

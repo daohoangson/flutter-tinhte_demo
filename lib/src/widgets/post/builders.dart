@@ -41,6 +41,8 @@ Widget buildPosterInfo(
     Padding(
       padding: const EdgeInsets.symmetric(horizontal: kPaddingHorizontal),
       child: RichText(
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
         text: TextSpan(
           children: <TextSpan>[
             TextSpan(

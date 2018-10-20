@@ -49,9 +49,15 @@ class _PostListWidgetState extends State<_PostListWidget> {
   @override
   Widget build(BuildContext context) => ListView.builder(
         controller: PrimaryScrollController.of(context),
-        itemBuilder: (context, i) =>
-            i == 0 ? _buildPostFirst(_firstPost) : _buildPostRoot(posts[i - 1]),
-        itemCount: 1 + posts.length,
+        itemBuilder: (context, i) {
+          if (_firstPost != null) {
+            i--;
+            if (i == -1) return _buildPostFirst(_firstPost);
+          }
+
+          return _buildPostRoot(posts[i]);
+        },
+        itemCount: (_firstPost != null ? 1 : 0) + posts.length,
       );
 
   void fetch() async {

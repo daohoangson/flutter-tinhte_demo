@@ -35,7 +35,6 @@ String getResizedUrl({
     if (proxyHeight * proxyWidth > proxyPixelsMax) return null;
   }
 
-  debugPrint("$imageUrl (${imageWidth}x$imageHeight) -> w=$proxyWidth");
   if (isPhoto2) return "$_imageUrlImageproxy/${proxyWidth}x/$imageUrl";
   if (isApiData) return "$imageUrl&max_width=$proxyWidth";
   return null;
