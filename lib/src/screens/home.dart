@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tinhte_api/feature_page.dart';
 import 'package:tinhte_api/thread.dart';
 
-import '../widgets/_api.dart';
+import '../api.dart';
 import '../widgets/home/drawer.dart';
 import '../widgets/home/feature_pages.dart';
 import '../widgets/home/header.dart';
@@ -73,48 +73,49 @@ class _HomeScreenState extends State<HomeScreen> {
     if (isFetching) return;
     setState(() => isFetching = true);
 
-    final api = ApiInheritedWidget.of(context).api;
-    final b = api.newBatch();
-
-    api.getJson('lists/1/threads').then((json) {
-      final List<Thread> newThreads = List();
-
-      final jsonMap = json as Map<String, dynamic>;
-      if (jsonMap.containsKey('threads')) {
-        final jsonThreads = json['threads'] as List<dynamic>;
-        jsonThreads.forEach((j) => newThreads.add(Thread.fromJson(j)));
-      }
-
-      setState(() {
-        if (threadsTopFive.length == 0) {
-          threadsTopFive.addAll(newThreads.getRange(0, 5));
-          threadsBelow.addAll(newThreads.getRange(5, newThreads.length));
-        } else {
-          threadsBelow.addAll(newThreads);
-        }
-      });
-    });
-
-    api.getJson('feature-pages?order=7_days_thread_count_desc').then((json) {
-      final List<FeaturePage> newPages = List();
-
-      final jsonMap = json as Map<String, dynamic>;
-      if (jsonMap.containsKey('pages')) {
-        final jsonPages = json['pages'] as List<dynamic>;
-        jsonPages.forEach((j) {
-          final fp = FeaturePage.fromJson(j);
-          if (fp?.links?.image?.isNotEmpty != true) {
-            return;
+    apiBatch(this, () {
+      apiGet(
+        this,
+        'lists/1/threads',
+        onSuccess: (jsonMap) {
+          final List<Thread> newThreads = List();
+          if (jsonMap.containsKey('threads')) {
+            final jsonThreads = jsonMap['threads'] as List<dynamic>;
+            jsonThreads.forEach((j) => newThreads.add(Thread.fromJson(j)));
           }
 
-          newPages.add(fp);
-        });
-      }
+          setState(() {
+            if (threadsTopFive.length == 0) {
+              threadsTopFive.addAll(newThreads.getRange(0, 5));
+              threadsBelow.addAll(newThreads.getRange(5, newThreads.length));
+            } else {
+              threadsBelow.addAll(newThreads);
+            }
+          });
+        },
+      );
 
-      setState(() => featurePages.addAll(newPages));
-    });
+      apiGet(
+        this,
+        'feature-pages?order=7_days_thread_count_desc',
+        onSuccess: (jsonMap) {
+          final List<FeaturePage> newPages = List();
 
-    await b.fetch();
-    setState(() => isFetching = false);
+          if (jsonMap.containsKey('pages')) {
+            final jsonPages = jsonMap['pages'] as List<dynamic>;
+            jsonPages.forEach((j) {
+              final fp = FeaturePage.fromJson(j);
+              if (fp?.links?.image?.isNotEmpty != true) {
+                return;
+              }
+
+              newPages.add(fp);
+            });
+          }
+
+          setState(() => featurePages.addAll(newPages));
+        },
+      );
+    }, onSuccess: (fetched) => setState(() => isFetching = false));
   }
 }

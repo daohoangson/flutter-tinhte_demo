@@ -82,26 +82,6 @@ class TinhteWidgetFactory extends WidgetFactory {
   }
 
   @override
-  Widget buildImageWidget(core.NodeImage image) {
-    final mqd = MediaQuery.of(context);
-    final proxyUrl = getResizedUrl(
-      boxWidth: mqd.devicePixelRatio * mqd.size.width,
-      imageHeight: image.height,
-      imageUrl: image.src,
-      imageWidth: image.width,
-    );
-    if (proxyUrl != null) {
-      image = core.NodeImage(
-        height: image.height,
-        src: proxyUrl,
-        width: image.width,
-      );
-    }
-
-    return super.buildImageWidget(image);
-  }
-
-  @override
   core.NodeMetadata collectMetadata(dom.Element e) {
     var meta = super.collectMetadata(e);
 

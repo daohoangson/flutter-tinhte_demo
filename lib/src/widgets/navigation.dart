@@ -4,7 +4,7 @@ import 'package:tinhte_api/navigation.dart' as navigation;
 
 import '../screens/forum_view.dart';
 import '../screens/navigation_element_view.dart';
-import '_api.dart';
+import '../api.dart';
 import '_list_view.dart';
 
 class NavigationWidget extends StatefulWidget {
@@ -55,23 +55,19 @@ class _NavigationWidgetState extends State<NavigationWidget> {
   }
 
   void fetch() async {
-    if (hasFetched) {
-      return;
-    }
+    if (hasFetched) return;
     setState(() => hasFetched = true);
 
-    List<navigation.Element> newElements = List();
+    apiGet(this, widget.path, onSuccess: (jsonMap) {
+      List<navigation.Element> newElements = List();
 
-    final api = ApiInheritedWidget.of(context).api;
-    final json = await api.getJson(widget.path);
-    final jsonMap = json as Map<String, dynamic>;
-    if (jsonMap.containsKey('elements')) {
-      final jsonElements = json['elements'] as List<dynamic>;
-      jsonElements
-          .forEach((j) => newElements.add(navigation.Element.fromJson(j)));
-    }
+      if (jsonMap.containsKey('elements')) {
+        final list = jsonMap['elements'] as List;
+        list.forEach((j) => newElements.add(navigation.Element.fromJson(j)));
+      }
 
-    setState(() => elements.addAll(newElements));
+      setState(() => elements.addAll(newElements));
+    });
   }
 
   Widget _buildRow(navigation.Element e) => ListTile(

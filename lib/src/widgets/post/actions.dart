@@ -11,6 +11,7 @@ class _PostActionsWidget extends StatefulWidget {
 
 class _PostActionsWidgetState extends State<_PostActionsWidget> {
   bool isShowingEditor = false;
+  bool isLiking = false;
   bool postIsLiked;
   int postLikeCount;
 
@@ -30,13 +31,13 @@ class _PostActionsWidgetState extends State<_PostActionsWidget> {
         buildButton(
           context,
           postIsLiked ? 'Unlike' : 'Like',
-          () => postIsLiked ? _unlikePost() : _likePost(),
           count: postLikeCount,
+          onTap: isLiking ? null : (postIsLiked ? _unlikePost : _likePost),
         ),
         buildButton(
           context,
           'Reply',
-          () => setState(() => isShowingEditor = true),
+          onTap: () => setState(() => isShowingEditor = true),
         ),
       ],
     );
@@ -56,21 +57,27 @@ class _PostActionsWidgetState extends State<_PostActionsWidget> {
     );
   }
 
-  _likePost() => prepareForApiAction(context, (apiData) async {
-        await apiData.api.postJson(widget.post.links.likes);
+  _likePost() => prepareForApiAction(this, () {
+        if (isLiking) return;
+        setState(() => isLiking = true);
 
-        setState(() {
-          postIsLiked = true;
-          postLikeCount++;
-        });
+        apiPost(this, widget.post.links.likes,
+            onSuccess: (_) => setState(() {
+                  postIsLiked = true;
+                  postLikeCount++;
+                }),
+            onComplete: () => setState(() => isLiking = false));
       });
 
-  _unlikePost() => prepareForApiAction(context, (apiData) async {
-        await apiData.api.deleteJson(widget.post.links.likes);
+  _unlikePost() => prepareForApiAction(this, () {
+        if (isLiking) return;
+        setState(() => isLiking = true);
 
-        setState(() {
-          postIsLiked = false;
-          if (postLikeCount > 0) postLikeCount--;
-        });
+        apiDelete(this, widget.post.links.likes,
+            onSuccess: (_) => setState(() {
+                  postIsLiked = false;
+                  if (postLikeCount > 0) postLikeCount--;
+                }),
+            onComplete: () => setState(() => isLiking = false));
       });
 }

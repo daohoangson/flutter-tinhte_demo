@@ -4,7 +4,7 @@ import 'package:tinhte_api/oauth_token.dart';
 import 'package:tinhte_api/user.dart';
 
 import '../../screens/login.dart';
-import '../_api.dart';
+import '../../api.dart';
 
 class HomeDrawerHeader extends StatefulWidget {
   HomeDrawerHeader({Key key}) : super(key: key);
@@ -123,7 +123,7 @@ class _HomeDrawerFooterState extends State<HomeDrawerFooter> {
   Widget build(BuildContext context) => _token != null
       ? ListTile(
           title: Text('Logout'),
-          onTap: () => ApiInheritedWidget.of(context).api.logout(),
+          onTap: () => ApiInheritedWidget.withoutInheritance(context).logout(),
         )
       : Container(height: 0.0, width: 0.0);
 }

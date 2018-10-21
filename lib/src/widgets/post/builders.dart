@@ -4,25 +4,34 @@ const kPaddingHorizontal = 10.0;
 
 Widget buildButton(
   BuildContext context,
-  String text,
-  GestureTapCallback onTap, {
+  String text, {
   Color color,
   int count = 0,
-}) =>
-    InkWell(
-      onTap: onTap,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-            horizontal: kPaddingHorizontal, vertical: 5.0),
-        child: Text(
-          (count > 0 ? "$count " : '') + text,
-          style: TextStyle(
-            color: color ?? Theme.of(context).accentColor,
-            fontSize: 12.0,
-          ),
-        ),
+  GestureTapCallback onTap,
+}) {
+  Widget button = Padding(
+    padding: const EdgeInsets.symmetric(
+        horizontal: kPaddingHorizontal, vertical: 5.0),
+    child: Text(
+      (count > 0 ? "$count " : '') + text,
+      style: TextStyle(
+        color: onTap != null
+            ? color ?? Theme.of(context).accentColor
+            : color ?? Theme.of(context).disabledColor,
+        fontSize: 12.0,
       ),
+    ),
+  );
+
+  if (onTap != null) {
+    button = InkWell(
+      onTap: onTap,
+      child: button,
     );
+  }
+
+  return button;
+}
 
 Widget buildPosterCircleAvatar(String url, {bool isPostReply = false}) =>
     Padding(

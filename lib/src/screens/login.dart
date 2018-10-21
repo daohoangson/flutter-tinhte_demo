@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../widgets/_api.dart';
+import '../api.dart';
 
 Future<dynamic> pushLoginScreen(BuildContext context) {
   return Navigator.push(
@@ -122,10 +122,9 @@ class _LoginScreenState extends State<LoginScreen> {
     form.save();
 
     setState(() => isLoggingIn = true);
-    ApiInheritedWidget.of(context).api
-        .login(username, password)
-        .then((token) => Navigator.pop(context, true))
-        .catchError((e) => showApiErrorDialog(context, 'Login error', e))
-        .whenComplete(() => setState(() => isLoggingIn = false));
+    login(this, username, password,
+        onSuccess: (_) => Navigator.pop(context, true),
+        onError: (e) => showApiErrorDialog(context, e, title: 'Login error'),
+        onComplete: () => setState(() => isLoggingIn = false));
   }
 }

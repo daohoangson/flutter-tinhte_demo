@@ -2,37 +2,82 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tinhte_api/api.dart';
-import 'package:tinhte_api/batch_controller.dart';
 import 'package:tinhte_api/oauth_token.dart';
 import 'package:tinhte_api/user.dart';
 
-import '../screens/login.dart';
-import '../constants.dart';
+import 'screens/login.dart';
+import 'constants.dart';
 
 final _oauthTokenRegEx = RegExp(r'oauth_token=.+(&|$)');
 
-typedef void ApiAction(ApiData apiData);
+Future apiBatch(State state, VoidCallback fetches,
+    {ApiOnSuccess<bool> onSuccess,
+    ApiOnError onError,
+    VoidCallback onComplete}) {
+  final apiData = ApiInheritedWidget.withoutInheritance(state.context);
+  final batch = apiData._api.newBatch(path: apiData._appendOauthToken('batch'));
 
-void prepareForApiAction(BuildContext context, ApiAction onReady,
-    {ApiAction onError}) async {
-  final apiData = ApiInheritedWidget.of(context);
+  fetches();
+
+  return _setupApiFuture(state, batch.fetch(), onSuccess, onError, onComplete);
+}
+
+Future apiDelete(State state, path,
+    {VoidCallback onComplete, ApiOnError onError, ApiOnJsonMap onSuccess}) {
+  final apiData = ApiInheritedWidget.withoutInheritance(state.context);
+  final future = apiData._api.deleteJson(apiData._appendOauthToken(path));
+  return _setupApiJsonHandlers(state, future, onSuccess, onError, onComplete);
+}
+
+Future apiGet(State state, path,
+    {VoidCallback onComplete, ApiOnError onError, ApiOnJsonMap onSuccess}) {
+  final apiData = ApiInheritedWidget.withoutInheritance(state.context);
+  final future = apiData._api.getJson(apiData._appendOauthToken(path));
+  return _setupApiJsonHandlers(state, future, onSuccess, onError, onComplete);
+}
+
+Future apiPost(State state, path,
+    {Map<String, String> bodyFields,
+    VoidCallback onComplete,
+    ApiOnError onError,
+    ApiOnJsonMap onSuccess}) {
+  final apiData = ApiInheritedWidget.withoutInheritance(state.context);
+  final future = apiData._api
+      .postJson(apiData._appendOauthToken(path), bodyFields: bodyFields);
+  return _setupApiJsonHandlers(state, future, onSuccess, onError, onComplete);
+}
+
+Future login(State state, String username, String password,
+    {VoidCallback onComplete,
+    ApiOnError onError,
+    ApiOnSuccess<OauthToken> onSuccess}) {
+  final apiData = ApiInheritedWidget.withoutInheritance(state.context);
+  final future = apiData._api.login(username, password).then((token) {
+    apiData._setToken(token);
+    return token;
+  });
+  return _setupApiFuture(state, future, onSuccess, onError, onComplete);
+}
+
+void prepareForApiAction(State state, VoidCallback onReady,
+    {VoidCallback onError}) async {
+  final apiData = ApiInheritedWidget.withoutInheritance(state.context);
   final token = await apiData._getOrRefreshToken();
+  if (!state.mounted) return;
+
   if (token == null) {
-    final loggedIn = await pushLoginScreen(context);
+    final loggedIn = await pushLoginScreen(state.context);
     if (loggedIn != true) {
-      if (onError != null) onError(apiData);
+      if (onError != null) onError();
       return;
     }
   }
 
-  try {
-    onReady(apiData);
-  } on ApiError {
-    return;
-  }
+  onReady();
 }
 
-Future showApiErrorDialog(BuildContext context, String title, error) =>
+Future showApiErrorDialog(BuildContext context, error,
+        {String title = 'Api Error'}) =>
     showDialog(
       context: context,
       builder: (c) => AlertDialog(
@@ -41,15 +86,69 @@ Future showApiErrorDialog(BuildContext context, String title, error) =>
           ),
     );
 
+Future _setupApiFuture<T>(State state, Future<T> future,
+    ApiOnSuccess<T> onSuccess, ApiOnError onError, VoidCallback onComplete) {
+  Future f = future;
+
+  if (onSuccess != null) {
+    f = f.then((data) {
+      if (!state.mounted) return;
+      if (onSuccess == null) return;
+      return onSuccess(data);
+    });
+  }
+
+  f = f.catchError((error) {
+    if (!state.mounted) return;
+    if (onError != null) return onError(error);
+    showApiErrorDialog(state.context, error);
+  });
+
+  if (onComplete != null) {
+    f.whenComplete(() {
+      if (!state.mounted) return;
+      if (onComplete == null) return;
+      onComplete();
+    });
+  }
+
+  return f;
+}
+
+Future _setupApiJsonHandlers(State state, Future future, ApiOnJsonMap onSuccess,
+    ApiOnError onError, VoidCallback onComplete) {
+  final _onSuccess = onSuccess != null
+      ? (json) {
+          if (json is! Map) {
+            debugPrint("Api response is not a Map: ${json.toString()}");
+            return;
+          }
+          onSuccess(json);
+        }
+      : null;
+
+  return _setupApiFuture<dynamic>(
+      state, future, _onSuccess, onError, onComplete);
+}
+
+typedef void ApiOnSuccess<T>(T data);
+typedef void ApiOnJsonMap(Map jsonMap);
+typedef void ApiOnError(error);
+
 class ApiInheritedWidget extends StatefulWidget {
   final Api api;
   final Widget child;
 
   ApiInheritedWidget({
     Key key,
-    @required this.api,
+    @required String apiRoot,
     @required this.child,
-  }) : super(key: key);
+    @required String clientId,
+    @required String clientSecret,
+  })  : api = Api(apiRoot, clientId, clientSecret)
+          ..httpHeaders['Api-Bb-Code-Chr'] = '!youtube'
+          ..httpHeaders['Api-Post-Tree'] = '1',
+        super(key: key);
 
   @override
   State<ApiInheritedWidget> createState() => ApiData();
@@ -58,10 +157,15 @@ class ApiInheritedWidget extends StatefulWidget {
       (context.inheritFromWidgetOfExactType(_ApiDataInheritedWidget)
               as _ApiDataInheritedWidget)
           .data;
+
+  static ApiData withoutInheritance(BuildContext context) =>
+      (context.ancestorWidgetOfExactType(_ApiDataInheritedWidget)
+              as _ApiDataInheritedWidget)
+          .data;
 }
 
 class ApiData extends State<ApiInheritedWidget> {
-  ApiWrapper get api => ApiWrapper(this);
+  Api get _api => widget.api;
 
   OauthToken _token;
   final List<ApiTokenListener> _tokenListeners = List();
@@ -126,17 +230,30 @@ class ApiData extends State<ApiInheritedWidget> {
     };
   }
 
+  void logout() => _setToken(null);
+
+  String _appendOauthToken(String path) {
+    final accessToken = _token?.accessToken ?? _api.buildOneTimeToken();
+    final connector = path.contains('?') ? '&' : '?';
+    return "${path.replaceAll(_oauthTokenRegEx, '')}${connector}oauth_token=$accessToken";
+  }
+
   Future<User> _fetchUser() async {
-    if (_token == null) return Future.value(null);
+    if (_token == null) return null;
     if (_user != null) return _user;
 
     final usersMe = "users/me?oauth_token=${_token.accessToken}";
-    final json = await api.getJson(usersMe);
-    final m = json as Map<String, dynamic>;
-    final newUser = m.containsKey('user') ? User.fromJson(m['user']) : null;
-    _setUser(newUser);
+    try {
+      final json = await widget.api.getJson(usersMe);
+      final m = json as Map;
+      final newUser = m.containsKey('user') ? User.fromJson(m['user']) : null;
+      _setUser(newUser);
 
-    return newUser;
+      return newUser;
+    } catch (e) {
+      debugPrint("_fetchUser encountered an error: ${e.toString()}");
+      return null;
+    }
   }
 
   Future<OauthToken> _getOrRefreshToken() async {
@@ -202,37 +319,6 @@ class ApiData extends State<ApiInheritedWidget> {
     }
 
     setState(() => _user = value);
-  }
-}
-
-class ApiWrapper {
-  final ApiData apiData;
-  final Api api;
-
-  ApiWrapper(this.apiData) : api = apiData.widget.api;
-
-  Future<dynamic> deleteJson(path) => api.deleteJson(_appendOauthToken(path));
-
-  Future<dynamic> getJson(path) => api.getJson(_appendOauthToken(path));
-
-  Future<OauthToken> login(String username, String password) =>
-      api.login(username, password).then((token) {
-        apiData._setToken(token);
-        return token;
-      });
-
-  logout() => apiData._setToken(null);
-
-  BatchController newBatch() => api.newBatch(path: _appendOauthToken('batch'));
-
-  Future<dynamic> postJson(path, {Map<String, String> bodyFields}) =>
-      api.postJson(_appendOauthToken(path), bodyFields: bodyFields);
-
-  String _appendOauthToken(String path) {
-    final token = apiData._token;
-    final accessToken = token?.accessToken ?? api.buildOneTimeToken();
-    final connector = path.contains('?') ? '&' : '?';
-    return "${path.replaceAll(_oauthTokenRegEx, '')}${connector}oauth_token=$accessToken";
   }
 }
 

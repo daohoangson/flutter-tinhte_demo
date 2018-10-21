@@ -4,8 +4,8 @@ import 'package:tinhte_api/links.dart';
 import 'package:tinhte_api/post.dart';
 import 'package:tinhte_api/thread.dart';
 
+import '../api.dart';
 import '../intl.dart';
-import '_api.dart';
 import 'html.dart';
 import 'post_editor.dart';
 

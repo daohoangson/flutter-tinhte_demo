@@ -1,27 +1,22 @@
 import 'package:flutter/material.dart';
 
-import 'package:tinhte_api/api.dart';
 import 'src/screens/home.dart';
-import 'src/widgets/_api.dart';
+import 'src/api.dart';
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
-  Widget build(BuildContext context) {
-    final api = Api('https://tinhte.vn/appforo/index.php', '', '');
-    api.httpHeaders['Api-Bb-Code-Chr'] = '!youtube';
-    api.httpHeaders['Api-Post-Tree'] = '1';
-
-    return ApiInheritedWidget(
-        api: api,
-        child: MaterialApp(
-          title: 'Tinh tế Demo',
-          theme: ThemeData(
-            brightness: Brightness.dark,
-          ),
-          home: SafeArea(child: HomeScreen(title: 'Tinh tế Home (demo)')),
-        ));
-  }
+  Widget build(BuildContext context) => ApiInheritedWidget(
+      apiRoot: 'https://tinhte.vn/appforo/index.php',
+      clientId: '',
+      clientSecret: '',
+      child: MaterialApp(
+        title: 'Tinh tế Demo',
+        theme: ThemeData(
+          brightness: Brightness.dark,
+        ),
+        home: SafeArea(child: HomeScreen(title: 'Tinh tế Home (demo)')),
+      ));
 }

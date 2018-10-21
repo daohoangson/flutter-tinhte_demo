@@ -57,28 +57,28 @@ class _PostListWidgetState extends State<_PostListWidget> {
     if (_isFetching || _url?.isNotEmpty != true) return;
     setState(() => _isFetching = true);
 
-    List<Post> newPosts = List();
-    String newUrl;
+    apiGet(this, _url,
+        onSuccess: (jsonMap) {
+          final List<Post> newPosts = List();
+          String newUrl;
 
-    final api = ApiInheritedWidget.of(context).api;
-    final json = await api.getJson(_url);
-    final jsonMap = json as Map<String, dynamic>;
-    if (jsonMap.containsKey('posts')) {
-      decodePostsAndTheirReplies(json['posts'])
-          .where((p) => !p.postIsFirstPost)
-          .forEach((post) => newPosts.add(post));
-    }
+          if (jsonMap.containsKey('posts')) {
+            decodePostsAndTheirReplies(jsonMap['posts'])
+                .where((p) => !p.postIsFirstPost)
+                .forEach((post) => newPosts.add(post));
+          }
 
-    if (jsonMap.containsKey('links')) {
-      final links = Links.fromJson(json['links']);
-      newUrl = links.next;
-    }
+          if (jsonMap.containsKey('links')) {
+            final links = Links.fromJson(jsonMap['links']);
+            newUrl = links.next;
+          }
 
-    setState(() {
-      posts.addAll(newPosts);
-      _isFetching = false;
-      _url = newUrl;
-    });
+          setState(() {
+            posts.addAll(newPosts);
+            _url = newUrl;
+          });
+        },
+        onComplete: () => setState(() => _isFetching = false));
   }
 
   Widget _buildFirstPost() {

@@ -3,7 +3,7 @@ import 'package:tinhte_api/post.dart';
 import 'package:tinhte_api/thread.dart';
 import 'package:tinhte_api/user.dart';
 
-import '_api.dart';
+import '../api.dart';
 import 'posts.dart';
 
 class PostEditor extends StatefulWidget {
@@ -96,11 +96,12 @@ class _PostEditorState extends State<PostEditor> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
-                buildButton(context, 'Cancel', _actionCancel,
-                    color: Theme.of(context).highlightColor),
+                buildButton(context, 'Cancel',
+                    color: Theme.of(context).highlightColor,
+                    onTap: _actionCancel),
                 _isPosting
                     ? CircularProgressIndicator()
-                    : buildButton(context, 'Post', _actionPost),
+                    : buildButton(context, 'Post', onTap: _actionPost),
               ],
             ),
           ],
@@ -116,24 +117,24 @@ class _PostEditorState extends State<PostEditor> {
     if (!form.validate()) return;
     form.save();
 
-    prepareForApiAction(context, (apiData) {
+    prepareForApiAction(this, () {
       if (_isPosting) return;
       setState(() => _isPosting = true);
 
-      apiData.api
-          .postJson('posts', bodyFields: {
+      apiPost(this, 'posts',
+          bodyFields: {
             'thread_id': widget.thread.threadId.toString(),
             'quote_post_id': widget.parentPost?.postId?.toString() ?? '',
             'post_body': _postBody,
-          })
-          .then((json) {
-            if (json is Map && json.containsKey('post')) {
-              final post = Post.fromJson(json['post']);
+          },
+          onSuccess: (jsonMap) {
+            if (jsonMap.containsKey('post')) {
+              final post = Post.fromJson(jsonMap['post']);
               _dismiss(post: post);
             }
-          })
-          .catchError((e) => showApiErrorDialog(context, 'Post error', e))
-          .whenComplete(() => setState(() => _isPosting = false));
+          },
+          onError: (e) => showApiErrorDialog(context, e, title: 'Post error'),
+          onComplete: () => setState(() => _isPosting = false));
     });
   }
 

@@ -5,9 +5,9 @@ import 'package:tinhte_api/links.dart';
 import 'package:tinhte_api/thread.dart';
 
 import '../screens/thread_view.dart';
+import '../api.dart';
 import '../intl.dart';
 import '_list_view.dart';
-import '_api.dart';
 import 'image.dart';
 
 part 'thread/builders.dart';
@@ -69,26 +69,26 @@ class _ThreadsWidgetState extends State<ThreadsWidget> {
     if (_isFetching || _url == null) return;
     setState(() => _isFetching = true);
 
-    List<Thread> newThreads = List();
-    String nextUrl;
+    apiGet(this, _url,
+        onSuccess: (jsonMap) {
+          final List<Thread> newThreads = List();
+          String nextUrl;
 
-    final api = ApiInheritedWidget.of(context).api;
-    final json = await api.getJson(_url);
-    final jsonMap = json as Map<String, dynamic>;
-    if (jsonMap.containsKey('threads')) {
-      final jsonThreads = json['threads'] as List<dynamic>;
-      jsonThreads.forEach((j) => newThreads.add(Thread.fromJson(j)));
-    }
+          if (jsonMap.containsKey('threads')) {
+            final jsonThreads = jsonMap['threads'] as List;
+            jsonThreads.forEach((j) => newThreads.add(Thread.fromJson(j)));
+          }
 
-    if (jsonMap.containsKey('links')) {
-      final links = Links.fromJson(json['links']);
-      nextUrl = links.next;
-    }
+          if (jsonMap.containsKey('links')) {
+            final links = Links.fromJson(jsonMap['links']);
+            nextUrl = links.next;
+          }
 
-    setState(() {
-      _isFetching = false;
-      threads.addAll(newThreads);
-      _url = nextUrl;
-    });
+          setState(() {
+            threads.addAll(newThreads);
+            _url = nextUrl;
+          });
+        },
+        onComplete: () => setState(() => _isFetching = false));
   }
 }
