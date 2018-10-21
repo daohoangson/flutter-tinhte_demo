@@ -248,7 +248,10 @@ class ApiData extends State<ApiInheritedWidget> {
     if (_token == null) return null;
     if (_user != null) return _user;
 
-    final usersMe = "users/me?oauth_token=${_token.accessToken}";
+    final token = await _getOrRefreshToken();
+    if (token == null) return null;
+
+    final usersMe = "users/me?oauth_token=${token.accessToken}";
     try {
       final json = await widget.api.getJson(usersMe);
       final m = json as Map;
@@ -256,8 +259,11 @@ class ApiData extends State<ApiInheritedWidget> {
       _setUser(newUser);
 
       return newUser;
-    } catch (e) {
-      debugPrint("_fetchUser encountered an error: ${e.toString()}");
+    } on ApiError catch (ae) {
+      debugPrint("_fetchUser encountered an api error: ${ae.message}");
+      return null;
+    } on Error catch (e) {
+      debugPrint("_fetchUser encountered ${e.toString()}: ${e.stackTrace}");
       return null;
     }
   }
