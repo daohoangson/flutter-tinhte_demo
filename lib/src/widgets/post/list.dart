@@ -11,19 +11,18 @@ class _PostListWidget extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() =>
-      _PostListWidgetState(this.path, thread?.firstPost);
+  State<StatefulWidget> createState() => _PostListWidgetState(this.path);
 }
 
 class _PostListWidgetState extends State<_PostListWidget> {
   final List<Post> posts = List();
 
-  Post _firstPost;
+  Widget _firstPost;
   bool _isFetching = false;
   VoidCallback _removeListener;
   String _url;
 
-  _PostListWidgetState(this._url, this._firstPost);
+  _PostListWidgetState(this._url);
 
   @override
   void didChangeDependencies() {
@@ -49,22 +48,15 @@ class _PostListWidgetState extends State<_PostListWidget> {
   @override
   Widget build(BuildContext context) => ListView.builder(
         controller: PrimaryScrollController.of(context),
-        itemBuilder: (context, i) {
-          if (_firstPost != null) {
-            i--;
-            if (i == -1) return _buildPostFirst(_firstPost);
-          }
-
-          return _buildPostRoot(posts[i]);
-        },
-        itemCount: (_firstPost != null ? 1 : 0) + posts.length,
+        itemBuilder: (context, i) =>
+            i == 0 ? _buildFirstPost() : _buildPostRoot(posts[i - 1]),
+        itemCount: 1 + posts.length,
       );
 
   void fetch() async {
     if (_isFetching || _url?.isNotEmpty != true) return;
     setState(() => _isFetching = true);
 
-    Post newFirstPost;
     List<Post> newPosts = List();
     String newUrl;
 
@@ -72,15 +64,9 @@ class _PostListWidgetState extends State<_PostListWidget> {
     final json = await api.getJson(_url);
     final jsonMap = json as Map<String, dynamic>;
     if (jsonMap.containsKey('posts')) {
-      final decodedPosts = decodePostsAndTheirReplies(json['posts']);
-      decodedPosts.forEach((post) {
-        if (post.postIsFirstPost) {
-          newFirstPost = post;
-          return;
-        }
-
-        newPosts.add(post);
-      });
+      decodePostsAndTheirReplies(json['posts'])
+          .where((p) => !p.postIsFirstPost)
+          .forEach((post) => newPosts.add(post));
     }
 
     if (jsonMap.containsKey('links')) {
@@ -90,35 +76,15 @@ class _PostListWidgetState extends State<_PostListWidget> {
 
     setState(() {
       posts.addAll(newPosts);
-      if (newFirstPost != null) _firstPost = newFirstPost;
-
       _isFetching = false;
       _url = newUrl;
     });
   }
 
-  Widget _buildPostFirst(Post post) => Padding(
-        padding: const EdgeInsets.only(bottom: 20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: kPaddingHorizontal, vertical: 10.0),
-              child: Text(
-                widget.thread?.threadTitle ?? '',
-                maxLines: null,
-                style: TextStyle(
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            TinhteHtmlWidget(post?.postBodyHtml, isFirstPost: true),
-            _PostActionsWidget(post),
-          ],
-        ),
-      );
+  Widget _buildFirstPost() {
+    _firstPost ??= _FirstPostWidget(widget.thread);
+    return _firstPost;
+  }
 
   Widget _buildPostRoot(Post post) => _ParentPostInheritedWidget(
         parentPost: post,

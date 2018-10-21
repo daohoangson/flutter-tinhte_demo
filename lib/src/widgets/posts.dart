@@ -11,6 +11,7 @@ import 'post_editor.dart';
 
 part 'post/actions.dart';
 part 'post/builders.dart';
+part 'post/first.dart';
 part 'post/inherited_widgets.dart';
 part 'post/list.dart';
 part 'post/replies.dart';
