@@ -10,8 +10,11 @@ Widget _buildPostReply(BuildContext context, Post post) => buildRow(
           date: post.postCreateDate,
         ),
         TinhteHtmlWidget(post.postBodyHtml),
+        _PostAttachmentsWidget.forPost(post),
       ],
-      footer: <Widget>[_PostActionsWidget(post)],
+      footer: <Widget>[
+        _PostActionsWidget(post),
+      ],
     );
 
 class _PostRepliesWidget extends StatefulWidget {

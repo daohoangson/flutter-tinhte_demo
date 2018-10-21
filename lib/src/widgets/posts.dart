@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:tinhte_api/attachment.dart';
 import 'package:tinhte_api/links.dart';
 import 'package:tinhte_api/post.dart';
 import 'package:tinhte_api/thread.dart';
@@ -10,6 +11,7 @@ import 'html.dart';
 import 'post_editor.dart';
 
 part 'post/actions.dart';
+part 'post/attachments.dart';
 part 'post/builders.dart';
 part 'post/first.dart';
 part 'post/inherited_widgets.dart';

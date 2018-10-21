@@ -99,6 +99,7 @@ class _PostListWidgetState extends State<_PostListWidget> {
                 date: post.postCreateDate,
               ),
               TinhteHtmlWidget(post.postBodyHtml),
+              _PostAttachmentsWidget.forPost(post),
             ],
             footer: <Widget>[
               _PostActionsWidget(post),

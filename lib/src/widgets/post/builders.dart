@@ -37,7 +37,7 @@ Widget buildPosterCircleAvatar(String url, {bool isPostReply = false}) =>
     Padding(
       padding: const EdgeInsets.only(left: kPaddingHorizontal),
       child: CircleAvatar(
-        backgroundImage: CachedNetworkImageProvider(url ?? ''),
+        backgroundImage: url != null ? CachedNetworkImageProvider(url) : null,
         radius: isPostReply ? 15.0 : 18.0,
       ),
     );
@@ -95,14 +95,14 @@ Widget buildRow(
             padding: const EdgeInsets.only(top: 10.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: box,
+              children: box.where((widget) => widget != null).toList(),
             )),
       ),
     ));
   }
 
   if (footer != null) {
-    children.addAll(footer);
+    children.addAll(footer.where((widget) => widget != null));
   }
 
   return Padding(

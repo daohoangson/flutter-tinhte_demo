@@ -1,6 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
 import 'src/_.dart';
+import 'attachment.dart';
 
 part 'post.g.dart';
 
@@ -50,6 +51,9 @@ class Post {
   String signaturePlainText;
   int threadId;
   bool userIsIgnored;
+
+  @JsonKey(toJson: none)
+  List<Attachment> attachments;
 
   @JsonKey(toJson: none)
   PostLinks links;

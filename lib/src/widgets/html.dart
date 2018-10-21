@@ -5,8 +5,6 @@ import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart
     as core;
 import 'package:html/dom.dart' as dom;
 
-import 'image.dart';
-
 final _smilies = {
   'Smile': '🙂',
   'Wink': '😉',

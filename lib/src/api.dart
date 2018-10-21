@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tinhte_api/api.dart';
@@ -22,28 +23,29 @@ Future apiBatch(State state, VoidCallback fetches,
   return _setupApiFuture(state, batch.fetch(), onSuccess, onError, onComplete);
 }
 
-Future apiDelete(State state, path,
+Future apiDelete(State state, String path,
     {VoidCallback onComplete, ApiOnError onError, ApiOnJsonMap onSuccess}) {
   final apiData = ApiInheritedWidget.withoutInheritance(state.context);
   final future = apiData._api.deleteJson(apiData._appendOauthToken(path));
   return _setupApiJsonHandlers(state, future, onSuccess, onError, onComplete);
 }
 
-Future apiGet(State state, path,
+Future apiGet(State state, String path,
     {VoidCallback onComplete, ApiOnError onError, ApiOnJsonMap onSuccess}) {
   final apiData = ApiInheritedWidget.withoutInheritance(state.context);
   final future = apiData._api.getJson(apiData._appendOauthToken(path));
   return _setupApiJsonHandlers(state, future, onSuccess, onError, onComplete);
 }
 
-Future apiPost(State state, path,
+Future apiPost(State state, String path,
     {Map<String, String> bodyFields,
+    Map<String, File> fileFields,
     VoidCallback onComplete,
     ApiOnError onError,
     ApiOnJsonMap onSuccess}) {
   final apiData = ApiInheritedWidget.withoutInheritance(state.context);
-  final future = apiData._api
-      .postJson(apiData._appendOauthToken(path), bodyFields: bodyFields);
+  final future = apiData._api.postJson(apiData._appendOauthToken(path),
+      bodyFields: bodyFields, fileFields: fileFields);
   return _setupApiJsonHandlers(state, future, onSuccess, onError, onComplete);
 }
 
@@ -82,7 +84,11 @@ Future showApiErrorDialog(BuildContext context, error,
       context: context,
       builder: (c) => AlertDialog(
             title: Text(title),
-            content: Text(error is ApiError ? error.message : error.toString()),
+            content: Text(
+              error is ApiError
+                  ? error.message
+                  : "${error.runtimeType.toString()}: ${error.toString()}",
+            ),
           ),
     );
 

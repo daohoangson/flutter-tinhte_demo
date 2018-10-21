@@ -27,6 +27,12 @@
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>image_picker</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>image_picker</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>image_picker</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

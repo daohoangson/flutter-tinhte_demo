@@ -1,6 +1,9 @@
-import 'dart:convert';
 import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
+import 'package:async/async.dart';
 import 'package:http/http.dart';
+import 'package:path/path.dart';
 
 import 'batch_controller.dart';
 import 'oauth_token.dart';
@@ -97,8 +100,10 @@ class Api {
     return sendRequest('GET', path, parseJson: true);
   }
 
-  Future<dynamic> postJson(String path, {Map<String, String> bodyFields}) {
-    return sendRequest('POST', path, bodyFields: bodyFields, parseJson: true);
+  Future<dynamic> postJson(String path,
+      {Map<String, String> bodyFields, Map<String, File> fileFields}) {
+    return sendRequest('POST', path,
+        bodyFields: bodyFields, fileFields: fileFields, parseJson: true);
   }
 
   Future<dynamic> putJson(String path, {Map<String, String> bodyFields}) {
@@ -124,14 +129,18 @@ class Api {
   }
 
   Future sendRequest(String method, String path,
-      {Map<String, String> bodyFields, String bodyJson, parseJson: false}) {
-    if (_batch != null && bodyJson == null && parseJson) {
+      {Map<String, String> bodyFields,
+      String bodyJson,
+      Map<String, File> fileFields,
+      parseJson: false}) {
+    if (_batch != null && bodyJson == null && fileFields == null && parseJson) {
       return _batch.newJob(method, path, bodyFields);
     }
 
     return _sendRequest(httpClient, method, buildUrl(path),
         bodyFields: bodyFields,
         bodyJson: bodyJson,
+        fileFields: fileFields,
         headers: httpHeaders,
         parseJson: parseJson);
   }
