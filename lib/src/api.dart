@@ -167,7 +167,14 @@ class ApiData extends State<ApiApp> {
   User _user;
 
   bool get hasToken => _token != null;
-  User get user => _user;
+  User get user {
+    if (_user != null) return _user;
+    if (_token == null) return null;
+
+    _fetchUser();
+
+    return null;
+  }
 
   Api get _api => widget.api;
 
