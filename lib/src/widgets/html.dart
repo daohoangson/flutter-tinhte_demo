@@ -1,8 +1,7 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart'
-    as core;
+    show lazySet, BuildOp, NodeMetadata;
 import 'package:html/dom.dart' as dom;
 
 final _smilies = {
@@ -55,46 +54,20 @@ class TinhteWidgetFactory extends WidgetFactory {
       : super(context, config);
 
   @override
-  Widget buildGestureDetectorToLaunchUrl(Widget child, String url) {
-    if (child == null || url?.isNotEmpty != true) return null;
-
-    return GestureDetector(
-      onTap: prepareGestureTapCallbackToLaunchUrl(
-        buildFullUrl(url, config.baseUrl),
-      ),
-      child: Stack(
-        children: <Widget>[
-          child,
-          Positioned.fill(
-            child: LayoutBuilder(
-              builder: (context, bc) => Icon(
-                    Icons.open_in_new,
-                    color: Theme.of(context).accentColor.withAlpha(178),
-                    size: min(bc.maxHeight, bc.maxWidth) / 2.5,
-                  ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  @override
-  core.NodeMetadata collectMetadata(dom.Element e) {
-    var meta = super.collectMetadata(e);
-
+  NodeMetadata collectMetadata(dom.Element e) {
     switch (e.className) {
       case 'bbCodeBlock bbCodeQuote':
-        meta = core.lazySet(meta, isNotRenderable: true);
-        break;
+        return lazySet(null, isNotRenderable: true);
       case 'smilie':
         final title = e.attributes['data-title'];
         if (_smilies.containsKey(title)) {
-          meta = core.lazyAddNode(meta, text: _smilies[title]);
+          final text = _smilies[title];
+          return lazySet(null,
+              buildOp: BuildOp(onProcess: (_, __, write) => write(text)));
         }
         break;
     }
 
-    return meta;
+    return super.collectMetadata(e);
   }
 }
