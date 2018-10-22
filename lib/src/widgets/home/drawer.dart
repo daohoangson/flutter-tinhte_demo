@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:tinhte_api/oauth_token.dart';
 import 'package:tinhte_api/user.dart';
 
 import '../../screens/login.dart';
@@ -14,54 +13,35 @@ class HomeDrawerHeader extends StatefulWidget {
 }
 
 class _HomeDrawerHeaderState extends State<HomeDrawerHeader> {
-  VoidCallback _removeListener;
-  OauthToken _token;
-  User _user;
-
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
+  Widget build(BuildContext context) {
+    final apiData = ApiData.of(context);
+    final hasToken = apiData.hasToken;
+    final user = apiData.user;
 
-    if (_removeListener != null) _removeListener();
-    _removeListener = ApiInheritedWidget.of(context)
-        .addApiUserListener((newToken, newUser) => setState(() {
-              _token = newToken;
-              _user = newUser;
-            }));
+    return DrawerHeader(
+      decoration: BoxDecoration(
+        color: Theme.of(context).highlightColor,
+      ),
+      child: hasToken
+          ? user != null
+              ? _buildVisitorPanel(user)
+              : Text('Welcome back, we are loading user profile...')
+          : GestureDetector(
+              child: Text('Login'),
+              onTap: () => pushLoginScreen(context),
+            ),
+    );
   }
 
-  @override
-  void deactivate() {
-    if (_removeListener != null) {
-      _removeListener();
-      _removeListener = null;
-    }
-
-    super.deactivate();
-  }
-
-  @override
-  Widget build(BuildContext context) => DrawerHeader(
-        decoration: BoxDecoration(
-          color: Theme.of(context).highlightColor,
-        ),
-        child: _token == null
-            ? GestureDetector(
-                child: Text('Login'),
-                onTap: () => pushLoginScreen(context),
-              )
-            : _user == null
-                ? Text('Welcome back, we are loading user profile...')
-                : _buildVisitorPanel(),
-      );
-
-  Widget _buildVisitorPanel() => Column(
+  Widget _buildVisitorPanel(User user) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Expanded(
             child: CircleAvatar(
-              backgroundImage:
-                  CachedNetworkImageProvider(_user.links.avatarBig),
+              backgroundImage: user?.links?.avatarBig?.isNotEmpty == true
+                  ? CachedNetworkImageProvider(user.links.avatarBig)
+                  : null,
               minRadius: 20.0,
             ),
           ),
@@ -73,14 +53,14 @@ class _HomeDrawerHeaderState extends State<HomeDrawerHeader> {
               text: TextSpan(
                 children: <TextSpan>[
                   TextSpan(
-                    text: _user.username,
+                    text: user?.username ?? '',
                     style: TextStyle(
                       color: Theme.of(context).accentColor,
                       fontSize: 18.0,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  TextSpan(text: " ${_user.rank.rankName}"),
+                  TextSpan(text: " ${user?.rank?.rankName ?? ''}"),
                 ],
               ),
             ),
@@ -97,33 +77,11 @@ class HomeDrawerFooter extends StatefulWidget {
 }
 
 class _HomeDrawerFooterState extends State<HomeDrawerFooter> {
-  VoidCallback _removeListener;
-  OauthToken _token;
-
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    if (_removeListener != null) _removeListener();
-    _removeListener = ApiInheritedWidget.of(context)
-        .addApiTokenListener((newToken) => setState(() => _token = newToken));
-  }
-
-  @override
-  void deactivate() {
-    if (_removeListener != null) {
-      _removeListener();
-      _removeListener = null;
-    }
-
-    super.deactivate();
-  }
-
-  @override
-  Widget build(BuildContext context) => _token != null
+  Widget build(BuildContext context) => ApiData.of(context).hasToken
       ? ListTile(
           title: Text('Logout'),
-          onTap: () => ApiInheritedWidget.withoutInheritance(context).logout(),
+          onTap: () => logout(this),
         )
       : Container(height: 0.0, width: 0.0);
 }

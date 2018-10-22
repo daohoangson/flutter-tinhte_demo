@@ -15,7 +15,7 @@ Future apiBatch(State state, VoidCallback fetches,
     {ApiOnSuccess<bool> onSuccess,
     ApiOnError onError,
     VoidCallback onComplete}) {
-  final apiData = ApiInheritedWidget.withoutInheritance(state.context);
+  final apiData = ApiData._noInherit(state.context);
   final batch = apiData._api.newBatch(path: apiData._appendOauthToken('batch'));
 
   fetches();
@@ -25,14 +25,14 @@ Future apiBatch(State state, VoidCallback fetches,
 
 Future apiDelete(State state, String path,
     {VoidCallback onComplete, ApiOnError onError, ApiOnJsonMap onSuccess}) {
-  final apiData = ApiInheritedWidget.withoutInheritance(state.context);
+  final apiData = ApiData._noInherit(state.context);
   final future = apiData._api.deleteJson(apiData._appendOauthToken(path));
   return _setupApiJsonHandlers(state, future, onSuccess, onError, onComplete);
 }
 
 Future apiGet(State state, String path,
     {VoidCallback onComplete, ApiOnError onError, ApiOnJsonMap onSuccess}) {
-  final apiData = ApiInheritedWidget.withoutInheritance(state.context);
+  final apiData = ApiData._noInherit(state.context);
   final future = apiData._api.getJson(apiData._appendOauthToken(path));
   return _setupApiJsonHandlers(state, future, onSuccess, onError, onComplete);
 }
@@ -43,7 +43,7 @@ Future apiPost(State state, String path,
     VoidCallback onComplete,
     ApiOnError onError,
     ApiOnJsonMap onSuccess}) {
-  final apiData = ApiInheritedWidget.withoutInheritance(state.context);
+  final apiData = ApiData._noInherit(state.context);
   final future = apiData._api.postJson(apiData._appendOauthToken(path),
       bodyFields: bodyFields, fileFields: fileFields);
   return _setupApiJsonHandlers(state, future, onSuccess, onError, onComplete);
@@ -53,7 +53,7 @@ Future login(State state, String username, String password,
     {VoidCallback onComplete,
     ApiOnError onError,
     ApiOnSuccess<OauthToken> onSuccess}) {
-  final apiData = ApiInheritedWidget.withoutInheritance(state.context);
+  final apiData = ApiData._noInherit(state.context);
   final future = apiData._api.login(username, password).then((token) {
     apiData._setToken(token);
     return token;
@@ -61,9 +61,11 @@ Future login(State state, String username, String password,
   return _setupApiFuture(state, future, onSuccess, onError, onComplete);
 }
 
+void logout(State state) => ApiData._noInherit(state.context)._setToken(null);
+
 void prepareForApiAction(State state, VoidCallback onReady,
     {VoidCallback onError}) async {
-  final apiData = ApiInheritedWidget.withoutInheritance(state.context);
+  final apiData = ApiData._noInherit(state.context);
   final token = await apiData._getOrRefreshToken();
   if (!state.mounted) return;
 
@@ -141,11 +143,11 @@ typedef void ApiOnSuccess<T>(T data);
 typedef void ApiOnJsonMap(Map jsonMap);
 typedef void ApiOnError(error);
 
-class ApiInheritedWidget extends StatefulWidget {
+class ApiApp extends StatefulWidget {
   final Api api;
   final Widget child;
 
-  ApiInheritedWidget({
+  ApiApp({
     Key key,
     @required String apiRoot,
     @required this.child,
@@ -157,26 +159,17 @@ class ApiInheritedWidget extends StatefulWidget {
         super(key: key);
 
   @override
-  State<ApiInheritedWidget> createState() => ApiData();
-
-  static ApiData of(BuildContext context) =>
-      (context.inheritFromWidgetOfExactType(_ApiDataInheritedWidget)
-              as _ApiDataInheritedWidget)
-          .data;
-
-  static ApiData withoutInheritance(BuildContext context) =>
-      (context.ancestorWidgetOfExactType(_ApiDataInheritedWidget)
-              as _ApiDataInheritedWidget)
-          .data;
+  State<ApiApp> createState() => ApiData();
 }
 
-class ApiData extends State<ApiInheritedWidget> {
-  Api get _api => widget.api;
-
+class ApiData extends State<ApiApp> {
   OauthToken _token;
-  final List<ApiTokenListener> _tokenListeners = List();
   User _user;
-  final List<ApiUserListener> _userListeners = List();
+
+  bool get hasToken => _token != null;
+  User get user => _user;
+
+  Api get _api => widget.api;
 
   @override
   void initState() {
@@ -210,33 +203,6 @@ class ApiData extends State<ApiInheritedWidget> {
   @override
   Widget build(BuildContext context) =>
       _ApiDataInheritedWidget(child: widget.child, data: this);
-
-  VoidCallback addApiTokenListener(ApiTokenListener listener) {
-    _tokenListeners.add(listener);
-
-    // notify right away when a new listener is added
-    listener(_token);
-
-    return () => _tokenListeners.remove(listener);
-  }
-
-  VoidCallback addApiUserListener(ApiUserListener listener) {
-    var __removed = false;
-    _userListeners.add(listener);
-
-    // notify right away when a new listener is added
-    _fetchUser().then((user) {
-      if (__removed) return;
-      listener(_token, user);
-    });
-
-    return () {
-      __removed = true;
-      _userListeners.remove(listener);
-    };
-  }
-
-  void logout() => _setToken(null);
 
   String _appendOauthToken(String path) {
     final accessToken = _token?.accessToken ?? _api.buildOneTimeToken();
@@ -302,15 +268,6 @@ class ApiData extends State<ApiInheritedWidget> {
           " expires at ${value?.expiresAt}");
     });
 
-    for (final listener in _tokenListeners) {
-      try {
-        listener(value);
-      } catch (e) {
-        // print debug info then ignore
-        debugPrint("Token listener $listener error: $e");
-      }
-    }
-
     setState(() => _token = value);
 
     if (value != null) {
@@ -320,18 +277,17 @@ class ApiData extends State<ApiInheritedWidget> {
     }
   }
 
-  void _setUser(User value) {
-    for (final listener in _userListeners) {
-      try {
-        listener(_token, value);
-      } catch (e) {
-        // print debug info then ignore
-        debugPrint("User listener $listener error: $e");
-      }
-    }
+  void _setUser(User value) => setState(() => _user = value);
 
-    setState(() => _user = value);
-  }
+  static ApiData of(BuildContext context) =>
+      (context.inheritFromWidgetOfExactType(_ApiDataInheritedWidget)
+              as _ApiDataInheritedWidget)
+          .data;
+
+  static ApiData _noInherit(BuildContext context) =>
+      (context.ancestorWidgetOfExactType(_ApiDataInheritedWidget)
+              as _ApiDataInheritedWidget)
+          .data;
 }
 
 class _ApiDataInheritedWidget extends InheritedWidget {
@@ -346,7 +302,3 @@ class _ApiDataInheritedWidget extends InheritedWidget {
   @override
   bool updateShouldNotify(_ApiDataInheritedWidget old) => true;
 }
-
-typedef void ApiTokenListener(OauthToken token);
-
-typedef void ApiUserListener(OauthToken token, User user);
