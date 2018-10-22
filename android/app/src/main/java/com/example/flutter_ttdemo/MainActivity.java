@@ -1,4 +1,4 @@
-package com.example.tinhtedemo;
+package com.daohoangson.flutter_ttdemo;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;

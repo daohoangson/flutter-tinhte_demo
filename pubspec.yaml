@@ -21,6 +21,7 @@ dependencies:
     path: ./packages/flutter_widget_from_html
   image_picker: ^0.4.10
   intl: ^0.15.7
+  package_info: ^0.3.2
   shared_preferences: ^0.4.3
   timeago: ^2.0.8
   tinhte_api:

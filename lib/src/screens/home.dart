@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:package_info/package_info.dart';
 import 'package:tinhte_api/feature_page.dart';
 import 'package:tinhte_api/thread.dart';
 
@@ -13,19 +14,19 @@ import '../widgets/threads.dart';
 const threadWidgetStartingIndex = 2;
 
 class HomeScreen extends StatefulWidget {
-  final String title;
-
-  HomeScreen({Key key, this.title}) : super(key: key);
+  HomeScreen({Key key}) : super(key: key);
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  bool isFetching = false;
   final List<FeaturePage> featurePages = List();
   final List<Thread> threadsTopFive = List();
   final List<Thread> threadsBelow = List();
+
+  bool _isFetching = false;
+  String _title = '';
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text(_title),
       ),
       body: ListView.builder(
         itemBuilder: (context, i) {
@@ -70,8 +71,11 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void fetch() async {
-    if (isFetching) return;
-    setState(() => isFetching = true);
+    if (_isFetching) return;
+    setState(() => _isFetching = true);
+
+    PackageInfo.fromPlatform().then((PackageInfo packageInfo) => setState(
+        () => _title = "${packageInfo.appName} ${packageInfo.version}"));
 
     apiBatch(this, () {
       apiGet(
@@ -116,6 +120,6 @@ class _HomeScreenState extends State<HomeScreen> {
           setState(() => featurePages.addAll(newPages));
         },
       );
-    }, onSuccess: (fetched) => setState(() => isFetching = false));
+    }, onSuccess: (fetched) => setState(() => _isFetching = false));
   }
 }
