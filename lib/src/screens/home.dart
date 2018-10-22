@@ -74,8 +74,8 @@ class _HomeScreenState extends State<HomeScreen> {
     if (_isFetching) return;
     setState(() => _isFetching = true);
 
-    PackageInfo.fromPlatform().then((PackageInfo packageInfo) => setState(
-        () => _title = "${packageInfo.appName} ${packageInfo.version}"));
+    PackageInfo.fromPlatform().then(
+        (info) => setState(() => _title = "${info.appName} ${info.version}"));
 
     apiBatch(this, () {
       apiGet(
@@ -84,7 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
         onSuccess: (jsonMap) {
           final List<Thread> newThreads = List();
           if (jsonMap.containsKey('threads')) {
-            final jsonThreads = jsonMap['threads'] as List<dynamic>;
+            final jsonThreads = jsonMap['threads'] as List;
             jsonThreads.forEach((j) => newThreads.add(Thread.fromJson(j)));
           }
 
@@ -106,7 +106,7 @@ class _HomeScreenState extends State<HomeScreen> {
           final List<FeaturePage> newPages = List();
 
           if (jsonMap.containsKey('pages')) {
-            final jsonPages = jsonMap['pages'] as List<dynamic>;
+            final jsonPages = jsonMap['pages'] as List;
             jsonPages.forEach((j) {
               final fp = FeaturePage.fromJson(j);
               if (fp?.links?.image?.isNotEmpty != true) {

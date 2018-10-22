@@ -5,7 +5,7 @@ import 'attachment.dart';
 
 part 'post.g.dart';
 
-List<Post> decodePostsAndTheirReplies(List<dynamic> jsonPosts) {
+List<Post> decodePostsAndTheirReplies(List jsonPosts) {
   List<Post> posts = List();
 
   jsonPosts.forEach((jsonPost) {
