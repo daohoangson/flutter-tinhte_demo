@@ -1,8 +1,13 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart'
     show lazySet, BuildOp, NodeMetadata;
 import 'package:html/dom.dart' as dom;
+
+import 'html/lb_trigger.dart';
+
+part 'html/galleria.dart';
 
 final _smilies = {
   'Smile': '🙂',
@@ -50,12 +55,49 @@ class TinhteHtmlWidget extends StatelessWidget {
 }
 
 class TinhteWidgetFactory extends WidgetFactory {
+  bool _isInGalleria = false;
+  LbTrigger _lbTrigger;
+
   TinhteWidgetFactory(BuildContext context, Config config)
       : super(context, config);
 
   @override
-  NodeMetadata collectMetadata(dom.Element e) {
+  Widget buildImageWidget(String src, {int height, int width}) {
+    if (_isInGalleria) {
+      final imageUrl = buildFullUrl(src, config.baseUrl);
+      if (imageUrl?.isEmpty != false) return null;
+
+      return AspectRatio(
+        aspectRatio: 16 / 9,
+        child: CachedNetworkImage(
+          imageUrl: imageUrl,
+          fit: BoxFit.cover,
+        ),
+      );
+    }
+
+    return super.buildImageWidget(src, height: height, width: width);
+  }
+
+  @override
+  NodeMetadata parseElement(dom.Element e) {
     switch (e.className) {
+      case 'LbTrigger':
+        if (e.localName == 'a' && e.attributes.containsKey('href')) {
+          final href = e.attributes['href'];
+          _lbTrigger ??= LbTrigger(this);
+
+          return lazySet(
+            null,
+            buildOp: BuildOp(
+              onWidgets: _lbTrigger.prepareBuildOpOnWidgets(href),
+            ),
+          );
+        }
+        break;
+      case 'Tinhte_Galleria':
+        _isInGalleria = true;
+        return lazySet(null, buildOp: galleria(this));
       case 'bbCodeBlock bbCodeQuote':
         return lazySet(null, isNotRenderable: true);
       case 'smilie':
@@ -68,6 +110,6 @@ class TinhteWidgetFactory extends WidgetFactory {
         break;
     }
 
-    return super.collectMetadata(e);
+    return super.parseElement(e);
   }
 }
