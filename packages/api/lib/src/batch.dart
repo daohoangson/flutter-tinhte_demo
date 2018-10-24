@@ -3,19 +3,22 @@ import 'dart:async';
 
 import '../api.dart';
 import '../batch_job.dart';
+import 'crypto.dart';
 
 class Batch {
   final String path;
   final Completer _completer = Completer();
+
   final List<BatchJob> _jobs = List();
+  final Map<String, BatchJob> _uniqueJobs = Map();
 
   String get bodyJson {
-    print('Batch has ${_jobs.length} jobs');
+    print('Batch has ${_jobs.length} jobs, ${_uniqueJobs.length} unique');
     for (final _job in _jobs) {
       print("Batch job ${_job.id}: ${_job.method} ${_job.uri}");
     }
 
-    return json.encode(_jobs);
+    return json.encode(_uniqueJobs.values.toList());
   }
 
   int get length => _jobs.length;
@@ -25,10 +28,23 @@ class Batch {
 
   Future newJob(String method, String uri, Map<String, String> params) {
     final String id = 'job' + (_jobs.length + 1).toString();
-    BatchJob job = BatchJob(id, method, uri, params);
-    _jobs.add(job);
+    final String paramsAsString = json.encode(params);
+    final String signature = "$method$uri$paramsAsString";
+    final String hash = md5(signature);
 
-    return job.future;
+    if (_uniqueJobs.containsKey(hash)) {
+      final prevJob = _uniqueJobs[hash];
+      final duplicateJob = BatchJob(prevJob.id, method, uri, params);
+      _jobs.add(duplicateJob);
+
+      return duplicateJob.future;
+    }
+
+    final newJob = BatchJob(id, method, uri, params);
+    _jobs.add(newJob);
+    _uniqueJobs[hash] = newJob;
+
+    return newJob.future;
   }
 
   bool handleResponse(json) {
@@ -54,7 +70,7 @@ class Batch {
         return;
       }
 
-      job. completer.completeError(ApiError(message: jobResult));
+      job.completer.completeError(ApiError(message: jobResult));
       return;
     });
 
