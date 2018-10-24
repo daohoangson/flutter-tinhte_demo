@@ -7,13 +7,10 @@ class HeaderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.fromLTRB(5.0, 20.0, 5.0, 10.0),
+        padding: const EdgeInsets.all(10.0),
         child: Text(
-          text.toUpperCase(),
-          style: TextStyle(
-            fontSize: 18.0,
-            fontWeight: FontWeight.bold,
-          ),
+          text,
+          style: Theme.of(context).textTheme.headline,
         ),
       );
 }

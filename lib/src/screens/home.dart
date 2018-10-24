@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
-import 'package:tinhte_api/feature_page.dart';
+import 'package:tinhte_api/links.dart';
 import 'package:tinhte_api/thread.dart';
 
 import '../api.dart';
 import '../widgets/home/drawer.dart';
 import '../widgets/home/feature_pages.dart';
-import '../widgets/home/header.dart';
-import '../widgets/home/threads_top_five.dart';
+import '../widgets/home/thread.dart';
 import '../widgets/navigation.dart';
-import '../widgets/threads.dart';
 
-const threadWidgetStartingIndex = 2;
+const _kFeaturePagesIndex = 5;
+const _kItemCountForFeaturePages = 1;
+const _kItemCountForNext = 1;
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({Key key}) : super(key: key);
@@ -21,16 +21,18 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final List<FeaturePage> featurePages = List();
-  final List<Thread> threadsTopFive = List();
-  final List<Thread> threadsBelow = List();
+  final GlobalKey<RefreshIndicatorState> refreshIndicatorKey = GlobalKey();
+  final List<Thread> threads = List();
 
+  bool _isFetchingThreads = false;
+  String _next;
   String _title = '';
 
   @override
   void initState() {
     super.initState();
-    fetch();
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => refreshIndicatorKey.currentState.show());
   }
 
   @override
@@ -38,29 +40,37 @@ class _HomeScreenState extends State<HomeScreen> {
         appBar: AppBar(
           title: Text(_title),
         ),
-        body: ListView.builder(
-          itemBuilder: (context, i) {
-            switch (i) {
-              case 0:
-                return ThreadsTopFiveWidget(threads: threadsTopFive);
-              case 1:
-                return FeaturePagesWidget(pages: featurePages);
-              default:
-                final j = i - threadWidgetStartingIndex;
-                Widget widget = buildThreadRow(context, threadsBelow[j]);
-                if (j == 0) {
-                  widget = Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      HeaderWidget('Có gì mới'),
-                      widget,
-                    ],
-                  );
-                }
-                return widget;
-            }
-          },
-          itemCount: threadWidgetStartingIndex + threadsBelow.length,
+        body: RefreshIndicator(
+          key: refreshIndicatorKey,
+          onRefresh: fetch,
+          child: ListView.builder(
+            itemBuilder: (context, i) {
+              if (i < _kFeaturePagesIndex) {
+                return HomeThreadWidget(i < threads.length ? threads[i] : null);
+              }
+
+              if (i == _kFeaturePagesIndex) {
+                return FeaturePagesWidget();
+              }
+
+              i--;
+              if (i < threads.length) {
+                return HomeThreadWidget(threads[i]);
+              }
+
+              return _next != null
+                  ? RaisedButton(
+                      child: Text('Next'),
+                      onPressed: () => fetchNext(),
+                    )
+                  : _isFetchingThreads
+                      ? const Center(child: CircularProgressIndicator())
+                      : Container(height: 0.0, width: 0.0);
+            },
+            itemCount: threads.length +
+                _kItemCountForFeaturePages +
+                _kItemCountForNext,
+          ),
         ),
         drawer: Drawer(
           child: NavigationWidget(
@@ -71,51 +81,54 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       );
 
-  void fetch() {
-    PackageInfo.fromPlatform().then(
-        (info) => setState(() => _title = "${info.appName} ${info.version}"));
+  Future fetch() async {
+    setState(() {
+      threads.clear();
+      _next = null;
+    });
 
-    apiGet(
+    await Future.wait([
+      _detectTitle(),
+      _fetchThreads(),
+    ]);
+  }
+
+  void fetchNext() {
+    final next = _next;
+    setState(() => _next = null);
+    if (next?.isNotEmpty != true) return;
+
+    _fetchThreads(path: next);
+  }
+
+  Future _detectTitle() => PackageInfo.fromPlatform().then(
+      (info) => setState(() => _title = "${info.appName} ${info.version}"));
+
+  Future _fetchThreads({String path = 'lists/1/threads'}) {
+    setState(() => _isFetchingThreads = true);
+    return apiGet(
       this,
-      'lists/1/threads',
+      path,
       onSuccess: (jsonMap) {
-        final List<Thread> newThreads = List();
+        final List<Thread> nextThreads = List();
+        String nextNext;
+
         if (jsonMap.containsKey('threads')) {
           final jsonThreads = jsonMap['threads'] as List;
-          jsonThreads.forEach((j) => newThreads.add(Thread.fromJson(j)));
+          jsonThreads.forEach((j) => nextThreads.add(Thread.fromJson(j)));
+        }
+
+        if (jsonMap.containsKey('links')) {
+          final links = Links.fromJson(jsonMap['links']);
+          nextNext = links.next;
         }
 
         setState(() {
-          if (threadsTopFive.length == 0) {
-            threadsTopFive.addAll(newThreads.getRange(0, 5));
-            threadsBelow.addAll(newThreads.getRange(5, newThreads.length));
-          } else {
-            threadsBelow.addAll(newThreads);
-          }
+          threads.addAll(nextThreads);
+          _next = nextNext;
         });
       },
-    );
-
-    apiGet(
-      this,
-      'feature-pages?order=7_days_thread_count_desc',
-      onSuccess: (jsonMap) {
-        final List<FeaturePage> newPages = List();
-
-        if (jsonMap.containsKey('pages')) {
-          final jsonPages = jsonMap['pages'] as List;
-          jsonPages.forEach((j) {
-            final fp = FeaturePage.fromJson(j);
-            if (fp?.links?.image?.isNotEmpty != true) {
-              return;
-            }
-
-            newPages.add(fp);
-          });
-        }
-
-        setState(() => featurePages.addAll(newPages));
-      },
+      onComplete: () => setState(() => _isFetchingThreads = false),
     );
   }
 }

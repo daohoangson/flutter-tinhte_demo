@@ -12,16 +12,13 @@ class _PostActionsWidget extends StatefulWidget {
 class _PostActionsWidgetState extends State<_PostActionsWidget> {
   bool isShowingEditor = false;
   bool isLiking = false;
-  bool postIsLiked;
-  int postLikeCount;
+  
+  Post get post => widget.post;
+  bool get postIsLiked => post?.postIsLiked == true;
+  int get postLikeCount => post?.postLikeCount ?? 0;
 
-  @override
-  void initState() {
-    super.initState();
-
-    postIsLiked = widget.post.postIsLiked == true;
-    postLikeCount = widget.post.postLikeCount ?? 0;
-  }
+  set postIsLiked(bool value) => post?.postIsLiked = value;
+  set postLikeCount(int value) => post?.postLikeCount = value;
 
   @override
   Widget build(BuildContext context) {

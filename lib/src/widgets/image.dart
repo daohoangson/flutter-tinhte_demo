@@ -61,13 +61,11 @@ Widget _buildImageWidget(String imageUrl, {num imageHeight, num imageWidth}) =>
 class ThreadImageWidget extends StatelessWidget {
   final int threadId;
   final ThreadImage image;
-  final Widget widgetOnNoImage;
 
   ThreadImageWidget({
     @required this.image,
     Key key,
     @required this.threadId,
-    this.widgetOnNoImage,
   }) : super(key: key);
 
   @override
@@ -81,7 +79,6 @@ class ThreadImageWidget extends StatelessWidget {
         ),
         child: AspectRatio(
           aspectRatio: kThreadImageAspectRatio,
-          child: widgetOnNoImage,
         ),
       );
     }

@@ -9,7 +9,7 @@ class FeaturePage {
   final int forumId;
   final String fullName;
   @JsonKey(name: 'is_followed')
-  final bool isFollowed;
+  bool isFollowed;
   final int tagId;
   final String tagText;
 

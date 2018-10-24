@@ -30,9 +30,6 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final sizeShorter = size.width > size.height ? size.height : size.width;
-    final textStyle = TextStyle(
-      fontSize: 22.0,
-    );
 
     return Scaffold(
       appBar: AppBar(
@@ -61,7 +58,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       initialValue: username,
                       keyboardType: TextInputType.emailAddress,
                       onSaved: (value) => username = value,
-                      style: textStyle,
                       validator: (username) {
                         if (username.isEmpty) {
                           return 'Please enter your username or email';
@@ -81,7 +77,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       initialValue: password,
                       obscureText: true,
                       onSaved: (value) => password = value,
-                      style: textStyle,
                       validator: (password) {
                         if (password.isEmpty) {
                           return 'Please enter your password to login';
@@ -93,16 +88,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 5.0),
-                    child: MaterialButton(
-                      child: Text(
-                        'Submit',
-                        style: textStyle.copyWith(
-                          color: isLoggingIn
-                              ? Theme.of(context).disabledColor
-                              : Theme.of(context).accentColor,
-                        ),
-                      ),
-                      onPressed: _login,
+                    child: FlatButton(
+                      child: Text('Submit'),
+                      onPressed: isLoggingIn ? null : _login,
                     ),
                   ),
                 ],
