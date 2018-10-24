@@ -11,43 +11,44 @@ import 'constants.dart';
 
 final _oauthTokenRegEx = RegExp(r'oauth_token=.+(&|$)');
 
-Future apiBatch(State state, VoidCallback fetches,
-    {ApiOnSuccess<bool> onSuccess,
-    ApiOnError onError,
-    VoidCallback onComplete}) {
-  final apiData = ApiData._noInherit(state.context);
-  final batch = apiData._api.newBatch(path: apiData._appendOauthToken('batch'));
-
-  fetches();
-
-  return _setupApiFuture(state, batch.fetch(), onSuccess, onError, onComplete);
-}
-
 Future apiDelete(State state, String path,
-    {VoidCallback onComplete, ApiOnError onError, ApiOnJsonMap onSuccess}) {
-  final apiData = ApiData._noInherit(state.context);
-  final future = apiData._api.deleteJson(apiData._appendOauthToken(path));
-  return _setupApiJsonHandlers(state, future, onSuccess, onError, onComplete);
-}
+        {VoidCallback onComplete,
+        ApiOnError onError,
+        ApiOnJsonMap onSuccess}) =>
+    _setupApiJsonHandlers(
+      state,
+      (apiData) => apiData._api.deleteJson(apiData._appendOauthToken(path)),
+      onSuccess,
+      onError,
+      onComplete,
+    );
 
 Future apiGet(State state, String path,
-    {VoidCallback onComplete, ApiOnError onError, ApiOnJsonMap onSuccess}) {
-  final apiData = ApiData._noInherit(state.context);
-  final future = apiData._api.getJson(apiData._appendOauthToken(path));
-  return _setupApiJsonHandlers(state, future, onSuccess, onError, onComplete);
-}
+        {VoidCallback onComplete,
+        ApiOnError onError,
+        ApiOnJsonMap onSuccess}) =>
+    _setupApiJsonHandlers(
+      state,
+      (apiData) => apiData._api.getJson(apiData._appendOauthToken(path)),
+      onSuccess,
+      onError,
+      onComplete,
+    );
 
 Future apiPost(State state, String path,
-    {Map<String, String> bodyFields,
-    Map<String, File> fileFields,
-    VoidCallback onComplete,
-    ApiOnError onError,
-    ApiOnJsonMap onSuccess}) {
-  final apiData = ApiData._noInherit(state.context);
-  final future = apiData._api.postJson(apiData._appendOauthToken(path),
-      bodyFields: bodyFields, fileFields: fileFields);
-  return _setupApiJsonHandlers(state, future, onSuccess, onError, onComplete);
-}
+        {Map<String, String> bodyFields,
+        Map<String, File> fileFields,
+        VoidCallback onComplete,
+        ApiOnError onError,
+        ApiOnJsonMap onSuccess}) =>
+    _setupApiJsonHandlers(
+      state,
+      (apiData) => apiData._api.postJson(apiData._appendOauthToken(path),
+          bodyFields: bodyFields, fileFields: fileFields),
+      onSuccess,
+      onError,
+      onComplete,
+    );
 
 Future login(State state, String username, String password,
     {VoidCallback onComplete,
@@ -66,10 +67,8 @@ void logout(State state) => ApiData._noInherit(state.context)._setToken(null);
 void prepareForApiAction(State state, VoidCallback onReady,
     {VoidCallback onError}) async {
   final apiData = ApiData._noInherit(state.context);
-  final token = await apiData._getOrRefreshToken();
-  if (!state.mounted) return;
 
-  if (token == null) {
+  if (apiData._token == null) {
     final loggedIn = await pushLoginScreen(state.context);
     if (loggedIn != true) {
       if (onError != null) onError();
@@ -100,8 +99,8 @@ Future _setupApiFuture<T>(State state, Future<T> future,
 
   if (onSuccess != null) {
     f = f.then((data) {
-      if (!state.mounted) return;
-      if (onSuccess == null) return;
+      if (!state.mounted) return false;
+      if (onSuccess == null) return true;
       return onSuccess(data);
     });
   }
@@ -123,24 +122,29 @@ Future _setupApiFuture<T>(State state, Future<T> future,
   return f;
 }
 
-Future _setupApiJsonHandlers(State state, Future future, ApiOnJsonMap onSuccess,
-    ApiOnError onError, VoidCallback onComplete) {
+Future _setupApiJsonHandlers(State state, ApiFetch fetch,
+    ApiOnJsonMap onSuccess, ApiOnError onError, VoidCallback onComplete) {
+  final apiData = ApiData._noInherit(state.context);
+  final c = Completer();
+  apiData._enqueue(() => c.complete(fetch(apiData)));
+
   final _onSuccess = onSuccess != null
       ? (json) {
           if (json is! Map) {
-            debugPrint("Api response is not a Map: ${json.toString()}");
-            return;
+            print(json);
+            return Future.error(ApiError(message: 'Unexpected api response'));
           }
-          onSuccess(json);
+          return onSuccess(json);
         }
       : null;
 
   return _setupApiFuture<dynamic>(
-      state, future, _onSuccess, onError, onComplete);
+      state, c.future, _onSuccess, onError, onComplete);
 }
 
-typedef void ApiOnSuccess<T>(T data);
-typedef void ApiOnJsonMap(Map jsonMap);
+typedef Future ApiFetch(ApiData apiData);
+typedef dynamic ApiOnSuccess<T>(T data);
+typedef dynamic ApiOnJsonMap(Map jsonMap);
 typedef void ApiOnError(error);
 
 class ApiApp extends StatefulWidget {
@@ -164,7 +168,10 @@ class ApiApp extends StatefulWidget {
 
 class ApiData extends State<ApiApp> {
   OauthToken _token;
+  bool _tokenHasBeenSet = false;
   User _user;
+
+  List<VoidCallback> _queue;
 
   bool get hasToken => _token != null;
   User get user {
@@ -184,26 +191,24 @@ class ApiData extends State<ApiApp> {
 
     SharedPreferences.getInstance().then((SharedPreferences prefs) {
       final clientId = prefs.getString(kPrefKeyTokenClientId);
-      if (clientId != widget.api.clientId) return;
+      if (clientId != _api.clientId) {
+        return _setToken(null, savePref: false);
+      }
 
-      final accessToken = prefs.getString(kPrefKeyTokenAccessToken);
-      final expiresAtMillisecondsSinceEpoch =
-          prefs.getInt(kPrefKeyTokenExpiresAtMillisecondsSinceEpoch) ?? 0;
-      final refreshToken = prefs.getString(kPrefKeyTokenRefreshToken);
+      final t = prefs.getString(kPrefKeyTokenAccessToken);
+      final expiresAtKey = kPrefKeyTokenExpiresAtMillisecondsSinceEpoch;
+      final expiresAt = prefs.getInt(expiresAtKey) ?? 0;
+      final rt = prefs.getString(kPrefKeyTokenRefreshToken);
       final scope = prefs.getString(kPrefKeyTokenScope);
       final userId = prefs.getInt(kPrefKeyTokenUserId);
-      if (accessToken?.isNotEmpty != true ||
-          expiresAtMillisecondsSinceEpoch < 1 ||
-          refreshToken?.isNotEmpty != true) return;
+      if (t?.isNotEmpty != true || expiresAt < 1) {
+        return _setToken(null, savePref: false);
+      }
 
-      final expiresIn = ((expiresAtMillisecondsSinceEpoch -
-                  DateTime.now().millisecondsSinceEpoch) /
-              1000)
-          .floor();
-      final token =
-          OauthToken(accessToken, expiresIn, refreshToken, scope, userId);
-      debugPrint("Restored token $accessToken, expires in $expiresIn");
-      setState(() => _token = token);
+      final now = DateTime.now().millisecondsSinceEpoch;
+      final ei = ((expiresAt - now) / 1000).floor();
+      debugPrint("Restored token $t, expires in $ei, refresh token $rt");
+      _setToken(OauthToken(t, ei, rt, scope, userId), savePref: false);
     });
   }
 
@@ -217,71 +222,96 @@ class ApiData extends State<ApiApp> {
     return "${path.replaceAll(_oauthTokenRegEx, '')}${connector}oauth_token=$accessToken";
   }
 
-  Future<User> _fetchUser() async {
-    if (_token == null) return null;
-    if (_user != null) return _user;
+  void _enqueue(VoidCallback callback) {
+    Timer.run(_dequeue);
 
-    final token = await _getOrRefreshToken();
-    if (token == null) return null;
-
-    final usersMe = "users/me?oauth_token=${token.accessToken}";
-    try {
-      final json = await widget.api.getJson(usersMe);
-      final m = json as Map;
-      final newUser = m.containsKey('user') ? User.fromJson(m['user']) : null;
-      _setUser(newUser);
-
-      return newUser;
-    } on ApiError catch (ae) {
-      debugPrint("_fetchUser encountered an api error: ${ae.message}");
-      return null;
-    } on Error catch (e) {
-      debugPrint("_fetchUser encountered ${e.toString()}: ${e.stackTrace}");
-      return null;
-    }
+    _queue ??= List();
+    _queue.add(callback);
   }
 
-  Future<OauthToken> _getOrRefreshToken() async {
-    if (_token == null) return Future.value(null);
-    if (_token.expiresAt.isAfter(DateTime.now())) return _token;
+  void _dequeue() {
+    if (!_tokenHasBeenSet) return;
+    if (_token?.hasExpired == true) return _refreshToken();
 
-    // TODO: handle concurrent request for token better
-    // with the current implementation, our caller will get `null`
-    // while it's being refreshed...
-    final refreshToken = _token.refreshToken;
-    _token = null;
+    final __callbacks = _queue;
+    _queue = null;
+    if (__callbacks?.isNotEmpty != true) return;
+    if (__callbacks.length == 1) return __callbacks.first();
+
+    final batch = _api.newBatch(path: _appendOauthToken('batch'));
+    for (final __callback in __callbacks) {
+      try {
+        __callback();
+      } catch (e) {
+        // print and ignore to avoid affecting others in batch
+        // this should not happen in normal circumstances because
+        // _setupApiFuture as a default onError handler
+        print(e);
+      }
+    }
+    batch.fetch();
+  }
+
+  void _fetchUser() {
+    _enqueue(() async {
+      try {
+        final json = await _api.getJson(_appendOauthToken('users/me'));
+        if (json is Map) {
+          return _setUser(
+            json.containsKey('user') ? User.fromJson(json['user']) : null,
+          );
+        }
+      } on ApiError catch (ae) {
+        debugPrint("_fetchUser encountered an api error: ${ae.message}");
+      } catch (e) {
+        print(e);
+      }
+
+      return _setUser(null);
+    });
+  }
+
+  void _refreshToken() async {
+    final refreshToken = _token?.refreshToken;
+    if (refreshToken?.isNotEmpty != true) return _setToken(null);
 
     try {
       debugPrint('Token has been expired, refreshing now...');
-      final newToken = await widget.api.refreshToken(refreshToken);
-      _setToken(newToken);
-
-      return newToken;
-    } on ApiError {
-      return Future.value(null);
+      return _setToken(await _api.refreshToken(refreshToken));
+    } catch (e) {
+      print(e);
     }
+
+    return _setToken(null);
   }
 
-  void _setToken(OauthToken value) {
-    SharedPreferences.getInstance().then((SharedPreferences prefs) {
-      prefs.setString(kPrefKeyTokenAccessToken, value?.accessToken);
-      prefs.setString(kPrefKeyTokenClientId, widget.api.clientId);
-      prefs.setInt(kPrefKeyTokenExpiresAtMillisecondsSinceEpoch,
-          value?.expiresAt?.millisecondsSinceEpoch);
-      prefs.setString(kPrefKeyTokenRefreshToken, value?.refreshToken);
-      prefs.setString(kPrefKeyTokenScope, value?.scope);
-      prefs.setInt(kPrefKeyTokenUserId, value?.userId);
-      debugPrint("Saved token ${value?.accessToken}," +
-          " expires at ${value?.expiresAt}");
-    });
-
-    setState(() => _token = value);
-
-    if (value != null) {
-      _fetchUser();
-    } else {
-      _setUser(null);
+  void _setToken(OauthToken value, {bool savePref = true}) {
+    if (savePref) {
+      SharedPreferences.getInstance().then((SharedPreferences prefs) {
+        prefs.setString(kPrefKeyTokenAccessToken, value?.accessToken);
+        prefs.setString(kPrefKeyTokenClientId, _api.clientId);
+        prefs.setInt(kPrefKeyTokenExpiresAtMillisecondsSinceEpoch,
+            value?.expiresAt?.millisecondsSinceEpoch);
+        prefs.setString(kPrefKeyTokenRefreshToken, value?.refreshToken);
+        prefs.setString(kPrefKeyTokenScope, value?.scope);
+        prefs.setInt(kPrefKeyTokenUserId, value?.userId);
+        debugPrint("Saved token ${value?.accessToken}, " +
+            "expires at ${value?.expiresAt}, " +
+            "refresh token ${value?.refreshToken}");
+      });
     }
+
+    setState(() {
+      _token = value;
+      _tokenHasBeenSet = true;
+
+      if (_user != null) {
+        _user = null;
+        if (value != null) _fetchUser();
+      }
+
+      _dequeue();
+    });
   }
 
   void _setUser(User value) => setState(() => _user = value);

@@ -23,6 +23,7 @@ class Api {
   Batch _batch;
 
   String get clientId => _clientId;
+  bool get inBatch => _batch != null;
   Response get latestResponse => _latestResponse;
   int get requestCount => _requestCount;
 
@@ -55,7 +56,7 @@ class Api {
   }
 
   BatchController newBatch({String path = 'batch'}) {
-    if (_batch == null) {
+    if (!inBatch) {
       final batch = Batch(path: path);
       _batch = batch;
       return BatchController(batch, () => _fetchBatch(batch));
@@ -111,10 +112,8 @@ class Api {
   }
 
   Future<bool> _fetchBatch(Batch batch) async {
-    if (batch.length == 0) {
-      _batch = null;
-      return Future.value(false);
-    }
+    if (batch == _batch) _batch = null;
+    if (batch.length == 0) return false;
 
     final json = await sendRequest(
       'POST',
@@ -122,10 +121,7 @@ class Api {
       bodyJson: batch.bodyJson,
       parseJson: true,
     );
-    final handled = batch.handleResponse(json);
-
-    _batch = null;
-    return handled;
+    return batch.handleResponse(json);
   }
 
   Future sendRequest(String method, String path,
@@ -133,7 +129,7 @@ class Api {
       String bodyJson,
       Map<String, File> fileFields,
       parseJson: false}) {
-    if (_batch != null && bodyJson == null && fileFields == null && parseJson) {
+    if (inBatch && bodyJson == null && fileFields == null && parseJson) {
       return _batch.newJob(method, path, bodyFields);
     }
 

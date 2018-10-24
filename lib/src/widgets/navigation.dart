@@ -25,50 +25,45 @@ class NavigationWidget extends StatefulWidget {
 
 class _NavigationWidgetState extends State<NavigationWidget> {
   final List<navigation.Element> elements = List();
-  bool hasFetched = false;
-
-  _NavigationWidgetState();
 
   @override
-  Widget build(BuildContext context) {
-    if (!hasFetched) fetch();
-
-    return ListView.builder(
-      itemBuilder: (context, i) {
-        if (widget.header != null) {
-          if (i == 0) return widget.header;
-          i--;
-        }
-
-        if (widget.footer != null) {
-          if (i == elements.length) return widget.footer;
-        }
-
-        if (i >= elements.length) return buildProgressIndicator(!hasFetched);
-        return _buildRow(elements[i]);
-      },
-      itemCount: (widget.header != null ? 1 : 0) +
-          elements.length +
-          1 +
-          (widget.footer != null ? 1 : 0),
-    );
+  void initState() {
+    super.initState();
+    fetch();
   }
 
-  void fetch() async {
-    if (hasFetched) return;
-    setState(() => hasFetched = true);
+  @override
+  Widget build(BuildContext context) => ListView.builder(
+        itemBuilder: (context, i) {
+          if (widget.header != null) {
+            if (i == 0) return widget.header;
+            i--;
+          }
 
-    apiGet(this, widget.path, onSuccess: (jsonMap) {
-      List<navigation.Element> newElements = List();
+          if (widget.footer != null) {
+            if (i == elements.length) return widget.footer;
+          }
 
-      if (jsonMap.containsKey('elements')) {
-        final list = jsonMap['elements'] as List;
-        list.forEach((j) => newElements.add(navigation.Element.fromJson(j)));
-      }
+          if (i >= elements.length)
+            return buildProgressIndicator(elements.isEmpty);
+          return _buildRow(elements[i]);
+        },
+        itemCount: (widget.header != null ? 1 : 0) +
+            elements.length +
+            1 +
+            (widget.footer != null ? 1 : 0),
+      );
 
-      setState(() => elements.addAll(newElements));
-    });
-  }
+  void fetch() => apiGet(this, widget.path, onSuccess: (jsonMap) {
+        List<navigation.Element> newElements = List();
+
+        if (jsonMap.containsKey('elements')) {
+          final list = jsonMap['elements'] as List;
+          list.forEach((j) => newElements.add(navigation.Element.fromJson(j)));
+        }
+
+        setState(() => elements.addAll(newElements));
+      });
 
   Widget _buildRow(navigation.Element e) => ListTile(
         title: Text(e.node?.title ?? "#${e.navigationId}"),

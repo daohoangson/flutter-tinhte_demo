@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:async';
 
+import '../api.dart';
 import '../batch_job.dart';
 
 class Batch {
@@ -8,7 +9,15 @@ class Batch {
   final Completer _completer = Completer();
   final List<BatchJob> _jobs = List();
 
-  String get bodyJson => json.encode(_jobs);
+  String get bodyJson {
+    print('Batch has ${_jobs.length} jobs');
+    for (final _job in _jobs) {
+      print("Batch job ${_job.id}: ${_job.method} ${_job.uri}");
+    }
+
+    return json.encode(_jobs);
+  }
+
   int get length => _jobs.length;
   Future get future => _completer.future;
 
@@ -33,7 +42,7 @@ class Batch {
           jsonJobs.containsKey(job.id) ? jsonJobs[job.id] : Map();
       String jobResult = jsonJob.containsKey('_job_result')
           ? jsonJob['_job_result']
-          : 'Error: no job result';
+          : "No job result (${job.method} ${job.uri.replaceAll(RegExp(r'\?.+$'), '')})";
 
       if (jobResult == 'ok') {
         job.completer.complete(jsonJob);
@@ -41,11 +50,11 @@ class Batch {
       }
 
       if (jsonJob.containsKey('_job_error')) {
-        job.completer.completeError(jsonJob['_job_error']);
+        job.completer.completeError(ApiError(message: jsonJob['_job_error']));
         return;
       }
 
-      job.completer.completeError(jobResult);
+      job. completer.completeError(ApiError(message: jobResult));
       return;
     });
 

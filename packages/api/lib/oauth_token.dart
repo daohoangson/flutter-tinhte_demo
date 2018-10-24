@@ -24,4 +24,6 @@ class OauthToken {
   ) : expiresAt = DateTime.now().add(Duration(milliseconds: expiresIn * 1000));
   factory OauthToken.fromJson(Map<String, dynamic> json) =>
       _$OauthTokenFromJson(json);
+
+  bool get hasExpired => expiresAt.isBefore(DateTime.now());
 }
