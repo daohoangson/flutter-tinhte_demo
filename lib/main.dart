@@ -19,7 +19,9 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Tinh tế Demo',
         theme: ThemeData(
-          brightness: Brightness.dark,
+          accentColor: const Color(0xFF00BAD7),
+          primaryColor: const Color(0xFF192533),
+          brightness: Brightness.light,
         ),
         home: SafeArea(child: HomeScreen()),
       ));
