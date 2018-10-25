@@ -36,7 +36,7 @@ class TinhteHtmlWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final dts = DefaultTextStyle.of(context).style;
+    final textStyle = Theme.of(context).textTheme.body1;
     final config = Config(
       baseUrl: Uri.parse('https://tinhte.vn'),
     );
@@ -45,10 +45,10 @@ class TinhteHtmlWidget extends StatelessWidget {
       child: HtmlWidget(
         html,
         config: config,
-        wfBuilder: (context) => TinhteWidgetFactory(context, config),
+        wfBuilder: (c) => TinhteWidgetFactory(c, config),
       ),
-      style: dts.copyWith(
-        fontSize: dts.fontSize + (isFirstPost ? 0 : -1),
+      style: textStyle.copyWith(
+        fontSize: textStyle.fontSize + (isFirstPost ? 1 : 0),
       ),
     );
   }
