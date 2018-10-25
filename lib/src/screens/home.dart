@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
+import 'package:tinhte_api/feature_page.dart';
 import 'package:tinhte_api/links.dart';
 import 'package:tinhte_api/thread.dart';
 
@@ -21,6 +22,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final List<FeaturePage> featurePages = List();
   final GlobalKey<RefreshIndicatorState> refreshIndicatorKey = GlobalKey();
   final List<Thread> threads = List();
 
@@ -50,7 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
               }
 
               if (i == _kFeaturePagesIndex) {
-                return FeaturePagesWidget();
+                return FeaturePagesWidget(featurePages);
               }
 
               i--;
@@ -83,6 +85,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future fetch() async {
     setState(() {
+      featurePages.clear();
       threads.clear();
       _next = null;
     });

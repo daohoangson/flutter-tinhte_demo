@@ -13,21 +13,23 @@ const _kImageAspectRatio = 114 / 72;
 const _kInfoHeight = 75.0;
 
 class FeaturePagesWidget extends StatefulWidget {
-  FeaturePagesWidget({Key key}) : super(key: key);
+  final List<FeaturePage> pages;
+
+  FeaturePagesWidget(this.pages, {Key key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _FeaturePagesWidgetState();
 }
 
 class _FeaturePagesWidgetState extends State<FeaturePagesWidget> {
-  final List<FeaturePage> pages = List();
-
   User _user;
+
+  List<FeaturePage> get pages => widget.pages;
 
   @override
   void initState() {
     super.initState();
-    fetch();
+    if (pages?.isEmpty == true) fetch();
   }
 
   @override
@@ -46,34 +48,32 @@ class _FeaturePagesWidgetState extends State<FeaturePagesWidget> {
   }
 
   @override
-  Widget build(BuildContext context) => pages.length > 0
-      ? Card(
-          margin: const EdgeInsets.only(bottom: 10.0),
-          shape: RoundedRectangleBorder(),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              HeaderWidget('Cộng đồng'),
-              SizedBox(
-                height: _kImageWidth / _kImageAspectRatio + _kInfoHeight,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (_, i) =>
-                      _FpWidget(i < pages.length ? pages[i] : null),
-                  itemCount: max(min(pages.length, 5), 1),
-                ),
+  Widget build(BuildContext context) => Card(
+        margin: const EdgeInsets.only(bottom: 10.0),
+        shape: RoundedRectangleBorder(),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            HeaderWidget('Cộng đồng'),
+            SizedBox(
+              height: _kImageWidth / _kImageAspectRatio + _kInfoHeight,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemBuilder: (_, i) =>
+                    _FpWidget(i < pages.length ? pages[i] : null),
+                itemCount: max(min(pages.length, 5), 1),
               ),
-              Center(
-                child: FlatButton(
-                  child: Text('View all communities'),
-                  textColor: Theme.of(context).accentColor,
-                  onPressed: null,
-                ),
+            ),
+            Center(
+              child: FlatButton(
+                child: Text('View all communities'),
+                textColor: Theme.of(context).accentColor,
+                onPressed: null,
               ),
-            ],
-          ),
-        )
-      : Container(height: 0.0, width: 0.0);
+            ),
+          ],
+        ),
+      );
 
   void fetch() => apiGet(
         this,
@@ -82,20 +82,15 @@ class _FeaturePagesWidgetState extends State<FeaturePagesWidget> {
           final List<FeaturePage> newPages = List();
 
           if (jsonMap.containsKey('pages')) {
-            final jsonPages = jsonMap['pages'] as List;
-            jsonPages.forEach((j) {
-              final fp = FeaturePage.fromJson(j);
-              if (fp?.links?.image?.isNotEmpty != true) {
-                return;
-              }
-
-              newPages.add(fp);
-            });
+            final js = jsonMap['pages'] as List;
+            js.forEach((j) => newPages.add(FeaturePage.fromJson(j)));
           }
 
           setState(() {
             pages.clear();
-            pages.addAll(newPages);
+            pages.addAll(
+              newPages.where((fp) => fp.links?.image?.isNotEmpty == true),
+            );
           });
         },
       );
@@ -132,7 +127,9 @@ class _FpWidgetState extends State<_FpWidget> {
                     imageUrl: fp.links.image,
                     fit: BoxFit.cover,
                   )
-                : null,
+                : fp == null
+                    ? const Center(child: CircularProgressIndicator())
+                    : null,
           ),
           SizedBox(
             height: _kInfoHeight,
@@ -148,15 +145,17 @@ class _FpWidgetState extends State<_FpWidget> {
                         fp?.fullName ?? '',
                         style: Theme.of(context).textTheme.title,
                       ),
-                      GestureDetector(
-                        child: isFollowed
-                            ? const Icon(
-                                Icons.check_circle,
-                                color: Color(0xFFFC7E1F),
-                              )
-                            : const Icon(Icons.check_circle_outline),
-                        onTap: isFollowed ? _unfollow : _follow,
-                      ),
+                      fp != null
+                          ? GestureDetector(
+                              child: isFollowed
+                                  ? const Icon(
+                                      Icons.check_circle,
+                                      color: Color(0xFFFC7E1F),
+                                    )
+                                  : const Icon(Icons.check_circle_outline),
+                              onTap: isFollowed ? _unfollow : _follow,
+                            )
+                          : Container(height: 0.0, width: 0.0),
                     ],
                   ),
                   followerCount > 0
