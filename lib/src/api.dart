@@ -301,17 +301,15 @@ class ApiData extends State<ApiApp> {
       });
     }
 
-    setState(() {
-      _token = value;
-      _tokenHasBeenSet = true;
+    _token = value;
+    _tokenHasBeenSet = true;
 
-      if (_user != null) {
-        _user = null;
-        if (value != null) _fetchUser();
-      }
+    if (_user != null) {
+      _user = null;
+      if (value != null) _fetchUser();
+    }
 
-      _dequeue();
-    });
+    _dequeue();
   }
 
   void _setUser(User value) => setState(() => _user = value);
