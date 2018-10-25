@@ -31,7 +31,7 @@ Future apiGet(State state, String path,
       state,
       (apiData) => apiData._api.getJson(apiData._appendOauthToken(path)),
       onSuccess,
-      onError,
+      onError ?? (error) => print(error),
       onComplete,
     );
 

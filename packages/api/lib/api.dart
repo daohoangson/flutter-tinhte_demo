@@ -147,4 +147,7 @@ class ApiError {
 
   ApiError({String message, List<String> messages})
       : message = messages != null ? messages.join(', ') : message;
+
+  @override
+  String toString() => "Api error: $message";
 }

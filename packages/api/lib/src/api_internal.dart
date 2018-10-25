@@ -44,27 +44,27 @@ Future _sendRequest(Client client, String method, String url,
 
   if (parseJson) {
     final decodedJson = json.decode(_latestResponse.body);
-    _throwExceptionOnError(_latestResponse, decodedJson);
-    return decodedJson;
+    final error = _verifyResponseAndJsonForError(_latestResponse, decodedJson);
+    return error ?? decodedJson;
   }
 
   return _latestResponse;
 }
 
-void _throwExceptionOnError(Response response, j) {
-  if (response.statusCode < 400) {
-    return;
-  }
+Future _verifyResponseAndJsonForError(Response response, j) {
+  if (response.statusCode < 400) return null;
 
   if (j is Map) {
     if (j.containsKey('error_description')) {
-      throw ApiError(message: j['error_description']);
+      return Future.error(ApiError(message: j['error_description']));
     }
     if (j.containsKey('errors')) {
       final errors = List<String>.from(j['errors']);
-      throw ApiError(messages: errors);
+      return Future.error(ApiError(messages: errors));
     }
   }
 
-  throw ApiError();
+  return Future.error(
+    ApiError(message: "Unexpected http response ${response.statusCode}"),
+  );
 }
