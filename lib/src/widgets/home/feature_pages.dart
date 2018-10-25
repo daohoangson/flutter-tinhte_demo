@@ -123,8 +123,8 @@ class _FpWidgetState extends State<_FpWidget> {
           AspectRatio(
             aspectRatio: _kImageAspectRatio,
             child: fp?.links?.image?.isNotEmpty == true
-                ? CachedNetworkImage(
-                    imageUrl: fp.links.image,
+                ? Image(
+                    image: CachedNetworkImageProvider(fp.links.image),
                     fit: BoxFit.cover,
                   )
                 : fp == null

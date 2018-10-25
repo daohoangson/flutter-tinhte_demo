@@ -51,8 +51,8 @@ Widget _buildImageWidget(String imageUrl, {num imageHeight, num imageWidth}) =>
           imageWidth: imageWidth,
         );
 
-        return CachedNetworkImage(
-          imageUrl: proxyUrl ?? imageUrl,
+        return Image(
+          image: CachedNetworkImageProvider(proxyUrl ?? imageUrl),
           fit: BoxFit.cover,
         );
       },

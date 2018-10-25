@@ -80,6 +80,17 @@ class TinhteWidgetFactory extends WidgetFactory {
   }
 
   @override
+  Widget buildImageWidgetFromUrl(String url) {
+    final imageUrl = buildFullUrl(url, config.baseUrl);
+    if (imageUrl?.isEmpty != false) return null;
+
+    return Image(
+      image: CachedNetworkImageProvider(imageUrl),
+      fit: BoxFit.cover,
+    );
+  }
+
+  @override
   NodeMetadata parseElement(dom.Element e) {
     switch (e.className) {
       case 'LbTrigger':
