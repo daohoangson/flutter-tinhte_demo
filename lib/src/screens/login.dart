@@ -49,42 +49,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 children: <Widget>[
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 5.0),
-                    child: TextFormField(
-                      autofocus: true,
-                      decoration: InputDecoration(
-                        hintText: 'cuhiep@tinhte.vn',
-                        labelText: 'Username / email',
-                      ),
-                      initialValue: username,
-                      keyboardType: TextInputType.emailAddress,
-                      onSaved: (value) => username = value,
-                      validator: (username) {
-                        if (username.isEmpty) {
-                          return 'Please enter your username or email';
-                        }
-
-                        return null;
-                      },
-                    ),
+                    child: _buildUsername(),
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 5.0),
-                    child: TextFormField(
-                      decoration: InputDecoration(
-                        hintText: 'hunter2',
-                        labelText: 'Password',
-                      ),
-                      initialValue: password,
-                      obscureText: true,
-                      onSaved: (value) => password = value,
-                      validator: (password) {
-                        if (password.isEmpty) {
-                          return 'Please enter your password to login';
-                        }
-
-                        return null;
-                      },
-                    ),
+                    child: _buildPassword(),
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 5.0),
@@ -101,6 +70,40 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
+
+  Widget _buildPassword() => TextFormField(
+        decoration: InputDecoration(
+          hintText: 'hunter2',
+          labelText: 'Password',
+        ),
+        initialValue: password,
+        obscureText: true,
+        onSaved: (value) => password = value,
+        validator: (password) {
+          if (password.isEmpty) {
+            return 'Please enter your password to login';
+          }
+
+          return null;
+        },
+      );
+
+  Widget _buildUsername() => TextFormField(
+      autofocus: true,
+      decoration: InputDecoration(
+        hintText: 'cuhiep@tinhte.vn',
+        labelText: 'Username / email',
+      ),
+      initialValue: username,
+      keyboardType: TextInputType.emailAddress,
+      onSaved: (value) => username = value,
+      validator: (username) {
+        if (username.isEmpty) {
+          return 'Please enter your username or email';
+        }
+
+        return null;
+      });
 
   void _login() {
     if (isLoggingIn) return;

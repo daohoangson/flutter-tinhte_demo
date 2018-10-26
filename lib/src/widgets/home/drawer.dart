@@ -4,15 +4,11 @@ import 'package:tinhte_api/user.dart';
 
 import '../../screens/login.dart';
 import '../../api.dart';
+import '../../constants.dart';
 
-class HomeDrawerHeader extends StatefulWidget {
+class HomeDrawerHeader extends StatelessWidget {
   HomeDrawerHeader({Key key}) : super(key: key);
 
-  @override
-  State<StatefulWidget> createState() => _HomeDrawerHeaderState();
-}
-
-class _HomeDrawerHeaderState extends State<HomeDrawerHeader> {
   @override
   Widget build(BuildContext context) {
     final apiData = ApiData.of(context);
@@ -25,7 +21,7 @@ class _HomeDrawerHeaderState extends State<HomeDrawerHeader> {
       ),
       child: hasToken
           ? user != null
-              ? _buildVisitorPanel(user)
+              ? _buildVisitorPanel(context, user)
               : Text('Welcome back, we are loading user profile...')
           : GestureDetector(
               child: Text('Login'),
@@ -34,12 +30,12 @@ class _HomeDrawerHeaderState extends State<HomeDrawerHeader> {
     );
   }
 
-  Widget _buildVisitorPanel(User user) => Column(
+  Widget _buildVisitorPanel(BuildContext context, User user) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Expanded(
             child: CircleAvatar(
-              backgroundImage: user?.links?.avatarBig?.isNotEmpty == true
+              backgroundImage: user.links?.avatarBig?.isNotEmpty == true
                   ? CachedNetworkImageProvider(user.links.avatarBig)
                   : null,
               minRadius: 20.0,
@@ -53,14 +49,18 @@ class _HomeDrawerHeaderState extends State<HomeDrawerHeader> {
               text: TextSpan(
                 children: <TextSpan>[
                   TextSpan(
-                    text: user?.username ?? '',
-                    style: TextStyle(
-                      color: Theme.of(context).accentColor,
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    text: user.username ?? '',
+                    style: Theme.of(context).textTheme.title.copyWith(
+                          color: Theme.of(context).accentColor,
+                        ),
                   ),
-                  TextSpan(text: " ${user?.rank?.rankName ?? ''}"),
+                  TextSpan(
+                    text: " ${user.rank?.rankName ?? ''}",
+                    style: Theme.of(context).textTheme.subhead.copyWith(
+                          color: kColorUserRank,
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
                 ],
               ),
             ),

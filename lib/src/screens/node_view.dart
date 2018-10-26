@@ -3,10 +3,10 @@ import 'package:tinhte_api/navigation.dart' as navigation;
 
 import '../widgets/navigation.dart';
 
-class NavigationElementViewScreen extends StatelessWidget {
+class NodeViewScreen extends StatelessWidget {
   final navigation.Element element;
 
-  NavigationElementViewScreen({this.element, Key key}) : super(key: key);
+  NodeViewScreen({this.element, Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) => Scaffold(

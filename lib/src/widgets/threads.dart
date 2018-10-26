@@ -56,16 +56,13 @@ class _ThreadsWidgetState extends State<ThreadsWidget> {
   @override
   Widget build(BuildContext context) => ListView.builder(
         controller: scrollController,
-        itemBuilder: (context, i) {
-          if (i == threads.length) {
-            return buildProgressIndicator(_isFetching);
-          }
-          return buildThreadRow(context, threads[i]);
-        },
+        itemBuilder: (context, i) => i >= threads.length
+            ? buildProgressIndicator(_isFetching)
+            : buildThreadRow(context, threads[i]),
         itemCount: threads.length + 1,
       );
 
-  void fetch() async {
+  fetch() {
     if (_isFetching || _url == null) return;
     setState(() => _isFetching = true);
 

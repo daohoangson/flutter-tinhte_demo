@@ -53,7 +53,7 @@ class _PostListWidgetState extends State<_PostListWidget> {
         itemCount: 1 + posts.length,
       );
 
-  void fetch() async {
+  fetch() {
     if (_isFetching || _url?.isNotEmpty != true) return;
     setState(() => _isFetching = true);
 

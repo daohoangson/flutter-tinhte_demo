@@ -10,9 +10,9 @@ class _PostActionsWidget extends StatefulWidget {
 }
 
 class _PostActionsWidgetState extends State<_PostActionsWidget> {
-  bool isShowingEditor = false;
-  bool isLiking = false;
-  
+  bool _isShowingEditor = false;
+  bool _isLiking = false;
+
   Post get post => widget.post;
   bool get postIsLiked => post?.postIsLiked == true;
   int get postLikeCount => post?.postLikeCount ?? 0;
@@ -29,52 +29,52 @@ class _PostActionsWidgetState extends State<_PostActionsWidget> {
           context,
           postIsLiked ? 'Unlike' : 'Like',
           count: postLikeCount,
-          onTap: isLiking ? null : (postIsLiked ? _unlikePost : _likePost),
+          onTap: _isLiking ? null : (postIsLiked ? _unlikePost : _likePost),
         ),
         buildButton(
           context,
-          'Reply',
-          onTap: () => setState(() => isShowingEditor = true),
+          _isShowingEditor ? 'Cancel' : 'Reply',
+          onTap: () => setState(() => _isShowingEditor = !_isShowingEditor),
         ),
       ],
     );
 
-    if (!isShowingEditor) return row;
+    if (!_isShowingEditor) return row;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
         row,
         PostEditor(
-          _ThreadInheritedWidget.of(context).thread,
-          onDismissed: () => setState(() => isShowingEditor = false),
-          parentPost: _ParentPostInheritedWidget.of(context)?.parentPost,
+          _ThreadInheritedWidget.of(context).thread.threadId,
+          parentPostId:
+              _ParentPostInheritedWidget.of(context)?.parentPost?.postId,
         )
       ],
     );
   }
 
   _likePost() => prepareForApiAction(this, () {
-        if (isLiking) return;
-        setState(() => isLiking = true);
+        if (_isLiking) return;
+        setState(() => _isLiking = true);
 
         apiPost(this, widget.post.links.likes,
             onSuccess: (_) => setState(() {
                   postIsLiked = true;
                   postLikeCount++;
                 }),
-            onComplete: () => setState(() => isLiking = false));
+            onComplete: () => setState(() => _isLiking = false));
       });
 
   _unlikePost() => prepareForApiAction(this, () {
-        if (isLiking) return;
-        setState(() => isLiking = true);
+        if (_isLiking) return;
+        setState(() => _isLiking = true);
 
         apiDelete(this, widget.post.links.likes,
             onSuccess: (_) => setState(() {
                   postIsLiked = false;
                   if (postLikeCount > 0) postLikeCount--;
                 }),
-            onComplete: () => setState(() => isLiking = false));
+            onComplete: () => setState(() => _isLiking = false));
       });
 }

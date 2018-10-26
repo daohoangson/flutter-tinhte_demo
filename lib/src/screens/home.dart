@@ -10,6 +10,8 @@ import '../widgets/home/feature_pages.dart';
 import '../widgets/home/thread.dart';
 import '../widgets/navigation.dart';
 
+const kThreadsPath = 'lists/1/threads';
+
 const _kFeaturePagesIndex = 5;
 const _kItemCountForFeaturePages = 1;
 const _kItemCountForNext = 1;
@@ -83,16 +85,16 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       );
 
-  Future fetch() async {
+  Future fetch() {
     setState(() {
       featurePages.clear();
       threads.clear();
       _next = null;
     });
 
-    await Future.wait([
+    return Future.wait([
       _detectTitle(),
-      _fetchThreads(),
+      _fetchThreads(kThreadsPath),
     ]);
   }
 
@@ -101,13 +103,13 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() => _next = null);
     if (next?.isNotEmpty != true) return;
 
-    _fetchThreads(path: next);
+    _fetchThreads(next);
   }
 
   Future _detectTitle() => PackageInfo.fromPlatform().then(
       (info) => setState(() => _title = "${info.appName} ${info.version}"));
 
-  Future _fetchThreads({String path = 'lists/1/threads'}) {
+  Future _fetchThreads(String path) {
     setState(() => _isFetchingThreads = true);
     return apiGet(
       this,

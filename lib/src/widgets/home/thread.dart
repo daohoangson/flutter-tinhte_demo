@@ -113,45 +113,19 @@ class _HomeThreadActionsWidgetState extends State<_HomeThreadActionsWidget> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                postLikeCount > 0
-                    ? Row(
-                        children: <Widget>[
-                          Icon(
-                            FontAwesomeIcons.solidHeart,
-                            color: Theme.of(context).accentColor,
-                            size: 13.0,
-                          ),
-                          Text(" ${formatNumber(postLikeCount)}"),
-                        ],
-                      )
-                    : Container(height: 0.0, width: 0.0),
-                threadPostCount > 0
-                    ? Text("${formatNumber(threadPostCount)} Posts")
-                    : Container(height: 0.0, width: 0.0),
+                _buildCounterLike(),
+                _buildCounterPost(),
               ],
             ),
           ),
         ),
         Divider(indent: 10.0),
         IconTheme(
-          data: Theme.of(context).iconTheme.copyWith(
-                size: 20.0,
-              ),
+          data: Theme.of(context).iconTheme.copyWith(size: 20.0),
           child: Row(
             children: <Widget>[
               Expanded(
-                child: FlatButton.icon(
-                  icon: postIsLiked
-                      ? const Icon(FontAwesomeIcons.solidHeart)
-                      : const Icon(FontAwesomeIcons.heart),
-                  label:
-                      postIsLiked ? const Text('Unlike') : const Text('Like'),
-                  onPressed: isLiking
-                      ? null
-                      : linkLikes?.isNotEmpty != true
-                          ? null
-                          : postIsLiked ? _unlikePost : _likePost,
-                ),
+                child: _buildButtonLike(),
               ),
               Expanded(
                 child: FlatButton.icon(
@@ -171,6 +145,35 @@ class _HomeThreadActionsWidgetState extends State<_HomeThreadActionsWidget> {
           ),
         ),
       ]);
+
+  _buildButtonLike() => FlatButton.icon(
+        icon: postIsLiked
+            ? const Icon(FontAwesomeIcons.solidHeart)
+            : const Icon(FontAwesomeIcons.heart),
+        label: postIsLiked ? const Text('Unlike') : const Text('Like'),
+        onPressed: isLiking
+            ? null
+            : linkLikes?.isNotEmpty != true
+                ? null
+                : postIsLiked ? _unlikePost : _likePost,
+      );
+
+  _buildCounterLike() => postLikeCount > 0
+      ? Row(
+          children: <Widget>[
+            Icon(
+              FontAwesomeIcons.solidHeart,
+              color: Theme.of(context).accentColor,
+              size: 13.0,
+            ),
+            Text(" ${formatNumber(postLikeCount)}"),
+          ],
+        )
+      : Container(height: 0.0, width: 0.0);
+
+  _buildCounterPost() => threadPostCount > 0
+      ? Text("${formatNumber(threadPostCount)} Posts")
+      : Container(height: 0.0, width: 0.0);
 
   _likePost() => prepareForApiAction(this, () {
         if (isLiking) return;

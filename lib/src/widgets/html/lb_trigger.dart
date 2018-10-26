@@ -27,8 +27,8 @@ class LbTrigger {
               wf.context,
               MaterialPageRoute(
                 builder: (context) => PhotoViewGalleryWrapper(
+                      sources,
                       initialPage: index,
-                      sources: sources,
                     ),
               ),
             );
@@ -44,7 +44,7 @@ class PhotoViewGalleryWrapper extends StatelessWidget {
   final PageController pageController;
   final List<String> sources;
 
-  PhotoViewGalleryWrapper({this.initialPage, this.sources})
+  PhotoViewGalleryWrapper(this.sources, {this.initialPage = 0})
       : this.pageController = PageController(initialPage: initialPage);
 
   @override
@@ -77,8 +77,8 @@ class PhotoViewGalleryWrapper extends StatelessWidget {
           ],
         ),
         direction: DismissDirection.down,
-        onDismissed: (_) => Navigator.pop(context),
         key: GlobalKey(),
+        onDismissed: (_) => Navigator.pop(context),
       ),
     );
   }

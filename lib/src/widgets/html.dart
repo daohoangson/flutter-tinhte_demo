@@ -24,6 +24,13 @@ final _smilies = {
   'Er... what?': '😳',
 };
 
+TextStyle getPostBodyTextStyle(BuildContext context, bool isFirstPost) {
+  final textStyle = Theme.of(context).textTheme.body1;
+  return textStyle.copyWith(
+    fontSize: textStyle.fontSize + (isFirstPost ? 1 : 0),
+  );
+}
+
 class TinhteHtmlWidget extends StatelessWidget {
   final String html;
   final bool isFirstPost;
@@ -36,7 +43,6 @@ class TinhteHtmlWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textStyle = Theme.of(context).textTheme.body1;
     final config = Config(
       baseUrl: Uri.parse('https://tinhte.vn'),
     );
@@ -47,9 +53,7 @@ class TinhteHtmlWidget extends StatelessWidget {
         config: config,
         wfBuilder: (c) => TinhteWidgetFactory(c, config),
       ),
-      style: textStyle.copyWith(
-        fontSize: textStyle.fontSize + (isFirstPost ? 1 : 0),
-      ),
+      style: getPostBodyTextStyle(context, isFirstPost),
     );
   }
 }

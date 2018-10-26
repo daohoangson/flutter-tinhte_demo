@@ -100,7 +100,7 @@ class _PostReplyHiddenWidgetState extends State<_PostReplyHiddenWidget> {
         return Padding(
           padding: const EdgeInsets.symmetric(
               horizontal: kPaddingHorizontal, vertical: 5.0),
-          child: Center(child: CircularProgressIndicator()),
+          child: const Center(child: CircularProgressIndicator()),
         );
       }
 
@@ -110,10 +110,7 @@ class _PostReplyHiddenWidgetState extends State<_PostReplyHiddenWidget> {
         child: GestureDetector(
           child: Text(
             "Tap to load ${widget.postReplyCount} hidden replies...",
-            style: DefaultTextStyle.of(context).style.copyWith(
-                  color: Theme.of(context).primaryColorLight,
-                  fontSize: 12.0,
-                ),
+            style: Theme.of(context).textTheme.caption,
           ),
           onTap: fetch,
         ),
@@ -126,7 +123,7 @@ class _PostReplyHiddenWidgetState extends State<_PostReplyHiddenWidget> {
     );
   }
 
-  void fetch() async {
+  fetch() {
     if (_hasFetched || widget.link == null) return;
     setState(() => _hasFetched = true);
 

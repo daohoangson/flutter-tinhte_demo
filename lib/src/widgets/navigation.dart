@@ -3,7 +3,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:tinhte_api/navigation.dart' as navigation;
 
 import '../screens/forum_view.dart';
-import '../screens/navigation_element_view.dart';
+import '../screens/node_view.dart';
 import '../api.dart';
 import '_list_view.dart';
 
@@ -54,7 +54,7 @@ class _NavigationWidgetState extends State<NavigationWidget> {
             (widget.footer != null ? 1 : 0),
       );
 
-  void fetch() => apiGet(this, widget.path, onSuccess: (jsonMap) {
+  fetch() => apiGet(this, widget.path, onSuccess: (jsonMap) {
         List<navigation.Element> newElements = List();
 
         if (jsonMap.containsKey('elements')) {
@@ -74,8 +74,8 @@ class _NavigationWidgetState extends State<NavigationWidget> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) =>
-                            NavigationElementViewScreen(element: e)));
+                      builder: (context) => NodeViewScreen(element: e),
+                    ));
               }
               break;
             case navigation.NavigationTypeForum:

@@ -14,8 +14,7 @@ class _PostAttachmentsWidget extends StatelessWidget {
           itemBuilder: (context, i) => _buildAttachment(attachments[i]),
           itemCount: attachments.length,
           scrollDirection: Axis.horizontal,
-          separatorBuilder: (context, i) =>
-              const Padding(padding: const EdgeInsets.only(left: 10.0)),
+          separatorBuilder: (context, i) => const SizedBox(width: 10.0),
         ),
       );
 

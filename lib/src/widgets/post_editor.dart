@@ -1,29 +1,28 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:tinhte_api/post.dart';
-import 'package:tinhte_api/thread.dart';
 
 import '../api.dart';
 import 'attachment_editor.dart';
+import 'html.dart';
 import 'posts.dart';
 
 class PostEditor extends StatefulWidget {
-  final VoidCallback onDismissed;
-  final Post parentPost;
+  final int parentPostId;
   final Post post;
-  final Thread thread;
+  final int threadId;
 
   PostEditor(
-    this.thread, {
+    this.threadId, {
     Key key,
-    this.onDismissed,
-    this.parentPost,
+    this.parentPostId,
     this.post,
-  }) : super(key: key);
+  })  : assert(threadId != null),
+        super(key: key);
 
   @override
   State<StatefulWidget> createState() =>
-      _PostEditorState(post?.postBodyPlainText);
+      _PostEditorState(post?.postBodyPlainText ?? '');
 }
 
 class _PostEditorState extends State<PostEditor> {
@@ -45,7 +44,7 @@ class _PostEditorState extends State<PostEditor> {
         context,
         buildPosterCircleAvatar(
           user?.links?.avatar,
-          isPostReply: widget.parentPost != null,
+          isPostReply: widget.parentPostId != null,
         ),
         box: <Widget>[
           buildPosterInfo(context, user?.username ?? ''),
@@ -60,9 +59,7 @@ class _PostEditorState extends State<PostEditor> {
               initialValue: _postBody,
               maxLines: 3,
               onSaved: (value) => _postBody = value,
-              style: DefaultTextStyle.of(context).style.copyWith(
-                    fontSize: DefaultTextStyle.of(context).style.fontSize - 1.0,
-                  ),
+              style: getPostBodyTextStyle(context, false),
               validator: (message) {
                 if (message.isEmpty) {
                   return 'Please enter some text.';
@@ -76,7 +73,7 @@ class _PostEditorState extends State<PostEditor> {
         footer: <Widget>[
           _attachmentHash != null
               ? AttachmentEditor(
-                  "posts/attachments?thread_id=${widget.thread?.threadId ?? 0}",
+                  "posts/attachments?thread_id=${widget.threadId}",
                   _attachmentHash,
                 )
               : null,
@@ -92,22 +89,10 @@ class _PostEditorState extends State<PostEditor> {
                           _attachmentHash = "${Random.secure().nextDouble()}"),
                     )
                   : Container(height: 0.0, width: 0.0),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: <Widget>[
-                  buildButton(
-                    context,
-                    'Cancel',
-                    color: Theme.of(context).highlightColor,
-                    onTap: _actionCancel,
-                  ),
-                  buildButton(
-                    context,
-                    'Post',
-                    onTap: _isPosting ? null : _actionPost,
-                  ),
-                ],
+              buildButton(
+                context,
+                'Post',
+                onTap: _isPosting ? null : _post,
               ),
             ],
           ),
@@ -116,11 +101,7 @@ class _PostEditorState extends State<PostEditor> {
     );
   }
 
-  void _actionCancel() {
-    _dismiss();
-  }
-
-  void _actionPost() {
+  _post() {
     final form = formKey.currentState;
     if (!form.validate()) return;
     form.save();
@@ -133,27 +114,17 @@ class _PostEditorState extends State<PostEditor> {
           bodyFields: {
             'attachment_hash': _attachmentHash ?? '',
             'post_body': _postBody,
-            'quote_post_id': widget.parentPost?.postId?.toString() ?? '',
-            'thread_id': widget.thread.threadId.toString(),
+            'quote_post_id': widget.parentPostId?.toString() ?? '',
+            'thread_id': widget.threadId.toString(),
           },
           onSuccess: (jsonMap) {
             if (jsonMap.containsKey('post')) {
               final post = Post.fromJson(jsonMap['post']);
-              _dismiss(post: post);
+              PostListInheritedWidget.of(context)?.notifyListeners(post);
             }
           },
           onError: (e) => showApiErrorDialog(context, e, title: 'Post error'),
           onComplete: () => setState(() => _isPosting = false));
     });
-  }
-
-  void _dismiss({Post post}) {
-    if (post != null) {
-      PostListInheritedWidget.of(context)?.notifyListeners(post);
-    }
-
-    if (widget.onDismissed != null) {
-      widget.onDismissed();
-    }
   }
 }
