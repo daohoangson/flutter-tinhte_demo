@@ -8,15 +8,23 @@ class _PostAttachmentsWidget extends StatelessWidget {
   _PostAttachmentsWidget(this.attachments);
 
   @override
-  Widget build(BuildContext context) => SizedBox(
-        height: kAttachmentSize,
-        child: ListView.separated(
-          itemBuilder: (context, i) => _buildAttachment(attachments[i]),
-          itemCount: attachments.length,
-          scrollDirection: Axis.horizontal,
-          separatorBuilder: (context, i) => const SizedBox(width: 10.0),
-        ),
-      );
+  Widget build(BuildContext context) {
+    final lbTrigger = LbTrigger(context);
+    for (final attachment in attachments) {
+      lbTrigger.sources.add(attachment.links.data);
+    }
+
+    return SizedBox(
+      height: kAttachmentSize,
+      child: ListView.separated(
+        itemBuilder: (context, i) => lbTrigger.buildGestureDetector(
+            i, _buildAttachment((attachments[i]))),
+        itemCount: attachments.length,
+        scrollDirection: Axis.horizontal,
+        separatorBuilder: (context, i) => const SizedBox(width: 10.0),
+      ),
+    );
+  }
 
   Widget _buildAttachment(Attachment attachment) => CachedNetworkImage(
         imageUrl: attachment.links.thumbnail,

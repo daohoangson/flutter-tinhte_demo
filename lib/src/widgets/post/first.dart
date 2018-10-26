@@ -13,7 +13,7 @@ class _FirstPostWidget extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 20.0),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.symmetric(
@@ -28,7 +28,7 @@ class _FirstPostWidget extends StatelessWidget {
             ),
           ),
           TinhteHtmlWidget(post.postBodyHtml, isFirstPost: true),
-          _PostActionsWidget(post),
+          _PostActionsWidget(post, showPostCreateDate: false),
         ],
       ),
     );

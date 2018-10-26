@@ -1,6 +1,7 @@
 part of '../posts.dart';
 
 const kPaddingHorizontal = 10.0;
+const kEdgeInsetsHorizontal = const EdgeInsets.symmetric(horizontal: kPaddingHorizontal);
 
 Widget buildButton(
   BuildContext context,
@@ -10,13 +11,12 @@ Widget buildButton(
   GestureTapCallback onTap,
 }) {
   Widget button = Padding(
-    padding: const EdgeInsets.symmetric(
-        horizontal: kPaddingHorizontal, vertical: 5.0),
+    padding: const EdgeInsets.fromLTRB(kPaddingHorizontal, 5.0, 0.0, 5.0),
     child: Text(
       (count > 0 ? "$count " : '') + text,
       style: TextStyle(
         color: onTap != null
-            ? color ?? Theme.of(context).accentColor
+            ? color ?? Theme.of(context).primaryColor
             : color ?? Theme.of(context).disabledColor,
         fontSize: 12.0,
       ),
@@ -45,10 +45,10 @@ Widget buildPosterCircleAvatar(String url, {bool isPostReply = false}) =>
 Widget buildPosterInfo(
   BuildContext context,
   String username, {
-  int date,
+  String userRank,
 }) =>
     Padding(
-      padding: const EdgeInsets.symmetric(horizontal: kPaddingHorizontal),
+      padding: kEdgeInsetsHorizontal,
       child: RichText(
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
@@ -63,14 +63,13 @@ Widget buildPosterInfo(
             ),
             TextSpan(
               style: TextStyle(
-                color: Theme.of(context).disabledColor,
+                color: kColorUserRank,
+                fontWeight: FontWeight.bold,
               ),
-              text: "  ${date != null ? formatTimestamp(date) : 'now'}",
+              text: "  ${userRank ?? ''}",
             ),
           ],
-          style: DefaultTextStyle.of(context).style.copyWith(
-                fontSize: 12.0,
-              ),
+          style: Theme.of(context).textTheme.caption,
         ),
       ),
     );
@@ -85,7 +84,7 @@ Widget buildRow(
 
   if (box != null) {
     children.add(Padding(
-      padding: const EdgeInsets.symmetric(horizontal: kPaddingHorizontal),
+      padding: kEdgeInsetsHorizontal,
       child: DecoratedBox(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(2.0),

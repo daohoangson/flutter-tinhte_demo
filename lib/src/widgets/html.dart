@@ -100,7 +100,7 @@ class TinhteWidgetFactory extends WidgetFactory {
       case 'LbTrigger':
         if (e.localName == 'a' && e.attributes.containsKey('href')) {
           final href = e.attributes['href'];
-          _lbTrigger ??= LbTrigger(this);
+          _lbTrigger ??= LbTrigger(this.context);
 
           return lazySet(
             null,

@@ -4,13 +4,26 @@ import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart
     show BuildOpOnWidgets;
 import 'package:photo_view/photo_view.dart';
 
-import '../html.dart';
-
 class LbTrigger {
-  final TinhteWidgetFactory wf;
+  final BuildContext context;
   final List<String> sources = List();
 
-  LbTrigger(this.wf);
+  LbTrigger(this.context);
+
+  Widget buildGestureDetector(int index, Widget child) => GestureDetector(
+        child: child,
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => PhotoViewGalleryWrapper(
+                    sources,
+                    initialPage: index,
+                  ),
+            ),
+          );
+        },
+      );
 
   BuildOpOnWidgets prepareBuildOpOnWidgets(String source) {
     final index = sources.length;
@@ -20,20 +33,7 @@ class LbTrigger {
       if (widgets.length != 1) return widgets;
 
       return <Widget>[
-        GestureDetector(
-          child: widgets.first,
-          onTap: () {
-            Navigator.push(
-              wf.context,
-              MaterialPageRoute(
-                builder: (context) => PhotoViewGalleryWrapper(
-                      sources,
-                      initialPage: index,
-                    ),
-              ),
-            );
-          },
-        )
+        buildGestureDetector(index, widgets.first),
       ];
     };
   }
@@ -70,7 +70,7 @@ class PhotoViewGalleryWrapper extends StatelessWidget {
               right: 0.0,
               child: Text(
                 'Swipe down to dismiss',
-                style: Theme.of(context).textTheme.caption,
+                style: Theme.of(context).primaryTextTheme.caption,
                 textAlign: TextAlign.center,
               ),
             ),

@@ -7,13 +7,16 @@ Widget _buildPostReply(BuildContext context, Post post) => buildRow(
         buildPosterInfo(
           context,
           post.posterUsername,
-          date: post.postCreateDate,
+          userRank: post.posterRank?.rankName,
         ),
         TinhteHtmlWidget(post.postBodyHtml),
         _PostAttachmentsWidget.forPost(post),
       ],
       footer: <Widget>[
-        _PostActionsWidget(post),
+        Padding(
+          padding: const EdgeInsets.only(left: kPaddingHorizontal),
+          child: _PostActionsWidget(post),
+        ),
       ],
     );
 
@@ -98,15 +101,15 @@ class _PostReplyHiddenWidgetState extends State<_PostReplyHiddenWidget> {
     if (_posts == null) {
       if (_hasFetched) {
         return Padding(
-          padding: const EdgeInsets.symmetric(
-              horizontal: kPaddingHorizontal, vertical: 5.0),
+          padding: const EdgeInsets.fromLTRB(
+              kPaddingHorizontal, 0.0, kPaddingHorizontal, 15.0),
           child: const Center(child: CircularProgressIndicator()),
         );
       }
 
       return Padding(
-        padding: const EdgeInsets.symmetric(
-            horizontal: kPaddingHorizontal, vertical: 5.0),
+        padding: const EdgeInsets.fromLTRB(
+            kPaddingHorizontal, 0.0, kPaddingHorizontal, 15.0),
         child: GestureDetector(
           child: Text(
             "Tap to load ${widget.postReplyCount} hidden replies...",

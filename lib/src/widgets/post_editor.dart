@@ -47,9 +47,13 @@ class _PostEditorState extends State<PostEditor> {
           isPostReply: widget.parentPostId != null,
         ),
         box: <Widget>[
-          buildPosterInfo(context, user?.username ?? ''),
+          buildPosterInfo(
+            context,
+            user?.username ?? '',
+            userRank: user?.rank?.rankName,
+          ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: kPaddingHorizontal),
+            padding: kEdgeInsetsHorizontal,
             child: TextFormField(
               autofocus: true,
               decoration: InputDecoration(

@@ -96,13 +96,16 @@ class _PostListWidgetState extends State<_PostListWidget> {
               buildPosterInfo(
                 context,
                 post.posterUsername,
-                date: post.postCreateDate,
+                userRank: post.posterRank?.rankName,
               ),
               TinhteHtmlWidget(post.postBodyHtml),
               _PostAttachmentsWidget.forPost(post),
             ],
             footer: <Widget>[
-              _PostActionsWidget(post),
+              Padding(
+                padding: const EdgeInsets.only(left: kPaddingHorizontal),
+                child: _PostActionsWidget(post),
+              ),
               _PostRepliesWidget(post),
             ],
           ),

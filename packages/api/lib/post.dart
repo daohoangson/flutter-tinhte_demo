@@ -2,6 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 import 'src/_.dart';
 import 'attachment.dart';
+import 'user.dart';
 
 part 'post.g.dart';
 
@@ -66,6 +67,9 @@ class Post {
   bool postHasOtherReplies;
   int postReplyTo;
   int postReplyDepth;
+
+  @JsonKey(toJson: none)
+  UserRank posterRank;
 
   Post(this.postId);
   factory Post.fromJson(Map<String, dynamic> json) => _$PostFromJson(json);
