@@ -4,6 +4,8 @@ import 'src/_.dart';
 
 part 'feature_page.g.dart';
 
+final _kIdRegExp = RegExp(r'/([\w-]+)/$');
+
 @JsonSerializable(createToJson: false)
 class FeaturePage {
   final int forumId;
@@ -28,6 +30,13 @@ class FeaturePage {
   );
   factory FeaturePage.fromJson(Map<String, dynamic> json) =>
       _$FeaturePageFromJson(json);
+
+  // TODO: use data from api when it's available
+  String get id {
+    final match = _kIdRegExp.firstMatch(links?.permalink ?? '');
+    if (match == null) return null;
+    return match.group(1);
+  }
 }
 
 @JsonSerializable(createToJson: false)

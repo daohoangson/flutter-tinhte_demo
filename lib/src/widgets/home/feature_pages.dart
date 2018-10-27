@@ -2,7 +2,6 @@ import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:tinhte_api/feature_page.dart';
-import 'package:tinhte_api/user.dart';
 
 import '../../api.dart';
 import '../../constants.dart';
@@ -16,21 +15,21 @@ const _kInfoHeight = 75.0;
 class FeaturePagesWidget extends StatefulWidget {
   final List<FeaturePage> pages;
 
-  FeaturePagesWidget(this.pages, {Key key}) : super(key: key);
+  FeaturePagesWidget(this.pages, {Key key})
+      : assert(pages != null),
+        super(key: key);
 
   @override
   State<StatefulWidget> createState() => _FeaturePagesWidgetState();
 }
 
 class _FeaturePagesWidgetState extends State<FeaturePagesWidget> {
-  User _user;
-
   List<FeaturePage> get pages => widget.pages;
 
   @override
   void initState() {
     super.initState();
-    if (pages?.isEmpty == true) fetch();
+    if (pages.isEmpty == true) fetch();
   }
 
   @override
@@ -38,13 +37,13 @@ class _FeaturePagesWidgetState extends State<FeaturePagesWidget> {
     super.didChangeDependencies();
 
     final user = ApiData.of(context).user;
-    if (user != _user) {
-      // don't use setState to avoid wasting a build cycle
-      _user = user;
-
-      // have to fetch feature pages on login because
-      // the follow link is null for guest...
-      fetch();
+    if (pages?.isNotEmpty == true) {
+      final hasLinkFollow = pages.first.links?.follow?.isNotEmpty == true;
+      if (hasLinkFollow == (user == null)) {
+        // if no user but fp has link -> fetch
+        // if has user but fp doesn't have link -> also fetch
+        fetch();
+      }
     }
   }
 
@@ -62,7 +61,7 @@ class _FeaturePagesWidgetState extends State<FeaturePagesWidget> {
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (_, i) =>
                     _FpWidget(i < pages.length ? pages[i] : null),
-                itemCount: max(min(pages.length, 5), 1),
+                itemCount: max(pages.length, 1),
               ),
             ),
             Center(
@@ -76,25 +75,49 @@ class _FeaturePagesWidgetState extends State<FeaturePagesWidget> {
         ),
       );
 
-  fetch() => apiGet(
-        this,
-        'feature-pages?order=7_days_thread_count_desc',
+  fetch() {
+    final List<String> pageIds = List();
+    final List<FeaturePage> allPages = List();
+
+    final _sortPages = () {
+      if (pageIds.length == 0 || allPages.length == 0) return;
+
+      final List<FeaturePage> filtered = List();
+      for (final fpId in pageIds) {
+        final fp = allPages.firstWhere((fp) => fp.id == fpId);
+        if (fp == null) continue;
+        filtered.add(fp);
+      }
+
+      setState(() => pages.addAll(filtered));
+    };
+
+    apiGet(this, 'posts/50265722?fields_include=post_body_plain_text',
         onSuccess: (jsonMap) {
-          final List<FeaturePage> newPages = List();
+      if (jsonMap.containsKey('post')) {
+        final post = jsonMap['post'] as Map;
+        if (post.containsKey('post_body_plain_text')) {
+          final list = post['post_body_plain_text'] as String;
+          pageIds.addAll(list.split('\n'));
+        }
+      }
 
-          if (jsonMap.containsKey('pages')) {
-            final js = jsonMap['pages'] as List;
-            js.forEach((j) => newPages.add(FeaturePage.fromJson(j)));
-          }
+      _sortPages();
+    });
 
-          setState(() {
-            pages.clear();
-            pages.addAll(
-              newPages.where((fp) => fp.links?.image?.isNotEmpty == true),
-            );
-          });
-        },
-      );
+    apiGet(
+      this,
+      'feature-pages?order=7_days_thread_count_desc',
+      onSuccess: (jsonMap) {
+        if (jsonMap.containsKey('pages')) {
+          final js = jsonMap['pages'] as List;
+          js.forEach((j) => allPages.add(FeaturePage.fromJson(j)));
+        }
+
+        _sortPages();
+      },
+    );
+  }
 }
 
 class _FpWidget extends StatefulWidget {
