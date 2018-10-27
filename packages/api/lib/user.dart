@@ -68,7 +68,8 @@ class UserRank {
   int rankGroupId;
   int rankLevel;
   String rankName;
-  String rankPoints;
+  
+  // TODO: handle rank_points, it could be String or int (-1)
 
   UserRank();
   factory UserRank.fromJson(Map<String, dynamic> json) =>
