@@ -305,7 +305,7 @@ class ApiData extends State<ApiApp> {
     _tokenHasBeenSet = true;
 
     if (_user != null) {
-      _user = null;
+      _setUser(null);
       if (value != null) _fetchUser();
     }
 
