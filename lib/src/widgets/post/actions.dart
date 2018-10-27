@@ -58,6 +58,10 @@ class _PostActionsWidgetState extends State<_PostActionsWidget> {
         buttons,
         PostEditor(
           _ThreadInheritedWidget.of(context).thread.threadId,
+          callback: (post) {
+            PostListInheritedWidget.of(context)?.notifyListeners(post);
+            setState(() => _isShowingEditor = false);
+          },
           parentPostId:
               _ParentPostInheritedWidget.of(context)?.parentPost?.postId,
         )

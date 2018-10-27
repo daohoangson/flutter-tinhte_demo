@@ -8,12 +8,14 @@ import 'html.dart';
 import 'posts.dart';
 
 class PostEditor extends StatefulWidget {
+  final PostEditorCallback callback;
   final int parentPostId;
   final Post post;
   final int threadId;
 
   PostEditor(
     this.threadId, {
+    this.callback,
     Key key,
     this.parentPostId,
     this.post,
@@ -81,24 +83,27 @@ class _PostEditorState extends State<PostEditor> {
                   _attachmentHash,
                 )
               : null,
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              _attachmentHash == null
-                  ? buildButton(
-                      context,
-                      'Upload images',
-                      onTap: () => setState(() =>
-                          _attachmentHash = "${Random.secure().nextDouble()}"),
-                    )
-                  : Container(height: 0.0, width: 0.0),
-              buildButton(
-                context,
-                'Post',
-                onTap: _isPosting ? null : _post,
-              ),
-            ],
+          Padding(
+            padding: kEdgeInsetsHorizontal,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                _attachmentHash == null
+                    ? buildButton(
+                        context,
+                        'Upload images',
+                        onTap: () => setState(() => _attachmentHash =
+                            "${Random.secure().nextDouble()}"),
+                      )
+                    : Container(height: 0.0, width: 0.0),
+                buildButton(
+                  context,
+                  'Post',
+                  onTap: _isPosting ? null : _post,
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -124,7 +129,9 @@ class _PostEditorState extends State<PostEditor> {
           onSuccess: (jsonMap) {
             if (jsonMap.containsKey('post')) {
               final post = Post.fromJson(jsonMap['post']);
-              PostListInheritedWidget.of(context)?.notifyListeners(post);
+              if (widget.callback != null) {
+                widget.callback(post);
+              }
             }
           },
           onError: (e) => showApiErrorDialog(context, e, title: 'Post error'),
@@ -132,3 +139,5 @@ class _PostEditorState extends State<PostEditor> {
     });
   }
 }
+
+typedef void PostEditorCallback(Post post);
