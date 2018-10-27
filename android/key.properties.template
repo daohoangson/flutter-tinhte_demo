@@ -1,4 +1,4 @@
 storePassword=xxx
 keyPassword=xxx
 keyAlias=key
-storeFile=release.jks
+storeFile=../release.jks
