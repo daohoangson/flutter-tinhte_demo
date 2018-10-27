@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:tinhte_api/feature_page.dart';
 
+import '../../screens/fp_view.dart';
 import '../../api.dart';
 import '../../constants.dart';
 import '../../intl.dart';
@@ -141,29 +142,31 @@ class _FpWidgetState extends State<_FpWidget> {
   set isFollowed(bool value) => fp?.isFollowed = value;
 
   @override
-  Widget build(BuildContext context) => _buildBox(
-        image?.isNotEmpty == true
-            ? Image(
-                image: CachedNetworkImageProvider(image),
-                fit: BoxFit.cover,
-              )
-            : fp == null
-                ? const Center(child: CircularProgressIndicator())
-                : null,
-        Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  _buildFullName(),
-                  _buildFollowerButton(),
-                ],
-              ),
-              _buildFollowerCount(),
-            ],
+  Widget build(BuildContext context) => _buildGestureDetector(
+        _buildBox(
+          image?.isNotEmpty == true
+              ? Image(
+                  image: CachedNetworkImageProvider(image),
+                  fit: BoxFit.cover,
+                )
+              : fp == null
+                  ? const Center(child: CircularProgressIndicator())
+                  : null,
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    _buildFullName(),
+                    _buildFollowerButton(),
+                  ],
+                ),
+                _buildFollowerCount(),
+              ],
+            ),
           ),
         ),
       );
@@ -219,6 +222,11 @@ class _FpWidgetState extends State<_FpWidget> {
   Widget _buildFullName() => Text(
         fp?.fullName ?? '',
         style: Theme.of(context).textTheme.title,
+      );
+
+  Widget _buildGestureDetector(Widget child) => GestureDetector(
+        child: child,
+        onTap: () => pushFpViewScreen(context, fp),
       );
 
   _follow() => prepareForApiAction(this, () {

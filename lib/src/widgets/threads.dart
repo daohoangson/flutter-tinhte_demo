@@ -14,8 +14,13 @@ part 'thread/builders.dart';
 
 class ThreadsWidget extends StatefulWidget {
   final String path;
+  final String threadsKey;
 
-  ThreadsWidget({Key key, this.path}) : super(key: key);
+  ThreadsWidget(
+    this.path, {
+    Key key,
+    this.threadsKey = 'threads',
+  }) : super(key: key);
 
   @override
   _ThreadsWidgetState createState() => _ThreadsWidgetState(this.path);
@@ -27,6 +32,8 @@ class _ThreadsWidgetState extends State<ThreadsWidget> {
 
   bool _isFetching = false;
   String _url;
+
+  String get threadsKey => widget.threadsKey;
 
   _ThreadsWidgetState(this._url);
 
@@ -71,8 +78,8 @@ class _ThreadsWidgetState extends State<ThreadsWidget> {
           final List<Thread> newThreads = List();
           String nextUrl;
 
-          if (jsonMap.containsKey('threads')) {
-            final jsonThreads = jsonMap['threads'] as List;
+          if (jsonMap.containsKey(threadsKey)) {
+            final jsonThreads = jsonMap[threadsKey] as List;
             jsonThreads.forEach((j) => newThreads.add(Thread.fromJson(j)));
           }
 

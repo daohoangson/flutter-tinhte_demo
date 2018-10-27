@@ -82,7 +82,7 @@ class _NavigationWidgetState extends State<NavigationWidget> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => ForumViewScreen(forum: e.node)));
+                      builder: (context) => ForumViewScreen(e.node)));
               break;
             case navigation.NavigationTypeLinkForum:
               final linkForum = e.node as navigation.LinkForum;
