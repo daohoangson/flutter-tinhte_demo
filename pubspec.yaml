@@ -20,6 +20,7 @@ dependencies:
   flutter_widget_from_html:
     path: ./packages/flutter_widget_from_html
   font_awesome_flutter: ^8.1.0
+  google_sign_in: ^3.2.2
   image_picker: ^0.4.10
   intl: ^0.15.7
   package_info: ^0.3.2

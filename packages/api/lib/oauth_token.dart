@@ -15,15 +15,29 @@ class OauthToken {
   @JsonKey(ignore: true)
   final DateTime expiresAt;
 
+  @JsonKey(ignore: true)
+  ObtainMethod _obtainMethod;
+
   OauthToken(
     this.accessToken,
     this.expiresIn,
     this.refreshToken,
     this.scope,
-    this.userId,
-  ) : expiresAt = DateTime.now().add(Duration(milliseconds: expiresIn * 1000));
-  factory OauthToken.fromJson(Map<String, dynamic> json) =>
-      _$OauthTokenFromJson(json);
+    this.userId, {
+    ObtainMethod obtainMethod,
+  })  : expiresAt =
+            DateTime.now().add(Duration(milliseconds: expiresIn * 1000)),
+        _obtainMethod = obtainMethod;
+  factory OauthToken.fromJson(
+          ObtainMethod obtainMethod, Map<String, dynamic> json) =>
+      _$OauthTokenFromJson(json).._obtainMethod = obtainMethod;
 
   bool get hasExpired => expiresAt.isBefore(DateTime.now());
+
+  ObtainMethod get obtainMethod => _obtainMethod;
+}
+
+enum ObtainMethod {
+  UsernamePassword,
+  Google,
 }

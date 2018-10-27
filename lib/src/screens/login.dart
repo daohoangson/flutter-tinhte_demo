@@ -1,6 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:tinhte_api/api.dart';
+import 'package:tinhte_api/oauth_token.dart';
 
 import '../api.dart';
+
+final _googleSignIn = GoogleSignIn(
+  scopes: [
+    'email',
+  ],
+);
+
+void logout(State state) {
+  final apiData = ApiData.of(state.context);
+  final token = apiData.token;
+
+  apiData.setToken(null);
+
+  if (token.obtainMethod == ObtainMethod.Google) {
+    _googleSignIn.signOut();
+  }
+}
 
 Future<dynamic> pushLoginScreen(BuildContext context) {
   return Navigator.push(
@@ -17,9 +37,9 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final _formKey = GlobalKey<FormState>();
+  final formKey = GlobalKey<FormState>();
 
-  bool isLoggingIn = false;
+  bool _isLoggingIn = false;
 
   String username;
   String password;
@@ -36,7 +56,7 @@ class _LoginScreenState extends State<LoginScreen> {
         title: Text('Login'),
       ),
       body: Form(
-        key: _formKey,
+        key: formKey,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
@@ -55,12 +75,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     padding: const EdgeInsets.symmetric(vertical: 5.0),
                     child: _buildPassword(),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 5.0),
-                    child: FlatButton(
-                      child: Text('Submit'),
-                      onPressed: isLoggingIn ? null : _login,
-                    ),
+                  RaisedButton(
+                    child: Text('Submit'),
+                    onPressed: _isLoggingIn ? null : _login,
+                  ),
+                  RaisedButton(
+                    child: Text('Login with Google'),
+                    onPressed: _isLoggingIn ? null : _loginGoogle,
                   ),
                 ],
               ),
@@ -106,16 +127,92 @@ class _LoginScreenState extends State<LoginScreen> {
       });
 
   void _login() {
-    if (isLoggingIn) return;
+    if (_isLoggingIn) return;
 
-    final form = _formKey.currentState;
+    final form = formKey.currentState;
     if (!form.validate()) return;
     form.save();
 
-    setState(() => isLoggingIn = true);
-    login(this, username, password,
-        onSuccess: (_) => Navigator.pop(context, true),
-        onError: (e) => showApiErrorDialog(context, e, title: 'Login error'),
-        onComplete: () => setState(() => isLoggingIn = false));
+    setState(() => _isLoggingIn = true);
+
+    final apiData = ApiData.of(context);
+    apiData.api
+        .login(username, password)
+        .then((token) {
+          apiData.setToken(token);
+
+          if (!mounted) return;
+          Navigator.pop(context, true);
+        })
+        .catchError((e) => _showErrorDialog)
+        .whenComplete(() => setState(() => _isLoggingIn = false));
   }
+
+  void _loginGoogle() {
+    if (_isLoggingIn) return;
+    setState(() => _isLoggingIn = true);
+
+    final apiData = ApiData.of(context);
+    final api = apiData.api;
+
+    _googleSignIn
+        .signIn()
+        .then<GoogleSignInAuthentication>((account) {
+          if (account == null) {
+            return Future.error('Cannot get Google account information.');
+          }
+
+          return account.authentication;
+        })
+        .then<String>((auth) {
+          // the server supports both kind of tokens
+          final googleToken = auth?.idToken ?? auth?.accessToken;
+          if (googleToken.isNotEmpty != true) {
+            return Future.error('Cannot get Google authentication info.');
+          }
+
+          return googleToken;
+        })
+        .then((idToken) => api.postJson('oauth/token/google', bodyFields: {
+              'client_id': api.clientId,
+              'client_secret': api.clientSecret,
+              'google_token': idToken,
+            }))
+        .then((json) {
+          if (!mounted) return false;
+
+          if (json is! Map) {
+            return Future.error('Unexpected response from server.');
+          }
+          final jsonMap = json as Map;
+
+          if (jsonMap.containsKey('message')) {
+            // TODO: register with extra_data?
+            return Future.error(jsonMap['message']);
+          }
+
+          if (jsonMap.containsKey('errors')) {
+            return Future.error((jsonMap['errors'] as List<String>).join(', '));
+          }
+
+          if (!jsonMap.containsKey('access_token')) {
+            return Future.error('Cannot login with Google.');
+          }
+
+          final token = OauthToken.fromJson(ObtainMethod.Google, jsonMap);
+          apiData.setToken(token);
+
+          return Navigator.pop(context, true);
+        })
+        .catchError(_showErrorDialog)
+        .whenComplete(() => setState(() => _isLoggingIn = false));
+  }
+
+  void _showErrorDialog(error) => showDialog(
+        context: context,
+        builder: (c) => AlertDialog(
+              title: Text('Login error'),
+              content: Text(error is ApiError ? error.message : "$error"),
+            ),
+      );
 }

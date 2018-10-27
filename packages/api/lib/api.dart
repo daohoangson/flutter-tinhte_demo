@@ -23,6 +23,7 @@ class Api {
   Batch _batch;
 
   String get clientId => _clientId;
+  String get clientSecret => _clientSecret;
   bool get inBatch => _batch != null;
   Response get latestResponse => _latestResponse;
   int get requestCount => _requestCount;
@@ -79,10 +80,13 @@ class Api {
       "password": password,
     });
 
-    return OauthToken.fromJson(json);
+    return OauthToken.fromJson(ObtainMethod.UsernamePassword, json);
   }
 
-  Future<OauthToken> refreshToken(String refreshToken) async {
+  Future<OauthToken> refreshToken(OauthToken token) async {
+    final refreshToken = token?.refreshToken;
+    if (refreshToken?.isNotEmpty != true) return null;
+
     final json = await postJson('oauth/token', bodyFields: {
       "grant_type": "refresh_token",
       "client_id": _clientId,
@@ -90,7 +94,7 @@ class Api {
       "refresh_token": refreshToken,
     });
 
-    return OauthToken.fromJson(json);
+    return OauthToken.fromJson(token.obtainMethod, json);
   }
 
   Future<dynamic> deleteJson(String path) {

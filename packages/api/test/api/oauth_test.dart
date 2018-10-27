@@ -33,7 +33,7 @@ void main() {
     group('grant_type=refresh_token', () {
       test('works', () async {
         final loginToken = await api.login(username, password);
-        final refreshedToken = await api.refreshToken(loginToken.refreshToken);
+        final refreshedToken = await api.refreshToken(loginToken);
         expect(refreshedToken.userId, equals(userId));
       });
     });
