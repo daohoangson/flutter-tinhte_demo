@@ -1,0 +1,2 @@
+/android/app/google-services.json filter=git-crypt diff=git-crypt
+/ios/Runner/GoogleService-Info.plist filter=git-crypt diff=git-crypt
