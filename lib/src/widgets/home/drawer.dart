@@ -34,11 +34,14 @@ class HomeDrawerHeader extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Expanded(
-            child: CircleAvatar(
-              backgroundImage: user.links?.avatarBig?.isNotEmpty == true
-                  ? CachedNetworkImageProvider(user.links.avatarBig)
-                  : null,
-              minRadius: 20.0,
+            child: Center(
+              child: AspectRatio(
+                aspectRatio: 1.0,
+                child: CircleAvatar(
+                  backgroundImage:
+                      CachedNetworkImageProvider(user.links.avatarBig),
+                ),
+              ),
             ),
           ),
           Padding(
