@@ -36,6 +36,8 @@
 	<string>566879507102666</string>
 	<key>FacebookDisplayName</key>
 	<string>com.daohoangson.flutter_ttdemo</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 	<string>fbapi</string>
