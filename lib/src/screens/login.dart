@@ -178,8 +178,8 @@ class _LoginScreenState extends State<LoginScreen> {
               'client_secret': api.clientSecret,
               'google_token': idToken,
             }))
-        .then((json) {
-          if (!mounted) return false;
+        .then<OauthToken>((json) {
+          if (!mounted) return null;
 
           if (json is! Map) {
             return Future.error('Unexpected response from server.');
@@ -187,7 +187,15 @@ class _LoginScreenState extends State<LoginScreen> {
           final jsonMap = json as Map;
 
           if (jsonMap.containsKey('message')) {
-            // TODO: register with extra_data?
+            if (jsonMap.containsKey('user_data')) {
+              return _tryAutoRegister(
+                api,
+                message: jsonMap['message'],
+                obtainMethod: ObtainMethod.Google,
+                userData: jsonMap['user_data'],
+              );
+            }
+
             return Future.error(jsonMap['message']);
           }
 
@@ -199,13 +207,58 @@ class _LoginScreenState extends State<LoginScreen> {
             return Future.error('Cannot login with Google.');
           }
 
-          final token = OauthToken.fromJson(ObtainMethod.Google, jsonMap);
-          apiData.setToken(token);
+          return OauthToken.fromJson(ObtainMethod.Google, jsonMap);
+        })
+        .then((token) {
+          if (!mounted || token == null) return;
 
-          return Navigator.pop(context, true);
+          apiData.setToken(token);
+          Navigator.pop(context, true);
         })
         .catchError(_showErrorDialog)
         .whenComplete(() => setState(() => _isLoggingIn = false));
+  }
+
+  Future<OauthToken> _tryAutoRegister(
+    Api api, {
+    @required String message,
+    @required ObtainMethod obtainMethod,
+    @required Map<String, dynamic> userData,
+  }) {
+    assert(message != null);
+    assert(obtainMethod != null);
+    assert(userData != null);
+
+    if (!userData.containsKey('extra_data') ||
+        !userData.containsKey('extra_timestamp') ||
+        !userData.containsKey('user_email')) {
+      return Future.error(message);
+    }
+
+    final email = userData['user_email'] as String;
+    final emailName = email.replaceAll(RegExp(r'@.+$'), '');
+    final timestamp = (DateTime.now().millisecondsSinceEpoch / 1000).floor();
+
+    return api.postJson('users', bodyFields: {
+      'client_id': api.clientId,
+      'client_secret': api.clientSecret,
+      'extra_data': "${userData['extra_data']}",
+      'extra_timestamp': "${userData['extra_timestamp']}",
+      'user_email': email,
+      'username': "${emailName}_$timestamp",
+    }).then<OauthToken>((json) {
+      if (json is! Map) {
+        return Future.error('Unexpected response from server.');
+      }
+
+      final jsonMap = json as Map;
+      if (!jsonMap.containsKey('token')) {
+        print(jsonMap);
+        return Future.error('Cannot register new user account.');
+      }
+
+      return OauthToken.fromJson(obtainMethod, jsonMap['token']);
+    });
   }
 
   void _showErrorDialog(error) => showDialog(
