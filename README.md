@@ -1,8 +1,10 @@
 # tinhte_demo
 
-A new Flutter project.
+Tinh tế mobile apps built with Flutter for evaluation purposes.
 
-## Getting Started
+## Try it
 
-For help getting started with Flutter, view our online
-[documentation](https://flutter.io/).
+Google Play Store: [Open Beta Testing](https://play.google.com/apps/testing/com.daohoangson.flutter_ttdemo)
+
+Apple App Store: [TestFlight](https://testflight.apple.com/join/4lGGYeSU)
+
