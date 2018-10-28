@@ -1,3 +1,6 @@
 [submodule "packages/flutter_widget_from_html"]
 	path = packages/flutter_widget_from_html
 	url = https://github.com/daohoangson/flutter_widget_from_html.git
+[submodule "packages/facebook"]
+	path = packages/facebook
+	url = https://github.com/daohoangson/flutter_facebook_login.git

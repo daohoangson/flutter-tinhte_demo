@@ -1,9 +1,12 @@
+import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:tinhte_api/api.dart';
 import 'package:tinhte_api/oauth_token.dart';
 
 import '../api.dart';
+
+final _facebookLogin = FacebookLogin();
 
 final _googleSignIn = GoogleSignIn(
   scopes: [
@@ -80,6 +83,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     onPressed: _isLoggingIn ? null : _login,
                   ),
                   RaisedButton(
+                    child: Text('Login with Facebook'),
+                    onPressed: _isLoggingIn ? null : _loginFacebook,
+                  ),
+                  RaisedButton(
                     child: Text('Login with Google'),
                     onPressed: _isLoggingIn ? null : _loginGoogle,
                   ),
@@ -138,13 +145,40 @@ class _LoginScreenState extends State<LoginScreen> {
     final apiData = ApiData.of(context);
     apiData.api
         .login(username, password)
-        .then((token) {
-          apiData.setToken(token);
-
-          if (!mounted) return;
-          Navigator.pop(context, true);
-        })
+        .then((token) => _loginOnToken(apiData, token))
         .catchError((e) => _showErrorDialog)
+        .whenComplete(() => setState(() => _isLoggingIn = false));
+  }
+
+  void _loginFacebook() {
+    if (_isLoggingIn) return;
+    // setState(() => _isLoggingIn = true);
+
+    final apiData = ApiData.of(context);
+    final api = apiData.api;
+
+    _facebookLogin
+        .logInWithReadPermissions(['email'])
+        .then<String>((result) {
+          switch (result.status) {
+            case FacebookLoginStatus.loggedIn:
+              return result.accessToken.token;
+            case FacebookLoginStatus.cancelledByUser:
+              return Future.error('Login with Facebook has been cancelled.');
+            case FacebookLoginStatus.error:
+              return Future.error(result.errorMessage);
+          }
+        })
+        .then((facebookToken) =>
+            api.postJson('oauth/token/facebook', bodyFields: {
+              'client_id': api.clientId,
+              'client_secret': api.clientSecret,
+              'facebook_token': facebookToken,
+            }))
+        .then<OauthToken>(
+            (json) => _loginOnExternalJson(api, ObtainMethod.Facebook, json))
+        .then((token) => _loginOnToken(apiData, token))
+        .catchError(_showErrorDialog)
         .whenComplete(() => setState(() => _isLoggingIn = false));
   }
 
@@ -173,50 +207,56 @@ class _LoginScreenState extends State<LoginScreen> {
 
           return googleToken;
         })
-        .then((idToken) => api.postJson('oauth/token/google', bodyFields: {
+        .then((googleToken) => api.postJson('oauth/token/google', bodyFields: {
               'client_id': api.clientId,
               'client_secret': api.clientSecret,
-              'google_token': idToken,
+              'google_token': googleToken,
             }))
-        .then<OauthToken>((json) {
-          if (!mounted) return null;
-
-          if (json is! Map) {
-            return Future.error('Unexpected response from server.');
-          }
-          final jsonMap = json as Map;
-
-          if (jsonMap.containsKey('message')) {
-            if (jsonMap.containsKey('user_data')) {
-              return _tryAutoRegister(
-                api,
-                message: jsonMap['message'],
-                obtainMethod: ObtainMethod.Google,
-                userData: jsonMap['user_data'],
-              );
-            }
-
-            return Future.error(jsonMap['message']);
-          }
-
-          if (jsonMap.containsKey('errors')) {
-            return Future.error((jsonMap['errors'] as List<String>).join(', '));
-          }
-
-          if (!jsonMap.containsKey('access_token')) {
-            return Future.error('Cannot login with Google.');
-          }
-
-          return OauthToken.fromJson(ObtainMethod.Google, jsonMap);
-        })
-        .then((token) {
-          if (!mounted || token == null) return;
-
-          apiData.setToken(token);
-          Navigator.pop(context, true);
-        })
+        .then<OauthToken>(
+            (json) => _loginOnExternalJson(api, ObtainMethod.Google, json))
+        .then((token) => _loginOnToken(apiData, token))
         .catchError(_showErrorDialog)
         .whenComplete(() => setState(() => _isLoggingIn = false));
+  }
+
+  Future<OauthToken> _loginOnExternalJson(
+      Api api, ObtainMethod obtainMethod, json) async {
+    if (!mounted) return null;
+
+    if (json is! Map) {
+      return Future.error('Unexpected response from server.');
+    }
+    final jsonMap = json as Map;
+
+    if (jsonMap.containsKey('message')) {
+      if (jsonMap.containsKey('user_data')) {
+        return _tryAutoRegister(
+          api,
+          message: jsonMap['message'],
+          obtainMethod: obtainMethod,
+          userData: jsonMap['user_data'],
+        );
+      }
+
+      return Future.error(jsonMap['message']);
+    }
+
+    if (jsonMap.containsKey('errors')) {
+      return Future.error((jsonMap['errors'] as List<String>).join(', '));
+    }
+
+    if (!jsonMap.containsKey('access_token')) {
+      return Future.error('Cannot login with Google.');
+    }
+
+    return OauthToken.fromJson(ObtainMethod.Google, jsonMap);
+  }
+
+  _loginOnToken(ApiData apiData, OauthToken token) {
+    if (!mounted || token == null) return;
+
+    apiData.setToken(token);
+    Navigator.pop(context, true);
   }
 
   Future<OauthToken> _tryAutoRegister(
@@ -235,18 +275,28 @@ class _LoginScreenState extends State<LoginScreen> {
       return Future.error(message);
     }
 
-    final email = userData['user_email'] as String;
-    final emailName = email.replaceAll(RegExp(r'@.+$'), '');
-    final timestamp = (DateTime.now().millisecondsSinceEpoch / 1000).floor();
-
-    return api.postJson('users', bodyFields: {
+    final bodyFields = {
       'client_id': api.clientId,
       'client_secret': api.clientSecret,
-      'extra_data': "${userData['extra_data']}",
-      'extra_timestamp': "${userData['extra_timestamp']}",
-      'user_email': email,
-      'username': "${emailName}_$timestamp",
-    }).then<OauthToken>((json) {
+    };
+    for (final e in userData.entries) {
+      try {
+        bodyFields[e.key] = e.value.toString();
+      } catch (e) {
+        print(e);
+      }
+    }
+
+    if (!bodyFields.containsKey('username')) {
+      final email = userData['user_email'] as String;
+      final emailName = email.replaceAll(RegExp(r'@.+$'), '');
+      final timestamp = (DateTime.now().millisecondsSinceEpoch / 1000).floor();
+      bodyFields['username'] = "${emailName}_$timestamp";
+    }
+
+    return api
+        .postJson('users', bodyFields: bodyFields)
+        .then<OauthToken>((json) {
       if (json is! Map) {
         return Future.error('Unexpected response from server.');
       }

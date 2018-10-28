@@ -39,5 +39,6 @@ class OauthToken {
 
 enum ObtainMethod {
   UsernamePassword,
+  Facebook,
   Google,
 }
