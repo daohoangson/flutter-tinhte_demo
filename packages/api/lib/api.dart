@@ -22,6 +22,7 @@ class Api {
 
   Batch _batch;
 
+  String get apiRoot => _apiRoot;
   String get clientId => _clientId;
   String get clientSecret => _clientSecret;
   bool get inBatch => _batch != null;

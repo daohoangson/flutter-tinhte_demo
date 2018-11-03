@@ -7,7 +7,7 @@ description: A new Flutter project.
 # Both the version and the builder number may be overridden in flutter
 # build by specifying --build-name and --build-number, respectively.
 # Read more about versioning at semver.org.
-version: 1.1.0+2
+version: 1.2.0+3
 
 environment:
   sdk: ">=2.0.0-dev.68.0 <3.0.0"
@@ -20,9 +20,11 @@ dependencies:
   flutter_widget_from_html:
     path: ./packages/flutter_widget_from_html
   font_awesome_flutter: ^8.1.0
-  google_sign_in: ^3.2.2
+  firebase_messaging: ^2.0.3
   flutter_facebook_login:
     path: ./packages/facebook
+  google_sign_in: ^3.2.2
+  http: any
   image_picker: ^0.4.10
   intl: ^0.15.7
   package_info: ^0.3.2
