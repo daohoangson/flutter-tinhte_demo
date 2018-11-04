@@ -20,7 +20,7 @@ void logout(State state) {
 
   apiData.setToken(null);
 
-  if (token.obtainMethod == ObtainMethod.Google) {
+  if (token?.obtainMethod == ObtainMethod.Google) {
     _googleSignIn.signOut();
   }
 }

@@ -222,8 +222,11 @@ class ApiData extends State<ApiApp> {
     _tokenHasBeenSet = true;
 
     if (_user != null) {
-      _setUser(null);
-      if (value != null) _fetchUser();
+      if (value != null) {
+        _fetchUser();
+      } else {
+        setState(() => _user = null);
+      }
     }
 
     _dequeue();
@@ -267,12 +270,11 @@ class ApiData extends State<ApiApp> {
 
   void _fetchUser() {
     _enqueue(() async {
+      User user;
       try {
         final json = await api.getJson(_appendOauthToken('users/me'));
-        if (json is Map) {
-          return _setUser(
-            json.containsKey('user') ? User.fromJson(json['user']) : null,
-          );
+        if (json is Map && json.containsKey('user')) {
+          user = User.fromJson(json['user']);
         }
       } on ApiError catch (ae) {
         debugPrint("_fetchUser encountered an api error: ${ae.message}");
@@ -280,7 +282,14 @@ class ApiData extends State<ApiApp> {
         print(e);
       }
 
-      return _setUser(null);
+      return setState(() {
+        _user = user;
+
+        if (user == null) {
+          // reset token to avoid fetchUser endless loop
+          _token = null;
+        }
+      });
     });
   }
 
@@ -290,8 +299,6 @@ class ApiData extends State<ApiApp> {
         .then((refreshedToken) => setToken(refreshedToken))
         .catchError((_) => setToken(null));
   }
-
-  void _setUser(User value) => setState(() => _user = value);
 
   static ApiData of(BuildContext context) =>
       (context.inheritFromWidgetOfExactType(_ApiDataInheritedWidget)
