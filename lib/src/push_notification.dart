@@ -1,11 +1,48 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:http/http.dart' as http;
+import 'package:tinhte_api/notification.dart' as api;
 import 'package:tinhte_api/user.dart';
 
 import 'api.dart';
 
 final _firebaseMessaging = FirebaseMessaging();
+
+final StreamController<int> _notifController = StreamController.broadcast();
+
+final StreamController<int> _unreadController = StreamController.broadcast();
+
+StreamSubscription<int> listenToNotification(void onData(int notificationId)) =>
+    _notifController.stream.listen(onData);
+
+StreamSubscription<int> listenToUnread(void onData(int unread)) =>
+    _unreadController.stream.listen(onData);
+
+_notifControllerAddFromFcmMessage(Map<String, dynamic> message) {
+  if (!message.containsKey('data')) return;
+  final data = message['data'] as Map;
+
+  if (!data.containsKey('notification_id')) return;
+  final str = data['notification_id'] as String;
+  final notificationId = int.parse(str);
+
+  debugPrint("_notifControllerAddFromFcmMessage: "
+      "notificationId=$notificationId");
+  _notifController.sink.add(notificationId);
+}
+
+_unreadControllerAddFromFcmMessage(Map<String, dynamic> message) {
+  if (!message.containsKey('data')) return;
+  final data = message['data'] as Map;
+
+  if (!data.containsKey('user_unread_notification_count')) return;
+  final str = data['user_unread_notification_count'] as String;
+  final value = int.parse(str);
+
+  debugPrint("_unreadControllerAddFromFcmMessage: value=$value");
+  _unreadController.sink.add(value);
+}
 
 class PushNotificationApp extends StatefulWidget {
   final Widget child;
@@ -37,6 +74,8 @@ class _PushNotificationAppState extends State<PushNotificationApp> {
       },
       onMessage: (message) {
         debugPrint("FCM.onMessage: $message");
+        _notifControllerAddFromFcmMessage(message);
+        _unreadControllerAddFromFcmMessage(message);
       },
       onResume: (message) {
         debugPrint("FCM.onResume: $message");
@@ -52,6 +91,8 @@ class _PushNotificationAppState extends State<PushNotificationApp> {
   @override
   Widget build(BuildContext context) {
     final user = ApiData.of(context).user;
+    _unreadController.sink.add(user?.userUnreadNotificationCount ?? 0);
+
     final userId = user?.userId ?? 0;
     if (userId > 0 && userId != _user?.userId) {
       _user = user;
@@ -74,7 +115,7 @@ class _PushNotificationAppState extends State<PushNotificationApp> {
     if (token?.isNotEmpty != true) return;
 
     final url = "${widget.pushServer}/subscribe";
-    final hubUri = "${api.apiRoot}/index.php?subscriptions";
+    final hubUri = "${api.apiRoot}?subscriptions";
     final hubTopic = "user_notification_${_user.userId}";
 
     http.post(

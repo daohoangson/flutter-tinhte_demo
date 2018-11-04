@@ -18,6 +18,7 @@ class User {
   int userMessageCount;
   int userRegisterDate;
   String userTitle;
+  int userUnreadNotificationCount;
   String username;
 
   @JsonKey(toJson: none)

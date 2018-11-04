@@ -5,6 +5,7 @@ import 'package:tinhte_api/links.dart';
 import 'package:tinhte_api/thread.dart';
 
 import '../api.dart';
+import '../widgets/home/app_bar.dart';
 import '../widgets/home/drawer.dart';
 import '../widgets/home/feature_pages.dart';
 import '../widgets/home/thread.dart';
@@ -43,6 +44,9 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
           title: Text(_title),
+          actions: <Widget>[
+            HomeNotificationAppBarButton(),
+          ],
         ),
         body: RefreshIndicator(
           key: refreshIndicatorKey,
