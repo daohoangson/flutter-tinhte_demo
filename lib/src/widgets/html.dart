@@ -45,6 +45,7 @@ class TinhteHtmlWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final config = Config(
       baseUrl: Uri.parse('https://tinhte.vn'),
+      webView: true,
     );
 
     return DefaultTextStyle(
