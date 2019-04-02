@@ -62,7 +62,10 @@ class ThreadViewScreen extends StatelessWidget {
           ),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 10.0,
+                vertical: 7.5,
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -71,12 +74,13 @@ class ThreadViewScreen extends StatelessWidget {
                     thread.firstPost.posterUsername,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
+                    style: TextStyle(fontSize: (kToolbarHeight - 10) / 2),
                   ),
                   Text(
                     formatTimestamp(thread.firstPost.postCreateDate),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(fontSize: 12.0),
+                    style: TextStyle(fontSize: (kToolbarHeight - 10) / 4),
                   ),
                 ],
               ),

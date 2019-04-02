@@ -27,7 +27,7 @@ final _smilies = {
 TextStyle getPostBodyTextStyle(BuildContext context, bool isFirstPost) {
   final textStyle = Theme.of(context).textTheme.body1;
   return textStyle.copyWith(
-    fontSize: textStyle.fontSize + (isFirstPost ? 1 : 0),
+    fontSize: textStyle.fontSize + (isFirstPost ? -1 : -2),
   );
 }
 

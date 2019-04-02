@@ -87,44 +87,42 @@ TextSpan buildThreadTextSpan(BuildContext context, Thread thread) {
   if (thread == null) return TextSpan(text: '');
   List<TextSpan> spans = List();
 
+  final theme = Theme.of(context);
+
+  if (thread.threadIsSticky == true) {
+    spans.add(TextSpan(text: '📌 '));
+  }
+
   spans.add(TextSpan(
-    style: TextStyle(
-      color: Theme.of(context).accentColor,
-      fontWeight: FontWeight.bold,
-    ),
+    style: TextStyle(color: theme.accentColor, fontWeight: FontWeight.bold),
     text: thread.creatorUsername,
   ));
 
-  final threadCreateDate = timeago.format(
-      DateTime.fromMillisecondsSinceEpoch(thread.threadCreateDate * 1000));
-  spans.add(TextSpan(
-    style: TextStyle(
-      color: Theme.of(context).disabledColor,
-    ),
-    text: "  $threadCreateDate",
-  ));
-
-  if (thread.threadViewCount > 1500) {
+  final threadCreateDate =
+      DateTime.fromMillisecondsSinceEpoch(thread.threadCreateDate * 1000);
+  if (threadCreateDate.isAfter(DateTime.now().subtract(Duration(days: 7)))) {
     spans.add(TextSpan(
-      style: TextStyle(
-        color: Theme.of(context).disabledColor,
-      ),
-      text: " - ${formatNumber(thread.threadViewCount)} views",
+      style: TextStyle(color: theme.disabledColor),
+      text: "  ${timeago.format(threadCreateDate)}",
     ));
   }
 
-  if (thread.threadIsSticky == true) {
-    spans.add(TextSpan(text: '  📌'));
+  if (thread.threadViewCount > 1500) {
+    spans.add(TextSpan(
+      style: TextStyle(color: theme.disabledColor),
+      text: " ${formatNumber(thread.threadViewCount)} views",
+    ));
   }
 
-  if (thread.threadIsFollowed == true) {
-    spans.add(TextSpan(text: '  👁'));
+  if (thread.threadPostCount > 20) {
+    spans.add(TextSpan(
+      style: TextStyle(color: theme.disabledColor),
+      text: " ${formatNumber(thread.threadPostCount - 1)} replies",
+    ));
   }
 
   return TextSpan(
     children: spans,
-    style: TextStyle(
-      fontSize: 12.0,
-    ),
+    style: theme.textTheme.caption,
   );
 }

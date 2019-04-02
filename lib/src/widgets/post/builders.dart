@@ -1,7 +1,9 @@
 part of '../posts.dart';
 
 const kPaddingHorizontal = 10.0;
-const kEdgeInsetsHorizontal = const EdgeInsets.symmetric(horizontal: kPaddingHorizontal);
+const kEdgeInsetsHorizontal = EdgeInsets.symmetric(
+  horizontal: kPaddingHorizontal,
+);
 
 Widget buildButton(
   BuildContext context,
@@ -10,15 +12,17 @@ Widget buildButton(
   int count = 0,
   GestureTapCallback onTap,
 }) {
+  final theme = Theme.of(context);
+
   Widget button = Padding(
     padding: const EdgeInsets.fromLTRB(kPaddingHorizontal, 5.0, 0.0, 5.0),
     child: Text(
       (count > 0 ? "$count " : '') + text,
       style: TextStyle(
         color: onTap != null
-            ? color ?? Theme.of(context).primaryColor
-            : color ?? Theme.of(context).disabledColor,
-        fontSize: 12.0,
+            ? color ?? theme.primaryColor
+            : color ?? theme.disabledColor,
+        fontSize: theme.textTheme.button.fontSize - 2,
       ),
     ),
   );
@@ -38,7 +42,7 @@ Widget buildPosterCircleAvatar(String url, {bool isPostReply = false}) =>
       padding: const EdgeInsets.only(left: kPaddingHorizontal),
       child: CircleAvatar(
         backgroundImage: url != null ? CachedNetworkImageProvider(url) : null,
-        radius: isPostReply ? 15.0 : 18.0,
+        radius: isPostReply ? kToolbarHeight / 5 : kToolbarHeight / 4,
       ),
     );
 

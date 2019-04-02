@@ -82,6 +82,7 @@ class _PostListWidgetState extends State<_PostListWidget> {
         itemCount: (hasFirstPost ? _kItemCountForFirstPost : 0) +
             items.length +
             (hasLinks ? _kItemCountForPageNav : 0),
+        padding: const EdgeInsets.all(0),
       );
 
   fetch(String path) {
