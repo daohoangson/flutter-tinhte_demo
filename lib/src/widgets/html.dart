@@ -6,6 +6,7 @@ import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart
 import 'package:html/dom.dart' as dom;
 
 import 'html/lb_trigger.dart';
+import 'image.dart';
 
 part 'html/galleria.dart';
 
@@ -97,6 +98,29 @@ class TinhteWidgetFactory extends WidgetFactory {
 
   @override
   NodeMetadata parseElement(dom.Element e) {
+    switch (e.localName) {
+      case 'img':
+        if (e.attributes.containsKey('data-height') &&
+            e.attributes.containsKey('data-permalink') &&
+            e.attributes.containsKey('src') &&
+            e.attributes.containsKey('data-width')) {
+          return lazySet(
+            null,
+            buildOp: BuildOp(
+              onProcess: (_, addWidgets, __) => addWidgets(<Widget>[
+                    AttachmentImageWidget(
+                      height: int.tryParse(e.attributes['data-height']),
+                      permalink: e.attributes['data-permalink'],
+                      src: e.attributes['src'],
+                      width: int.tryParse(e.attributes['data-width']),
+                    )
+                  ]),
+            ),
+          );
+        }
+        break;
+    }
+
     switch (e.className) {
       case 'LbTrigger':
         if (e.localName == 'a' && e.attributes.containsKey('href')) {
