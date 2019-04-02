@@ -33,11 +33,16 @@ class _PostAttachmentsWidget extends StatelessWidget {
         width: kAttachmentSize,
       );
 
-  static _PostAttachmentsWidget forPost(Post post) {
-    final attachments = post.attachments
-        ?.where((attachment) => !attachment.attachmentIsInserted)
-        ?.toList();
-    if (attachments?.isNotEmpty != true) return null;
+  static Widget forPost(Post post, {Thread thread}) {
+    final attachments = post.attachments?.where((attachment) {
+      if (attachment.attachmentIsInserted) return false;
+      if (thread?.threadImage?.displayMode == 'cover' &&
+          thread?.threadImage?.link == attachment.links.permalink) return false;
+
+      return true;
+    })?.toList();
+
+    if (attachments?.isNotEmpty != true) return Container();
 
     return _PostAttachmentsWidget(attachments);
   }

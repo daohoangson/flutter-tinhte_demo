@@ -28,6 +28,7 @@ class _FirstPostWidget extends StatelessWidget {
             ),
           ),
           TinhteHtmlWidget(post.postBodyHtml, isFirstPost: true),
+          _PostAttachmentsWidget.forPost(post, thread: thread),
           _PostActionsWidget(post, showPostCreateDate: false),
         ],
       ),

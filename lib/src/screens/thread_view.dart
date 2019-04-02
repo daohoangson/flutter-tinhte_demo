@@ -21,9 +21,10 @@ class ThreadViewScreen extends StatelessWidget {
   ThreadViewScreen(this.thread, {Key key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => thread?.threadImage == null
-      ? buildThreadNoImage()
-      : buildThreadWithImage();
+  Widget build(BuildContext context) =>
+      thread?.threadImage?.displayMode == 'cover'
+          ? buildThreadWithCoverImage()
+          : buildThreadNoImage();
 
   Widget buildThreadNoImage() => Scaffold(
         appBar: AppBar(
@@ -32,7 +33,7 @@ class ThreadViewScreen extends StatelessWidget {
         body: _buildBody(),
       );
 
-  Widget buildThreadWithImage() => Scaffold(
+  Widget buildThreadWithCoverImage() => Scaffold(
         body: NestedScrollView(
           headerSliverBuilder: (context, innerBoxIsScrolled) => <Widget>[
                 SliverAppBar(
