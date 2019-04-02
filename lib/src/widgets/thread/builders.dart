@@ -1,6 +1,9 @@
 part of '../threads.dart';
 
 Widget buildThreadRow(BuildContext context, Thread thread) {
+  final theme = Theme.of(context);
+  final threadTitleIsRedundant = thread.isTitleRedundant();
+
   final postBodyAndMetadata = Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: <Widget>[
@@ -8,7 +11,7 @@ Widget buildThreadRow(BuildContext context, Thread thread) {
         padding: const EdgeInsets.all(5.0),
         child: Text(
           thread.firstPost.postBodyPlainText,
-          maxLines: 3,
+          maxLines: threadTitleIsRedundant ? 6 : 3,
           overflow: TextOverflow.ellipsis,
         ),
       ),
@@ -58,22 +61,24 @@ Widget buildThreadRow(BuildContext context, Thread thread) {
         )
       : postBodyAndMetadata;
 
-  return GestureDetector(
-    child: Card(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(5.0),
-            child: Text(
-              thread.threadTitle,
-              style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+  final cardContents = threadTitleIsRedundant
+      ? bodyAndPossiblyImage
+      : Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(5.0),
+              child: Text(
+                thread.threadTitle,
+                style: theme.textTheme.title,
+              ),
             ),
-          ),
-          bodyAndPossiblyImage,
-        ],
-      ),
-    ),
+            bodyAndPossiblyImage,
+          ],
+        );
+
+  return GestureDetector(
+    child: Card(child: cardContents),
     onTap: () => pushThreadViewScreen(context, thread),
   );
 }

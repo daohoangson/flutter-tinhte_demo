@@ -6,6 +6,8 @@ import 'thread_prefix.dart';
 
 part 'thread.g.dart';
 
+final _kThreadTitleEllipsisRegEx = RegExp(r'^(.+)\.\.\.$');
+
 Map<String, String> _threadTagsFromJson(json) {
   if (json is List) {
     // php returns empty json array if thread has no tags...
@@ -56,6 +58,15 @@ class Thread {
   Thread(this.threadId);
   factory Thread.fromJson(Map<String, dynamic> json) => _$ThreadFromJson(json);
   Map<String, dynamic> toJson() => _$ThreadToJson(this);
+
+  bool isTitleRedundant() {
+    final ellipsis = _kThreadTitleEllipsisRegEx.firstMatch(threadTitle);
+    if (ellipsis != null) {
+      return firstPost?.postBody?.startsWith(ellipsis.group(1)) == true;
+    }
+
+    return firstPost?.postBody?.startsWith(threadTitle) == true;
+  }
 }
 
 @JsonSerializable(createToJson: false)

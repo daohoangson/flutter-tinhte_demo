@@ -15,18 +15,19 @@ class _FirstPostWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.symmetric(
-                horizontal: kPaddingHorizontal, vertical: 10.0),
-            child: Text(
-              thread.threadTitle,
-              maxLines: null,
-              style: TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
+          thread.isTitleRedundant()
+              ? Container()
+              : Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: kPaddingHorizontal,
+                    vertical: 10.0,
+                  ),
+                  child: Text(
+                    thread.threadTitle,
+                    maxLines: null,
+                    style: Theme.of(context).textTheme.title,
+                  ),
+                ),
           TinhteHtmlWidget(post.postBodyHtml, isFirstPost: true),
           _PostAttachmentsWidget.forPost(post, thread: thread),
           _PostActionsWidget(post, showPostCreateDate: false),
