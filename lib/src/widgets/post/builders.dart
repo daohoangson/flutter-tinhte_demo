@@ -68,6 +68,7 @@ Widget buildPosterInfo(
             TextSpan(
               style: TextStyle(
                 color: kColorUserRank,
+                fontSize: Theme.of(context).textTheme.caption.fontSize - 1,
                 fontWeight: FontWeight.bold,
               ),
               text: "  ${userRank ?? ''}",
