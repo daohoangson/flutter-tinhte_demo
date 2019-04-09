@@ -99,6 +99,18 @@ class TinhteWidgetFactory extends WidgetFactory {
   @override
   NodeMetadata parseElement(dom.Element e) {
     switch (e.localName) {
+      case 'a':
+        if (e.attributes.containsKey('data-chr') &&
+            e.attributes['data-chr'] == 'true' &&
+            e.attributes.containsKey('href')) {
+          return lazySet(
+            null,
+            buildOp: BuildOp(
+                onProcess: (_, addWidgets, __) =>
+                    addWidgets(<Widget>[WebView(e.attributes['href'])])),
+          );
+        }
+        break;
       case 'img':
         if (e.attributes.containsKey('data-height') &&
             e.attributes.containsKey('data-permalink') &&

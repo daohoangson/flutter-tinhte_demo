@@ -144,6 +144,7 @@ class ApiApp extends StatefulWidget {
     @required String clientId,
     @required String clientSecret,
   })  : api = Api(apiRoot, clientId, clientSecret)
+          ..httpHeaders['Api-Bb-Code-Chr'] = '1'
           ..httpHeaders['Api-Post-Tree'] = '1',
         super(key: key);
 
