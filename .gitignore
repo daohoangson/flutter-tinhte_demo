@@ -1,7 +1,9 @@
-/git-crypt.key
+/android/fastlane/README.md
+/android/fastlane/report.xml
 /ios/fastlane/README.md
 /ios/fastlane/report.xml
 /ios/Runner.*
+/git-crypt.key
 
 # Miscellaneous
 *.class
