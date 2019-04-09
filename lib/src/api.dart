@@ -7,6 +7,7 @@ import 'package:tinhte_api/oauth_token.dart';
 import 'package:tinhte_api/user.dart';
 
 import 'screens/login.dart';
+import 'config.dart';
 import 'constants.dart';
 
 final _oauthTokenRegEx = RegExp(r'oauth_token=.+(&|$)');
@@ -137,13 +138,8 @@ class ApiApp extends StatefulWidget {
   final Api api;
   final Widget child;
 
-  ApiApp({
-    Key key,
-    @required String apiRoot,
-    @required this.child,
-    @required String clientId,
-    @required String clientSecret,
-  })  : api = Api(apiRoot, clientId, clientSecret)
+  ApiApp(this.child, {Key key})
+      : api = Api(configApiRoot, configClientId, configClientSecret)
           ..httpHeaders['Api-Bb-Code-Chr'] = '1'
           ..httpHeaders['Api-Post-Tree'] = '1',
         super(key: key);

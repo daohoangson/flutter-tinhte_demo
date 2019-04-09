@@ -11,16 +11,10 @@ void main() =>
         .then((_) => runApp(MyApp()));
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) => ApiApp(
-        apiRoot: 'https://tinhte.vn/appforo/index.php',
-        clientId: '',
-        clientSecret: '',
-        child: PushNotificationApp(
-          fcmProjectId: '',
-          pushServer: '',
-          child: MaterialApp(
+        PushNotificationApp(
+          MaterialApp(
             title: 'Tinh tế Demo',
             theme: ThemeData(
               accentColor: const Color(0xFF00BAD7),

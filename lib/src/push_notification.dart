@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:tinhte_api/user.dart';
 
 import 'api.dart';
+import 'config.dart';
 
 final _firebaseMessaging = FirebaseMessaging();
 
@@ -45,15 +46,8 @@ _unreadControllerAddFromFcmMessage(Map<String, dynamic> message) {
 
 class PushNotificationApp extends StatefulWidget {
   final Widget child;
-  final String fcmProjectId;
-  final String pushServer;
 
-  PushNotificationApp({
-    @required this.child,
-    @required this.fcmProjectId,
-    Key key,
-    @required this.pushServer,
-  }) : super(key: key);
+  PushNotificationApp(this.child, {Key key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _PushNotificationAppState();
@@ -113,7 +107,7 @@ class _PushNotificationAppState extends State<PushNotificationApp> {
     final token = apiData.token?.accessToken;
     if (token?.isNotEmpty != true) return;
 
-    final url = "${widget.pushServer}/subscribe";
+    final url = "$configPushServer/subscribe";
     final hubUri = "${api.apiRoot}?subscriptions";
     final hubTopic = "user_notification_${_user.userId}";
 
@@ -127,7 +121,8 @@ class _PushNotificationAppState extends State<PushNotificationApp> {
         'oauth_client_id': api.clientId,
         'oauth_token': token,
         'extra_data[platform]': Theme.of(context).platform.toString(),
-        'extra_data[project]': widget.fcmProjectId,
+        'extra_data[project]': configFcmProjectId,
+        'extra_data[notification]': '1',
       },
     ).then((response) {
       if (response.statusCode == 202) {
