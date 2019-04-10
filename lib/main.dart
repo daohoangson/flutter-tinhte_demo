@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'src/screens/home.dart';
 import 'src/api.dart';
 import 'src/push_notification.dart';
+import 'src/responsive_layout.dart';
 
 // https://medium.com/@kr1uz/how-to-restrict-device-orientation-in-flutter-65431cd35113
 void main() =>
@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
               primaryColor: const Color(0xFF192533),
               brightness: Brightness.light,
             ),
-            home: SafeArea(child: HomeScreen()),
+            home: SafeArea(child: ResponsiveLayout()),
           ),
         ),
       );

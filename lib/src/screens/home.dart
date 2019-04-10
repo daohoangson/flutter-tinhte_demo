@@ -5,8 +5,7 @@ import 'package:tinhte_api/links.dart';
 import 'package:tinhte_api/thread.dart';
 
 import '../api.dart';
-import '../widgets/home/app_bar.dart';
-import '../widgets/home/drawer.dart';
+import '../widgets/app_bar.dart';
 import '../widgets/home/feature_pages.dart';
 import '../widgets/home/thread.dart';
 import '../widgets/navigation.dart';
@@ -45,7 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
         appBar: AppBar(
           title: Text(_title),
           actions: <Widget>[
-            HomeNotificationAppBarButton(),
+            AppBarNotificationButton(),
           ],
         ),
         body: RefreshIndicator(
@@ -78,13 +77,6 @@ class _HomeScreenState extends State<HomeScreen> {
             itemCount: threads.length +
                 _kItemCountForFeaturePages +
                 _kItemCountForNext,
-          ),
-        ),
-        drawer: Drawer(
-          child: NavigationWidget(
-            footer: HomeDrawerFooter(),
-            header: HomeDrawerHeader(),
-            path: 'navigation?parent=0',
           ),
         ),
       );
@@ -140,4 +132,8 @@ class _HomeScreenState extends State<HomeScreen> {
       onComplete: () => setState(() => _isFetchingThreads = false),
     );
   }
+}
+
+class HomeScreenRoute extends MaterialPageRoute {
+  HomeScreenRoute() : super(builder: (_) => HomeScreen());
 }

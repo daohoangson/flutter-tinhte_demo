@@ -10,11 +10,13 @@ import '_list_view.dart';
 class NavigationWidget extends StatefulWidget {
   final Widget footer;
   final Widget header;
+  final List<navigation.Element> initialElements;
   final String path;
 
   NavigationWidget({
     this.footer,
     this.header,
+    this.initialElements = const [],
     Key key,
     @required this.path,
   }) : super(key: key);
@@ -29,6 +31,9 @@ class _NavigationWidgetState extends State<NavigationWidget> {
   @override
   void initState() {
     super.initState();
+
+    elements.addAll(widget.initialElements);
+
     fetch();
   }
 
@@ -72,24 +77,29 @@ class _NavigationWidgetState extends State<NavigationWidget> {
             case navigation.NavigationTypeCategory:
               if (e.hasSubElements) {
                 Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => NodeViewScreen(element: e),
-                    ));
+                  context,
+                  NavigationRoute((_) => NodeViewScreen(element: e)),
+                );
               }
               break;
             case navigation.NavigationTypeForum:
               Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => ForumViewScreen(e.node)));
+                context,
+                MaterialPageRoute(builder: (_) => ForumViewScreen(e.node)),
+              );
               break;
             case navigation.NavigationTypeLinkForum:
               final linkForum = e.node as navigation.LinkForum;
               final url = linkForum.links.target;
               canLaunch(url).then((ok) => ok ? launch(url) : null);
               break;
+            default:
+              Navigator.pushNamed(context, e.navigationType);
           }
         },
       );
+}
+
+class NavigationRoute extends MaterialPageRoute {
+  NavigationRoute(WidgetBuilder builder) : super(builder: builder);
 }
