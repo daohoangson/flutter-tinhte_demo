@@ -37,9 +37,7 @@ class ThreadViewScreen extends StatelessWidget {
         body: NestedScrollView(
           headerSliverBuilder: (context, innerBoxIsScrolled) => <Widget>[
                 SliverAppBar(
-                  expandedHeight: MediaQuery.of(context).size.width /
-                          kThreadImageAspectRatio -
-                      kToolbarHeight,
+                  expandedHeight: _calculateImageHeight(context),
                   flexibleSpace: FlexibleSpaceBar(
                     background: ThreadImageWidget(
                       image: thread.threadImage,
@@ -93,4 +91,11 @@ class ThreadViewScreen extends StatelessWidget {
         path: thread.links.posts,
         thread: thread,
       );
+
+  double _calculateImageHeight(BuildContext context) {
+    final mq = MediaQuery.of(context);
+    final ratioHeight = mq.size.width / kThreadImageAspectRatio - kToolbarHeight;
+    final maxHeight = mq.size.height * .5;
+    return maxHeight > ratioHeight ? ratioHeight : maxHeight;
+  }
 }
