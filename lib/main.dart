@@ -5,10 +5,7 @@ import 'src/api.dart';
 import 'src/push_notification.dart';
 import 'src/responsive_layout.dart';
 
-// https://medium.com/@kr1uz/how-to-restrict-device-orientation-in-flutter-65431cd35113
-void main() =>
-    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
-        .then((_) => runApp(MyApp()));
+void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   @override

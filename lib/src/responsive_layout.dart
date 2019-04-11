@@ -9,7 +9,7 @@ import 'widgets/navigation.dart';
 
 const _kRouteHome = 'home';
 
-bool isNarrow(BuildContext context) => MediaQuery.of(context).size.width < 800;
+bool isNarrow(BuildContext context) => MediaQuery.of(context).size.width < 1000;
 
 class ResponsiveLayout extends StatefulWidget {
   @override
