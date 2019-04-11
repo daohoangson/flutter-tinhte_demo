@@ -103,7 +103,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future _detectTitle() => PackageInfo.fromPlatform().then(
-      (info) => setState(() => _title = "${info.appName} ${info.version}"));
+      (info) => setState(() => _title = "${info.version}+${info.buildNumber}"));
 
   Future _fetchThreads(String path) {
     setState(() => _isFetchingThreads = true);
