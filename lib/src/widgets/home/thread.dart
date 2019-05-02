@@ -16,54 +16,53 @@ class HomeThreadWidget extends StatelessWidget {
   HomeThreadWidget(this.thread, {Key key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => Card(
-        margin: const EdgeInsets.only(bottom: 10.0),
-        child: GestureDetector(
-          child: Column(
-            children: <Widget>[
-              ThreadImageWidget(
-                image: thread?.threadImage,
-                threadId: thread?.threadId,
-              ),
+  Widget build(BuildContext context) => Center(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: 600),
+          child: _buildCard(
+            context,
+            <Widget>[
+              _buildImage(),
               const SizedBox(height: 10.0),
-              Padding(
-                padding: _kPaddingHorizontal,
-                child: _buildInfoRow(context, thread),
-              ),
+              _buildTextPadding(_buildInfoRow(context)),
               const SizedBox(height: 5.0),
-              Padding(
-                padding: _kPaddingHorizontal,
-                child: Text(
-                  thread?.threadTitle ?? '▲  □■   ○●○    ▼◁▲▷',
-                  maxLines: 3,
-                  style: Theme.of(context).textTheme.title,
-                ),
-              ),
+              _buildTextPadding(_buildTitle(context)),
               const SizedBox(height: 10.0),
               _HomeThreadActionsWidget(thread),
             ],
+          ),
+        ),
+      );
+
+  Widget _buildCard(BuildContext context, List<Widget> children) => Card(
+        margin: const EdgeInsets.only(bottom: 10.0),
+        child: GestureDetector(
+          child: Column(
+            children: children,
             crossAxisAlignment: CrossAxisAlignment.start,
           ),
           onTap: () => pushThreadViewScreen(context, thread),
         ),
       );
 
-  Widget _buildInfoRow(BuildContext context, Thread thread) {
+  Widget _buildImage() =>
+      ThreadImageWidget(image: thread?.threadImage, threadId: thread?.threadId);
+
+  Widget _buildInfoRow(BuildContext context) {
     final List<TextSpan> spans = List();
+    final theme = Theme.of(context);
+
     spans.add(TextSpan(
       style: TextStyle(
-        color: thread != null
-            ? Theme.of(context).accentColor
-            : Theme.of(context).disabledColor,
+        color: thread != null ? theme.accentColor : theme.disabledColor,
         fontWeight: FontWeight.bold,
       ),
       text: thread?.creatorUsername ?? '■ ●● ▲▲▲',
     ));
 
     if (thread?.threadCreateDate != null) {
-      spans.add(TextSpan(
-        text: " - ${formatTimestamp(thread.threadCreateDate)}",
-      ));
+      final threadCreateDate = formatTimestamp(thread.threadCreateDate);
+      spans.add(TextSpan(text: " - $threadCreateDate"));
     }
 
     final threadViewCount = thread?.threadViewCount ?? 0;
@@ -76,10 +75,19 @@ class HomeThreadWidget extends StatelessWidget {
       overflow: TextOverflow.ellipsis,
       text: TextSpan(
         children: spans,
-        style: Theme.of(context).textTheme.body1,
+        style: theme.textTheme.body1,
       ),
     );
   }
+
+  Widget _buildTextPadding(Widget child) =>
+      Padding(padding: _kPaddingHorizontal, child: child);
+
+  Widget _buildTitle(BuildContext context) => Text(
+        thread?.threadTitle ?? '▲  □■   ○●○    ▼◁▲▷',
+        maxLines: 3,
+        style: Theme.of(context).textTheme.title,
+      );
 }
 
 class _HomeThreadActionsWidget extends StatefulWidget {

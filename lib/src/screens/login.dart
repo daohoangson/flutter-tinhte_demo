@@ -14,8 +14,8 @@ final _googleSignIn = GoogleSignIn(
   ],
 );
 
-void logout(State state) {
-  final apiData = ApiData.of(state.context);
+void logout(BuildContext context) {
+  final apiData = ApiData.of(context);
   final token = apiData.token;
 
   apiData.setToken(null);
@@ -25,21 +25,17 @@ void logout(State state) {
   }
 }
 
-Future<dynamic> pushLoginScreen(BuildContext context) {
-  return Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => LoginScreen()),
-  );
-}
+Future<dynamic> pushLoginScreen(BuildContext context) =>
+    Navigator.push(context, LoginScreenRoute());
 
-class LoginScreen extends StatefulWidget {
-  LoginScreen({Key key}) : super(key: key);
+class LoginForm extends StatefulWidget {
+  LoginForm({Key key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _LoginScreenState();
+  State<StatefulWidget> createState() => _LoginFormState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginFormState extends State<LoginForm> {
   final formKey = GlobalKey<FormState>();
 
   bool _isLoggingIn = false;
@@ -47,57 +43,49 @@ class _LoginScreenState extends State<LoginScreen> {
   String username;
   String password;
 
-  _LoginScreenState({this.username = '', this.password = ''});
+  _LoginFormState({this.username = '', this.password = ''});
 
   @override
-  Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    final sizeShorter = size.width > size.height ? size.height : size.width;
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Login'),
-      ),
-      body: Form(
-        key: formKey,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            SizedBox(
-              height: sizeShorter,
-              width: sizeShorter,
-              child: ListView(
-                padding: const EdgeInsets.all(20.0),
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 5.0),
-                    child: _buildUsername(),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 5.0),
-                    child: _buildPassword(),
-                  ),
-                  RaisedButton(
-                    child: Text('Submit'),
-                    onPressed: _isLoggingIn ? null : _login,
-                  ),
-                  RaisedButton(
-                    child: Text('Login with Facebook'),
-                    onPressed: _isLoggingIn ? null : _loginFacebook,
-                  ),
-                  RaisedButton(
-                    child: Text('Login with Google'),
-                    onPressed: _isLoggingIn ? null : _loginGoogle,
-                  ),
+  Widget build(BuildContext context) => LayoutBuilder(
+        builder: (_, box) => Form(
+              key: formKey,
+              child: _buildBox(
+                box,
+                <Widget>[
+                  _buildInputPadding(_buildUsername()),
+                  _buildInputPadding(_buildPassword()),
+                  _buildButton('Submit', _login),
+                  _buildButton('Login with Facebook', _loginFacebook),
+                  _buildButton('Login with Google', _loginGoogle),
                 ],
               ),
             ),
-          ],
-        ),
-      ),
-    );
-  }
+      );
+
+  Widget _buildBox(BoxConstraints box, List<Widget> children) => Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          SizedBox(
+            height: box.biggest.shortestSide,
+            width: box.biggest.shortestSide,
+            child: ListView(
+              padding: const EdgeInsets.all(20.0),
+              children: children,
+            ),
+          ),
+        ],
+      );
+
+  Widget _buildButton(String text, VoidCallback onPressed) => RaisedButton(
+        child: Text(text),
+        onPressed: _isLoggingIn ? null : onPressed,
+      );
+
+  Widget _buildInputPadding(Widget child) => Padding(
+        padding: const EdgeInsets.symmetric(vertical: 5.0),
+        child: child,
+      );
 
   Widget _buildPassword() => TextFormField(
         decoration: InputDecoration(
@@ -152,7 +140,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _loginFacebook() {
     if (_isLoggingIn) return;
-    // setState(() => _isLoggingIn = true);
+    setState(() => _isLoggingIn = true);
 
     final apiData = ApiData.of(context);
     final api = apiData.api;
@@ -246,7 +234,7 @@ class _LoginScreenState extends State<LoginScreen> {
     }
 
     if (!jsonMap.containsKey('access_token')) {
-      return Future.error('Cannot login with Google.');
+      return Future.error('Cannot login with ${obtainMethod.toString()}.');
     }
 
     return OauthToken.fromJson(ObtainMethod.Google, jsonMap);
@@ -318,4 +306,14 @@ class _LoginScreenState extends State<LoginScreen> {
               content: Text(error is ApiError ? error.message : "$error"),
             ),
       );
+}
+
+class LoginScreenRoute extends MaterialPageRoute {
+  LoginScreenRoute()
+      : super(
+          builder: (_) => Scaffold(
+                appBar: AppBar(title: Text('Login')),
+                body: LoginForm(),
+              ),
+        );
 }

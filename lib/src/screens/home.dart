@@ -5,8 +5,7 @@ import 'package:tinhte_api/links.dart';
 import 'package:tinhte_api/thread.dart';
 
 import '../api.dart';
-import '../widgets/home/app_bar.dart';
-import '../widgets/home/drawer.dart';
+import '../widgets/app_bar.dart';
 import '../widgets/home/feature_pages.dart';
 import '../widgets/home/thread.dart';
 
@@ -43,8 +42,10 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
           title: Text(_title),
+          automaticallyImplyLeading: false,
+          leading: AppBarMenuIconButton(),
           actions: <Widget>[
-            HomeNotificationAppBarButton(),
+            AppBarNotificationButton(),
           ],
         ),
         body: RefreshIndicator(
@@ -79,13 +80,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 _kItemCountForNext,
           ),
         ),
-        drawer: Drawer(
-          child: NavigationWidget(
-            footer: HomeDrawerFooter(),
-            header: HomeDrawerHeader(),
-            path: 'navigation?parent=0',
-          ),
-        ),
       );
 
   Future fetch() {
@@ -110,7 +104,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future _detectTitle() => PackageInfo.fromPlatform().then(
-      (info) => setState(() => _title = "${info.appName} ${info.version}"));
+      (info) => setState(() => _title = "${info.version}+${info.buildNumber}"));
 
   Future _fetchThreads(String path) {
     setState(() => _isFetchingThreads = true);
@@ -139,4 +133,8 @@ class _HomeScreenState extends State<HomeScreen> {
       onComplete: () => setState(() => _isFetchingThreads = false),
     );
   }
+}
+
+class HomeScreenRoute extends MaterialPageRoute {
+  HomeScreenRoute() : super(builder: (_) => HomeScreen());
 }
