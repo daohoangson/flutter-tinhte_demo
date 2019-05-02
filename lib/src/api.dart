@@ -159,12 +159,13 @@ class ApiData extends State<ApiApp> {
   bool get hasToken => _token != null;
   OauthToken get token => _token;
   User get user {
-    if (_user != null) return _user;
-    if (_token == null) return null;
+    if (_user == null) {
+      _user = User(0);
 
-    _fetchUser();
+      _fetchUser();
+    }
 
-    return null;
+    return _user;
   }
 
   @override
@@ -221,7 +222,7 @@ class ApiData extends State<ApiApp> {
       if (value != null) {
         _fetchUser();
       } else {
-        setState(() => _user = null);
+        setState(() => _user = User(0));
       }
     }
 
@@ -266,26 +267,19 @@ class ApiData extends State<ApiApp> {
 
   void _fetchUser() {
     _enqueue(() async {
-      User user;
+      if (!hasToken) return;
+
       try {
         final json = await api.getJson(_appendOauthToken('users/me'));
         if (json is Map && json.containsKey('user')) {
-          user = User.fromJson(json['user']);
+          final user = User.fromJson(json['user']);
+          setState(() => _user = user);
         }
       } on ApiError catch (ae) {
         debugPrint("_fetchUser encountered an api error: ${ae.message}");
       } catch (e) {
         print(e);
       }
-
-      return setState(() {
-        _user = user;
-
-        if (user == null) {
-          // reset token to avoid fetchUser endless loop
-          _token = null;
-        }
-      });
     });
   }
 
