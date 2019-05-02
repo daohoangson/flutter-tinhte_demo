@@ -1,8 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
-import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart'
-    show lazySet, BuildOp, NodeMetadata;
 import 'package:html/dom.dart' as dom;
 
 import 'html/lb_trigger.dart';
@@ -10,7 +8,7 @@ import 'image.dart';
 
 part 'html/galleria.dart';
 
-final _smilies = {
+const _kSmilies = {
   'Smile': '🙂',
   'Wink': '😉',
   'Frown': '😔',
@@ -43,125 +41,114 @@ class TinhteHtmlWidget extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final config = Config(
-      baseUrl: Uri.parse('https://tinhte.vn'),
-      webView: true,
-    );
-
-    return DefaultTextStyle(
-      child: HtmlWidget(
+  Widget build(BuildContext context) => HtmlWidget(
         html,
-        config: config,
-        wfBuilder: (c) => TinhteWidgetFactory(c, config),
-      ),
-      style: getPostBodyTextStyle(context, isFirstPost),
-    );
-  }
+        baseUrl: Uri.parse('https://tinhte.vn'),
+        hyperlinkColor: Theme.of(context).accentColor,
+        textStyle: getPostBodyTextStyle(context, isFirstPost),
+        webView: true,
+        wf: TinhteWidgetFactory(),
+      );
 }
 
 class TinhteWidgetFactory extends WidgetFactory {
-  bool _isInGalleria = false;
+  BuildOp _attachImageOp;
+  BuildOp _chrOp;
+  BuildOp _smilieOp;
+
   LbTrigger _lbTrigger;
+  Galleria _galleria;
 
-  TinhteWidgetFactory(BuildContext context, Config config)
-      : super(context, config);
-
-  @override
-  Widget buildImageWidget(String src, {int height, int width}) {
-    if (_isInGalleria) {
-      final imageUrl = buildFullUrl(src, config.baseUrl);
+  BuildOp get attachImageOp {
+    _attachImageOp ??= BuildOp(onWidgets: (meta, __) {
+      final e = meta.domElement;
+      final a = e.attributes;
+      final imageUrl = constructFullUrl(a['src']);
       if (imageUrl?.isEmpty != false) return null;
 
-      return AspectRatio(
-        aspectRatio: 16 / 9,
-        child: CachedNetworkImage(
-          imageUrl: imageUrl,
-          fit: BoxFit.cover,
-        ),
+      return AttachmentImageWidget(
+        height: int.tryParse(e.attributes['data-height']),
+        permalink: e.attributes['data-permalink'],
+        src: imageUrl,
+        width: int.tryParse(e.attributes['data-width']),
       );
-    }
-
-    return super.buildImageWidget(src, height: height, width: width);
+    });
+    return _attachImageOp;
   }
 
-  @override
-  Widget buildImageWidgetFromUrl(String url) {
-    final imageUrl = buildFullUrl(url, config.baseUrl);
-    if (imageUrl?.isEmpty != false) return null;
+  BuildOp get chrOp {
+    _chrOp ??= BuildOp(onWidgets: (meta, __) {
+      final a = meta.domElement.attributes;
+      final url = constructFullUrl(a['href']);
+      if (url?.isEmpty != false) return null;
 
-    return Image(
-      image: CachedNetworkImageProvider(imageUrl),
-      fit: BoxFit.cover,
+      return WebView(url, aspectRatio: 16 / 9, getDimensions: true);
+    });
+    return _chrOp;
+  }
+
+  BuildOp get smilieOp {
+    _smilieOp ??= BuildOp(
+      onPieces: (meta, pieces) {
+        final a = meta.domElement.attributes;
+        if (!a.containsKey('data-title')) return pieces;
+        final title = a['data-title'];
+        if (!_kSmilies.containsKey(title)) return pieces;
+
+        return pieces
+          ..first.block.rebuildBits((b) => b.rebuild(data: _kSmilies[title]));
+      },
     );
+    return _smilieOp;
+  }
+
+  LbTrigger get lbTrigger {
+    _lbTrigger ??= LbTrigger();
+    return _lbTrigger;
+  }
+
+  Galleria get galleria {
+    _galleria ??= Galleria(this);
+    return _galleria;
   }
 
   @override
-  NodeMetadata parseElement(dom.Element e) {
+  NodeMetadata parseElement(NodeMetadata meta, dom.Element e) {
     switch (e.localName) {
       case 'a':
         if (e.attributes.containsKey('data-chr') &&
             e.attributes['data-chr'] == 'true' &&
             e.attributes.containsKey('href')) {
-          return lazySet(
-            null,
-            buildOp: BuildOp(
-                onProcess: (_, addWidgets, __) =>
-                    addWidgets(<Widget>[WebView(e.attributes['href'])])),
-          );
+          return lazySet(null, buildOp: chrOp);
         }
         break;
       case 'img':
+        var isInGalleria = false;
+        meta.keys((k) => k == galleria.key ? isInGalleria = true : null);
+        if (isInGalleria) {
+          return lazySet(null, buildOp: galleria.imgOp);
+        }
+
         if (e.attributes.containsKey('data-height') &&
             e.attributes.containsKey('data-permalink') &&
             e.attributes.containsKey('src') &&
             e.attributes.containsKey('data-width')) {
-          return lazySet(
-            null,
-            buildOp: BuildOp(
-              onProcess: (_, addWidgets, __) => addWidgets(<Widget>[
-                    AttachmentImageWidget(
-                      height: int.tryParse(e.attributes['data-height']),
-                      permalink: e.attributes['data-permalink'],
-                      src: e.attributes['src'],
-                      width: int.tryParse(e.attributes['data-width']),
-                    )
-                  ]),
-            ),
-          );
+          return lazySet(null, buildOp: attachImageOp);
         }
         break;
     }
 
     switch (e.className) {
       case 'LbTrigger':
-        if (e.localName == 'a' && e.attributes.containsKey('href')) {
-          final href = e.attributes['href'];
-          _lbTrigger ??= LbTrigger(this.context);
-
-          return lazySet(
-            null,
-            buildOp: BuildOp(
-              onWidgets: _lbTrigger.prepareBuildOpOnWidgets(href),
-            ),
-          );
-        }
-        break;
+        return lazySet(null, buildOp: lbTrigger.buildOp);
       case 'Tinhte_Galleria':
-        _isInGalleria = true;
-        return lazySet(null, buildOp: galleria(this));
+        return lazySet(null, buildOp: galleria.buildOp);
       case 'bbCodeBlock bbCodeQuote':
         return lazySet(null, isNotRenderable: true);
       case 'smilie':
-        final title = e.attributes['data-title'];
-        if (_smilies.containsKey(title)) {
-          final text = _smilies[title];
-          return lazySet(null,
-              buildOp: BuildOp(onProcess: (_, __, write) => write(text)));
-        }
-        break;
+        return lazySet(null, buildOp: smilieOp);
     }
 
-    return super.parseElement(e);
+    return meta;
   }
 }

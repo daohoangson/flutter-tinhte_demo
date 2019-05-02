@@ -9,7 +9,6 @@ import '../widgets/home/app_bar.dart';
 import '../widgets/home/drawer.dart';
 import '../widgets/home/feature_pages.dart';
 import '../widgets/home/thread.dart';
-import '../widgets/navigation.dart';
 
 const kThreadsPath = 'lists/1/threads';
 
