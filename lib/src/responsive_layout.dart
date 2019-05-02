@@ -13,25 +13,29 @@ bool isNarrow(BuildContext context) => MediaQuery.of(context).size.width < 1000;
 
 class ResponsiveLayout extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => _ResponsiveLayoutState();
+  State<StatefulWidget> createState() => ResponsiveState();
 }
 
-class _ResponsiveLayoutState extends State<ResponsiveLayout> {
+class ResponsiveState extends State<ResponsiveLayout> {
   final primaryNavKey = GlobalKey<NavigatorState>();
   final narrowKey = GlobalKey<ScaffoldState>();
   final wideKey = GlobalKey<ScaffoldState>();
 
   @override
-  Widget build(BuildContext _) => OrientationBuilder(
-        builder: (c, _) => isNarrow(c) ? buildNarrow() : buildWide(),
+  Widget build(BuildContext _) => _ResponsiveLayoutInheritedWidget(
+        child: OrientationBuilder(
+          builder: (c, _) => isNarrow(c) ? buildNarrow() : buildWide(),
+        ),
+        state: this,
       );
 
   Widget buildNarrow() => Scaffold(
         body: Container(child: _buildPrimaryNavigator()),
         drawer: Drawer(
-            child: _buildSidebarNavigator(
-          scaffoldKey: narrowKey,
-        )),
+          child: _buildSidebarNavigator(
+            scaffoldKey: narrowKey,
+          ),
+        ),
         key: narrowKey,
       );
 
@@ -45,19 +49,13 @@ class _ResponsiveLayoutState extends State<ResponsiveLayout> {
         key: wideKey,
       );
 
+  bool hasDrawer() => isNarrow(context);
+
+  void openDrawer() => narrowKey.currentState?.openDrawer();
+
   Widget _buildPrimaryNavigator() => Navigator(
         key: primaryNavKey,
         onGenerateRoute: (_) => HomeScreenRoute(),
-      );
-
-  Widget _buildSidebar({
-    List<navigation.Element> initialElements = const [],
-  }) =>
-      NavigationWidget(
-        footer: AppBarDrawerFooter(),
-        header: AppBarDrawerHeader(),
-        initialElements: initialElements,
-        path: 'navigation?parent=0',
       );
 
   Widget _buildSidebarNavigator({GlobalKey<ScaffoldState> scaffoldKey}) =>
@@ -67,17 +65,38 @@ class _ResponsiveLayoutState extends State<ResponsiveLayout> {
         (route) {
           switch (route.name) {
             case '/':
-              return NavigationRoute((_) => _buildSidebar(
+              return NavigationRoute((_) => NavigationWidget(
+                    footer: AppBarDrawerFooter(),
+                    header: AppBarDrawerHeader(),
                     initialElements: [
                       navigation.Element(0, _kRouteHome)
                         ..node = (node.Category(0)..categoryTitle = "Home"),
                     ],
+                    path: 'navigation?parent=0',
                   ));
             case _kRouteHome:
               return HomeScreenRoute();
           }
         },
       );
+
+  static ResponsiveState of(BuildContext context) =>
+      (context.inheritFromWidgetOfExactType(_ResponsiveLayoutInheritedWidget)
+              as _ResponsiveLayoutInheritedWidget)
+          .state;
+}
+
+class _ResponsiveLayoutInheritedWidget extends InheritedWidget {
+  final ResponsiveState state;
+
+  _ResponsiveLayoutInheritedWidget({
+    Widget child,
+    this.state,
+    Key key,
+  }) : super(child: child, key: key);
+
+  @override
+  bool updateShouldNotify(_ResponsiveLayoutInheritedWidget old) => true;
 }
 
 class _SidebarNavigator extends Navigator {

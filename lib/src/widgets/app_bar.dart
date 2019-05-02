@@ -8,6 +8,7 @@ import '../screens/notification_list.dart';
 import '../api.dart';
 import '../constants.dart';
 import '../push_notification.dart';
+import '../responsive_layout.dart';
 
 class AppBarDrawerHeader extends StatelessWidget {
   AppBarDrawerHeader({Key key}) : super(key: key);
@@ -84,6 +85,20 @@ class AppBarDrawerFooter extends StatelessWidget {
           onTap: () => logout(context),
         )
       : Container(height: 0.0, width: 0.0);
+}
+
+class AppBarMenuIconButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final rs = ResponsiveState.of(context);
+
+    return rs?.hasDrawer() == true
+        ? IconButton(
+            icon: const Icon(Icons.menu),
+            onPressed: () => rs?.openDrawer(),
+          )
+        : Container();
+  }
 }
 
 class AppBarNotificationButton extends StatefulWidget {
