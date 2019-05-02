@@ -49,13 +49,13 @@ class _NavigationWidgetState extends State<NavigationWidget> {
             if (i == elements.length) return widget.footer;
           }
 
-          if (i >= elements.length)
+          if (i > elements.length)
             return buildProgressIndicator(elements.isEmpty);
+
           return _buildRow(elements[i]);
         },
         itemCount: (widget.header != null ? 1 : 0) +
             elements.length +
-            1 +
             (widget.footer != null ? 1 : 0),
       );
 

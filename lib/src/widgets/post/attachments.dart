@@ -9,7 +9,7 @@ class _PostAttachmentsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final lbTrigger = LbTrigger(context);
+    final lbTrigger = LbTrigger();
     for (final attachment in attachments) {
       lbTrigger.sources.add(attachment.links.data);
     }
@@ -18,7 +18,7 @@ class _PostAttachmentsWidget extends StatelessWidget {
       height: kAttachmentSize,
       child: ListView.separated(
         itemBuilder: (context, i) => lbTrigger.buildGestureDetector(
-            i, _buildAttachment((attachments[i]))),
+            context, i, _buildAttachment((attachments[i]))),
         itemCount: attachments.length,
         scrollDirection: Axis.horizontal,
         separatorBuilder: (context, i) => const SizedBox(width: 10.0),

@@ -3,10 +3,20 @@ part of '../html.dart';
 const kColumns = 3;
 const kSpacing = 3.0;
 
-BuildOp galleria(TinhteWidgetFactory wf) => BuildOp(
-      onWidgets: (widgets) {
-        wf._isInGalleria = false;
+class Galleria {
+  final TinhteWidgetFactory wf;
+  final key = UniqueKey();
 
+  BuildOp _buildOp;
+  BuildOp _imgOp;
+
+  Galleria(this.wf);
+
+  BuildOp get buildOp {
+    _buildOp ??= BuildOp(
+      onMetadata: (meta) => lazySet(meta, key: key),
+      onWidgets: (meta, iterable) {
+        final widgets = iterable.toList();
         final rows = (widgets.length / kColumns).ceil();
         final List<Widget> newWidgets = List();
 
@@ -27,6 +37,29 @@ BuildOp galleria(TinhteWidgetFactory wf) => BuildOp(
           newWidgets.add(SizedBox(height: kSpacing));
         }
 
-        return newWidgets;
+        return wf.buildColumn(newWidgets);
       },
     );
+
+    return _buildOp;
+  }
+
+  BuildOp get imgOp {
+    _imgOp ??= BuildOp(onWidgets: (meta, _) {
+      final a = meta.domElement.attributes;
+      final src = a.containsKey('src') ? a['src'] : null;
+      final imageUrl = wf.constructFullUrl(src);
+      if (imageUrl?.isEmpty != false) return null;
+
+      return AspectRatio(
+        aspectRatio: 16 / 9,
+        child: CachedNetworkImage(
+          imageUrl: imageUrl,
+          fit: BoxFit.cover,
+        ),
+      );
+    });
+
+    return _imgOp;
+  }
+}

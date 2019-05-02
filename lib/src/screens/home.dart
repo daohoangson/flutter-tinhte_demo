@@ -8,7 +8,6 @@ import '../api.dart';
 import '../widgets/app_bar.dart';
 import '../widgets/home/feature_pages.dart';
 import '../widgets/home/thread.dart';
-import '../widgets/navigation.dart';
 
 const kThreadsPath = 'lists/1/threads';
 

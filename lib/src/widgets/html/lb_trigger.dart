@@ -1,50 +1,42 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart'
-    show BuildOpOnWidgets;
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 
 class LbTrigger {
-  final BuildContext context;
-  final List<String> sources = List();
+  final sources = <String>[];
 
-  LbTrigger(this.context);
-
-  Widget buildGestureDetector(int index, Widget child) => GestureDetector(
+  Widget buildGestureDetector(BuildContext context, int index, Widget child) =>
+      GestureDetector(
         child: child,
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => PhotoViewGalleryWrapper(
-                    sources,
-                    initialPage: index,
-                  ),
+        onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => _Screen(sources, initialPage: index),
+              ),
             ),
-          );
-        },
       );
 
-  BuildOpOnWidgets prepareBuildOpOnWidgets(String source) {
-    final index = sources.length;
-    sources.add(source);
+  BuildOp get buildOp => BuildOp(onWidgets: (meta, widgets) {
+        final a = meta.domElement.attributes;
+        final href = a.containsKey('href') ? a['href'] : null;
+        if (href?.isNotEmpty != true) return null;
 
-    return (List<Widget> widgets) {
-      if (widgets.length != 1) return widgets;
+        final index = sources.length;
+        sources.add(href);
 
-      return <Widget>[
-        buildGestureDetector(index, widgets.first),
-      ];
-    };
-  }
+        return widgets.length == 1
+            ? buildGestureDetector(meta.context, index, widgets.first)
+            : null;
+      });
 }
 
-class PhotoViewGalleryWrapper extends StatelessWidget {
+class _Screen extends StatelessWidget {
   final int initialPage;
   final PageController pageController;
   final List<String> sources;
 
-  PhotoViewGalleryWrapper(this.sources, {this.initialPage = 0})
+  _Screen(this.sources, {this.initialPage = 0})
       : this.pageController = PageController(initialPage: initialPage);
 
   @override
