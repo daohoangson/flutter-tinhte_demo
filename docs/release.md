@@ -1,4 +1,10 @@
-# How to release
+# How to do beta releases
+
+## Both
+
+```bash
+./tool/release-beta.sh
+```
 
 ## Android
 
