@@ -28,6 +28,13 @@ class NavigationWidget extends StatefulWidget {
 class _NavigationWidgetState extends State<NavigationWidget> {
   final List<navigation.Element> elements = List();
 
+  bool _isFetching = false;
+
+  int get itemCount =>
+      (widget.header != null ? 1 : 0) +
+      (_isFetching ? 1 : elements.length) +
+      (widget.footer != null ? 1 : 0);
+
   @override
   void initState() {
     super.initState();
@@ -40,26 +47,25 @@ class _NavigationWidgetState extends State<NavigationWidget> {
   @override
   Widget build(BuildContext context) => ListView.builder(
         itemBuilder: (context, i) {
-          if (widget.header != null) {
-            if (i == 0) return widget.header;
-            i--;
-          }
+          if (widget.header != null && i == 0) return widget.header;
 
-          if (widget.footer != null) {
-            if (i == elements.length) return widget.footer;
-          }
+          if (widget.footer != null && i == itemCount - 1) return widget.footer;
 
-          if (i > elements.length)
-            return buildProgressIndicator(elements.isEmpty);
+          if (_isFetching) return buildProgressIndicator(true);
 
-          return _buildRow(elements[i]);
+          return _buildRow(elements[i - (widget.header != null ? 1 : 0)]);
         },
-        itemCount: (widget.header != null ? 1 : 0) +
-            elements.length +
-            (widget.footer != null ? 1 : 0),
+        itemCount: itemCount,
       );
 
-  fetch() => apiGet(this, widget.path, onSuccess: (jsonMap) {
+  fetch() {
+    if (_isFetching) return;
+    setState(() => _isFetching = true);
+
+    apiGet(
+      this,
+      widget.path,
+      onSuccess: (jsonMap) {
         List<navigation.Element> newElements = List();
 
         if (jsonMap.containsKey('elements')) {
@@ -68,7 +74,10 @@ class _NavigationWidgetState extends State<NavigationWidget> {
         }
 
         setState(() => elements.addAll(newElements));
-      });
+      },
+      onComplete: () => setState(() => _isFetching = false),
+    );
+  }
 
   Widget _buildRow(navigation.Element e) => ListTile(
         title: Text(e.node?.title ?? "#${e.navigationId}"),
