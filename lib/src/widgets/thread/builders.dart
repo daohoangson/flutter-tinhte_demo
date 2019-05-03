@@ -95,7 +95,7 @@ TextSpan buildThreadTextSpan(BuildContext context, Thread thread) {
 
   spans.add(TextSpan(
     style: TextStyle(color: theme.accentColor, fontWeight: FontWeight.bold),
-    text: thread.creatorUsername,
+    text: "${thread.creatorUsername}${thread.creatorHasVerifiedBadge == true ? ' ✅' : ''}",
   ));
 
   final threadCreateDate =
