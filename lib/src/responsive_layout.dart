@@ -23,8 +23,18 @@ class ResponsiveState extends State<ResponsiveLayout> {
 
   @override
   Widget build(BuildContext _) => _ResponsiveLayoutInheritedWidget(
-        child: OrientationBuilder(
-          builder: (c, _) => isNarrow(c) ? buildNarrow() : buildWide(),
+        child: WillPopScope(
+          child: OrientationBuilder(
+            builder: (c, _) => isNarrow(c) ? buildNarrow() : buildWide(),
+          ),
+          onWillPop: () async {
+            final primary = primaryNavKey.currentState;
+            final primaryCanPop = primary?.canPop() == true;
+            if (!primaryCanPop) return true;
+
+            primary.pop();
+            return false;
+          },
         ),
         state: this,
       );
