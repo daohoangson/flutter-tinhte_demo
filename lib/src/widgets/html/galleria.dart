@@ -14,7 +14,8 @@ class Galleria {
 
   BuildOp get buildOp {
     _buildOp ??= BuildOp(
-      onMetadata: (meta) => lazySet(meta, key: key),
+      onChild: (meta, e) =>
+          e.localName == 'img' ? lazySet(null, buildOp: imgOp) : null,
       onWidgets: (meta, iterable) {
         final widgets = iterable.toList();
         final rows = (widgets.length / kColumns).ceil();

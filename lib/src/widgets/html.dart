@@ -7,6 +7,7 @@ import 'html/lb_trigger.dart';
 import 'image.dart';
 
 part 'html/galleria.dart';
+part 'html/link_expander.dart';
 
 const _kSmilies = {
   'Smile': '🙂',
@@ -56,8 +57,9 @@ class TinhteWidgetFactory extends WidgetFactory {
   BuildOp _chrOp;
   BuildOp _smilieOp;
 
-  LbTrigger _lbTrigger;
   Galleria _galleria;
+  LbTrigger _lbTrigger;
+  LinkExpander _linkExpander;
 
   BuildOp get attachImageOp {
     _attachImageOp ??= BuildOp(onWidgets: (meta, __) {
@@ -102,14 +104,19 @@ class TinhteWidgetFactory extends WidgetFactory {
     return _smilieOp;
   }
 
+  Galleria get galleria {
+    _galleria ??= Galleria(this);
+    return _galleria;
+  }
+
   LbTrigger get lbTrigger {
     _lbTrigger ??= LbTrigger();
     return _lbTrigger;
   }
 
-  Galleria get galleria {
-    _galleria ??= Galleria(this);
-    return _galleria;
+  LinkExpander get linkExpander {
+    _linkExpander ??= LinkExpander(this);
+    return _linkExpander;
   }
 
   @override
@@ -121,14 +128,13 @@ class TinhteWidgetFactory extends WidgetFactory {
             e.attributes.containsKey('href')) {
           return lazySet(null, buildOp: chrOp);
         }
+
+        if (e.classes.contains('LinkExpander') &&
+            e.classes.contains('expanded')) {
+          return lazySet(null, buildOp: linkExpander.buildOp);
+        }
         break;
       case 'img':
-        var isInGalleria = false;
-        meta.keys((k) => k == galleria.key ? isInGalleria = true : null);
-        if (isInGalleria) {
-          return lazySet(null, buildOp: galleria.imgOp);
-        }
-
         if (e.attributes.containsKey('data-height') &&
             e.attributes.containsKey('data-permalink') &&
             e.attributes.containsKey('src') &&
