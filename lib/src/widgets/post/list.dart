@@ -192,6 +192,7 @@ class _PostListWidgetState extends State<_PostListWidget> {
               buildPosterInfo(
                 context,
                 post.posterUsername,
+                userHasVerifiedBadge: post.posterHasVerifiedBadge,
                 userRank: post.posterRank?.rankName,
               ),
               TinhteHtmlWidget(post.postBodyHtml),

@@ -45,6 +45,7 @@ class Post {
   bool postIsPublished;
   int postLikeCount;
   int postUpdateDate;
+  bool posterHasVerifiedBadge;
   int posterUserId;
   String posterUsername;
   String signature;

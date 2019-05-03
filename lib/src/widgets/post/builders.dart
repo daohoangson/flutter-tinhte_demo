@@ -49,6 +49,7 @@ Widget buildPosterCircleAvatar(String url, {bool isPostReply = false}) =>
 Widget buildPosterInfo(
   BuildContext context,
   String username, {
+  bool userHasVerifiedBadge,
   String userRank,
 }) =>
     Padding(
@@ -63,7 +64,7 @@ Widget buildPosterInfo(
                 color: Theme.of(context).accentColor,
                 fontWeight: FontWeight.bold,
               ),
-              text: username,
+              text: "$username${userHasVerifiedBadge == true ? ' ✅' : ''}",
             ),
             TextSpan(
               style: TextStyle(

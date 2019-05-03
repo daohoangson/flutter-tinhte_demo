@@ -7,6 +7,7 @@ Widget _buildPostReply(BuildContext context, Post post) => buildRow(
         buildPosterInfo(
           context,
           post.posterUsername,
+          userHasVerifiedBadge: post.posterHasVerifiedBadge,
           userRank: post.posterRank?.rankName,
         ),
         TinhteHtmlWidget(post.postBodyHtml),

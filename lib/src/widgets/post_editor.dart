@@ -52,6 +52,7 @@ class _PostEditorState extends State<PostEditor> {
           buildPosterInfo(
             context,
             user?.username ?? '',
+            userHasVerifiedBadge: user?.userHasVerifiedBadge,
             userRank: user?.rank?.rankName,
           ),
           Padding(
