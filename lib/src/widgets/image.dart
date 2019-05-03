@@ -50,9 +50,24 @@ Widget _buildImageWidget(
 
         if (resizedUrl != null) debugPrint(resizedUrl);
 
-        return Image(
-          image: CachedNetworkImageProvider(resizedUrl ?? imageUrl),
-          fit: BoxFit.cover,
+        if (bc.maxWidth <= imageWidth) {
+          return AspectRatio(
+            aspectRatio: imageWidth / imageHeight,
+            child: Image(
+              image: CachedNetworkImageProvider(resizedUrl ?? imageUrl),
+              fit: BoxFit.cover,
+            ),
+          );
+        }
+
+        return SizedBox(
+          child: Image(
+            image: CachedNetworkImageProvider(resizedUrl ?? imageUrl),
+            alignment: Alignment.topLeft,
+            fit: BoxFit.contain,
+          ),
+          height: imageHeight.toDouble(),
+          width: imageWidth.toDouble(),
         );
       },
     );
@@ -80,14 +95,11 @@ class AttachmentImageWidget extends StatelessWidget {
       return Container();
     }
 
-    return AspectRatio(
-      aspectRatio: width / height,
-      child: _buildImageWidget(
-        permalink,
-        apiUrl: src,
-        imageHeight: height,
-        imageWidth: width,
-      ),
+    return _buildImageWidget(
+      permalink,
+      apiUrl: src,
+      imageHeight: height,
+      imageWidth: width,
     );
   }
 }
@@ -113,10 +125,9 @@ class ThreadImageWidget extends StatelessWidget {
       );
     }
 
-    final img = _buildImageWidget(
-      link,
-      imageHeight: image.height,
-      imageWidth: image.width,
+    final img = Image(
+      image: CachedNetworkImageProvider(link),
+      fit: BoxFit.cover,
     );
 
     return AspectRatio(
