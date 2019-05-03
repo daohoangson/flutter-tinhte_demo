@@ -43,7 +43,7 @@ class AppBarDrawerHeader extends StatelessWidget {
                 aspectRatio: 1.0,
                 child: CircleAvatar(
                   backgroundImage:
-                      CachedNetworkImageProvider(user.links.avatarBig),
+                      CachedNetworkImageProvider(user.links?.avatarBig),
                 ),
               ),
             ),
