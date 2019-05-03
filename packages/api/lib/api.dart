@@ -147,7 +147,7 @@ class Api {
   }
 }
 
-class ApiError {
+class ApiError extends Error {
   final String message;
 
   ApiError({String message, List<String> messages})

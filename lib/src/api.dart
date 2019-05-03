@@ -12,31 +12,31 @@ import 'constants.dart';
 
 final _oauthTokenRegEx = RegExp(r'oauth_token=.+(&|$)');
 
-Future apiDelete(State state, String path,
+void apiDelete(State state, String path,
         {VoidCallback onComplete,
         ApiOnError onError,
         ApiOnJsonMap onSuccess}) =>
     _setupApiJsonHandlers(
       state,
-      (apiData) => apiData.api.deleteJson(apiData._appendOauthToken(path)),
+      (d) => d.api.deleteJson(d._appendOauthToken(path)),
       onSuccess,
       onError,
       onComplete,
     );
 
-Future apiGet(State state, String path,
+void apiGet(State state, String path,
         {VoidCallback onComplete,
         ApiOnError onError,
         ApiOnJsonMap onSuccess}) =>
     _setupApiJsonHandlers(
       state,
-      (apiData) => apiData.api.getJson(apiData._appendOauthToken(path)),
+      (d) => d.api.getJson(d._appendOauthToken(path)),
       onSuccess,
-      onError ?? (error) => print(error),
+      onError,
       onComplete,
     );
 
-Future apiPost(State state, String path,
+void apiPost(State state, String path,
         {Map<String, String> bodyFields,
         Map<String, File> fileFields,
         VoidCallback onComplete,
@@ -44,15 +44,21 @@ Future apiPost(State state, String path,
         ApiOnJsonMap onSuccess}) =>
     _setupApiJsonHandlers(
       state,
-      (apiData) => apiData.api.postJson(apiData._appendOauthToken(path),
-          bodyFields: bodyFields, fileFields: fileFields),
+      (d) => d.api.postJson(
+            d._appendOauthToken(path),
+            bodyFields: bodyFields,
+            fileFields: fileFields,
+          ),
       onSuccess,
       onError,
       onComplete,
     );
 
-void prepareForApiAction(State state, VoidCallback onReady,
-    {VoidCallback onError}) async {
+void prepareForApiAction(
+  State state,
+  VoidCallback onReady, {
+  VoidCallback onError,
+}) async {
   final apiData = ApiData._noInherit(state.context);
 
   if (apiData._token == null) {
@@ -66,11 +72,14 @@ void prepareForApiAction(State state, VoidCallback onReady,
   onReady();
 }
 
-Future showApiErrorDialog(BuildContext context, error,
-        {String title = 'Api Error'}) =>
+Future showApiErrorDialog(
+  BuildContext context,
+  dynamic error, {
+  String title = 'Api Error',
+}) =>
     showDialog(
       context: context,
-      builder: (c) => AlertDialog(
+      builder: (_) => AlertDialog(
             title: Text(title),
             content: Text(
               error is ApiError
@@ -80,16 +89,19 @@ Future showApiErrorDialog(BuildContext context, error,
           ),
     );
 
-Future _setupApiFuture<T>(State state, Future<T> future,
-    ApiOnSuccess<T> onSuccess, ApiOnError onError, VoidCallback onComplete) {
-  Future f = future;
+void _setupApiCompleter<T>(
+  State state,
+  Completer<T> completer,
+  ApiOnSuccess<T> onSuccess,
+  ApiOnError onError,
+  VoidCallback onComplete,
+) {
+  var f = completer.future;
 
   if (onSuccess != null) {
-    f = f.then((data) {
-      if (!state.mounted) return false;
-      if (onSuccess == null) return true;
-      return onSuccess(data);
-    });
+    f = f.then(
+      (data) => (state.mounted && onSuccess != null) ? onSuccess(data) : null,
+    );
   }
 
   f = f.catchError((error) {
@@ -105,33 +117,39 @@ Future _setupApiFuture<T>(State state, Future<T> future,
       onComplete();
     });
   }
-
-  return f;
 }
 
-Future _setupApiJsonHandlers(State state, ApiFetch fetch,
-    ApiOnJsonMap onSuccess, ApiOnError onError, VoidCallback onComplete) {
+void _setupApiJsonHandlers(
+  State state,
+  ApiFetch fetch,
+  ApiOnJsonMap onSuccess,
+  ApiOnError onError,
+  VoidCallback onComplete,
+) {
   final apiData = ApiData._noInherit(state.context);
-  final c = Completer();
-  apiData._enqueue(() => c.complete(fetch(apiData)));
+  final completer = Completer();
+  apiData._enqueue(() => completer.complete(fetch(apiData)));
 
-  final _onSuccess = onSuccess != null
-      ? (json) {
-          if (json is! Map) {
-            print(json);
-            return Future.error(ApiError(message: 'Unexpected api response'));
+  return _setupApiCompleter<dynamic>(
+    state,
+    completer,
+    onSuccess != null
+        ? (json) {
+            if (json is! Map) {
+              print(json);
+              throw new ApiError(message: 'Unexpected api response');
+            }
+            return onSuccess(json);
           }
-          return onSuccess(json);
-        }
-      : null;
-
-  return _setupApiFuture<dynamic>(
-      state, c.future, _onSuccess, onError, onComplete);
+        : null,
+    onError,
+    onComplete,
+  );
 }
 
 typedef Future ApiFetch(ApiData apiData);
-typedef dynamic ApiOnSuccess<T>(T data);
-typedef dynamic ApiOnJsonMap(Map jsonMap);
+typedef T ApiOnSuccess<T>(T data);
+typedef void ApiOnJsonMap(Map jsonMap);
 typedef void ApiOnError(error);
 
 class ApiApp extends StatefulWidget {

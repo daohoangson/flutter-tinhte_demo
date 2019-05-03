@@ -58,7 +58,7 @@ class _NavigationWidgetState extends State<NavigationWidget> {
         itemCount: itemCount,
       );
 
-  fetch() {
+  void fetch() {
     if (_isFetching) return;
     setState(() => _isFetching = true);
 

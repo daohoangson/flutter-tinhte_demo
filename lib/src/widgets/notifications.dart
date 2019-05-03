@@ -20,6 +20,7 @@ class _NotificationsWidgetState extends State<NotificationsWidget> {
   final List<api.Notification> notifications = List();
 
   StreamSubscription<int> _notifSub;
+  bool _isFetching = false;
 
   @override
   void initState() {
@@ -35,13 +36,20 @@ class _NotificationsWidgetState extends State<NotificationsWidget> {
 
   @override
   Widget build(BuildContext context) => ListView.builder(
-        itemBuilder: (context, i) => i >= notifications.length
-            ? buildProgressIndicator(notifications.isEmpty)
+        itemBuilder: (context, i) => _isFetching
+            ? buildProgressIndicator(true)
             : _buildRow(notifications[i]),
-        itemCount: notifications.length + 1,
+        itemCount: _isFetching ? 1 : notifications.length,
       );
 
-  fetch() => apiGet(this, 'notifications', onSuccess: (jsonMap) {
+  void fetch() {
+    if (_isFetching) return;
+    setState(() => _isFetching = true);
+
+    return apiGet(
+      this,
+      'notifications',
+      onSuccess: (jsonMap) {
         List<api.Notification> newNotifs = List();
 
         if (jsonMap.containsKey('notifications')) {
@@ -50,10 +58,13 @@ class _NotificationsWidgetState extends State<NotificationsWidget> {
         }
 
         setState(() => notifications.addAll(newNotifs));
-      }).then((_) {
+
         _notifSub ??= listenToNotification(_onNotifData);
         apiPost(this, 'notifications/read');
-      });
+      },
+      onComplete: () => setState(() => _isFetching = false),
+    );
+  }
 
   Widget _buildRow(api.Notification n) => Card(
         child: Row(

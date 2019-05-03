@@ -69,30 +69,33 @@ class _ThreadsWidgetState extends State<ThreadsWidget> {
         itemCount: threads.length + 1,
       );
 
-  fetch() {
+  void fetch() {
     if (_isFetching || _url == null) return;
     setState(() => _isFetching = true);
 
-    apiGet(this, _url,
-        onSuccess: (jsonMap) {
-          final List<Thread> newThreads = List();
-          String nextUrl;
+    return apiGet(
+      this,
+      _url,
+      onSuccess: (jsonMap) {
+        final List<Thread> newThreads = List();
+        String nextUrl;
 
-          if (jsonMap.containsKey(threadsKey)) {
-            final jsonThreads = jsonMap[threadsKey] as List;
-            jsonThreads.forEach((j) => newThreads.add(Thread.fromJson(j)));
-          }
+        if (jsonMap.containsKey(threadsKey)) {
+          final jsonThreads = jsonMap[threadsKey] as List;
+          jsonThreads.forEach((j) => newThreads.add(Thread.fromJson(j)));
+        }
 
-          if (jsonMap.containsKey('links')) {
-            final links = Links.fromJson(jsonMap['links']);
-            nextUrl = links.next;
-          }
+        if (jsonMap.containsKey('links')) {
+          final links = Links.fromJson(jsonMap['links']);
+          nextUrl = links.next;
+        }
 
-          setState(() {
-            threads.addAll(newThreads);
-            _url = nextUrl;
-          });
-        },
-        onComplete: () => setState(() => _isFetching = false));
+        setState(() {
+          threads.addAll(newThreads);
+          _url = nextUrl;
+        });
+      },
+      onComplete: () => setState(() => _isFetching = false),
+    );
   }
 }

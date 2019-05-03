@@ -85,32 +85,35 @@ class _PostListWidgetState extends State<_PostListWidget> {
         padding: const EdgeInsets.all(0),
       );
 
-  fetch(String path) {
+  void fetch(String path) {
     if (_isFetching) return;
     setState(() => _isFetching = true);
 
-    apiGet(this, path,
-        onSuccess: (jsonMap) {
-          final List<_PostListItem> newItems = List();
-          Links newLinks;
+    apiGet(
+      this,
+      path,
+      onSuccess: (jsonMap) {
+        final List<_PostListItem> newItems = List();
+        Links newLinks;
 
-          if (jsonMap.containsKey('posts')) {
-            if (jsonMap.containsKey('links')) {
-              newLinks = Links.fromJson(jsonMap['links']);
-              newItems.add(_PostListItem(page: newLinks.page));
-            }
-
-            decodePostsAndTheirReplies(jsonMap['posts'])
-                .where((p) => !p.postIsFirstPost)
-                .forEach((post) => newItems.add(_PostListItem(post: post)));
+        if (jsonMap.containsKey('posts')) {
+          if (jsonMap.containsKey('links')) {
+            newLinks = Links.fromJson(jsonMap['links']);
+            newItems.add(_PostListItem(page: newLinks.page));
           }
 
-          setState(() {
-            items.addAll(newItems);
-            _links = newLinks;
-          });
-        },
-        onComplete: () => setState(() => _isFetching = false));
+          decodePostsAndTheirReplies(jsonMap['posts'])
+              .where((p) => !p.postIsFirstPost)
+              .forEach((post) => newItems.add(_PostListItem(post: post)));
+        }
+
+        setState(() {
+          items.addAll(newItems);
+          _links = newLinks;
+        });
+      },
+      onComplete: () => setState(() => _isFetching = false),
+    );
   }
 
   onPageNav(int page, String url) {

@@ -126,18 +126,22 @@ class _PostReplyHiddenWidgetState extends State<_PostReplyHiddenWidget> {
     );
   }
 
-  fetch() {
+  void fetch() {
     if (_hasFetched || widget.link == null) return;
     setState(() => _hasFetched = true);
 
-    apiGet(this, widget.link, onSuccess: (jsonMap) {
-      if (!jsonMap.containsKey('replies')) {
-        setState(() => _posts = List(0));
-        return;
-      }
+    return apiGet(
+      this,
+      widget.link,
+      onSuccess: (jsonMap) {
+        if (!jsonMap.containsKey('replies')) {
+          setState(() => _posts = List(0));
+          return;
+        }
 
-      final posts = decodePostsAndTheirReplies(jsonMap['replies']);
-      setState(() => _posts = posts);
-    });
+        final posts = decodePostsAndTheirReplies(jsonMap['replies']);
+        setState(() => _posts = posts);
+      },
+    );
   }
 }

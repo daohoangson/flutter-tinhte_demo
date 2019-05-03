@@ -76,7 +76,7 @@ class _FeaturePagesWidgetState extends State<FeaturePagesWidget> {
         ),
       );
 
-  fetch() {
+  void fetch() {
     final List<String> pageIds = List();
     final List<FeaturePage> allPages = List();
 
@@ -93,18 +93,21 @@ class _FeaturePagesWidgetState extends State<FeaturePagesWidget> {
       setState(() => pages.addAll(filtered));
     };
 
-    apiGet(this, 'posts/50265722?fields_include=post_body_plain_text',
-        onSuccess: (jsonMap) {
-      if (jsonMap.containsKey('post')) {
-        final post = jsonMap['post'] as Map;
-        if (post.containsKey('post_body_plain_text')) {
-          final list = post['post_body_plain_text'] as String;
-          pageIds.addAll(list.split('\n'));
+    apiGet(
+      this,
+      'posts/50265722?fields_include=post_body_plain_text',
+      onSuccess: (jsonMap) {
+        if (jsonMap.containsKey('post')) {
+          final post = jsonMap['post'] as Map;
+          if (post.containsKey('post_body_plain_text')) {
+            final list = post['post_body_plain_text'] as String;
+            pageIds.addAll(list.split('\n'));
+          }
         }
-      }
 
-      _sortPages();
-    });
+        _sortPages();
+      },
+    );
 
     apiGet(
       this,

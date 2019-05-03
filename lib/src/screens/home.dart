@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
 import 'package:tinhte_api/feature_page.dart';
@@ -34,6 +35,9 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+
+    _detectTitle();
+
     WidgetsBinding.instance
         .addPostFrameCallback((_) => refreshIndicatorKey.currentState.show());
   }
@@ -89,10 +93,7 @@ class _HomeScreenState extends State<HomeScreen> {
       _next = null;
     });
 
-    return Future.wait([
-      _detectTitle(),
-      _fetchThreads(kThreadsPath),
-    ]);
+    return _fetchThreads(kThreadsPath);
   }
 
   void fetchNext() {
@@ -103,12 +104,14 @@ class _HomeScreenState extends State<HomeScreen> {
     _fetchThreads(next);
   }
 
-  Future _detectTitle() => PackageInfo.fromPlatform().then(
+  void _detectTitle() => PackageInfo.fromPlatform().then(
       (info) => setState(() => _title = "${info.version}+${info.buildNumber}"));
 
   Future _fetchThreads(String path) {
     setState(() => _isFetchingThreads = true);
-    return apiGet(
+    final completer = Completer();
+
+    apiGet(
       this,
       path,
       onSuccess: (jsonMap) {
@@ -130,8 +133,13 @@ class _HomeScreenState extends State<HomeScreen> {
           _next = nextNext;
         });
       },
-      onComplete: () => setState(() => _isFetchingThreads = false),
+      onComplete: () {
+        setState(() => _isFetchingThreads = false);
+        completer.complete();
+      },
     );
+
+    return completer.future;
   }
 }
 
