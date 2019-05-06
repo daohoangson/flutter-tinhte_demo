@@ -29,6 +29,7 @@ dependencies:
   package_info: ^0.4.0+2
   photo_view: ^0.2.3
   shared_preferences: ^0.5.1+2
+  scroll_to_index: any
   timeago: ^2.0.8
   tinhte_api:
     path: ./packages/api

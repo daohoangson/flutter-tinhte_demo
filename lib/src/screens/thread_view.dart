@@ -4,59 +4,53 @@ import 'package:tinhte_api/thread.dart';
 
 import '../intl.dart';
 import '../widgets/posts.dart';
-import '../widgets/image.dart';
 
-void pushThreadViewScreen(BuildContext context, Thread thread) {
+void pushThreadViewScreen(
+  BuildContext context,
+  Thread thread, {
+  Map<dynamic, dynamic> json,
+  int scrollToPostId,
+}) {
   if (thread == null) return;
 
   Navigator.push(
     context,
-    MaterialPageRoute(builder: (context) => ThreadViewScreen(thread)),
+    MaterialPageRoute(
+        builder: (_) => ThreadViewScreen(
+              thread,
+              initialJson: json,
+              scrollToPostId: scrollToPostId,
+            )),
   );
 }
 
 class ThreadViewScreen extends StatelessWidget {
   final Thread thread;
+  final Map<dynamic, dynamic> initialJson;
+  final int scrollToPostId;
 
-  ThreadViewScreen(this.thread, {Key key}) : super(key: key);
+  ThreadViewScreen(
+    this.thread, {
+    this.initialJson,
+    Key key,
+    this.scrollToPostId,
+  })  : assert(thread != null),
+        super(key: key);
 
   @override
-  Widget build(BuildContext context) =>
-      thread?.threadImage?.displayMode == 'cover'
-          ? buildThreadWithCoverImage()
-          : buildThreadNoImage();
-
-  Widget buildThreadNoImage() => Scaffold(
+  Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
           title: _buildAppBarTitle(),
         ),
         body: _buildBody(),
       );
 
-  Widget buildThreadWithCoverImage() => Scaffold(
-        body: NestedScrollView(
-          headerSliverBuilder: (context, innerBoxIsScrolled) => <Widget>[
-                SliverAppBar(
-                  expandedHeight: _calculateImageHeight(context),
-                  flexibleSpace: FlexibleSpaceBar(
-                    background: ThreadImageWidget(
-                      image: thread.threadImage,
-                      threadId: thread.threadId,
-                    ),
-                  ),
-                  pinned: true,
-                  title: _buildAppBarTitle(),
-                ),
-              ],
-          body: _buildBody(),
-        ),
-      );
-
   Widget _buildAppBarTitle() => Row(
         children: <Widget>[
           CircleAvatar(
-            backgroundImage:
-                CachedNetworkImageProvider(thread.links.firstPosterAvatar),
+            backgroundImage: CachedNetworkImageProvider(
+              thread.links?.firstPosterAvatar,
+            ),
           ),
           Expanded(
             child: Padding(
@@ -69,13 +63,13 @@ class ThreadViewScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
                   Text(
-                    thread.firstPost.posterUsername,
+                    thread.creatorUsername,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(fontSize: (kToolbarHeight - 10) / 2),
                   ),
                   Text(
-                    formatTimestamp(thread.firstPost.postCreateDate),
+                    formatTimestamp(thread.threadCreateDate),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(fontSize: (kToolbarHeight - 10) / 4),
@@ -88,14 +82,9 @@ class ThreadViewScreen extends StatelessWidget {
       );
 
   Widget _buildBody() => PostsWidget(
-        path: thread.links.posts,
+        path: thread.links?.posts,
+        initialJson: initialJson,
+        scrollToPostId: scrollToPostId,
         thread: thread,
       );
-
-  double _calculateImageHeight(BuildContext context) {
-    final mq = MediaQuery.of(context);
-    final ratioHeight = mq.size.width / kThreadImageAspectRatio - kToolbarHeight;
-    final maxHeight = mq.size.height * .5;
-    return maxHeight > ratioHeight ? ratioHeight : maxHeight;
-  }
 }

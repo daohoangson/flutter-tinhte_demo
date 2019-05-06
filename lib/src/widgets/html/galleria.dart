@@ -8,14 +8,11 @@ class Galleria {
   final key = UniqueKey();
 
   BuildOp _buildOp;
-  BuildOp _imgOp;
 
   Galleria(this.wf);
 
   BuildOp get buildOp {
     _buildOp ??= BuildOp(
-      onChild: (meta, e) =>
-          e.localName == 'img' ? lazySet(null, buildOp: imgOp) : null,
       onWidgets: (meta, iterable) {
         final widgets = iterable.toList();
         final rows = (widgets.length / kColumns).ceil();
@@ -38,29 +35,10 @@ class Galleria {
           newWidgets.add(SizedBox(height: kSpacing));
         }
 
-        return wf.buildColumn(newWidgets);
+        return newWidgets;
       },
     );
 
     return _buildOp;
-  }
-
-  BuildOp get imgOp {
-    _imgOp ??= BuildOp(onWidgets: (meta, _) {
-      final a = meta.domElement.attributes;
-      final src = a.containsKey('src') ? a['src'] : null;
-      final imageUrl = wf.constructFullUrl(src);
-      if (imageUrl?.isEmpty != false) return null;
-
-      return AspectRatio(
-        aspectRatio: 16 / 9,
-        child: CachedNetworkImage(
-          imageUrl: imageUrl,
-          fit: BoxFit.cover,
-        ),
-      );
-    });
-
-    return _imgOp;
   }
 }

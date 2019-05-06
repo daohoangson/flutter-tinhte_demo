@@ -43,22 +43,24 @@ class LinkExpander {
 
   BuildOp get infoOp {
     _infoOp ??= BuildOp(
-      onWidgets: (meta, widgets) => _Info(wf.buildColumn(widgets)),
+      onWidgets: (meta, widgets) => [_Info(wf.buildColumn(widgets))],
     );
     return _infoOp;
   }
 
   BuildOp get thumbnailOp {
     _thumbnailOp ??= BuildOp(
-      onWidgets: (meta, widgets) => _Thumbnail(
-            widgets.first,
-            isCover: meta.domElement.classes.contains('thumbnail-cover'),
-          ),
+      onWidgets: (meta, widgets) => [
+            _Thumbnail(
+              widgets.first,
+              isCover: meta.domElement.classes.contains('thumbnail-cover'),
+            ),
+          ],
     );
     return _thumbnailOp;
   }
 
-  Widget build(NodeMetadata meta, Iterable<Widget> children) {
+  Iterable<Widget> build(NodeMetadata meta, Iterable<Widget> children) {
     _Thumbnail thumbnail;
     _Info info;
 
@@ -69,16 +71,20 @@ class LinkExpander {
 
     if (info == null) return null;
 
-    return Padding(
-      child: Row(
-        children: <Widget>[
-          thumbnail?.isCover != false
-              ? _buildCover(meta, thumbnail, info)
-              : _buildSquare(meta, thumbnail, info),
-        ],
+    return [
+      Padding(
+        child: Row(
+          children: <Widget>[
+            Expanded(
+              child: thumbnail?.isCover != false
+                  ? _buildCover(meta, thumbnail, info)
+                  : _buildSquare(meta, thumbnail, info),
+            ),
+          ],
+        ),
+        padding: const EdgeInsets.symmetric(vertical: 10),
       ),
-      padding: const EdgeInsets.all(10),
-    );
+    ];
   }
 
   Widget _buildBox(NodeMetadata meta, Widget child) {
@@ -99,27 +105,25 @@ class LinkExpander {
   }
 
   Widget _buildSquare(NodeMetadata meta, _Thumbnail thumbnail, _Info info) =>
-      Expanded(
-        child: _buildBox(
-          meta,
-          LayoutBuilder(
-            builder: (_, bc) {
-              if (bc.maxWidth < 600) return info;
+      _buildBox(
+        meta,
+        LayoutBuilder(
+          builder: (_, bc) {
+            if (bc.maxWidth < 600) return info;
 
-              return Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  thumbnail,
-                  Expanded(
-                    child: SizedBox(
-                      height: kLinkExpanderSquareThumbnailSize,
-                      child: info,
-                    ),
+            return Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                thumbnail,
+                Expanded(
+                  child: SizedBox(
+                    height: kLinkExpanderSquareThumbnailSize,
+                    child: info,
                   ),
-                ],
-              );
-            },
-          ),
+                ),
+              ],
+            );
+          },
         ),
       );
 

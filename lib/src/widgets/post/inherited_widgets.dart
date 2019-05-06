@@ -56,7 +56,8 @@ class _ThreadInheritedWidget extends InheritedWidget {
     Widget child,
     this.thread,
     Key key,
-  }) : super(child: child, key: key);
+  })  : assert(thread != null),
+        super(child: child, key: key);
 
   @override
   bool updateShouldNotify(_ThreadInheritedWidget old) => thread != old.thread;

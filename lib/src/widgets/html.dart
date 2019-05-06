@@ -1,10 +1,10 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:html/dom.dart' as dom;
+import 'package:url_launcher/url_launcher.dart';
 
+import '../link.dart';
 import 'html/lb_trigger.dart';
-import 'image.dart';
 
 part 'html/galleria.dart';
 part 'html/link_expander.dart';
@@ -31,7 +31,7 @@ TextStyle getPostBodyTextStyle(BuildContext context, bool isFirstPost) {
   );
 }
 
-class TinhteHtmlWidget extends StatelessWidget {
+class TinhteHtmlWidget extends StatefulWidget {
   final String html;
   final bool isFirstPost;
 
@@ -42,18 +42,33 @@ class TinhteHtmlWidget extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<StatefulWidget> createState() => _TinhteHtmlWidgetState();
+}
+
+class _TinhteHtmlWidgetState extends State<TinhteHtmlWidget> {
+  @override
   Widget build(BuildContext context) => HtmlWidget(
-        html,
+        widget.html,
         baseUrl: Uri.parse('https://tinhte.vn'),
         hyperlinkColor: Theme.of(context).accentColor,
-        textStyle: getPostBodyTextStyle(context, isFirstPost),
+        onTapUrl: onTapUrl,
+        textStyle: getPostBodyTextStyle(context, widget.isFirstPost),
         webView: true,
         wf: TinhteWidgetFactory(),
       );
+
+  void onTapUrl(String url) async {
+    if (url.startsWith('https://tinhte.vn')) {
+      final parsed = await parseLink(this, url);
+      if (parsed) return;
+    }
+
+    final ok = await canLaunch(url);
+    if (ok) launch(url);
+  }
 }
 
 class TinhteWidgetFactory extends WidgetFactory {
-  BuildOp _attachImageOp;
   BuildOp _chrOp;
   BuildOp _smilieOp;
 
@@ -61,30 +76,13 @@ class TinhteWidgetFactory extends WidgetFactory {
   LbTrigger _lbTrigger;
   LinkExpander _linkExpander;
 
-  BuildOp get attachImageOp {
-    _attachImageOp ??= BuildOp(onWidgets: (meta, __) {
-      final e = meta.domElement;
-      final a = e.attributes;
-      final imageUrl = constructFullUrl(a['src']);
-      if (imageUrl?.isEmpty != false) return null;
-
-      return AttachmentImageWidget(
-        height: int.tryParse(e.attributes['data-height']),
-        permalink: e.attributes['data-permalink'],
-        src: imageUrl,
-        width: int.tryParse(e.attributes['data-width']),
-      );
-    });
-    return _attachImageOp;
-  }
-
   BuildOp get chrOp {
     _chrOp ??= BuildOp(onWidgets: (meta, __) {
       final a = meta.domElement.attributes;
       final url = constructFullUrl(a['href']);
       if (url?.isEmpty != false) return null;
 
-      return WebView(url, aspectRatio: 16 / 9, getDimensions: true);
+      return [WebView(url, aspectRatio: 16 / 9, getDimensions: true)];
     });
     return _chrOp;
   }
@@ -110,7 +108,7 @@ class TinhteWidgetFactory extends WidgetFactory {
   }
 
   LbTrigger get lbTrigger {
-    _lbTrigger ??= LbTrigger();
+    _lbTrigger ??= LbTrigger(wf: this);
     return _lbTrigger;
   }
 
@@ -129,6 +127,10 @@ class TinhteWidgetFactory extends WidgetFactory {
           return lazySet(null, buildOp: chrOp);
         }
 
+        if (e.classes.contains('LbTrigger')) {
+          return lazySet(null, buildOp: lbTrigger.buildOp);
+        }
+
         if (e.classes.contains('LinkExpander') &&
             e.classes.contains('expanded')) {
           return lazySet(null, buildOp: linkExpander.buildOp);
@@ -139,14 +141,13 @@ class TinhteWidgetFactory extends WidgetFactory {
             e.attributes.containsKey('data-permalink') &&
             e.attributes.containsKey('src') &&
             e.attributes.containsKey('data-width')) {
-          return lazySet(null, buildOp: attachImageOp);
+          return lazySet(null, buildOp: lbTrigger.buildOp);
         }
         break;
     }
 
     switch (e.className) {
-      case 'LbTrigger':
-        return lazySet(null, buildOp: lbTrigger.buildOp);
+      // TODO: COMPARE bb code (.twentytwenty-wrapper .twentytwenty-horizontal)
       case 'Tinhte_Galleria':
         return lazySet(null, buildOp: galleria.buildOp);
       case 'bbCodeBlock bbCodeQuote':
@@ -155,6 +156,6 @@ class TinhteWidgetFactory extends WidgetFactory {
         return lazySet(null, buildOp: smilieOp);
     }
 
-    return meta;
+    return super.parseElement(meta, e);
   }
 }

@@ -2,37 +2,59 @@ part of '../posts.dart';
 
 class _FirstPostWidget extends StatelessWidget {
   final Thread thread;
+  final Post post;
 
-  _FirstPostWidget(this.thread, {Key key}) : super(key: key);
+  _FirstPostWidget(
+    this.thread,
+    this.post, {
+    Key key,
+  })  : assert(thread != null),
+        assert(post != null),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final post = thread?.firstPost;
-    if (post == null) return Container(height: 0.0, width: 0.0);
+    var widget = buildPost(context, post);
 
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 20.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+    if (thread?.threadImage?.displayMode == 'cover') {
+      widget = Column(
         children: <Widget>[
-          thread.isTitleRedundant()
-              ? Container()
-              : Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: kPaddingHorizontal,
-                    vertical: 10.0,
-                  ),
-                  child: Text(
-                    thread.threadTitle,
-                    maxLines: null,
-                    style: Theme.of(context).textTheme.title,
-                  ),
-                ),
-          TinhteHtmlWidget(post.postBodyHtml, isFirstPost: true),
-          _PostAttachmentsWidget.forPost(post, thread: thread),
-          _PostActionsWidget(post, showPostCreateDate: false),
+          ThreadImageWidget(
+            image: thread.threadImage,
+            threadId: thread.threadId,
+          ),
+          widget,
         ],
-      ),
-    );
+      );
+    }
+
+    return widget;
   }
+
+  Widget buildPost(BuildContext context, Post post) => Padding(
+        padding: const EdgeInsets.only(bottom: 20.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            thread.isTitleRedundant()
+                ? Container()
+                : Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: kPaddingHorizontal,
+                      vertical: 10.0,
+                    ),
+                    child: Text(
+                      thread.threadTitle,
+                      maxLines: null,
+                      style: Theme.of(context).textTheme.title,
+                    ),
+                  ),
+            TinhteHtmlWidget(post.postBodyHtml, isFirstPost: true),
+            thread.threadImage?.displayMode == 'cover'
+                ? Container()
+                : _PostAttachmentsWidget.forPost(post, thread: thread),
+            _PostActionsWidget(post, showPostCreateDate: false),
+          ],
+        ),
+      );
 }

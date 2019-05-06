@@ -53,9 +53,15 @@ Widget _buildImageWidget(
         if (bc.maxWidth <= imageWidth) {
           return AspectRatio(
             aspectRatio: imageWidth / imageHeight,
-            child: Image(
-              image: CachedNetworkImageProvider(resizedUrl ?? imageUrl),
-              fit: BoxFit.cover,
+            child: OverflowBox(
+              child: SizedBox(
+                child: Image(
+                  image: CachedNetworkImageProvider(resizedUrl ?? imageUrl),
+                  fit: BoxFit.cover,
+                ),
+                width: bc.maxWidth + 20,
+                height: (bc.maxWidth + 20) / imageWidth * imageHeight,
+              ),
             ),
           );
         }
