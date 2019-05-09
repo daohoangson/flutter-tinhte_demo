@@ -2,7 +2,7 @@ part of '../threads.dart';
 
 Widget buildThreadRow(BuildContext context, Thread thread) {
   final theme = Theme.of(context);
-  final threadTitleIsRedundant = thread.isTitleRedundant();
+  final threadTitleIsRedundant = isThreadTitleRedundant(thread);
 
   final postBodyAndMetadata = Column(
     crossAxisAlignment: CrossAxisAlignment.start,

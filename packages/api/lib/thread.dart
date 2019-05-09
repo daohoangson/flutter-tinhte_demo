@@ -8,13 +8,16 @@ part 'thread.g.dart';
 
 final _kThreadTitleEllipsisRegEx = RegExp(r'^(.+)\.\.\.$');
 
-Map<String, String> _threadTagsFromJson(json) {
-  if (json is List) {
-    // php returns empty json array if thread has no tags...
-    return null;
+bool isThreadTitleRedundant(Thread thread, [Post firstPost]) {
+  firstPost ??= thread?.firstPost;
+  if (thread == null || firstPost == null) return false;
+
+  final ellipsis = _kThreadTitleEllipsisRegEx.firstMatch(thread.threadTitle);
+  if (ellipsis != null) {
+    return firstPost.postBody?.startsWith(ellipsis.group(1)) == true;
   }
 
-  return Map<String, String>.from(json);
+  return firstPost.postBody?.startsWith(thread.threadTitle) == true;
 }
 
 @JsonSerializable(fieldRename: FieldRename.snake)
@@ -58,15 +61,6 @@ class Thread {
   Thread(this.threadId);
   factory Thread.fromJson(Map<String, dynamic> json) => _$ThreadFromJson(json);
   Map<String, dynamic> toJson() => _$ThreadToJson(this);
-
-  bool isTitleRedundant() {
-    final ellipsis = _kThreadTitleEllipsisRegEx.firstMatch(threadTitle);
-    if (ellipsis != null) {
-      return firstPost?.postBody?.startsWith(ellipsis.group(1)) == true;
-    }
-
-    return firstPost?.postBody?.startsWith(threadTitle) == true;
-  }
 }
 
 @JsonSerializable(createToJson: false)
@@ -137,4 +131,13 @@ class ThreadPermissions {
   ThreadPermissions();
   factory ThreadPermissions.fromJson(Map<String, dynamic> json) =>
       _$ThreadPermissionsFromJson(json);
+}
+
+Map<String, String> _threadTagsFromJson(json) {
+  if (json is List) {
+    // php returns empty json array if thread has no tags...
+    return null;
+  }
+
+  return Map<String, String>.from(json);
 }

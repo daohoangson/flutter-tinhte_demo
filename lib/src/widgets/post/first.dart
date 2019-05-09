@@ -36,7 +36,7 @@ class _FirstPostWidget extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            thread.isTitleRedundant()
+            isThreadTitleRedundant(thread, post)
                 ? Container()
                 : Padding(
                     padding: const EdgeInsets.symmetric(
