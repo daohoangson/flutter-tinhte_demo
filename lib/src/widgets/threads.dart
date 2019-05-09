@@ -102,7 +102,12 @@ class _ThreadsWidgetState extends State<ThreadsWidget> {
 
     if (json.containsKey(threadsKey)) {
       final jsonThreads = json[threadsKey] as List;
-      jsonThreads.forEach((j) => newThreads.add(Thread.fromJson(j)));
+      jsonThreads.forEach((j) {
+        final thread = Thread.fromJson(j);
+        if (thread.threadId == null || thread.firstPost == null) return;
+
+        newThreads.add(thread);
+      });
     }
 
     if (json.containsKey('links')) {
