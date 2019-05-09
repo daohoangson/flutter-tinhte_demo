@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tinhte_api/tag.dart';
 
+import '../widgets/tag/tag_view_header.dart';
 import '../widgets/threads.dart';
 
 pushTagViewScreen(
@@ -37,6 +38,7 @@ class TagViewScreen extends StatelessWidget {
           title: Text("#${tag.tagText}"),
         ),
         body: ThreadsWidget(
+          header: TagViewHeader(tag),
           initialJson: initialJson,
           path: tag.links?.detail ?? "tags/${tag.tagId}",
           threadsKey: 'tagged',

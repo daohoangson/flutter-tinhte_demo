@@ -10,6 +10,7 @@ import '../../intl.dart';
 import 'header.dart';
 
 const _kImageWidth = 300.0;
+const _kImageAspectRatio = 114 / 72;
 const _kInfoHeight = 75.0;
 
 class FeaturePagesWidget extends StatefulWidget {
@@ -56,7 +57,7 @@ class _FeaturePagesWidgetState extends State<FeaturePagesWidget> {
           children: <Widget>[
             HeaderWidget('Cộng đồng'),
             SizedBox(
-              height: _kImageWidth / kAspectRatioFpImage + _kInfoHeight,
+              height: _kImageWidth / _kImageAspectRatio + _kInfoHeight,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (_, i) =>
@@ -189,7 +190,7 @@ class _FpWidgetState extends State<_FpWidget> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 AspectRatio(
-                  aspectRatio: kAspectRatioFpImage,
+                  aspectRatio: _kImageAspectRatio,
                   child: head,
                 ),
                 SizedBox(

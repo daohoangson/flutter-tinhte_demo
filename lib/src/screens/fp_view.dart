@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tinhte_api/feature_page.dart';
 
-import '../widgets/fp/header.dart';
+import '../widgets/tag/fp_header.dart';
 import '../widgets/threads.dart';
 
 pushFpViewScreen(BuildContext context, FeaturePage fp) {
