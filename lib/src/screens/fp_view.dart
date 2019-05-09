@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tinhte_api/feature_page.dart';
 
+import '../widgets/fp/header.dart';
 import '../widgets/threads.dart';
 
 pushFpViewScreen(BuildContext context, FeaturePage fp) {
@@ -25,7 +26,8 @@ class FpViewScreen extends StatelessWidget {
         // TODO: use better layout for fp view
         // e.g. hide thread title, show latest_posts, etc.
         body: ThreadsWidget(
-          "tags/${fp.tagId}",
+          header: FpHeader(fp),
+          path: "tags/${fp.tagId}",
           threadsKey: 'tagged',
         ),
       );

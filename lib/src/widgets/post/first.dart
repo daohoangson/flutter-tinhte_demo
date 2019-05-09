@@ -50,11 +50,48 @@ class _FirstPostWidget extends StatelessWidget {
                     ),
                   ),
             TinhteHtmlWidget(post.postBodyHtml, isFirstPost: true),
+            buildTags(context, thread) ?? Container(),
             thread.threadImage?.displayMode == 'cover'
                 ? Container()
                 : _PostAttachmentsWidget.forPost(post, thread: thread),
             _PostActionsWidget(post, showPostCreateDate: false),
           ],
         ),
+      );
+
+  Widget buildTags(BuildContext context, Thread thread) {
+    if (thread.threadTags?.isNotEmpty != true) return null;
+
+    return Padding(
+      child: Wrap(
+        children: thread.threadTags
+            .map((tagId, tagText) => MapEntry(tagId, _TagChip(tagText)))
+            .values
+            .toList(),
+        spacing: 5,
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: kPaddingHorizontal),
+    );
+  }
+}
+
+class _TagChip extends StatefulWidget {
+  final String tagText;
+
+  _TagChip(this.tagText);
+
+  @override
+  State<StatefulWidget> createState() => _TagChipState();
+}
+
+class _TagChipState extends State<_TagChip> {
+  @override
+  Widget build(BuildContext context) => ActionChip(
+        label: Text("#${widget.tagText}", style: TextStyle(fontSize: 11)),
+        labelPadding: const EdgeInsets.symmetric(horizontal: 3),
+        onPressed: () => parseLink(
+              this,
+              "https://tinhte.vn/tags?t=${Uri.encodeQueryComponent(widget.tagText)}",
+            ),
       );
 }

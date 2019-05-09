@@ -1,5 +1,7 @@
 import 'package:flutter/widgets.dart';
 
+const kAspectRatioFpImage = 114 / 72;
+
 const kColorHomeFpBox = Color(0xFFF7F7F9);
 const kColorHomeFpBoxBorder = Color(0xFFEEEDF2);
 const kColorHomeFpBoxShadow = Color(0xFFDEDEE0);

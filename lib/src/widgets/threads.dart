@@ -13,12 +13,16 @@ import 'image.dart';
 part 'thread/builders.dart';
 
 class ThreadsWidget extends StatefulWidget {
+  final Widget header;
+  final Map<dynamic, dynamic> initialJson;
   final String path;
   final String threadsKey;
 
-  ThreadsWidget(
-    this.path, {
+  ThreadsWidget({
+    this.header,
+    this.initialJson,
     Key key,
+    this.path,
     this.threadsKey = 'threads',
   }) : super(key: key);
 
@@ -34,6 +38,8 @@ class _ThreadsWidgetState extends State<ThreadsWidget> {
   String _url;
 
   String get threadsKey => widget.threadsKey;
+  int get itemCount =>
+      (widget.header != null ? 1 : 0) + threads.length + (_isFetching ? 1 : 0);
 
   _ThreadsWidgetState(this._url);
 
@@ -63,10 +69,19 @@ class _ThreadsWidgetState extends State<ThreadsWidget> {
   @override
   Widget build(BuildContext context) => ListView.builder(
         controller: scrollController,
-        itemBuilder: (context, i) => i >= threads.length
-            ? buildProgressIndicator(_isFetching)
-            : buildThreadRow(context, threads[i]),
-        itemCount: threads.length + 1,
+        itemBuilder: (context, i) {
+          if (widget.header != null) {
+            if (i == 0) return widget.header;
+            i--;
+          }
+
+          if (i >= threads.length) {
+            return buildProgressIndicator(true);
+          }
+
+          return buildThreadRow(context, threads[i]);
+        },
+        itemCount: itemCount,
       );
 
   void fetch() {
@@ -76,26 +91,28 @@ class _ThreadsWidgetState extends State<ThreadsWidget> {
     return apiGet(
       this,
       _url,
-      onSuccess: (jsonMap) {
-        final List<Thread> newThreads = List();
-        String nextUrl;
-
-        if (jsonMap.containsKey(threadsKey)) {
-          final jsonThreads = jsonMap[threadsKey] as List;
-          jsonThreads.forEach((j) => newThreads.add(Thread.fromJson(j)));
-        }
-
-        if (jsonMap.containsKey('links')) {
-          final links = Links.fromJson(jsonMap['links']);
-          nextUrl = links.next;
-        }
-
-        setState(() {
-          threads.addAll(newThreads);
-          _url = nextUrl;
-        });
-      },
+      onSuccess: fetchOnSuccess,
       onComplete: () => setState(() => _isFetching = false),
     );
+  }
+
+  void fetchOnSuccess(Map<dynamic, dynamic> json) {
+    final List<Thread> newThreads = List();
+    String nextUrl;
+
+    if (json.containsKey(threadsKey)) {
+      final jsonThreads = json[threadsKey] as List;
+      jsonThreads.forEach((j) => newThreads.add(Thread.fromJson(j)));
+    }
+
+    if (json.containsKey('links')) {
+      final links = Links.fromJson(json['links']);
+      nextUrl = links.next;
+    }
+
+    setState(() {
+      threads.addAll(newThreads);
+      _url = nextUrl;
+    });
   }
 }
