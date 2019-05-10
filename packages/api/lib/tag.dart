@@ -4,7 +4,7 @@ import 'src/_.dart';
 
 part 'tag.g.dart';
 
-@JsonSerializable(fieldRename: FieldRename.snake)
+@JsonSerializable(createToJson: false, fieldRename: FieldRename.snake)
 class Tag {
   final int tagId;
   bool tagIsFollowed;
