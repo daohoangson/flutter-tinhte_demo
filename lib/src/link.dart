@@ -3,11 +3,30 @@ import 'package:flutter/material.dart';
 import 'package:tinhte_api/feature_page.dart';
 import 'package:tinhte_api/tag.dart';
 import 'package:tinhte_api/thread.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'api.dart';
+import 'config.dart';
 import 'screens/fp_view.dart';
 import 'screens/tag_view.dart';
 import 'screens/thread_view.dart';
+
+void launchLink(State state, String link) async {
+  if (link.startsWith(configSiteRoot)) {
+    final parsed = await parseLink(state, link);
+    if (parsed) return;
+
+    final data = ApiData.of(state.context);
+    if (data.hasToken) {
+      link = "$configApiRoot?tools/login&oauth_token=${data.token.accessToken}&"
+          "redirect_uri=${Uri.encodeQueryComponent(link)}";
+    }
+  }
+
+  if (!await canLaunch(link)) return;
+
+  launch(link);
+}
 
 Future<bool> parseLink(State state, String link) {
   var cancelled = false;

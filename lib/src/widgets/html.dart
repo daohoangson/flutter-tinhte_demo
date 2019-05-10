@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:html/dom.dart' as dom;
-import 'package:url_launcher/url_launcher.dart';
 
+import '../config.dart';
 import '../link.dart';
 import 'html/lb_trigger.dart';
 
@@ -49,7 +49,7 @@ class _TinhteHtmlWidgetState extends State<TinhteHtmlWidget> {
   @override
   Widget build(BuildContext context) => HtmlWidget(
         widget.html,
-        baseUrl: Uri.parse('https://tinhte.vn'),
+        baseUrl: Uri.parse(configSiteRoot),
         hyperlinkColor: Theme.of(context).accentColor,
         onTapUrl: onTapUrl,
         textStyle: getPostBodyTextStyle(context, widget.isFirstPost),
@@ -57,15 +57,7 @@ class _TinhteHtmlWidgetState extends State<TinhteHtmlWidget> {
         wf: TinhteWidgetFactory(),
       );
 
-  void onTapUrl(String url) async {
-    if (url.startsWith('https://tinhte.vn')) {
-      final parsed = await parseLink(this, url);
-      if (parsed) return;
-    }
-
-    final ok = await canLaunch(url);
-    if (ok) launch(url);
-  }
+  void onTapUrl(String url) => launchLink(this, url);
 }
 
 class TinhteWidgetFactory extends WidgetFactory {

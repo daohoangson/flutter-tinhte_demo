@@ -3,9 +3,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:tinhte_api/thread.dart';
 
+import '../config.dart';
+
 const kThreadImageAspectRatio = 594 / 368;
 
-const _apiUrlAttachments = 'https://tinhte.vn/appforo/index.php?attachments';
+const _apiUrlAttachments = "$configApiRoot?attachments";
 
 String getResizedUrl({
   @required String apiUrl,

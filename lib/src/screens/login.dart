@@ -107,7 +107,7 @@ class _LoginFormState extends State<LoginForm> {
   Widget _buildUsername() => TextFormField(
       autofocus: true,
       decoration: InputDecoration(
-        hintText: 'cuhiep@tinhte.vn',
+        hintText: 'keyboard_warrior',
         labelText: 'Username / email',
       ),
       initialValue: username,

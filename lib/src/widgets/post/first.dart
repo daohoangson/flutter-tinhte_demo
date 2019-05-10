@@ -89,9 +89,9 @@ class _TagChipState extends State<_TagChip> {
   Widget build(BuildContext context) => ActionChip(
         label: Text("#${widget.tagText}", style: TextStyle(fontSize: 11)),
         labelPadding: const EdgeInsets.symmetric(horizontal: 3),
-        onPressed: () => parseLink(
+        onPressed: () => launchLink(
               this,
-              "https://tinhte.vn/tags?t=${Uri.encodeQueryComponent(widget.tagText)}",
+              "$configSiteRoot/tags?t=${Uri.encodeQueryComponent(widget.tagText)}",
             ),
       );
 }

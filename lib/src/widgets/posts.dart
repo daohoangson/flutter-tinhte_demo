@@ -8,6 +8,7 @@ import 'package:tinhte_api/post.dart';
 import 'package:tinhte_api/thread.dart';
 
 import '../api.dart';
+import '../config.dart';
 import '../constants.dart';
 import '../intl.dart';
 import '../link.dart';
