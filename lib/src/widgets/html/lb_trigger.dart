@@ -4,7 +4,6 @@ import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 
 import '../image.dart';
-import '../posts.dart';
 
 class LbTrigger {
   final sources = <String>[];
@@ -31,6 +30,11 @@ class LbTrigger {
       onChild: (meta, e) =>
           e.localName == 'img' ? lazySet(null, buildOp: imgOp) : meta,
       onWidgets: (meta, widgets) {
+        var skipOnTap = false;
+        meta.styles((key, value) => key == 'LbTrigger' && value == 'skipOnTap'
+            ? skipOnTap = true
+            : null);
+
         final a = meta.domElement.attributes;
         final src = a.containsKey('src') ? a['src'] : null;
         final href = a.containsKey('href') ? a['href'] : src;
@@ -45,11 +49,7 @@ class LbTrigger {
         final index = sources.length;
         sources.add(p ?? href);
 
-        final imgs = <_Img>[];
-        for (final widget in widgets) {
-          if (widget is _Img) imgs.add(widget);
-        }
-
+        final imgs = widgets.where((w) => w is _Img);
         if (imgs.length == 1) {
           var childHeight = 265.0 / 2;
           var childWidth = 265.0 / 2;
@@ -62,34 +62,32 @@ class LbTrigger {
             }
           }
 
-          return [
-            wf.buildWrapable(
-              buildGestureDetector(
-                meta.context,
-                index,
-                CachedNetworkImage(
-                  imageUrl: imgs.first.src,
-                  fit: BoxFit.contain,
-                  height: childHeight,
-                  width: childWidth,
-                ),
-              ),
-            ),
-          ];
+          Widget thumbnail = Image(
+            image: CachedNetworkImageProvider((imgs.first as _Img).src),
+            fit: BoxFit.contain,
+            height: childHeight,
+            width: childWidth,
+          );
+
+          if (!skipOnTap) {
+            thumbnail = buildGestureDetector(meta.context, index, thumbnail);
+          }
+
+          return [wf.buildWrapable(thumbnail)];
         }
 
-        return [
-          buildGestureDetector(
-            meta.context,
-            index,
-            AttachmentImageWidget(
-              height: height,
-              permalink: p,
-              src: src,
-              width: width,
-            ),
-          ),
-        ];
+        Widget widget = AttachmentImageWidget(
+          height: height,
+          permalink: p,
+          src: src,
+          width: width,
+        );
+
+        if (!skipOnTap) {
+          widget = buildGestureDetector(meta.context, index, widget);
+        }
+
+        return [widget];
       },
     );
 
@@ -115,12 +113,7 @@ class _Img extends StatelessWidget {
   _Img(this.src);
 
   @override
-  Widget build(BuildContext context) => CachedNetworkImage(
-        imageUrl: src,
-        fit: BoxFit.contain,
-        height: kAttachmentSize,
-        width: kAttachmentSize,
-      );
+  Widget build(BuildContext context) => Container();
 }
 
 class _Screen extends StatelessWidget {

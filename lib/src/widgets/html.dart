@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:html/dom.dart' as dom;
@@ -8,6 +9,7 @@ import 'html/lb_trigger.dart';
 
 part 'html/galleria.dart';
 part 'html/link_expander.dart';
+part 'html/photo_compare.dart';
 
 const _kSmilies = {
   'Smile': '🙂',
@@ -67,6 +69,7 @@ class TinhteWidgetFactory extends WidgetFactory {
   Galleria _galleria;
   LbTrigger _lbTrigger;
   LinkExpander _linkExpander;
+  PhotoCompare _photoCompare;
 
   BuildOp get chrOp {
     _chrOp ??= BuildOp(onWidgets: (meta, __) {
@@ -109,6 +112,17 @@ class TinhteWidgetFactory extends WidgetFactory {
     return _linkExpander;
   }
 
+  PhotoCompare get photoCompare {
+    _photoCompare ??= PhotoCompare(this);
+    return _photoCompare;
+  }
+
+  @override
+  Widget buildImageFromUrl(String url) => Image(
+        image: CachedNetworkImageProvider(url),
+        fit: BoxFit.cover,
+      );
+
   @override
   NodeMetadata parseElement(NodeMetadata meta, dom.Element e) {
     switch (e.localName) {
@@ -133,15 +147,16 @@ class TinhteWidgetFactory extends WidgetFactory {
             e.attributes.containsKey('data-permalink') &&
             e.attributes.containsKey('src') &&
             e.attributes.containsKey('data-width')) {
-          return lazySet(null, buildOp: lbTrigger.buildOp);
+          return lazySet(meta, buildOp: lbTrigger.buildOp);
         }
         break;
     }
 
     switch (e.className) {
-      // TODO: COMPARE bb code (.twentytwenty-wrapper .twentytwenty-horizontal)
       case 'Tinhte_Galleria':
         return lazySet(null, buildOp: galleria.buildOp);
+      case 'Tinhte_PhotoCompare':
+        return lazySet(null, buildOp: photoCompare.buildOp);
       case 'bbCodeBlock bbCodeQuote':
         return lazySet(null, isNotRenderable: true);
       case 'smilie':
