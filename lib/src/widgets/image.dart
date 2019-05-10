@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:tinhte_api/thread.dart';
@@ -20,9 +19,7 @@ String getResizedUrl({
   if (imageHeight == null || imageWidth == null) return null;
   if (!apiUrl.startsWith(_apiUrlAttachments)) return null;
 
-  /// finds the nearest power-of-2 value for proxy width
-  /// e.g. boxWidth = 1000 -> log2(boxWidth) = 9.xxx -> proxyWidth = 2^10 = 1024
-  final proxyWidth = pow(2, (log(boxWidth) / ln2).ceil());
+  final proxyWidth = (boxWidth / 100).ceil() * 100;
   if (proxyWidth >= imageWidth) return null;
 
   if (proxyPixelsMax > 0) {
@@ -33,52 +30,6 @@ String getResizedUrl({
 
   return "$apiUrl&max_width=$proxyWidth";
 }
-
-Widget _buildImageWidget(
-  String imageUrl, {
-  String apiUrl,
-  int imageHeight,
-  int imageWidth,
-}) =>
-    LayoutBuilder(
-      builder: (context, bc) {
-        final mqd = MediaQuery.of(context);
-        final resizedUrl = getResizedUrl(
-          apiUrl: apiUrl ?? imageUrl,
-          boxWidth: mqd.devicePixelRatio * mqd.size.width,
-          imageHeight: imageHeight,
-          imageWidth: imageWidth,
-        );
-
-        if (resizedUrl != null) debugPrint(resizedUrl);
-
-        if (bc.maxWidth <= imageWidth) {
-          return AspectRatio(
-            aspectRatio: imageWidth / imageHeight,
-            child: OverflowBox(
-              child: SizedBox(
-                child: Image(
-                  image: CachedNetworkImageProvider(resizedUrl ?? imageUrl),
-                  fit: BoxFit.cover,
-                ),
-                width: bc.maxWidth + 20,
-                height: (bc.maxWidth + 20) / imageWidth * imageHeight,
-              ),
-            ),
-          );
-        }
-
-        return SizedBox(
-          child: Image(
-            image: CachedNetworkImageProvider(resizedUrl ?? imageUrl),
-            alignment: Alignment.topLeft,
-            fit: BoxFit.contain,
-          ),
-          height: imageHeight.toDouble(),
-          width: imageWidth.toDouble(),
-        );
-      },
-    );
 
 class AttachmentImageWidget extends StatelessWidget {
   final int height;
@@ -96,18 +47,40 @@ class AttachmentImageWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (height == null || permalink == null || src == null || width == null) {
-      return Container();
-    }
-    if (height < 1 || width < 1) {
-      return Container();
-    }
+    if (permalink == null) return Container();
+    if (height == null || height < 1) return Container();
+    if (width == null || width < 1) return Container();
 
-    return _buildImageWidget(
-      permalink,
-      apiUrl: src,
-      imageHeight: height,
-      imageWidth: width,
+    return LayoutBuilder(
+      builder: (context, bc) {
+        final mqd = MediaQuery.of(context);
+        final resizedUrl = getResizedUrl(
+          apiUrl: src ?? permalink,
+          boxWidth: mqd.devicePixelRatio * mqd.size.width,
+          imageHeight: height,
+          imageWidth: width,
+        );
+
+        if (resizedUrl != null) debugPrint(resizedUrl);
+
+        final aspectRatio = AspectRatio(
+          aspectRatio: width / height,
+          child: Image(
+            image: CachedNetworkImageProvider(resizedUrl ?? permalink),
+            fit: BoxFit.cover,
+          ),
+        );
+
+        if (bc.maxWidth < width) return aspectRatio;
+
+        return Wrap(children: <Widget>[
+          LimitedBox(
+            child: aspectRatio,
+            maxHeight: height.toDouble(),
+            maxWidth: width.toDouble(),
+          ),
+        ]);
+      },
     );
   }
 }
