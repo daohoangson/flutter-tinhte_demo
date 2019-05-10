@@ -4,7 +4,6 @@ const kLinkExpanderSquareThumbnailSize = 120.0;
 
 class LinkExpander {
   final TinhteWidgetFactory wf;
-  final key = UniqueKey();
 
   LinkExpander(this.wf);
 

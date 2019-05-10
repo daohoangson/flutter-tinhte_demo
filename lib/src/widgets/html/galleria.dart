@@ -5,7 +5,6 @@ const kSpacing = 3.0;
 
 class Galleria {
   final TinhteWidgetFactory wf;
-  final key = UniqueKey();
 
   BuildOp _buildOp;
 
