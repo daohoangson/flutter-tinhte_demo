@@ -11,7 +11,6 @@ import '../config.dart';
 import '../constants.dart';
 import '../intl.dart';
 import '../link.dart';
-import 'html/lb_trigger.dart';
 import 'html.dart';
 import 'image.dart';
 import 'post_editor.dart';

@@ -2,13 +2,15 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:html/dom.dart' as dom;
+import 'package:photo_view/photo_view_gallery.dart';
 
 import '../config.dart';
 import '../link.dart';
-import 'html/lb_trigger.dart';
+import 'image.dart';
 
 part 'html/galleria.dart';
 part 'html/link_expander.dart';
+part 'html/lb_trigger.dart';
 part 'html/photo_compare.dart';
 
 const _kSmilies = {
@@ -25,6 +27,8 @@ const _kSmilies = {
   'Roll Eyes': '🙄',
   'Er... what?': '😳',
 };
+
+const _kTextPadding = const EdgeInsets.symmetric(horizontal: 10);
 
 TextStyle getPostBodyTextStyle(BuildContext context, bool isFirstPost) {
   final textStyle = Theme.of(context).textTheme.body1;
@@ -52,6 +56,7 @@ class _TinhteHtmlWidgetState extends State<TinhteHtmlWidget> {
   Widget build(BuildContext context) => HtmlWidget(
         widget.html,
         baseUrl: Uri.parse(configSiteRoot),
+        bodyPadding: const EdgeInsets.symmetric(vertical: 10),
         hyperlinkColor: Theme.of(context).accentColor,
         onTapUrl: onTapUrl,
         textStyle: getPostBodyTextStyle(context, widget.isFirstPost),
@@ -118,6 +123,12 @@ class TinhteWidgetFactory extends WidgetFactory {
   }
 
   @override
+  List<Widget> fixOverlappingPaddings(List<Widget> widgets) => super
+      .fixOverlappingPaddings(widgets)
+      .map(_buildTextPadding)
+      .toList();
+
+  @override
   Widget buildImageFromUrl(String url) => Image(
         image: CachedNetworkImageProvider(url),
         fit: BoxFit.cover,
@@ -164,5 +175,15 @@ class TinhteWidgetFactory extends WidgetFactory {
     }
 
     return super.parseElement(meta, e);
+  }
+
+  Widget _buildTextPadding(Widget widget) {
+    if (widget is _AttachmentImageWidget) return widget;
+    if (widget is _PhotoCompareWidget) return widget;
+    if (widget is Align) return _buildTextPadding(widget.child);
+    if (widget is GestureDetector) return _buildTextPadding(widget.child);
+    if (widget is WebView) return widget;
+
+    return buildPadding(widget, _kTextPadding);
   }
 }

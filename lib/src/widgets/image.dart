@@ -31,60 +31,6 @@ String getResizedUrl({
   return "$apiUrl&max_width=$proxyWidth";
 }
 
-class AttachmentImageWidget extends StatelessWidget {
-  final int height;
-  final String permalink;
-  final String src;
-  final int width;
-
-  AttachmentImageWidget({
-    this.height,
-    Key key,
-    this.permalink,
-    this.src,
-    this.width,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    if (permalink == null) return Container();
-    if (height == null || height < 1) return Container();
-    if (width == null || width < 1) return Container();
-
-    return LayoutBuilder(
-      builder: (context, bc) {
-        final mqd = MediaQuery.of(context);
-        final resizedUrl = getResizedUrl(
-          apiUrl: src ?? permalink,
-          boxWidth: mqd.devicePixelRatio * mqd.size.width,
-          imageHeight: height,
-          imageWidth: width,
-        );
-
-        if (resizedUrl != null) debugPrint(resizedUrl);
-
-        final aspectRatio = AspectRatio(
-          aspectRatio: width / height,
-          child: Image(
-            image: CachedNetworkImageProvider(resizedUrl ?? permalink),
-            fit: BoxFit.cover,
-          ),
-        );
-
-        if (bc.maxWidth < width) return aspectRatio;
-
-        return Wrap(children: <Widget>[
-          LimitedBox(
-            child: aspectRatio,
-            maxHeight: height.toDouble(),
-            maxWidth: width.toDouble(),
-          ),
-        ]);
-      },
-    );
-  }
-}
-
 class ThreadImageWidget extends StatelessWidget {
   final int threadId;
   final ThreadImage image;
