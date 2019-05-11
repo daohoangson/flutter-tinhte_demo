@@ -1,11 +1,14 @@
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import 'src/api.dart';
 import 'src/push_notification.dart';
 import 'src/responsive_layout.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  FlutterError.onError = (e) => Crashlytics.instance.onError(e);
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   @override
