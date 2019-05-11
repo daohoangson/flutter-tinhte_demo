@@ -56,7 +56,7 @@ class _TinhteHtmlWidgetState extends State<TinhteHtmlWidget> {
   Widget build(BuildContext context) => HtmlWidget(
         widget.html,
         baseUrl: Uri.parse(configSiteRoot),
-        bodyPadding: const EdgeInsets.symmetric(vertical: 10),
+        bodyPadding: const EdgeInsets.only(top: 10),
         hyperlinkColor: Theme.of(context).accentColor,
         onTapUrl: onTapUrl,
         textStyle: getPostBodyTextStyle(context, widget.isFirstPost),
@@ -135,10 +135,16 @@ class TinhteWidgetFactory extends WidgetFactory {
 
   @override
   List<Widget> fixOverlappingPaddings(List<Widget> widgets) {
-    final fixed = super.fixOverlappingPaddings(widgets);
+    var fixed = super.fixOverlappingPaddings(widgets);
     if (_isBuildingBody == 0) return fixed;
 
-    return fixed.map(_buildTextPadding).toList();
+    fixed = fixed.map(_buildTextPadding).toList();
+
+    if (_checkIsText(fixed.last)) {
+      fixed.add(buildPadding(widget0, const EdgeInsets.only(bottom: 10)));
+    }
+
+    return fixed;
   }
 
   @override
@@ -190,14 +196,16 @@ class TinhteWidgetFactory extends WidgetFactory {
     return super.parseElement(meta, e);
   }
 
-  Widget _buildTextPadding(Widget w, [Widget parent]) {
-    final output = parent ?? w;
+  Widget _buildTextPadding(Widget widget) =>
+      _checkIsText(widget) ? buildPadding(widget, _kTextPadding) : widget;
+
+  bool _checkIsText(Widget w) {
     if (w is _AttachmentImageWidget || w is _PhotoCompareWidget || w is WebView)
-      return output;
+      return false;
 
-    if (w is Align) return _buildTextPadding(w.child, output);
-    if (w is GestureDetector) return _buildTextPadding(w.child, output);
+    if (w is Align) return _checkIsText(w.child);
+    if (w is GestureDetector) return _checkIsText(w.child);
 
-    return buildPadding(output, _kTextPadding);
+    return true;
   }
 }
