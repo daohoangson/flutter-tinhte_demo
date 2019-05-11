@@ -123,10 +123,8 @@ class TinhteWidgetFactory extends WidgetFactory {
   }
 
   @override
-  List<Widget> fixOverlappingPaddings(List<Widget> widgets) => super
-      .fixOverlappingPaddings(widgets)
-      .map(_buildTextPadding)
-      .toList();
+  List<Widget> fixOverlappingPaddings(List<Widget> widgets) =>
+      super.fixOverlappingPaddings(widgets).map(_buildTextPadding).toList();
 
   @override
   Widget buildImageFromUrl(String url) => Image(
@@ -177,13 +175,14 @@ class TinhteWidgetFactory extends WidgetFactory {
     return super.parseElement(meta, e);
   }
 
-  Widget _buildTextPadding(Widget widget) {
-    if (widget is _AttachmentImageWidget) return widget;
-    if (widget is _PhotoCompareWidget) return widget;
-    if (widget is Align) return _buildTextPadding(widget.child);
-    if (widget is GestureDetector) return _buildTextPadding(widget.child);
-    if (widget is WebView) return widget;
+  Widget _buildTextPadding(Widget w, [Widget parent]) {
+    final output = parent ?? w;
+    if (w is _AttachmentImageWidget || w is _PhotoCompareWidget || w is WebView)
+      return output;
 
-    return buildPadding(widget, _kTextPadding);
+    if (w is Align) return _buildTextPadding(w.child, output);
+    if (w is GestureDetector) return _buildTextPadding(w.child, output);
+
+    return buildPadding(output, _kTextPadding);
   }
 }
