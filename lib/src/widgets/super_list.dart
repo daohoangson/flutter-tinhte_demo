@@ -87,8 +87,8 @@ class SuperListState<T> extends State<SuperListView<T>> {
   Map _initialJson;
   VoidCallback _itemListenerRegisteredAppend;
   VoidCallback _itemListenerRegisteredPrepend;
-  StreamSubscription<T> _itemStreamSubAppend;
-  StreamSubscription<T> _itemStreamSubPrepend;
+  StreamSubscription _itemStreamSubAppend;
+  StreamSubscription _itemStreamSubPrepend;
   GlobalKey<RefreshIndicatorState> _refreshIndicatorKey;
   AutoScrollController _scrollController;
 
