@@ -304,7 +304,7 @@ class SuperListState<T> extends State<SuperListView<T>> {
     VoidCallback onPreFetch,
     Map preFetchedJson,
   }) {
-    if (_isFetching || !mounted) return null;
+    if (_isFetching || !mounted) return Future.value();
 
     if (onPreFetch != null) onPreFetch();
     setState(() => _isFetching = true);
@@ -312,7 +312,7 @@ class SuperListState<T> extends State<SuperListView<T>> {
     if (preFetchedJson != null) {
       _fetchOnSuccess(preFetchedJson, fc);
       _fetchOnComplete(fc);
-      return null;
+      return Future.value();
     }
 
     final c = Completer();
