@@ -76,7 +76,7 @@ class LbTrigger {
           return [wf.buildWrapable(thumbnail)];
         }
 
-        Widget widget = AttachmentImageWidget(
+        Widget full = AttachmentImageWidget(
           height: height,
           permalink: p,
           src: src,
@@ -84,10 +84,10 @@ class LbTrigger {
         );
 
         if (!skipOnTap) {
-          widget = buildGestureDetector(meta.context, index, widget);
+          full = buildGestureDetector(meta.context, index, full);
         }
 
-        return [widget];
+        return [wf.buildWrapable(full)];
       },
     );
 
