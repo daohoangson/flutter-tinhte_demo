@@ -8,8 +8,7 @@ import '../widgets/posts.dart';
 void pushThreadViewScreen(
   BuildContext context,
   Thread thread, {
-  Map<dynamic, dynamic> json,
-  int scrollToPostId,
+  Map json,
 }) {
   if (thread == null) return;
 
@@ -19,21 +18,18 @@ void pushThreadViewScreen(
         builder: (_) => ThreadViewScreen(
               thread,
               initialJson: json,
-              scrollToPostId: scrollToPostId,
             )),
   );
 }
 
 class ThreadViewScreen extends StatelessWidget {
   final Thread thread;
-  final Map<dynamic, dynamic> initialJson;
-  final int scrollToPostId;
+  final Map initialJson;
 
   ThreadViewScreen(
     this.thread, {
     this.initialJson,
     Key key,
-    this.scrollToPostId,
   })  : assert(thread != null),
         super(key: key);
 
@@ -84,7 +80,6 @@ class ThreadViewScreen extends StatelessWidget {
   Widget _buildBody() => PostsWidget(
         path: thread.links?.posts,
         initialJson: initialJson,
-        scrollToPostId: scrollToPostId,
         thread: thread,
       );
 }

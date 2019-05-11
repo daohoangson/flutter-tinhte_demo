@@ -2,10 +2,9 @@ part of '../posts.dart';
 
 const _kPageIndicatorHeight = 40.0;
 
-class _PostListWidget extends StatefulWidget {
-  final Map<dynamic, dynamic> initialJson;
+class _PostListWidget extends StatelessWidget {
+  final Map initialJson;
   final String path;
-  final int scrollToPostId;
   final Thread thread;
 
   _PostListWidget(
@@ -13,252 +12,97 @@ class _PostListWidget extends StatefulWidget {
     this.initialJson,
     Key key,
     this.path,
-    this.scrollToPostId,
   })  : assert(thread != null),
         super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _PostListWidgetState();
-}
-
-class _PostListWidgetState extends State<_PostListWidget> {
-  final List<_PostListItem> items = List();
-
-  final _controller = AutoScrollController();
-  bool _isFetching = false;
-  String _linkPrev;
-  String _linkNext;
-  int _pageRange0;
-  int _pageRange1;
-  VoidCallback _removeListener;
-
-  int __scrollToPostId;
-  var __scrollToNewItem = false;
-
-  _PostListWidgetState();
-
-  @override
-  void initState() {
-    super.initState();
-
-    final firstPost = widget.thread.firstPost;
-    if (firstPost != null) items.add(_PostListItem(post: firstPost));
-
-    __scrollToPostId = widget.scrollToPostId;
-
-    if (widget.initialJson != null) {
-      fetchOnSuccess(widget.initialJson);
-    } else {
-      fetch(widget.path);
-    }
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    if (_removeListener != null) _removeListener();
-    _removeListener = PostListInheritedWidget.of(context).addListener(
-      (post) => setState(() => items.insert(0, _PostListItem(post: post))),
-    );
-  }
-
-  @override
-  void deactivate() {
-    if (_removeListener != null) {
-      _removeListener();
-      _removeListener = null;
-    }
-
-    super.deactivate();
-  }
-
-  @override
-  Widget build(BuildContext context) =>
-      NotificationListener<ScrollNotification>(
-        child: ListView.builder(
-          controller: _controller,
-          itemBuilder: (context, i) => AutoScrollTag(
-                child: i < items.length
-                    ? _buildItem(items[i])
-                    : buildProgressIndicator(_isFetching),
-                controller: _controller,
-                index: i,
-                key: ValueKey(i),
-              ),
-          itemCount: items.length + 1,
-          padding: const EdgeInsets.all(0),
-        ),
-        onNotification: (scrollInfo) {
-          if (!(scrollInfo is ScrollEndNotification)) return;
-          if (_controller.isAutoScrolling) return;
-
-          final m = scrollInfo.metrics;
-          if (m.pixels < m.maxScrollExtent - m.viewportDimension) {
-            return;
-          }
-
-          if (_linkNext?.isNotEmpty != true) return;
-          fetch(_linkNext);
-        },
+  Widget build(BuildContext context) => SuperListView<_PostListItem>(
+        enableScrollToIndex: true,
+        fetchPathInitial: path,
+        fetchOnSuccess: _fetchOnSuccess,
+        initialItems: thread.firstPost != null
+            ? [_PostListItem(post: thread.firstPost)]
+            : null,
+        initialJson: initialJson,
+        itemBuilder: _buildItem,
+        itemListenerRegisterPrepend: (prepend) =>
+            PostListInheritedWidget.of(context)
+                .addListener((post) => prepend(_PostListItem(post: post))),
       );
 
-  void fetch(String path) {
-    if (_isFetching) return;
-    setState(() => _isFetching = true);
-
-    apiGet(
-      this,
-      path,
-      onSuccess: fetchOnSuccess,
-      onComplete: () => setState(() => _isFetching = false),
-    );
-  }
-
-  void fetchOnSuccess(Map<dynamic, dynamic> json) {
-    final List<_PostListItem> newItems = List();
-    Links newLinks;
-
-    if (json.containsKey('posts')) {
-      final firstItemPostId = items.isEmpty ? null : items.first.post?.postId;
-
-      if (json.containsKey('links')) {
-        newLinks = Links.fromJson(json['links']);
-        if (firstItemPostId != null || newLinks.page != 1) {
-          newItems.add(_PostListItem(page: newLinks.page));
-        }
-      }
-
-      decodePostsAndTheirReplies(json['posts'])
-          .where((p) => p.postId != firstItemPostId)
-          .forEach(
-        (post) {
-          if (firstItemPostId == null && newLinks?.page == 1) {
-            if (newItems.length == 1) {
-              newItems.add(_PostListItem(page: newLinks.page));
-            }
-          }
-
-          newItems.add(_PostListItem(post: post));
-        },
-      );
-    }
-
-    int scrollToIndex;
-    if (__scrollToPostId != null) {
-      for (int i = 0; i < newItems.length; i++) {
-        final post = newItems[i].post;
-        if (post == null) continue;
-
-        if (post.postId == __scrollToPostId) {
-          scrollToIndex = items.length + i;
-          break;
-        }
-
-        for (final reply in post.postReplies) {
-          if (reply.postId == __scrollToPostId) {
-            scrollToIndex = items.length + i;
-            break;
-          }
-        }
-      }
-    } else if (__scrollToNewItem) {
-      scrollToIndex = items.length;
-    }
-    __scrollToPostId = null;
-    __scrollToNewItem = false;
-
-    setState(() {
-      var prepend = false;
-      if (newLinks != null) {
-        if (_pageRange0 == null || _pageRange0 > newLinks.page) {
-          if (_pageRange0 != null) prepend = true;
-          _linkPrev = newLinks.prev;
-          _pageRange0 = newLinks.page;
-        }
-        if (_pageRange1 == null || _pageRange1 < newLinks.page) {
-          _linkNext = newLinks.next;
-          _pageRange1 = newLinks.page;
-        }
-      }
-
-      if (prepend) {
-        items.insertAll(0, newItems);
-      } else {
-        items.addAll(newItems);
-      }
-
-      if (scrollToIndex != null) {
-        _controller.scrollToIndex(
-          scrollToIndex,
-          preferPosition: AutoScrollPosition.begin,
-        );
-      }
-    });
-  }
-
-  Widget _buildItem(_PostListItem item) {
-    if (item.page != null) return _buildPageIndicator(item.page);
+  Widget _buildItem(
+    BuildContext context,
+    SuperListState state,
+    _PostListItem item,
+  ) {
+    if (item.page != null)
+      return _buildPageIndicator(context, state, item.page);
 
     final post = item.post;
     if (post != null) {
       return post.postIsFirstPost
-          ? _FirstPostWidget(widget.thread, post)
-          : _buildPostRoot(post);
+          ? _FirstPostWidget(thread, post)
+          : _buildPostRoot(context, post);
     }
 
     return Container();
   }
 
-  Widget _buildPageIndicator(int page) {
-    if (_isFetching) {
+  Widget _buildPageIndicator(
+    BuildContext context,
+    SuperListState state,
+    int page,
+  ) {
+    if (state.isFetching) {
       return Stack(children: <Widget>[
         const Divider(height: _kPageIndicatorHeight),
-        _buildPageIndicatorText('Loading...'),
+        _buildPageIndicatorText(context, 'Loading...'),
       ]);
     }
 
     final children = <Widget>[
       const Divider(height: _kPageIndicatorHeight),
-      _buildPageIndicatorText("Page $page"),
+      _buildPageIndicatorText(context, "Page $page"),
     ];
 
-    if (page > _pageRange0) {
+    if (page > state.fetchedPageMin) {
       if (page > 2) {
         children.add(_buildPageIndicatorText(
+          context,
           "previous",
           alignment: Alignment.centerLeft,
-          onTap: () => _scrollToPage(page - 1),
+          onTap: () => _scrollToPage(state, page - 1),
         ));
       } else {
         children.add(_buildPageIndicatorText(
+          context,
           "top",
           alignment: Alignment.centerLeft,
-          onTap: () => _controller.scrollToIndex(0),
+          onTap: () => state.scrollController.jumpTo(0),
         ));
       }
-    } else if (_linkPrev?.isNotEmpty == true) {
+    } else if (state.canFetchPrev) {
       children.add(_buildPageIndicatorText(
+        context,
         "previous",
         alignment: Alignment.centerLeft,
-        onTap: () => fetch(_linkPrev),
+        onTap: () => state.fetchPrev(),
       ));
     }
 
-    if (page < _pageRange1) {
+    if (page < state.fetchedPageMax) {
       children.add(_buildPageIndicatorText(
+        context,
         'next',
         alignment: Alignment.centerRight,
-        onTap: () => _scrollToPage(page + 1),
+        onTap: () => _scrollToPage(state, page + 1),
       ));
-    } else if (_linkNext?.isNotEmpty == true) {
+    } else if (state.canFetchNext) {
       children.add(_buildPageIndicatorText(
+        context,
         'next',
         alignment: Alignment.centerRight,
-        onTap: () {
-          __scrollToNewItem = true;
-          fetch(_linkNext);
-        },
+        onTap: () => state.fetchNext(scrollToRelativeIndex: 0),
       ));
     }
 
@@ -266,6 +110,7 @@ class _PostListWidgetState extends State<_PostListWidget> {
   }
 
   Widget _buildPageIndicatorText(
+    BuildContext context,
     String text, {
     Alignment alignment = Alignment.center,
     GestureTapCallback onTap,
@@ -291,7 +136,8 @@ class _PostListWidgetState extends State<_PostListWidget> {
         ),
       );
 
-  Widget _buildPostRoot(Post post) => _ParentPostInheritedWidget(
+  Widget _buildPostRoot(BuildContext context, Post post) =>
+      _ParentPostInheritedWidget(
         parentPost: post,
         child: PostListInheritedWidget(
           child: buildRow(
@@ -318,11 +164,50 @@ class _PostListWidgetState extends State<_PostListWidget> {
         ),
       );
 
-  void _scrollToPage(int page) {
-    for (int i = 0; i < items.length; i++) {
-      if (items[i].page != page) continue;
+  void _fetchOnSuccess(Map json, FetchContext<_PostListItem> fc) {
+    if (!json.containsKey('posts')) return;
 
-      _controller.scrollToIndex(i, preferPosition: AutoScrollPosition.begin);
+    final firstItemPostId =
+        fc.state.items.isEmpty ? null : fc.state.items.first.post?.postId;
+    final linksPage = fc.linksPage ?? 1;
+    int pageOfPostId =
+        json.containsKey('page_of_post_id') ? json['page_of_post_id'] : null;
+
+    if (firstItemPostId != null || linksPage != 1) {
+      fc.addItem(_PostListItem(page: linksPage));
+    }
+
+    final posts = decodePostsAndTheirReplies(json['posts'])
+        .where((p) => p.postId != firstItemPostId);
+    for (final post in posts) {
+      if (firstItemPostId == null && linksPage == 1) {
+        if (fc.items?.length == 1) {
+          fc.addItem(_PostListItem(page: linksPage));
+        }
+      }
+
+      if (pageOfPostId != null && fc.scrollToRelativeIndex == null) {
+        if (post.postId == pageOfPostId) {
+          fc.scrollToRelativeIndex = fc.items?.length ?? 0;
+        } else {
+          post.postReplies?.forEach((reply) => reply.postId == pageOfPostId
+              ? fc.scrollToRelativeIndex = fc.items?.length ?? 0
+              : null);
+        }
+      }
+
+      fc.addItem(_PostListItem(post: post));
+    }
+  }
+
+  void _scrollToPage(SuperListState state, int page) {
+    var i = -1;
+    for (final item in state.items) {
+      i++;
+      if (item.page != page) continue;
+
+      state.scrollController
+          .scrollToIndex(i, preferPosition: AutoScrollPosition.begin);
       return;
     }
   }

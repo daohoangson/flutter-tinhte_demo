@@ -3,7 +3,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:tinhte_api/attachment.dart';
-import 'package:tinhte_api/links.dart';
 import 'package:tinhte_api/post.dart';
 import 'package:tinhte_api/thread.dart';
 
@@ -13,10 +12,10 @@ import '../constants.dart';
 import '../intl.dart';
 import '../link.dart';
 import 'html/lb_trigger.dart';
-import '_list_view.dart';
 import 'html.dart';
 import 'image.dart';
 import 'post_editor.dart';
+import 'super_list.dart';
 
 part 'post/actions.dart';
 part 'post/attachments.dart';
@@ -27,16 +26,14 @@ part 'post/list.dart';
 part 'post/replies.dart';
 
 class PostsWidget extends StatelessWidget {
-  final Map<dynamic, dynamic> initialJson;
+  final Map initialJson;
   final String path;
-  final int scrollToPostId;
   final Thread thread;
 
   PostsWidget({
     this.initialJson,
     Key key,
     this.path,
-    this.scrollToPostId,
     this.thread,
   }) : super(key: key);
 
@@ -48,7 +45,6 @@ class PostsWidget extends StatelessWidget {
             thread,
             initialJson: initialJson,
             path: path,
-            scrollToPostId: scrollToPostId,
           ),
         ),
       );

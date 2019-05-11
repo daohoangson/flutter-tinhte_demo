@@ -7,7 +7,7 @@ import '../widgets/threads.dart';
 pushTagViewScreen(
   BuildContext context,
   Tag tag, {
-  Map<dynamic, dynamic> json,
+  Map json,
 }) {
   if (tag == null) return;
 
@@ -23,7 +23,7 @@ pushTagViewScreen(
 
 class TagViewScreen extends StatelessWidget {
   final Tag tag;
-  final Map<dynamic, dynamic> initialJson;
+  final Map initialJson;
 
   TagViewScreen(
     this.tag, {

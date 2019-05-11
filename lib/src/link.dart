@@ -78,8 +78,8 @@ Future<bool> parseLink(State state, String link) {
   return completer.future;
 }
 
-bool _parseTag(State state, Map<dynamic, dynamic> json) {
-  final Map<dynamic, dynamic> jsonTag = json['tag'];
+bool _parseTag(State state, Map json) {
+  final Map jsonTag = json['tag'];
   final tag = Tag.fromJson(jsonTag);
   if (tag.tagId == null) return false;
 
@@ -95,17 +95,11 @@ bool _parseTag(State state, Map<dynamic, dynamic> json) {
   return true;
 }
 
-bool _parseThread(State state, Map<dynamic, dynamic> json) {
-  final Map<dynamic, dynamic> jsonThread = json['thread'];
+bool _parseThread(State state, Map json) {
+  final Map jsonThread = json['thread'];
   final thread = Thread.fromJson(jsonThread);
   if (thread.threadId == null) return false;
 
-  pushThreadViewScreen(
-    state.context,
-    thread,
-    json: json,
-    scrollToPostId:
-        json.containsKey('page_of_post_id') ? json['page_of_post_id'] : null,
-  );
+  pushThreadViewScreen(state.context, thread, json: json);
   return true;
 }

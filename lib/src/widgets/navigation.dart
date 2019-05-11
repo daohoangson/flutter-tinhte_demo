@@ -4,10 +4,9 @@ import 'package:tinhte_api/navigation.dart' as navigation;
 
 import '../screens/forum_view.dart';
 import '../screens/node_view.dart';
-import '../api.dart';
-import '_list_view.dart';
+import 'super_list.dart';
 
-class NavigationWidget extends StatefulWidget {
+class NavigationWidget extends StatelessWidget {
   final Widget footer;
   final Widget header;
   final List<navigation.Element> initialElements;
@@ -22,64 +21,16 @@ class NavigationWidget extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _NavigationWidgetState createState() => _NavigationWidgetState();
-}
-
-class _NavigationWidgetState extends State<NavigationWidget> {
-  final List<navigation.Element> elements = List();
-
-  bool _isFetching = false;
-
-  int get itemCount =>
-      (widget.header != null ? 1 : 0) +
-      (_isFetching ? 1 : elements.length) +
-      (widget.footer != null ? 1 : 0);
-
-  @override
-  void initState() {
-    super.initState();
-
-    elements.addAll(widget.initialElements);
-
-    fetch();
-  }
-
-  @override
-  Widget build(BuildContext context) => ListView.builder(
-        itemBuilder: (context, i) {
-          if (widget.header != null && i == 0) return widget.header;
-
-          if (widget.footer != null && i == itemCount - 1) return widget.footer;
-
-          if (_isFetching) return buildProgressIndicator(true);
-
-          return _buildRow(elements[i - (widget.header != null ? 1 : 0)]);
-        },
-        itemCount: itemCount,
+  Widget build(BuildContext context) => SuperListView<navigation.Element>(
+        fetchOnSuccess: _fetchOnSuccess,
+        fetchPathInitial: path,
+        footer: footer,
+        header: header,
+        initialItems: initialElements,
+        itemBuilder: (context, __, element) => _buildRow(context, element),
       );
 
-  void fetch() {
-    if (_isFetching) return;
-    setState(() => _isFetching = true);
-
-    apiGet(
-      this,
-      widget.path,
-      onSuccess: (jsonMap) {
-        List<navigation.Element> newElements = List();
-
-        if (jsonMap.containsKey('elements')) {
-          final list = jsonMap['elements'] as List;
-          list.forEach((j) => newElements.add(navigation.Element.fromJson(j)));
-        }
-
-        setState(() => elements.addAll(newElements));
-      },
-      onComplete: () => setState(() => _isFetching = false),
-    );
-  }
-
-  Widget _buildRow(navigation.Element e) => ListTile(
+  Widget _buildRow(BuildContext context, navigation.Element e) => ListTile(
         title: Text(e.node?.title ?? "#${e.navigationId}"),
         onTap: () {
           switch (e.navigationType) {
@@ -107,6 +58,13 @@ class _NavigationWidgetState extends State<NavigationWidget> {
           }
         },
       );
+
+  void _fetchOnSuccess(Map json, FetchContext<navigation.Element> fc) {
+    if (!json.containsKey('elements')) return;
+
+    final list = json['elements'] as List;
+    list.forEach((j) => fc.addItem(navigation.Element.fromJson(j)));
+  }
 }
 
 class NavigationRoute extends MaterialPageRoute {
