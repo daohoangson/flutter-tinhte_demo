@@ -68,6 +68,8 @@ class _TinhteHtmlWidgetState extends State<TinhteHtmlWidget> {
 }
 
 class TinhteWidgetFactory extends WidgetFactory {
+  var _isBuildingBody = 0;
+
   BuildOp _chrOp;
   BuildOp _smilieOp;
 
@@ -123,8 +125,21 @@ class TinhteWidgetFactory extends WidgetFactory {
   }
 
   @override
-  List<Widget> fixOverlappingPaddings(List<Widget> widgets) =>
-      super.fixOverlappingPaddings(widgets).map(_buildTextPadding).toList();
+  Widget buildBody(Iterable<Widget> children) {
+    _isBuildingBody++;
+    final built = super.buildBody(children);
+    _isBuildingBody--;
+
+    return built;
+  }
+
+  @override
+  List<Widget> fixOverlappingPaddings(List<Widget> widgets) {
+    final fixed = super.fixOverlappingPaddings(widgets);
+    if (_isBuildingBody == 0) return fixed;
+
+    return fixed.map(_buildTextPadding).toList();
+  }
 
   @override
   Widget buildImageFromUrl(String url) => Image(
