@@ -19,12 +19,8 @@ Widget buildThreadRow(BuildContext context, Thread thread) {
         padding: const EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 5.0),
         child: LayoutBuilder(
           builder: (context, bc) {
-            final text = RichText(
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              text: buildThreadTextSpan(context, thread),
-            );
-            if (bc.maxWidth < 600.0) return text;
+            final creatorInfo = buildCreatorInfo(context, thread);
+            if (bc.maxWidth < 600.0) return creatorInfo;
 
             return Row(
               children: <Widget>[
@@ -36,7 +32,7 @@ Widget buildThreadRow(BuildContext context, Thread thread) {
                     maxRadius: 12.0,
                   ),
                 ),
-                Expanded(child: text),
+                Expanded(child: creatorInfo),
               ],
             );
           },
@@ -83,46 +79,77 @@ Widget buildThreadRow(BuildContext context, Thread thread) {
   );
 }
 
-TextSpan buildThreadTextSpan(BuildContext context, Thread thread) {
-  if (thread == null) return TextSpan(text: '');
-  List<TextSpan> spans = List();
+Widget buildCreatorInfo(BuildContext context, Thread thread) {
+  if (thread == null) return null;
+  final children = <Widget>[];
 
   final theme = Theme.of(context);
+  final style = theme.textTheme.caption;
 
   if (thread.threadIsSticky == true) {
-    spans.add(TextSpan(text: '📌 '));
+    children.add(Icon(
+      FontAwesomeIcons.thumbtack,
+      size: style.fontSize,
+    ));
   }
 
-  spans.add(TextSpan(
-    style: TextStyle(color: theme.accentColor, fontWeight: FontWeight.bold),
-    text: "${thread.creatorUsername}${thread.creatorHasVerifiedBadge == true ? ' ✅' : ''}",
-  ));
+  children.add(
+    RichText(
+      text: TextSpan(
+        text: thread.creatorUsername,
+        style: style.copyWith(
+          color: theme.accentColor,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    ),
+  );
+
+  if (thread.creatorHasVerifiedBadge == true) {
+    children.add(Icon(
+      FontAwesomeIcons.solidCheckCircle,
+      color: kColorUserVerifiedBadge,
+      size: style.fontSize,
+    ));
+  }
 
   final threadCreateDate =
       DateTime.fromMillisecondsSinceEpoch(thread.threadCreateDate * 1000);
   if (threadCreateDate.isAfter(DateTime.now().subtract(Duration(days: 7)))) {
-    spans.add(TextSpan(
-      style: TextStyle(color: theme.disabledColor),
-      text: "  ${timeago.format(threadCreateDate)}",
-    ));
+    children.add(
+      RichText(
+        text: TextSpan(
+          text: timeago.format(threadCreateDate),
+          style: style.copyWith(color: theme.disabledColor),
+        ),
+      ),
+    );
   }
 
   if (thread.threadViewCount > 1500) {
-    spans.add(TextSpan(
-      style: TextStyle(color: theme.disabledColor),
-      text: " ${formatNumber(thread.threadViewCount)} views",
-    ));
+    children.add(
+      RichText(
+        text: TextSpan(
+          text: "${formatNumber(thread.threadViewCount)} views",
+          style: style.copyWith(color: theme.disabledColor),
+        ),
+      ),
+    );
   }
 
   if (thread.threadPostCount > 20) {
-    spans.add(TextSpan(
-      style: TextStyle(color: theme.disabledColor),
-      text: " ${formatNumber(thread.threadPostCount - 1)} replies",
-    ));
+    children.add(
+      RichText(
+        text: TextSpan(
+          text: "${formatNumber(thread.threadPostCount - 1)} replies",
+          style: style.copyWith(color: theme.disabledColor),
+        ),
+      ),
+    );
   }
 
-  return TextSpan(
-    children: spans,
-    style: theme.textTheme.caption,
+  return Wrap(
+    children: children,
+    spacing: 5,
   );
 }

@@ -5,6 +5,7 @@ const kColorHomeFpBoxBorder = Color(0xFFEEEDF2);
 const kColorHomeFpBoxShadow = Color(0xFFDEDEE0);
 const kColorHomeFpCheckedIcon = Color(0xFFFC7E1F);
 const kColorUserRank = Color(0xFFEAB363);
+const kColorUserVerifiedBadge = Color(0xFF2477C6);
 
 const kPrefKeyTokenAccessToken = 'token__accessToken';
 const kPrefKeyTokenClientId = 'token__clientId';

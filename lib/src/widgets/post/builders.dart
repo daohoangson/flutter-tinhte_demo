@@ -51,34 +51,48 @@ Widget buildPosterInfo(
   String username, {
   bool userHasVerifiedBadge,
   String userRank,
-}) =>
-    Padding(
-      padding: kEdgeInsetsHorizontal,
-      child: RichText(
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-        text: TextSpan(
-          children: <TextSpan>[
-            TextSpan(
-              style: TextStyle(
-                color: Theme.of(context).accentColor,
-                fontWeight: FontWeight.bold,
-              ),
-              text: "$username${userHasVerifiedBadge == true ? ' ✅' : ''}",
-            ),
-            TextSpan(
-              style: TextStyle(
-                color: kColorUserRank,
-                fontSize: Theme.of(context).textTheme.caption.fontSize - 1,
-                fontWeight: FontWeight.bold,
-              ),
-              text: "  ${userRank ?? ''}",
-            ),
-          ],
-          style: Theme.of(context).textTheme.caption,
+}) {
+  final theme = Theme.of(context);
+  final style = theme.textTheme.caption;
+  final children = <Widget>[
+    RichText(
+      text: TextSpan(
+        text: username,
+        style: style.copyWith(
+          color: theme.accentColor,
+          fontWeight: FontWeight.bold,
         ),
       ),
-    );
+    ),
+  ];
+
+  if (userHasVerifiedBadge == true) {
+    children.add(Icon(
+      FontAwesomeIcons.solidCheckCircle,
+      color: kColorUserVerifiedBadge,
+      size: style.fontSize,
+    ));
+  }
+
+  if (userRank?.isNotEmpty == true) {
+    children.add(RichText(
+      text: TextSpan(
+        text: userRank,
+        style: style.copyWith(
+          color: kColorUserRank,
+        ),
+      ),
+    ));
+  }
+
+  return Padding(
+    padding: kEdgeInsetsHorizontal,
+    child: Wrap(
+      children: children,
+      spacing: 5,
+    ),
+  );
+}
 
 Widget buildRow(
   BuildContext context,
