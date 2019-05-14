@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
             primaryColor: const Color(0xFF192533),
             brightness: Brightness.light,
           ),
-          home: SafeArea(child: ResponsiveLayout()),
+          home: ResponsiveLayout(),
         ),
       );
 }

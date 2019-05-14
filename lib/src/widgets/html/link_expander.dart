@@ -72,13 +72,11 @@ class LinkExpander {
 
     return [
       Padding(
-        child: Row(
+        child: Wrap(
           children: <Widget>[
-            Expanded(
-              child: thumbnail?.isCover != false
-                  ? _buildCover(meta, thumbnail, info)
-                  : _buildSquare(meta, thumbnail, info),
-            ),
+            thumbnail?.isCover != false
+                ? _buildCover(meta, thumbnail, info)
+                : _buildSquare(meta, thumbnail, info),
           ],
         ),
         padding: const EdgeInsets.symmetric(vertical: 10),
@@ -108,7 +106,7 @@ class LinkExpander {
         meta,
         LayoutBuilder(
           builder: (_, bc) {
-            if (bc.maxWidth < 600) return info;
+            if (bc.maxWidth < 480) return info;
 
             return Row(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -127,7 +125,7 @@ class LinkExpander {
       );
 
   Widget _buildCover(NodeMetadata meta, _Thumbnail thumbnail, _Info info) =>
-      LimitedBox(
+      SizedBox(
         child: _buildBox(
           meta,
           Column(
@@ -138,7 +136,7 @@ class LinkExpander {
             ],
           ),
         ),
-        maxWidth: 480,
+        width: 480,
       );
 }
 

@@ -18,6 +18,7 @@ class SuperListView<T> extends StatefulWidget {
   final _ItemBuilder<T> itemBuilder;
   final _ItemListenerRegister<T> itemListenerRegisterAppend;
   final _ItemListenerRegister<T> itemListenerRegisterPrepend;
+  final int itemMaxWidth;
   final _ItemStreamRegister<T> itemStreamRegisterAppend;
   final _ItemStreamRegister<T> itemStreamRegisterPrepend;
 
@@ -34,6 +35,7 @@ class SuperListView<T> extends StatefulWidget {
     this.itemBuilder,
     this.itemListenerRegisterAppend,
     this.itemListenerRegisterPrepend,
+    this.itemMaxWidth = 600,
     this.itemStreamRegisterAppend,
     this.itemStreamRegisterPrepend,
     Key key,
@@ -184,6 +186,15 @@ class SuperListState<T> extends State<SuperListView<T>> {
             controller: _scrollController,
             index: i,
             key: ValueKey(i),
+          );
+        }
+
+        if (widget.itemMaxWidth != null) {
+          built = Center(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: 600),
+              child: built,
+            ),
           );
         }
 

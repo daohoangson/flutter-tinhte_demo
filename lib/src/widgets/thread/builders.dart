@@ -20,7 +20,7 @@ Widget buildThreadRow(BuildContext context, Thread thread) {
         child: LayoutBuilder(
           builder: (context, bc) {
             final creatorInfo = buildCreatorInfo(context, thread);
-            if (bc.maxWidth < 600.0) return creatorInfo;
+            if (bc.maxWidth < 480) return creatorInfo;
 
             return Row(
               children: <Widget>[
