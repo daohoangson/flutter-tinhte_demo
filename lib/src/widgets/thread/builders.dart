@@ -2,100 +2,51 @@ part of '../threads.dart';
 
 Widget buildThreadRow(BuildContext context, Thread thread) {
   final theme = Theme.of(context);
-  final threadTitleIsRedundant = isThreadTitleRedundant(thread);
+  final style = theme.textTheme.caption;
 
-  final postBodyAndMetadata = Column(
+  final left = SizedBox(
+    child: ThreadImageWidget(
+      image: thread?.threadThumbnail,
+      threadId: thread?.threadId,
+    ),
+    height: 80,
+  );
+
+  final right = Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: <Widget>[
       Padding(
-        padding: const EdgeInsets.all(5.0),
-        child: Text(
-          thread.firstPost.postBodyPlainText,
-          maxLines: threadTitleIsRedundant ? 6 : 3,
-          overflow: TextOverflow.ellipsis,
-        ),
+        child: buildCreatorInfoWithAvatar(thread, style),
+        padding: const EdgeInsets.only(bottom: 5),
       ),
-      Padding(
-        padding: const EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 5.0),
-        child: LayoutBuilder(
-          builder: (context, bc) {
-            final creatorInfo = buildCreatorInfo(context, thread);
-            if (bc.maxWidth < 480) return creatorInfo;
-
-            return Row(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(right: 5.0),
-                  child: CircleAvatar(
-                    backgroundImage: CachedNetworkImageProvider(
-                        thread.links.firstPosterAvatar),
-                    maxRadius: 12.0,
-                  ),
-                ),
-                Expanded(child: creatorInfo),
-              ],
-            );
-          },
-        ),
-      ),
+      Text(thread.threadTitle),
     ],
   );
 
-  final bodyAndPossiblyImage = thread.threadImage != null
-      ? Row(
+  return GestureDetector(
+    child: Padding(
+        child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            SizedBox(
-              child: ThreadImageWidget(
-                image: thread?.threadImage,
-                threadId: thread?.threadId,
-              ),
-              height: 90.0,
-            ),
-            Expanded(child: postBodyAndMetadata),
-          ],
-        )
-      : postBodyAndMetadata;
-
-  final cardContents = threadTitleIsRedundant
-      ? bodyAndPossiblyImage
-      : Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
             Padding(
-              padding: const EdgeInsets.all(5.0),
-              child: Text(
-                thread.threadTitle,
-                style: theme.textTheme.title,
-              ),
+              child: left,
+              padding: const EdgeInsets.only(right: 10),
             ),
-            bodyAndPossiblyImage,
+            Expanded(child: right),
           ],
-        );
-
-  return GestureDetector(
-    child: Card(child: cardContents),
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5)),
     onTap: () => Navigator.of(context).push(
           MaterialPageRoute(builder: (_) => ThreadViewScreen(thread)),
         ),
   );
 }
 
-Widget buildCreatorInfo(BuildContext context, Thread thread) {
+Widget buildCreatorInfo(BuildContext context, Thread thread, TextStyle style) {
   if (thread == null) return null;
-  final children = <Widget>[];
-
   final theme = Theme.of(context);
-  final style = theme.textTheme.caption;
 
-  if (thread.threadIsSticky == true) {
-    children.add(Icon(
-      FontAwesomeIcons.thumbtack,
-      size: style.fontSize,
-    ));
-  }
-
-  children.add(
+  final children = <Widget>[
     RichText(
       text: TextSpan(
         text: thread.creatorUsername,
@@ -105,7 +56,7 @@ Widget buildCreatorInfo(BuildContext context, Thread thread) {
         ),
       ),
     ),
-  );
+  ];
 
   if (thread.creatorHasVerifiedBadge == true) {
     children.add(Icon(
@@ -115,18 +66,14 @@ Widget buildCreatorInfo(BuildContext context, Thread thread) {
     ));
   }
 
-  final threadCreateDate =
-      DateTime.fromMillisecondsSinceEpoch(thread.threadCreateDate * 1000);
-  if (threadCreateDate.isAfter(DateTime.now().subtract(Duration(days: 7)))) {
-    children.add(
-      RichText(
-        text: TextSpan(
-          text: timeago.format(threadCreateDate),
-          style: style.copyWith(color: theme.disabledColor),
-        ),
+  children.add(
+    RichText(
+      text: TextSpan(
+        text: formatTimestamp(thread.threadCreateDate),
+        style: style.copyWith(color: theme.disabledColor),
       ),
-    );
-  }
+    ),
+  );
 
   if (thread.threadViewCount > 1500) {
     children.add(
@@ -155,3 +102,26 @@ Widget buildCreatorInfo(BuildContext context, Thread thread) {
     spacing: 5,
   );
 }
+
+Widget buildCreatorInfoWithAvatar(Thread thread, TextStyle style) =>
+    LayoutBuilder(
+      builder: (context, bc) {
+        final creatorInfo = buildCreatorInfo(context, thread, style);
+        if (bc.maxWidth < 300) return creatorInfo;
+
+        return Row(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(right: 5.0),
+              child: CircleAvatar(
+                backgroundImage: CachedNetworkImageProvider(
+                  thread.links.firstPosterAvatar,
+                ),
+                maxRadius: style.fontSize,
+              ),
+            ),
+            Expanded(child: creatorInfo),
+          ],
+        );
+      },
+    );

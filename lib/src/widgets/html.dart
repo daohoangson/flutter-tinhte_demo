@@ -148,12 +148,6 @@ class TinhteWidgetFactory extends WidgetFactory {
   }
 
   @override
-  Widget buildImageFromUrl(String url) => Image(
-        image: CachedNetworkImageProvider(url),
-        fit: BoxFit.cover,
-      );
-
-  @override
   NodeMetadata parseElement(NodeMetadata meta, dom.Element e) {
     switch (e.localName) {
       case 'a':

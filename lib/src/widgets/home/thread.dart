@@ -16,22 +16,17 @@ class HomeThreadWidget extends StatelessWidget {
   HomeThreadWidget(this.thread, {Key key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => Center(
-        child: ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: 600),
-          child: _buildCard(
-            context,
-            <Widget>[
-              _buildImage(),
-              const SizedBox(height: 10.0),
-              _buildTextPadding(_buildInfoRow(context)),
-              const SizedBox(height: 5.0),
-              _buildTextPadding(_buildTitle(context)),
-              const SizedBox(height: 10.0),
-              _HomeThreadActionsWidget(thread),
-            ],
-          ),
-        ),
+  Widget build(BuildContext context) => _buildCard(
+        context,
+        <Widget>[
+          _buildImage(),
+          const SizedBox(height: 10.0),
+          _buildTextPadding(_buildInfoRow(context)),
+          const SizedBox(height: 5.0),
+          _buildTextPadding(_buildTitle(context)),
+          const SizedBox(height: 10.0),
+          _HomeThreadActionsWidget(thread),
+        ],
       );
 
   Widget _buildCard(BuildContext context, List<Widget> children) => Card(

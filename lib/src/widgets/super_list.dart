@@ -78,6 +78,19 @@ class FetchContext<T> {
 
 enum FetchContextId { FetchInitial, FetchNext, FetchPrev }
 
+class SuperListItemFullWidth extends StatelessWidget {
+  final Widget child;
+
+  SuperListItemFullWidth({
+    this.child,
+    Key key,
+  })  : assert(child != null),
+        super(key: key);
+
+  @override
+  Widget build(BuildContext context) => child;
+}
+
 class SuperListState<T> extends State<SuperListView<T>> {
   final List<T> _items = [];
 
@@ -178,7 +191,16 @@ class SuperListState<T> extends State<SuperListView<T>> {
   Widget build(BuildContext context) {
     Widget built = ListView.builder(
       itemBuilder: (context, i) {
-        Widget built = _buildItem(context, i);
+        Widget built = _buildItem(context, i) ?? Container();
+
+        if (widget.itemMaxWidth != null && !(built is SuperListItemFullWidth)) {
+          built = Center(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: 600),
+              child: built,
+            ),
+          );
+        }
 
         if (_scrollController != null) {
           built = AutoScrollTag(
@@ -186,15 +208,6 @@ class SuperListState<T> extends State<SuperListView<T>> {
             controller: _scrollController,
             index: i,
             key: ValueKey(i),
-          );
-        }
-
-        if (widget.itemMaxWidth != null) {
-          built = Center(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: 600),
-              child: built,
-            ),
           );
         }
 
