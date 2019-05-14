@@ -82,16 +82,25 @@ class NotificationsWidget extends StatelessWidget {
     BuildContext context,
     int newId,
     void prepend(api.Notification n),
-  ) =>
-      ApiData.of(context).api.getJson('notifications').then((json) {
-        if (!json.containsKey('notifications')) return;
+  ) {
+    final data = ApiData.of(context);
+    if (!data.hasToken) return;
 
-        final list = json['notifications'] as List<Map>;
-        final j = list.where((j) =>
-            j.containsKey('notification_id') && j['notification_id'] == newId);
-        if (j.length != 1) return;
+    data.api
+        .getJson("notifications?oauth_token=${data.token.accessToken}")
+        .then((json) {
+      if (!json.containsKey('notifications')) return;
 
-        final notification = api.Notification.fromJson(j.first);
-        prepend(notification);
+      final list = json['notifications'] as List;
+      final j = list.where((j) {
+        if (!(j is Map)) return false;
+        final m = j as Map;
+        return m.containsKey('notification_id') && m['notification_id'] == newId;
       });
+      if (j.length != 1) return;
+
+      final notification = api.Notification.fromJson(j.first);
+      prepend(notification);
+    });
+  }
 }
