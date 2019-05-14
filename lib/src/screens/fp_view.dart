@@ -4,15 +4,6 @@ import 'package:tinhte_api/feature_page.dart';
 import '../widgets/tag/fp_header.dart';
 import '../widgets/threads.dart';
 
-pushFpViewScreen(BuildContext context, FeaturePage fp) {
-  if (fp == null) return;
-
-  Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => FpViewScreen(fp)),
-  );
-}
-
 class FpViewScreen extends StatelessWidget {
   final FeaturePage fp;
 

@@ -13,7 +13,7 @@ import 'screens/thread_view.dart';
 
 void launchLink(State state, String link) async {
   if (link.startsWith(configSiteRoot)) {
-    final parsed = await parseLink(state, link);
+    final parsed = await parseLink(state, link: link);
     if (parsed) return;
 
     final data = ApiData.of(state.context);
@@ -28,7 +28,8 @@ void launchLink(State state, String link) async {
   launch(link);
 }
 
-Future<bool> parseLink(State state, String link) {
+Future<bool> parseLink(State state, {String link, String path}) {
+  assert((link == null) != (path == null));
   var cancelled = false;
   final completer = Completer<bool>();
   var parsed = false;
@@ -50,27 +51,37 @@ Future<bool> parseLink(State state, String link) {
         ),
   );
 
+  final cancelDialog = () {
+    if (cancelled) return;
+
+    Navigator.of(state.context, rootNavigator: true).pop();
+    cancelled = true;
+  };
+
   apiGet(
     state,
-    'tools/parse-link?link=${Uri.encodeQueryComponent(link)}',
+    path ?? 'tools/parse-link?link=${Uri.encodeQueryComponent(link)}',
     onSuccess: (json) {
       if (cancelled) return;
 
+      Route route;
       if (json.containsKey('tag') && json.containsKey('tagged')) {
-        parsed = _parseTag(state, json);
-        return;
+        route = _parseTag(state, json);
+      } else if (json.containsKey('thread') && json.containsKey('posts')) {
+        route = _parseThread(state, json);
       }
 
-      if (json.containsKey('thread') && json.containsKey('posts')) {
-        parsed = _parseThread(state, json);
-        return;
+      if (route != null) {
+        parsed = true;
+        cancelDialog();
+        Navigator.of(state.context).push(route);
       }
     },
     onError: (error) {
       debugPrint("$error");
     },
     onComplete: () {
-      if (!cancelled) Navigator.of(state.context, rootNavigator: true).pop();
+      cancelDialog();
       completer.complete(parsed);
     },
   );
@@ -78,28 +89,29 @@ Future<bool> parseLink(State state, String link) {
   return completer.future;
 }
 
-bool _parseTag(State state, Map json) {
+Route _parseTag(State state, Map json) {
   final Map jsonTag = json['tag'];
   final tag = Tag.fromJson(jsonTag);
-  if (tag.tagId == null) return false;
+  if (tag.tagId == null) return null;
 
   if (json.containsKey('feature_page')) {
     final fp = FeaturePage.fromJson(json['feature_page']);
     if (fp.id != null) {
-      pushFpViewScreen(state.context, fp);
-      return true;
+      return MaterialPageRoute(builder: (_) => FpViewScreen(fp));
     }
   }
 
-  pushTagViewScreen(state.context, tag, json: json);
-  return true;
+  return MaterialPageRoute(
+    builder: (_) => TagViewScreen(tag, initialJson: json),
+  );
 }
 
-bool _parseThread(State state, Map json) {
+Route _parseThread(State state, Map json) {
   final Map jsonThread = json['thread'];
   final thread = Thread.fromJson(jsonThread);
-  if (thread.threadId == null) return false;
+  if (thread.threadId == null) return null;
 
-  pushThreadViewScreen(state.context, thread, json: json);
-  return true;
+  return MaterialPageRoute(
+    builder: (_) => ThreadViewScreen(thread, initialJson: json),
+  );
 }

@@ -62,7 +62,7 @@ void prepareForApiAction(
   final apiData = ApiData._noInherit(state.context);
 
   if (apiData._token == null) {
-    final loggedIn = await pushLoginScreen(state.context);
+    final loggedIn = await Navigator.push(state.context, LoginScreenRoute());
     if (loggedIn != true) {
       if (onError != null) onError();
       return;

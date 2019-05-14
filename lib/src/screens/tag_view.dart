@@ -4,23 +4,6 @@ import 'package:tinhte_api/tag.dart';
 import '../widgets/tag/tag_view_header.dart';
 import '../widgets/threads.dart';
 
-pushTagViewScreen(
-  BuildContext context,
-  Tag tag, {
-  Map json,
-}) {
-  if (tag == null) return;
-
-  Navigator.push(
-    context,
-    MaterialPageRoute(
-        builder: (context) => TagViewScreen(
-              tag,
-              initialJson: json,
-            )),
-  );
-}
-
 class TagViewScreen extends StatelessWidget {
   final Tag tag;
   final Map initialJson;

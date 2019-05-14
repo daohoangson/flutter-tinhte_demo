@@ -6,6 +6,7 @@ import 'package:tinhte_api/user.dart';
 
 import 'api.dart';
 import 'config.dart';
+import 'link.dart';
 
 final _firebaseMessaging = FirebaseMessaging();
 
@@ -62,17 +63,13 @@ class _PushNotificationAppState extends State<PushNotificationApp> {
     super.initState();
 
     _firebaseMessaging.configure(
-      onLaunch: (message) {
-        debugPrint("FCM.onLaunch: $message");
-      },
+      onLaunch: _onLaunchOrResume,
       onMessage: (message) {
         debugPrint("FCM.onMessage: $message");
         _notifControllerAddFromFcmMessage(message);
         _unreadControllerAddFromFcmMessage(message);
       },
-      onResume: (message) {
-        debugPrint("FCM.onResume: $message");
-      },
+      onResume: _onLaunchOrResume,
     );
 
     _firebaseMessaging.getToken().then((token) => setState(() {
@@ -98,6 +95,17 @@ class _PushNotificationAppState extends State<PushNotificationApp> {
     return widget.child;
   }
 
+  Future _onLaunchOrResume(Map message) {
+    if (!message.containsKey('data')) return Future.value(false);
+    final data = message['data'];
+
+    // TODO: use message.data.links.content when it is available
+    if (!data.containsKey('notification_id')) return Future.value(false);
+    final id = data['notification_id'];
+
+    return parseLink(this, path: "notifications/content?notification_id=$id");
+  }
+
   void _subscribeIfPossible() {
     if (_fcmToken?.isNotEmpty != true) return;
     if (_user?.userId?.isFinite != true) return;
@@ -120,9 +128,10 @@ class _PushNotificationAppState extends State<PushNotificationApp> {
         'hub_topic': hubTopic,
         'oauth_client_id': api.clientId,
         'oauth_token': token,
+        'extra_data[click_action]': 'FLUTTER_NOTIFICATION_CLICK',
+        'extra_data[notification]': '1',
         'extra_data[platform]': Theme.of(context).platform.toString(),
         'extra_data[project]': configFcmProjectId,
-        'extra_data[notification]': '1',
       },
     ).then((response) {
       if (response.statusCode == 202) {

@@ -5,23 +5,6 @@ import 'package:tinhte_api/thread.dart';
 import '../intl.dart';
 import '../widgets/posts.dart';
 
-void pushThreadViewScreen(
-  BuildContext context,
-  Thread thread, {
-  Map json,
-}) {
-  if (thread == null) return;
-
-  Navigator.push(
-    context,
-    MaterialPageRoute(
-        builder: (_) => ThreadViewScreen(
-              thread,
-              initialJson: json,
-            )),
-  );
-}
-
 class ThreadViewScreen extends StatelessWidget {
   final Thread thread;
   final Map initialJson;

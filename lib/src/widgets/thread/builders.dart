@@ -75,7 +75,9 @@ Widget buildThreadRow(BuildContext context, Thread thread) {
 
   return GestureDetector(
     child: Card(child: cardContents),
-    onTap: () => pushThreadViewScreen(context, thread),
+    onTap: () => Navigator.of(context).push(
+          MaterialPageRoute(builder: (_) => ThreadViewScreen(thread)),
+        ),
   );
 }
 

@@ -29,7 +29,7 @@ class AppBarDrawerHeader extends StatelessWidget {
               : const Text('Welcome back, we are loading user profile...')
           : GestureDetector(
               child: const Text('Login'),
-              onTap: () => pushLoginScreen(context),
+              onTap: () => Navigator.push(context, LoginScreenRoute()),
             ),
     );
   }
@@ -158,6 +158,6 @@ class _AppBarNotificationButtonState extends State<AppBarNotificationButton> {
 
   _showNotificationList() => Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => NotificationListScreen()),
+        MaterialPageRoute(builder: (_) => NotificationListScreen()),
       );
 }

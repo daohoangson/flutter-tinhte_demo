@@ -25,9 +25,6 @@ void logout(BuildContext context) {
   }
 }
 
-Future<dynamic> pushLoginScreen(BuildContext context) =>
-    Navigator.push(context, LoginScreenRoute());
-
 class LoginForm extends StatefulWidget {
   LoginForm({Key key}) : super(key: key);
 

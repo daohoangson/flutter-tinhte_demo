@@ -5,10 +5,11 @@ import 'package:tinhte_api/feature_page.dart';
 import 'package:tinhte_api/links.dart';
 import 'package:tinhte_api/thread.dart';
 
-import '../api.dart';
 import '../widgets/app_bar.dart';
 import '../widgets/home/feature_pages.dart';
 import '../widgets/home/thread.dart';
+import '../api.dart';
+import '../push_notification.dart';
 
 const kThreadsPath = 'lists/1/threads';
 
@@ -144,5 +145,10 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 class HomeScreenRoute extends MaterialPageRoute {
-  HomeScreenRoute() : super(builder: (_) => HomeScreen());
+  HomeScreenRoute()
+      : super(
+          builder: (_) => PushNotificationApp(
+                HomeScreen(),
+              ),
+        );
 }

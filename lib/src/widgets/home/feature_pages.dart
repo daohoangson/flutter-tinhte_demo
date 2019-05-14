@@ -229,7 +229,9 @@ class _FpWidgetState extends State<_FpWidget> {
 
   Widget _buildGestureDetector(Widget child) => GestureDetector(
         child: child,
-        onTap: () => pushFpViewScreen(context, fp),
+        onTap: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => FpViewScreen(fp)),
+            ),
       );
 
   _follow() => prepareForApiAction(this, () {

@@ -41,7 +41,9 @@ class HomeThreadWidget extends StatelessWidget {
             children: children,
             crossAxisAlignment: CrossAxisAlignment.start,
           ),
-          onTap: () => pushThreadViewScreen(context, thread),
+          onTap: () => Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => ThreadViewScreen(thread)),
+              ),
         ),
       );
 
