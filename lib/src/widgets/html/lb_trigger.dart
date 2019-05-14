@@ -82,7 +82,7 @@ class LbTrigger {
           full = buildGestureDetector(meta.context, index, full);
         }
 
-        return [full];
+        return [wf.buildPadding(full, const EdgeInsets.symmetric(vertical: 5))];
       },
     );
 

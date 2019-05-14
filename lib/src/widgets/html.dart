@@ -200,11 +200,13 @@ class TinhteWidgetFactory extends WidgetFactory {
       _checkIsText(widget) ? buildPadding(widget, _kTextPadding) : widget;
 
   bool _checkIsText(Widget w) {
+    if (w == widget0) return false;
     if (w is _AttachmentImageWidget || w is _PhotoCompareWidget || w is WebView)
       return false;
 
-    if (w is Align) return _checkIsText(w.child);
     if (w is GestureDetector) return _checkIsText(w.child);
+    if (w is InkWell) return _checkIsText(w.child);
+    if (w is SingleChildRenderObjectWidget) return _checkIsText(w.child);
 
     return true;
   }

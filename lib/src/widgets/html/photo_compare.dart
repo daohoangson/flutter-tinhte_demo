@@ -12,10 +12,14 @@ class PhotoCompare {
     _buildOp ??= BuildOp(
       onChild: (meta, e) =>
           e.localName == 'img' ? lazySet(meta, buildOp: imgOp) : meta,
-      onWidgets: (meta, widgets) {
-        if (widgets.length != 2) return null;
-        return [_PhotoCompareWidget(widgets.first, widgets.last)];
-      },
+      onWidgets: (meta, widgets) => widgets.length == 2
+          ? [
+              _PhotoCompareWidget(
+                _noPadding(widgets.first),
+                _noPadding(widgets.last),
+              ),
+            ]
+          : null,
     );
 
     return _buildOp;
@@ -86,3 +90,5 @@ class _PhotoCompareState extends State<_PhotoCompareWidget>
     controller.animateTo(target, curve: Curves.easeInOut);
   }
 }
+
+Widget _noPadding(Widget w) => w is Padding ? w.child : w;
