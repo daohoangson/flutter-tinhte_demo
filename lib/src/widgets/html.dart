@@ -157,8 +157,11 @@ class TinhteWidgetFactory extends WidgetFactory {
           return lazySet(null, buildOp: chrOp);
         }
 
-        if (e.classes.contains('LbTrigger')) {
-          return lazySet(null, buildOp: lbTrigger.buildOp);
+        if (e.classes.contains('LbTrigger') &&
+            e.attributes.containsKey('data-height') &&
+            e.attributes.containsKey('data-permalink') &&
+            e.attributes.containsKey('data-width')) {
+          return lazySet(meta, buildOp: lbTrigger.buildOp);
         }
 
         if (e.classes.contains('LinkExpander') &&
@@ -195,8 +198,10 @@ class TinhteWidgetFactory extends WidgetFactory {
 
   bool _checkIsText(Widget w) {
     if (w == widget0) return false;
-    if (w is _AttachmentImageWidget || w is _PhotoCompareWidget || w is WebView)
-      return false;
+    if (w is _AttachmentImageWidget ||
+        w is _GalleriaGrid ||
+        w is _PhotoCompareWidget ||
+        w is WebView) return false;
 
     if (w is GestureDetector) return _checkIsText(w.child);
     if (w is InkWell) return _checkIsText(w.child);

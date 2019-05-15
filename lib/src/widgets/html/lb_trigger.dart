@@ -2,6 +2,7 @@ part of '../html.dart';
 
 class LbTrigger {
   final sources = <String>[];
+  final captions = Map<int, String>();
   final WidgetFactory wf;
 
   BuildOp _buildOp;
@@ -14,8 +15,12 @@ class LbTrigger {
         child: child,
         onTap: () => Navigator.push(
               context,
-              MaterialPageRoute(
-                builder: (_) => _Screen(sources, initialPage: index),
+              _SlideUpRoute(
+                page: _Screen(
+                  captions: captions,
+                  initialPage: index,
+                  sources: sources,
+                ),
               ),
             ),
       );
@@ -36,13 +41,13 @@ class LbTrigger {
         if (href?.isNotEmpty != true) return null;
 
         final h = a.containsKey('data-height') ? a['data-height'] : null;
-        final p = a.containsKey('data-permalink') ? a['data-permalink'] : null;
+        final p = a.containsKey('data-permalink') ? a['data-permalink'] : href;
         final w = a.containsKey('data-width') ? a['data-width'] : null;
         final height = h != null ? int.tryParse(h) : null;
         final width = w != null ? int.tryParse(w) : null;
 
         final index = sources.length;
-        sources.add(p ?? href);
+        sources.add(p);
 
         final imgs = widgets.where((w) => w is _Img);
         if (imgs.length == 1) {
@@ -59,7 +64,7 @@ class LbTrigger {
 
           Widget thumbnail = Image(
             image: CachedNetworkImageProvider((imgs.first as _Img).src),
-            fit: BoxFit.contain,
+            fit: BoxFit.cover,
             height: childHeight,
             width: childWidth,
           );
@@ -152,7 +157,7 @@ class _AttachmentImageWidget extends StatelessWidget {
               height: height.toDouble(),
             ),
           ]),
-          padding: _kTextPadding,
+          padding: _kTextPadding.copyWith(bottom: 10),
         );
       },
     );
@@ -168,47 +173,106 @@ class _Img extends StatelessWidget {
   Widget build(BuildContext context) => Container();
 }
 
-class _Screen extends StatelessWidget {
+class _SlideUpRoute extends PageRouteBuilder {
+  final Widget page;
+
+  _SlideUpRoute({this.page})
+      : super(
+          pageBuilder: (
+            BuildContext context,
+            Animation<double> animation,
+            Animation<double> secondaryAnimation,
+          ) =>
+              page,
+          transitionsBuilder: (
+            BuildContext context,
+            Animation<double> animation,
+            Animation<double> secondaryAnimation,
+            Widget child,
+          ) =>
+              SlideTransition(
+                position: Tween<Offset>(
+                  begin: const Offset(0, 1),
+                  end: Offset.zero,
+                ).animate(animation),
+                child: child,
+              ),
+        );
+}
+
+class _Screen extends StatefulWidget {
+  final Decoration backgroundDecoration;
+  final TextStyle captionStyle;
+  final Map<int, String> captions;
   final int initialPage;
   final PageController pageController;
   final List<String> sources;
 
-  _Screen(this.sources, {this.initialPage = 0})
-      : this.pageController = PageController(initialPage: initialPage);
+  _Screen({
+    this.backgroundDecoration = const BoxDecoration(color: Colors.black),
+    this.captionStyle = const TextStyle(color: Colors.white),
+    this.captions,
+    this.initialPage,
+    this.sources,
+  }) : pageController = PageController(initialPage: initialPage);
+
+  @override
+  State<StatefulWidget> createState() => _ScreenState();
+}
+
+class _ScreenState extends State<_Screen> {
+  final key = GlobalKey();
+
+  int _currentPage;
+
+  @override
+  void initState() {
+    _currentPage = widget.initialPage;
+    super.initState();
+  }
+
+  void onPageChanged(int page) => setState(() => _currentPage = page);
 
   @override
   Widget build(BuildContext context) {
-    final List<PhotoViewGalleryPageOptions> pageOptions = List();
-    for (final source in sources) {
-      pageOptions.add(PhotoViewGalleryPageOptions(
-        imageProvider: CachedNetworkImageProvider(source),
-      ));
-    }
-
     return Scaffold(
-      body: Dismissible(
+      body: Container(
+        decoration: widget.backgroundDecoration,
         child: Stack(
+          alignment: Alignment.bottomCenter,
           children: <Widget>[
-            PhotoViewGallery(
-              pageOptions: pageOptions,
-              pageController: pageController,
-            ),
-            Positioned(
-              bottom: 10.0,
-              left: 0.0,
-              right: 0.0,
-              child: Text(
-                'Swipe down to dismiss',
-                style: Theme.of(context).primaryTextTheme.caption,
-                textAlign: TextAlign.center,
+            Dismissible(
+              child: PhotoViewGallery.builder(
+                scrollPhysics: const BouncingScrollPhysics(),
+                builder: _buildItem,
+                itemCount: widget.sources.length,
+                backgroundDecoration: widget.backgroundDecoration,
+                pageController: widget.pageController,
+                onPageChanged: onPageChanged,
               ),
+              direction: DismissDirection.down,
+              key: key,
+              onDismissed: (_) => Navigator.pop(context),
             ),
+            Padding(
+              child: _buildCaption(_currentPage),
+              padding: const EdgeInsets.fromLTRB(10, 0, 10, 30),
+            )
           ],
         ),
-        direction: DismissDirection.down,
-        key: GlobalKey(),
-        onDismissed: (_) => Navigator.pop(context),
       ),
     );
   }
+
+  Widget _buildCaption(int index) => Text(
+        widget.captions.containsKey(index)
+            ? widget.captions[index]
+            : "${index + 1} of ${widget.sources.length}",
+        style: widget.captionStyle,
+      );
+
+  PhotoViewGalleryPageOptions _buildItem(BuildContext context, int index) =>
+      PhotoViewGalleryPageOptions(
+        imageProvider: CachedNetworkImageProvider(widget.sources[index]),
+      );
 }
