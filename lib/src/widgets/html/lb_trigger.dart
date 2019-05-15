@@ -76,7 +76,7 @@ class LbTrigger {
           return [wf.buildWrapable(thumbnail)];
         }
 
-        Widget full = _AttachmentImageWidget(
+        Widget full = AttachmentImageWidget(
           height: height,
           permalink: p,
           src: src,
@@ -104,63 +104,6 @@ class LbTrigger {
       },
     );
     return _imgOp;
-  }
-}
-
-class _AttachmentImageWidget extends StatelessWidget {
-  final int height;
-  final String permalink;
-  final String src;
-  final int width;
-
-  _AttachmentImageWidget({
-    this.height,
-    Key key,
-    this.permalink,
-    this.src,
-    this.width,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    if (permalink == null) return Container();
-    if (height == null || height < 1) return Container();
-    if (width == null || width < 1) return Container();
-
-    return LayoutBuilder(
-      builder: (context, bc) {
-        final mqd = MediaQuery.of(context);
-        final imageUrl = getResizedUrl(
-              apiUrl: src ?? permalink,
-              boxWidth: mqd.devicePixelRatio * mqd.size.width,
-              imageHeight: height,
-              imageWidth: width,
-            ) ??
-            permalink;
-        final image = CachedNetworkImageProvider(imageUrl);
-
-        // image is large, just render it in aspect ratio
-        if (bc.maxWidth < width)
-          return AspectRatio(
-            aspectRatio: width / height,
-            child: Image(image: image, fit: BoxFit.cover),
-          );
-
-        // image is small, render with text padding for consistent look
-        // put it in a wrap + limited box to prevent image from being scaled up
-        return Padding(
-          child: Wrap(children: <Widget>[
-            Image(
-              image: image,
-              fit: BoxFit.contain,
-              width: width.toDouble(),
-              height: height.toDouble(),
-            ),
-          ]),
-          padding: _kTextPadding.copyWith(bottom: 10),
-        );
-      },
-    );
   }
 }
 

@@ -198,9 +198,9 @@ class TinhteWidgetFactory extends WidgetFactory {
 
   bool _checkIsText(Widget w) {
     if (w == widget0) return false;
-    if (w is _AttachmentImageWidget ||
-        w is _GalleriaGrid ||
+    if (w is _GalleriaGrid ||
         w is _PhotoCompareWidget ||
+        w is AttachmentImageWidget ||
         w is WebView) return false;
 
     if (w is GestureDetector) return _checkIsText(w.child);

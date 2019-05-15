@@ -14,15 +14,29 @@ class _PostAttachmentsWidget extends StatelessWidget {
       lbTrigger.sources.add(attachment.links.data);
     }
 
-    return SizedBox(
-      height: kAttachmentSize,
-      child: ListView.separated(
-        itemBuilder: (context, i) => lbTrigger.buildGestureDetector(
-            context, i, _buildAttachment((attachments[i]))),
-        itemCount: attachments.length,
-        scrollDirection: Axis.horizontal,
-        separatorBuilder: (context, i) => const SizedBox(width: 10.0),
+    if (attachments.length == 1) {
+      final first = attachments.first;
+      final widget = AttachmentImageWidget(
+        height: first.attachmentHeight,
+        permalink: first.links.permalink,
+        src: first.links.data,
+        width: first.attachmentWidth,
+      );
+      return lbTrigger.buildGestureDetector(context, 0, widget);
+    }
+
+    return Padding(
+      child: SizedBox(
+        height: kAttachmentSize,
+        child: ListView.separated(
+          itemBuilder: (context, i) => lbTrigger.buildGestureDetector(
+              context, i, _buildAttachment((attachments[i]))),
+          itemCount: attachments.length,
+          scrollDirection: Axis.horizontal,
+          separatorBuilder: (context, i) => const SizedBox(width: 10.0),
+        ),
       ),
+      padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
     );
   }
 

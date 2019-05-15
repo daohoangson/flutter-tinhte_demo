@@ -8,7 +8,9 @@ part 'attachment.g.dart';
 class Attachment {
   int attachmentDownloadCount;
   final int attachmentId;
+  int attachmentHeight;
   bool attachmentIsInserted;
+  int attachmentWidth;
   String filename;
 
   @JsonKey(toJson: none)
