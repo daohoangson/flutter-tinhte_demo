@@ -6,13 +6,13 @@ import 'package:tinhte_api/links.dart';
 import '../api.dart';
 
 class SuperListView<T> extends StatefulWidget {
-  final bool enableInfiniteScrolling;
   final bool enableRefreshIndicator;
   final bool enableScrollToIndex;
   final String fetchPathInitial;
   final _FetchOnSuccess<T> fetchOnSuccess;
   final Widget footer;
   final Widget header;
+  final int infiniteScrollingVh;
   final Map initialJson;
   final Iterable<T> initialItems;
   final _ItemBuilder<T> itemBuilder;
@@ -23,13 +23,13 @@ class SuperListView<T> extends StatefulWidget {
   final _ItemStreamRegister<T> itemStreamRegisterPrepend;
 
   SuperListView({
-    this.enableInfiniteScrolling = true,
     this.enableRefreshIndicator,
     this.enableScrollToIndex = false,
     this.fetchPathInitial,
     this.fetchOnSuccess,
     this.footer,
     this.header,
+    this.infiniteScrollingVh = 2,
     this.initialJson,
     this.initialItems,
     this.itemBuilder,
@@ -226,15 +226,17 @@ class SuperListState<T> extends State<SuperListView<T>> {
       );
     }
 
-    if (widget.enableInfiniteScrolling) {
+    if (widget.infiniteScrollingVh > 0) {
       built = NotificationListener<ScrollNotification>(
         child: built,
         onNotification: (scrollInfo) {
-          if (!(scrollInfo is ScrollEndNotification)) return;
+          if (_isFetching) return;
           if (_scrollController?.isAutoScrolling == true) return;
+          if (!(scrollInfo is ScrollEndNotification)) return;
 
           final m = scrollInfo.metrics;
-          if (m.pixels < m.maxScrollExtent - m.viewportDimension) return;
+          final lookAhead = widget.infiniteScrollingVh * m.viewportDimension;
+          if (m.pixels < m.maxScrollExtent - lookAhead) return;
 
           if (canFetchNext)
             fetchNext().then((_) => Scaffold.of(context).showSnackBar(SnackBar(
