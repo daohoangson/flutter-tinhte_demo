@@ -20,10 +20,7 @@ StreamSubscription<int> listenToNotification(void onData(int notificationId)) =>
 StreamSubscription<int> listenToUnread(void onData(int unread)) =>
     _unreadController.stream.listen(onData);
 
-_notifControllerAddFromFcmMessage(Map<String, dynamic> message) {
-  if (!message.containsKey('data')) return;
-  final data = message['data'] as Map;
-
+_notifControllerAddFromFcmMessage(Map<String, dynamic> data) {
   if (!data.containsKey('notification_id')) return;
   final str = data['notification_id'] as String;
   final notificationId = int.parse(str);
@@ -33,10 +30,7 @@ _notifControllerAddFromFcmMessage(Map<String, dynamic> message) {
   _notifController.sink.add(notificationId);
 }
 
-_unreadControllerAddFromFcmMessage(Map<String, dynamic> message) {
-  if (!message.containsKey('data')) return;
-  final data = message['data'] as Map;
-
+_unreadControllerAddFromFcmMessage(Map<String, dynamic> data) {
   if (!data.containsKey('user_unread_notification_count')) return;
   final str = data['user_unread_notification_count'] as String;
   final value = int.parse(str);
@@ -64,10 +58,11 @@ class _PushNotificationAppState extends State<PushNotificationApp> {
 
     _firebaseMessaging.configure(
       onLaunch: _onLaunchOrResume,
-      onMessage: (message) {
-        debugPrint("FCM.onMessage: $message");
-        _notifControllerAddFromFcmMessage(message);
-        _unreadControllerAddFromFcmMessage(message);
+      onMessage: (m) {
+        debugPrint("FCM.onMessage: $m");
+        final data = m.containsKey('data') ? m['data'] as Map : m;
+        _notifControllerAddFromFcmMessage(data);
+        _unreadControllerAddFromFcmMessage(data);
       },
       onResume: _onLaunchOrResume,
     );
@@ -95,9 +90,9 @@ class _PushNotificationAppState extends State<PushNotificationApp> {
     return widget.child;
   }
 
-  Future _onLaunchOrResume(Map message) {
-    if (!message.containsKey('data')) return Future.value(false);
-    final data = message['data'];
+  Future _onLaunchOrResume(Map m) {
+    debugPrint("FCM._onLaunchOrResume: $m");
+    final data = m.containsKey('data') ? m['data'] as Map : m;
 
     // TODO: use message.data.links.content when it is available
     if (!data.containsKey('notification_id')) return Future.value(false);
@@ -135,11 +130,11 @@ class _PushNotificationAppState extends State<PushNotificationApp> {
       },
     ).then((response) {
       if (response.statusCode == 202) {
-        debugPrint("Subscribed at $url for $hubUri/$hubTopic...");
+        debugPrint("Subscribed $_fcmToken at $url for $hubUri/$hubTopic...");
       } else {
-        print(response.statusCode);
-        print(response.body);
+        debugPrint("Failed subscribing $_fcmToken: "
+            "status=${response.statusCode}, body=${response.body}");
       }
-    }).catchError((e) => print(e));
+    }).catchError((e) => debugPrint("$e"));
   }
 }
