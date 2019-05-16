@@ -12,7 +12,7 @@ class SuperListView<T> extends StatefulWidget {
   final _FetchOnSuccess<T> fetchOnSuccess;
   final Widget footer;
   final Widget header;
-  final int infiniteScrollingVh;
+  final double infiniteScrollingVh;
   final Map initialJson;
   final Iterable<T> initialItems;
   final _ItemBuilder<T> itemBuilder;
@@ -29,7 +29,7 @@ class SuperListView<T> extends StatefulWidget {
     this.fetchOnSuccess,
     this.footer,
     this.header,
-    this.infiniteScrollingVh = 2,
+    this.infiniteScrollingVh = 1.5,
     this.initialJson,
     this.initialItems,
     this.itemBuilder,
@@ -113,9 +113,8 @@ class SuperListState<T> extends State<SuperListView<T>> {
   int get fetchedPageMin => _fetchedPageMin;
   bool get isFetching => _isFetching;
   int get itemCountAfter =>
-      (canFetchNext ? 1 : 0) + (widget.footer != null ? 1 : 0);
-  int get itemCountBefore =>
-      (canFetchPrev ? 1 : 0) + (widget.header != null ? 1 : 0);
+      (widget.footer != null ? 1 : 0) + (canFetchNext ? 1 : 0);
+  int get itemCountBefore => 1 + (widget.header != null ? 1 : 0);
   Iterable<T> get items => _items;
   AutoScrollController get scrollController => _scrollController;
 
@@ -232,7 +231,7 @@ class SuperListState<T> extends State<SuperListView<T>> {
         onNotification: (scrollInfo) {
           if (_isFetching) return;
           if (_scrollController?.isAutoScrolling == true) return;
-          if (!(scrollInfo is ScrollEndNotification)) return;
+          if (!(scrollInfo is UserScrollNotification)) return;
 
           final m = scrollInfo.metrics;
           final lookAhead = widget.infiniteScrollingVh * m.viewportDimension;
@@ -295,10 +294,9 @@ class SuperListState<T> extends State<SuperListView<T>> {
   }
 
   Widget _buildItem(BuildContext context, int i) {
-    if (canFetchPrev) {
-      if (i == 0) return _buildProgressIndicator(_isFetching);
-      i--;
-    }
+    if (i == 0)
+      return canFetchPrev ? _buildProgressIndicator(_isFetching) : Container();
+    i--;
 
     if (widget.header != null) {
       if (i == 0) return widget.header;
