@@ -136,7 +136,7 @@ class TinhteWidgetFactory extends WidgetFactory {
   @override
   List<Widget> fixOverlappingPaddings(List<Widget> widgets) {
     var fixed = super.fixOverlappingPaddings(widgets);
-    if (_isBuildingBody == 0) return fixed;
+    if (_isBuildingBody == 0 || fixed?.isNotEmpty != true) return fixed;
 
     fixed = fixed.map(_buildTextPadding).toList();
 
