@@ -64,9 +64,11 @@ class _PostEditorState extends State<PostEditor> {
                 hintText: 'Enter your message to post',
               ),
               initialValue: _postBody,
+              keyboardType: TextInputType.multiline,
               maxLines: 3,
               onSaved: (value) => _postBody = value,
               style: getPostBodyTextStyle(context, false),
+              textCapitalization: TextCapitalization.sentences,
               validator: (message) {
                 if (message.isEmpty) {
                   return 'Please enter some text.';
