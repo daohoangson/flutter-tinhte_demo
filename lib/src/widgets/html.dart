@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
@@ -54,7 +56,7 @@ class TinhteHtmlWidget extends StatefulWidget {
 class _TinhteHtmlWidgetState extends State<TinhteHtmlWidget> {
   @override
   Widget build(BuildContext context) => HtmlWidget(
-        widget.html,
+        "<html><body>${widget.html}</body></html>",
         baseUrl: Uri.parse(configSiteRoot),
         bodyPadding: const EdgeInsets.only(top: 10),
         hyperlinkColor: Theme.of(context).accentColor,
@@ -72,6 +74,7 @@ class TinhteWidgetFactory extends WidgetFactory {
 
   BuildOp _chrOp;
   BuildOp _smilieOp;
+  BuildOp _webViewDataUriOp;
 
   Galleria _galleria;
   LbTrigger _lbTrigger;
@@ -102,6 +105,21 @@ class TinhteWidgetFactory extends WidgetFactory {
       },
     );
     return _smilieOp;
+  }
+
+  BuildOp get webViewDataUriOp {
+    _webViewDataUriOp ??= BuildOp(
+      onWidgets: (meta, _) {
+        final url = Uri.dataFromString(
+          "<html><body>${meta.domElement.outerHtml}</body></html",
+          encoding: Encoding.getByName('utf-8'),
+          mimeType: 'text/html',
+        ).toString();
+        debugPrint(url);
+        return [WebView(url, aspectRatio: 10, getDimensions: true)];
+      },
+    );
+    return _webViewDataUriOp;
   }
 
   Galleria get galleria {
@@ -175,6 +193,12 @@ class TinhteWidgetFactory extends WidgetFactory {
             e.attributes.containsKey('src') &&
             e.attributes.containsKey('data-width')) {
           return lazySet(meta, buildOp: lbTrigger.buildOp);
+        }
+        break;
+      case 'script':
+        if (e.attributes.containsKey('src') &&
+            e.attributes['src'] == 'https://e.infogr.am/js/embed.js') {
+          return lazySet(null, buildOp: webViewDataUriOp);
         }
         break;
     }
