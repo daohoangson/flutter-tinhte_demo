@@ -59,11 +59,11 @@ class _TinhteHtmlWidgetState extends State<TinhteHtmlWidget> {
         "<html><body>${widget.html}</body></html>",
         baseUrl: Uri.parse(configSiteRoot),
         bodyPadding: const EdgeInsets.only(top: 10),
+        factoryBuilder: (c, hw) => TinhteWidgetFactory(c, hw),
         hyperlinkColor: Theme.of(context).accentColor,
         onTapUrl: onTapUrl,
         textStyle: getPostBodyTextStyle(context, widget.isFirstPost),
         webView: true,
-        wf: TinhteWidgetFactory(),
       );
 
   void onTapUrl(String url) => launchLink(this, url);
@@ -80,6 +80,9 @@ class TinhteWidgetFactory extends WidgetFactory {
   LbTrigger _lbTrigger;
   LinkExpander _linkExpander;
   PhotoCompare _photoCompare;
+
+  TinhteWidgetFactory(BuildContext context, HtmlWidget htmlWidget)
+      : super(context, htmlWidget);
 
   BuildOp get chrOp {
     _chrOp ??= BuildOp(onWidgets: (meta, __) {

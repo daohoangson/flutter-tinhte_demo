@@ -129,7 +129,7 @@ class _GalleriaItem extends StatelessWidget {
 
 Widget _unwrapImage(Widget widget) {
   if (widget is InkWell) return _unwrapImage(widget.child);
-  if (widget is Wrapable) return _unwrapImage(widget.widgets.first);
+  if (widget is Wrap) return _unwrapImage(widget.children.first);
 
   return widget;
 }

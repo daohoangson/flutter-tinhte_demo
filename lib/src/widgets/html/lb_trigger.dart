@@ -73,7 +73,7 @@ class LbTrigger {
             thumbnail = buildGestureDetector(meta.context, index, thumbnail);
           }
 
-          return [wf.buildWrapable(thumbnail)];
+          return [wf.buildWrap([thumbnail])];
         }
 
         Widget full = AttachmentImageWidget(
