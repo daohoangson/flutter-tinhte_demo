@@ -21,13 +21,13 @@ class _PostListWidget extends StatelessWidget {
         fetchPathInitial: path,
         fetchOnSuccess: _fetchOnSuccess,
         initialItems: thread.firstPost != null
-            ? [_PostListItem(post: thread.firstPost)]
+            ? [_PostListItem.post(thread.firstPost)]
             : null,
         initialJson: initialJson,
         itemBuilder: _buildItem,
         itemListenerRegisterPrepend: (prepend) =>
             PostListInheritedWidget.of(context)
-                .addListener((post) => prepend(_PostListItem(post: post))),
+                .addListener((post) => prepend(_PostListItem.post(post))),
       );
 
   Widget _buildItem(
@@ -35,8 +35,8 @@ class _PostListWidget extends StatelessWidget {
     SuperListState state,
     _PostListItem item,
   ) {
-    if (item.page != null)
-      return _buildPageIndicator(context, state, item.page);
+    if (item.pageCurrent != null)
+      return _buildPageIndicator(context, state, item);
 
     final post = item.post;
     if (post != null) {
@@ -51,8 +51,11 @@ class _PostListWidget extends StatelessWidget {
   Widget _buildPageIndicator(
     BuildContext context,
     SuperListState state,
-    int page,
+    _PostListItem item,
   ) {
+    final page = item.pageCurrent;
+    final total = item.pageTotal;
+
     if (state.isFetching) {
       return Stack(children: <Widget>[
         const Divider(height: _kPageIndicatorHeight),
@@ -62,7 +65,10 @@ class _PostListWidget extends StatelessWidget {
 
     final children = <Widget>[
       const Divider(height: _kPageIndicatorHeight),
-      _buildPageIndicatorText(context, "Page $page"),
+      _buildPageIndicatorText(
+        context,
+        total == null ? "Page $page" : "Page $page of $total",
+      ),
     ];
 
     if (page > state.fetchedPageMin) {
@@ -174,7 +180,7 @@ class _PostListWidget extends StatelessWidget {
         json.containsKey('page_of_post_id') ? json['page_of_post_id'] : null;
 
     if (firstItemPostId != null || linksPage != 1) {
-      fc.addItem(_PostListItem(page: linksPage));
+      fc.addItem(_PostListItem.page(linksPage, total: fc.linksPages));
     }
 
     final posts = decodePostsAndTheirReplies(json['posts'])
@@ -182,7 +188,7 @@ class _PostListWidget extends StatelessWidget {
     for (final post in posts) {
       if (firstItemPostId == null && linksPage == 1) {
         if (fc.items?.length == 1) {
-          fc.addItem(_PostListItem(page: linksPage));
+          fc.addItem(_PostListItem.page(linksPage, total: fc.linksPages));
         }
       }
 
@@ -196,7 +202,7 @@ class _PostListWidget extends StatelessWidget {
         }
       }
 
-      fc.addItem(_PostListItem(post: post));
+      fc.addItem(_PostListItem.post(post));
     }
   }
 
@@ -214,9 +220,17 @@ class _PostListWidget extends StatelessWidget {
 }
 
 class _PostListItem {
-  final int page;
+  final int pageCurrent;
+  final int pageTotal;
   final Post post;
 
-  _PostListItem({this.page, this.post})
-      : assert((page == null) != (post == null));
+  _PostListItem.post(this.post)
+      : pageCurrent = null,
+        pageTotal = null,
+        assert(post != null);
+
+  _PostListItem.page(this.pageCurrent, {int total})
+      : pageTotal = total,
+        post = null,
+        assert(pageCurrent != null);
 }

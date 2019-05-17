@@ -237,10 +237,7 @@ class SuperListState<T> extends State<SuperListView<T>> {
           final lookAhead = widget.infiniteScrollingVh * m.viewportDimension;
           if (m.pixels < m.maxScrollExtent - lookAhead) return;
 
-          if (canFetchNext)
-            fetchNext().then((_) => Scaffold.of(context).showSnackBar(SnackBar(
-                  content: Text("Auto fetched page number $fetchedPageMax."),
-                )));
+          if (canFetchNext) fetchNext();
         },
       );
     }
