@@ -8,5 +8,15 @@ DateTime secondsToDateTime(int secondsSinceEpoch) =>
 
 String formatNumber(dynamic value) => _numberFormatCompact.format(value);
 
-String formatTimestamp(int timestamp) =>
-    timestamp != null ? timeago.format(secondsToDateTime(timestamp)) : '';
+String formatTimestamp(int timestamp) {
+  if (timestamp == null) return '';
+
+  final d = secondsToDateTime(timestamp);
+  if (DateTime.now().subtract(Duration(days: 30)).isBefore(d)) {
+    return timeago.format(d);
+  }
+  
+  // TODO: use date format from device locale
+  return "${d.day}/${d.month}/${d.year}";
+}
+    
