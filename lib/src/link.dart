@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:tinhte_api/feature_page.dart';
 import 'package:tinhte_api/tag.dart';
 import 'package:tinhte_api/thread.dart';
+import 'package:tinhte_api/user.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'api.dart';
 import 'config.dart';
 import 'screens/fp_view.dart';
+import 'screens/member_view.dart';
 import 'screens/tag_view.dart';
 import 'screens/thread_view.dart';
 
@@ -27,6 +29,9 @@ void launchLink(State state, String link) async {
 
   launch(link);
 }
+
+void launchMemberView(State state, int userId) =>
+    launchLink(state, "$configSiteRoot/members/$userId/");
 
 Future<bool> parseLink(State state, {String link, String path}) {
   assert((link == null) != (path == null));
@@ -66,9 +71,11 @@ Future<bool> parseLink(State state, {String link, String path}) {
 
       Route route;
       if (json.containsKey('tag') && json.containsKey('tagged')) {
-        route = _parseTag(state, json);
+        route = _parseTag(json);
       } else if (json.containsKey('thread') && json.containsKey('posts')) {
-        route = _parseThread(state, json);
+        route = _parseThread(json);
+      } else if (json.containsKey('user')) {
+        route = _parseUser(json);
       }
 
       if (route != null) {
@@ -89,7 +96,7 @@ Future<bool> parseLink(State state, {String link, String path}) {
   return completer.future;
 }
 
-Route _parseTag(State state, Map json) {
+Route _parseTag(Map json) {
   final Map jsonTag = json['tag'];
   final tag = Tag.fromJson(jsonTag);
   if (tag.tagId == null) return null;
@@ -106,12 +113,22 @@ Route _parseTag(State state, Map json) {
   );
 }
 
-Route _parseThread(State state, Map json) {
+Route _parseThread(Map json) {
   final Map jsonThread = json['thread'];
   final thread = Thread.fromJson(jsonThread);
   if (thread.threadId == null) return null;
 
   return MaterialPageRoute(
     builder: (_) => ThreadViewScreen(thread, initialJson: json),
+  );
+}
+
+Route _parseUser(Map json) {
+  final Map jsonUser = json['user'];
+  final user = User.fromJson(jsonUser);
+  if (user.userId == null) return null;
+
+  return MaterialPageRoute(
+    builder: (_) => MemberViewScreen(user),
   );
 }

@@ -148,6 +148,13 @@ void _setupApiJsonHandlers(
 }
 
 typedef Future ApiFetch(ApiData apiData);
+typedef void ApiMethod(
+  State state,
+  String path, {
+  VoidCallback onComplete,
+  ApiOnError onError,
+  ApiOnJsonMap onSuccess,
+});
 typedef T ApiOnSuccess<T>(T data);
 typedef void ApiOnJsonMap(Map jsonMap);
 typedef void ApiOnError(error);

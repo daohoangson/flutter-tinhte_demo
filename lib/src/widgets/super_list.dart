@@ -6,6 +6,7 @@ import 'package:tinhte_api/links.dart';
 import '../api.dart';
 
 class SuperListView<T> extends StatefulWidget {
+  final ApiMethod apiMethodInitial;
   final bool enableRefreshIndicator;
   final bool enableScrollToIndex;
   final String fetchPathInitial;
@@ -23,6 +24,7 @@ class SuperListView<T> extends StatefulWidget {
   final _ItemStreamRegister<T> itemStreamRegisterPrepend;
 
   SuperListView({
+    this.apiMethodInitial,
     this.enableRefreshIndicator,
     this.enableScrollToIndex = false,
     this.fetchPathInitial,
@@ -49,6 +51,7 @@ class SuperListView<T> extends StatefulWidget {
 }
 
 class FetchContext<T> {
+  final ApiMethod apiMethod;
   final FetchContextId id;
   final String path;
   final SuperListState<T> state;
@@ -65,6 +68,7 @@ class FetchContext<T> {
 
   FetchContext(
     this.state, {
+    this.apiMethod,
     @required this.id,
     @required this.path,
   })  : assert(id != null),
@@ -248,6 +252,7 @@ class SuperListState<T> extends State<SuperListView<T>> {
   Future<void> fetchInitial({bool clearItems = true}) => _fetch(
         FetchContext(
           this,
+          apiMethod: widget.apiMethodInitial,
           id: FetchContextId.FetchInitial,
           path: widget.fetchPathInitial,
         ),
@@ -337,7 +342,8 @@ class SuperListState<T> extends State<SuperListView<T>> {
     }
 
     final c = Completer();
-    apiGet(
+    final apiMethod = fc.apiMethod ?? apiGet;
+    apiMethod(
       this,
       fc.path,
       onSuccess: (json) => _fetchOnSuccess(json, fc),

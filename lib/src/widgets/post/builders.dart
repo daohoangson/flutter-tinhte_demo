@@ -48,7 +48,9 @@ Widget buildPosterCircleAvatar(String url, {bool isPostReply = false}) =>
 
 Widget buildPosterInfo(
   BuildContext context,
+  State state,
   String username, {
+  int userId,
   bool userHasVerifiedBadge,
   String userRank,
 }) {
@@ -85,12 +87,21 @@ Widget buildPosterInfo(
     ));
   }
 
+  Widget built = Wrap(
+    children: children,
+    spacing: 5,
+  );
+
+  if (userId != null) {
+    built = GestureDetector(
+      child: built,
+      onTap: () => launchMemberView(state, userId),
+    );
+  }
+
   return Padding(
     padding: kEdgeInsetsHorizontal,
-    child: Wrap(
-      children: children,
-      spacing: 5,
-    ),
+    child: built,
   );
 }
 

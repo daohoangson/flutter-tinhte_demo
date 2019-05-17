@@ -7,12 +7,18 @@ import '../screens/login.dart';
 import '../screens/notification_list.dart';
 import '../api.dart';
 import '../constants.dart';
+import '../link.dart';
 import '../push_notification.dart';
 import '../responsive_layout.dart';
 
-class AppBarDrawerHeader extends StatelessWidget {
+class AppBarDrawerHeader extends StatefulWidget {
   AppBarDrawerHeader({Key key}) : super(key: key);
 
+  @override
+  State<StatefulWidget> createState() => _AppBarDrawerHeaderState();
+}
+
+class _AppBarDrawerHeaderState extends State<AppBarDrawerHeader> {
   @override
   Widget build(BuildContext context) {
     final apiData = ApiData.of(context);
@@ -34,46 +40,58 @@ class AppBarDrawerHeader extends StatelessWidget {
     );
   }
 
-  Widget _buildVisitorPanel(BuildContext context, User user) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Expanded(
-            child: Center(
-              child: AspectRatio(
-                aspectRatio: 1.0,
-                child: CircleAvatar(
-                  backgroundImage:
-                      CachedNetworkImageProvider(user.links?.avatarBig),
+  Widget _buildVisitorPanel(BuildContext context, User user) {
+    Widget built = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Expanded(
+          child: Center(
+            child: AspectRatio(
+              aspectRatio: 1.0,
+              child: CircleAvatar(
+                backgroundImage: CachedNetworkImageProvider(
+                  user.links?.avatarBig,
                 ),
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(top: 10.0),
-            child: RichText(
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              text: TextSpan(
-                children: <TextSpan>[
-                  TextSpan(
-                    text: user.username ?? '',
-                    style: Theme.of(context).textTheme.title.copyWith(
-                          color: Theme.of(context).accentColor,
-                        ),
-                  ),
-                  TextSpan(
-                    text: " ${user.rank?.rankName ?? ''}",
-                    style: Theme.of(context).textTheme.subhead.copyWith(
-                          color: kColorUserRank,
-                          fontWeight: FontWeight.bold,
-                        ),
-                  ),
-                ],
-              ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(top: 10.0),
+          child: RichText(
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            text: TextSpan(
+              children: <TextSpan>[
+                TextSpan(
+                  text: user.username ?? '',
+                  style: Theme.of(context).textTheme.title.copyWith(
+                        color: Theme.of(context).accentColor,
+                      ),
+                ),
+                TextSpan(
+                  text: " ${user.rank?.rankName ?? ''}",
+                  style: Theme.of(context).textTheme.subhead.copyWith(
+                        color: kColorUserRank,
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
+              ],
             ),
           ),
-        ],
+        ),
+      ],
+    );
+
+    if (user.userId != null && user.userId > 0) {
+      built = GestureDetector(
+        child: built,
+        onTap: () => launchMemberView(this, user.userId),
       );
+    }
+
+    return built;
+  }
 }
 
 class AppBarDrawerFooter extends StatelessWidget {

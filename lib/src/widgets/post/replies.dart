@@ -1,12 +1,15 @@
 part of '../posts.dart';
 
-Widget _buildPostReply(BuildContext context, Post post) => buildRow(
+Widget _buildPostReply(BuildContext context, State state, Post post) =>
+    buildRow(
       context,
       buildPosterCircleAvatar(post.links.posterAvatar, isPostReply: true),
       box: <Widget>[
         buildPosterInfo(
           context,
+          state,
           post.posterUsername,
+          userId: post.posterUserId,
           userHasVerifiedBadge: post.posterHasVerifiedBadge,
           userRank: post.posterRank?.rankName,
         ),
@@ -60,13 +63,13 @@ class _PostRepliesWidgetState extends State<_PostRepliesWidget> {
     List<Widget> children = List(newPosts.length + postReplyCount);
 
     for (int i = 0; i < newPosts.length; i++) {
-      children[i] = _buildPostReply(context, newPosts[i]);
+      children[i] = _buildPostReply(context, this, newPosts[i]);
     }
 
     for (int j = 0; j < postReplyCount; j++) {
       final reply = widget.parentPost.postReplies[j];
       children[newPosts.length + j] = reply.post != null
-          ? _buildPostReply(context, reply.post)
+          ? _buildPostReply(context, this, reply.post)
           : reply.link?.isNotEmpty == true
               ? _PostReplyHiddenWidget(reply.link, reply.postReplyCount)
               : Container(height: 0.0, width: 0.0);
@@ -131,7 +134,7 @@ class _PostReplyHiddenWidgetState extends State<_PostReplyHiddenWidget> {
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: _posts.map((p) => _buildPostReply(context, p)).toList(),
+      children: _posts.map((p) => _buildPostReply(context, this, p)).toList(),
     );
   }
 

@@ -42,7 +42,7 @@ class _PostListWidget extends StatelessWidget {
     if (post != null) {
       return post.postIsFirstPost
           ? _FirstPostWidget(thread, post)
-          : _buildPostRoot(context, post);
+          : _buildPostRoot(context, state, post);
     }
 
     return Container();
@@ -142,7 +142,11 @@ class _PostListWidget extends StatelessWidget {
         ),
       );
 
-  Widget _buildPostRoot(BuildContext context, Post post) =>
+  Widget _buildPostRoot(
+    BuildContext context,
+    SuperListState<_PostListItem> state,
+    Post post,
+  ) =>
       _ParentPostInheritedWidget(
         parentPost: post,
         child: PostListInheritedWidget(
@@ -152,7 +156,9 @@ class _PostListWidget extends StatelessWidget {
             box: <Widget>[
               buildPosterInfo(
                 context,
+                state,
                 post.posterUsername,
+                userId: post.posterUserId,
                 userHasVerifiedBadge: post.posterHasVerifiedBadge,
                 userRank: post.posterRank?.rankName,
               ),

@@ -51,6 +51,7 @@ class _PostEditorState extends State<PostEditor> {
         box: <Widget>[
           buildPosterInfo(
             context,
+            this,
             user?.username ?? '',
             userHasVerifiedBadge: user?.userHasVerifiedBadge,
             userRank: user?.rank?.rankName,

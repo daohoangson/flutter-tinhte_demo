@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tinhte_api/thread.dart';
 
 import '../screens/thread_view.dart';
+import '../api.dart';
 import '../constants.dart';
 import '../intl.dart';
 import 'super_list.dart';
@@ -12,12 +13,14 @@ import 'image.dart';
 part 'thread/builders.dart';
 
 class ThreadsWidget extends StatelessWidget {
+  final ApiMethod apiMethod;
   final Widget header;
   final Map initialJson;
   final String path;
   final String threadsKey;
 
   ThreadsWidget({
+    this.apiMethod,
     this.header,
     this.initialJson,
     Key key,
@@ -27,6 +30,7 @@ class ThreadsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => SuperListView<Thread>(
+        apiMethodInitial: apiMethod,
         fetchOnSuccess: _fetchOnSuccess,
         fetchPathInitial: path,
         initialJson: initialJson,
