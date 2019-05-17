@@ -103,18 +103,26 @@ class _PostReplyHiddenWidgetState extends State<_PostReplyHiddenWidget> {
       if (_hasFetched) {
         return Padding(
           padding: const EdgeInsets.fromLTRB(
-              kPaddingHorizontal, 0.0, kPaddingHorizontal, 15.0),
-          child: const Center(child: CircularProgressIndicator()),
+            kPaddingHorizontal,
+            0.0,
+            kPaddingHorizontal,
+            15.0,
+          ),
+          child: _buildText(context, 'Loading...'),
         );
       }
 
       return Padding(
         padding: const EdgeInsets.fromLTRB(
-            kPaddingHorizontal, 0.0, kPaddingHorizontal, 15.0),
+          kPaddingHorizontal,
+          0.0,
+          kPaddingHorizontal,
+          15.0,
+        ),
         child: GestureDetector(
-          child: Text(
+          child: _buildText(
+            context,
             "Tap to load ${widget.postReplyCount} hidden replies...",
-            style: Theme.of(context).textTheme.caption,
           ),
           onTap: fetch,
         ),
@@ -145,4 +153,9 @@ class _PostReplyHiddenWidgetState extends State<_PostReplyHiddenWidget> {
       },
     );
   }
+
+  Widget _buildText(BuildContext context, String data) => Text(
+        data,
+        style: Theme.of(context).textTheme.caption,
+      );
 }
