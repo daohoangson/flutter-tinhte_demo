@@ -34,7 +34,10 @@ class _AppBarDrawerHeaderState extends State<AppBarDrawerHeader> {
               ? _buildVisitorPanel(context, user)
               : const Text('Welcome back, we are loading user profile...')
           : GestureDetector(
-              child: const Text('Login'),
+              child: ConstrainedBox(
+                child: const Text('Login'),
+                constraints: BoxConstraints.expand(),
+              ),
               onTap: () => Navigator.push(context, LoginScreenRoute()),
             ),
     );
