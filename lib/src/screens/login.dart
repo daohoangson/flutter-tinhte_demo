@@ -59,19 +59,9 @@ class _LoginFormState extends State<LoginForm> {
             ),
       );
 
-  Widget _buildBox(BoxConstraints box, List<Widget> children) => Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          SizedBox(
-            height: box.biggest.shortestSide,
-            width: box.biggest.shortestSide,
-            child: ListView(
-              padding: const EdgeInsets.all(20.0),
-              children: children,
-            ),
-          ),
-        ],
+  Widget _buildBox(BoxConstraints box, List<Widget> children) => ListView(
+        padding: const EdgeInsets.all(20.0),
+        children: children,
       );
 
   Widget _buildButton(String text, VoidCallback onPressed) => RaisedButton(

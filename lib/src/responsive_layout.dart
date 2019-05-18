@@ -130,7 +130,8 @@ class _SidebarNavigatorState extends NavigatorState {
       return super.push(route);
     }
 
-    if (route is LoginScreenRoute) {
+    final scaffold = (widget as _SidebarNavigator).scaffoldKey?.currentState;
+    if (scaffold == null && route is LoginScreenRoute) {
       return showDialog(
         context: context,
         builder: (_) => Dialog(
@@ -140,8 +141,7 @@ class _SidebarNavigatorState extends NavigatorState {
     }
 
     final f = _pushPrimary(route);
-
-    final scaffold = (widget as _SidebarNavigator).scaffoldKey?.currentState;
+    
     if (scaffold?.isDrawerOpen == true) {
       Navigator.of(scaffold.context).pop();
     }
