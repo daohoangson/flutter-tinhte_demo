@@ -182,7 +182,7 @@ class TinhteWidgetFactory extends WidgetFactory {
             e.attributes.containsKey('data-height') &&
             e.attributes.containsKey('data-permalink') &&
             e.attributes.containsKey('data-width')) {
-          return lazySet(meta, buildOp: lbTrigger.buildOp);
+          return lazySet(null, buildOp: lbTrigger.buildOp);
         }
 
         if (e.classes.contains('LinkExpander') &&
