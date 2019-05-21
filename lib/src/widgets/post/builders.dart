@@ -17,7 +17,7 @@ Widget buildButton(
   Widget button = Padding(
     padding: const EdgeInsets.fromLTRB(kPaddingHorizontal, 5.0, 0.0, 5.0),
     child: Text(
-      (count > 0 ? "$count " : '') + text,
+      (count > 0 ? "$count • " : '') + text,
       style: TextStyle(
         color: onTap != null
             ? color ?? theme.primaryColor
