@@ -69,7 +69,7 @@ class _PushNotificationAppState extends State<PushNotificationApp> {
 
     _firebaseMessaging.getToken().then((token) => setState(() {
           _fcmToken = token;
-          _subscribeIfPossible();
+          _subscribe();
         }));
   }
 
@@ -79,12 +79,18 @@ class _PushNotificationAppState extends State<PushNotificationApp> {
     _unreadController.sink.add(user?.userUnreadNotificationCount ?? 0);
 
     final userId = user?.userId ?? 0;
-    if (userId > 0 && userId != _user?.userId) {
-      _user = user;
-      _subscribeIfPossible();
+    final existingUserId = _user?.userId ?? 0;
+    if (userId != existingUserId) {
+      if (userId > 0) {
+        _user = user;
+        _subscribe();
 
-      // for iOS only, this is a no op on Android
-      _firebaseMessaging.requestNotificationPermissions();
+        // for iOS only, this is a no op on Android
+        _firebaseMessaging.requestNotificationPermissions();
+      } else if (existingUserId > 0) {
+        _user = null;
+        _unregister();
+      }
     }
 
     return widget.child;
@@ -101,7 +107,7 @@ class _PushNotificationAppState extends State<PushNotificationApp> {
     return parseLink(this, path: "notifications/content?notification_id=$id");
   }
 
-  void _subscribeIfPossible() {
+  void _subscribe() async {
     if (_fcmToken?.isNotEmpty != true) return;
     if (_user?.userId?.isFinite != true) return;
 
@@ -114,7 +120,7 @@ class _PushNotificationAppState extends State<PushNotificationApp> {
     final hubUri = "${api.apiRoot}?subscriptions";
     final hubTopic = "user_notification_${_user.userId}";
 
-    http.post(
+    final response = await http.post(
       url,
       body: {
         'device_type': 'firebase',
@@ -128,13 +134,35 @@ class _PushNotificationAppState extends State<PushNotificationApp> {
         'extra_data[platform]': Theme.of(context).platform.toString(),
         'extra_data[project]': configFcmProjectId,
       },
-    ).then((response) {
-      if (response.statusCode == 202) {
-        debugPrint("Subscribed $_fcmToken at $url for $hubUri/$hubTopic...");
-      } else {
-        debugPrint("Failed subscribing $_fcmToken: "
-            "status=${response.statusCode}, body=${response.body}");
-      }
-    }).catchError((e) => debugPrint("$e"));
+    );
+
+    if (response.statusCode == 202) {
+      debugPrint("Subscribed $_fcmToken at $url for $hubUri/$hubTopic...");
+    } else {
+      debugPrint("Failed subscribing $_fcmToken: "
+          "status=${response.statusCode}, body=${response.body}");
+    }
+  }
+
+  void _unregister() async {
+    if (_fcmToken?.isNotEmpty != true) return;
+
+    final url = "$configPushServer/unregister";
+
+    final response = await http.post(
+      url,
+      body: {
+        'device_type': 'firebase',
+        'device_id': _fcmToken,
+        'oauth_client_id': ApiData.of(context).api.clientId,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      debugPrint("Unregistered $_fcmToken at $url...");
+    } else {
+      debugPrint("Failed unregistering $_fcmToken: "
+          "status=${response.statusCode}, body=${response.body}");
+    }
   }
 }
