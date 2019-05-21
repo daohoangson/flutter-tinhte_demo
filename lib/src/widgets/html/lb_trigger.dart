@@ -62,11 +62,14 @@ class LbTrigger {
             }
           }
 
-          Widget thumbnail = Image(
-            image: CachedNetworkImageProvider((imgs.first as _Img).src),
-            fit: BoxFit.cover,
-            height: childHeight,
-            width: childWidth,
+          Widget thumbnail = ClipRRect(
+            borderRadius: BorderRadius.circular(3),
+            child: Image(
+              image: CachedNetworkImageProvider((imgs.first as _Img).src),
+              fit: BoxFit.cover,
+              height: childHeight,
+              width: childWidth,
+            ),
           );
 
           if (!skipOnTap) {

@@ -116,17 +116,17 @@ Widget buildRow(
   if (box != null) {
     children.add(Padding(
       padding: kEdgeInsetsHorizontal,
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(2.0),
-          color: Theme.of(context).highlightColor,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(3),
+        child: DecoratedBox(
+          decoration: BoxDecoration(color: Theme.of(context).highlightColor),
+          child: Padding(
+              padding: const EdgeInsets.only(top: 10.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: box.where((widget) => widget != null).toList(),
+              )),
         ),
-        child: Padding(
-            padding: const EdgeInsets.only(top: 10.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: box.where((widget) => widget != null).toList(),
-            )),
       ),
     ));
   }

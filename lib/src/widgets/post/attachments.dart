@@ -1,7 +1,5 @@
 part of '../posts.dart';
 
-const kAttachmentSize = 100.0;
-
 class _PostAttachmentsWidget extends StatelessWidget {
   final List<Attachment> attachments;
 
@@ -14,23 +12,15 @@ class _PostAttachmentsWidget extends StatelessWidget {
       lbTrigger.sources.add(attachment.links.data);
     }
 
-    if (attachments.length == 1) {
-      final first = attachments.first;
-      final widget = AttachmentImageWidget(
-        height: first.attachmentHeight,
-        permalink: first.links.permalink,
-        src: first.links.data,
-        width: first.attachmentWidth,
-      );
-      return lbTrigger.buildGestureDetector(context, 0, widget);
-    }
-
     return Padding(
       child: SizedBox(
-        height: kAttachmentSize,
+        height: 100,
         child: ListView.separated(
           itemBuilder: (context, i) => lbTrigger.buildGestureDetector(
-              context, i, _buildAttachment((attachments[i]))),
+                context,
+                i,
+                _buildAttachment(attachments[i]),
+              ),
           itemCount: attachments.length,
           scrollDirection: Axis.horizontal,
           separatorBuilder: (context, i) => const SizedBox(width: 10.0),
@@ -40,11 +30,15 @@ class _PostAttachmentsWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildAttachment(Attachment attachment) => CachedNetworkImage(
-        imageUrl: attachment.links.thumbnail,
-        fit: BoxFit.cover,
-        height: kAttachmentSize,
-        width: kAttachmentSize,
+  Widget _buildAttachment(Attachment attachment) => AspectRatio(
+        aspectRatio: attachment.attachmentWidth / attachment.attachmentHeight,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(3),
+          child: CachedNetworkImage(
+            imageUrl: attachment.links.thumbnail,
+            fit: BoxFit.cover,
+          ),
+        ),
       );
 
   static Widget forPost(Post post, {Thread thread}) {
@@ -52,6 +46,10 @@ class _PostAttachmentsWidget extends StatelessWidget {
       if (attachment.attachmentIsInserted) return false;
       if (thread?.threadImage?.displayMode == 'cover' &&
           thread?.threadImage?.link == attachment.links.permalink) return false;
+      if (attachment.attachmentWidth == null ||
+          attachment.attachmentWidth < 1 ||
+          attachment.attachmentHeight == null ||
+          attachment.attachmentHeight < 1) return false;
 
       return true;
     })?.toList();

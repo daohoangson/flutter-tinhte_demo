@@ -74,11 +74,14 @@ class AttachmentImageWidget extends StatelessWidget {
         // put it in a wrap + limited box to prevent image from being scaled up
         return Padding(
           child: Wrap(children: <Widget>[
-            Image(
-              image: image,
-              fit: BoxFit.contain,
-              width: width.toDouble(),
-              height: height.toDouble(),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(3),
+              child: Image(
+                image: image,
+                fit: BoxFit.contain,
+                width: width.toDouble(),
+                height: height.toDouble(),
+              ),
             ),
           ]),
           padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
