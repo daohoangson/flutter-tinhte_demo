@@ -35,7 +35,7 @@ const _kTextPadding = const EdgeInsets.symmetric(horizontal: 10);
 TextStyle getPostBodyTextStyle(BuildContext context, bool isFirstPost) {
   final textStyle = Theme.of(context).textTheme.body1;
   return textStyle.copyWith(
-    fontSize: textStyle.fontSize + (isFirstPost ? 0 : -1),
+    fontSize: textStyle.fontSize + (isFirstPost ? 1 : 0),
   );
 }
 
