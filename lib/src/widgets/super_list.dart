@@ -120,7 +120,6 @@ class SuperListState<T> extends State<SuperListView<T>> {
       (widget.footer != null ? 1 : 0) + (canFetchNext ? 1 : 0);
   int get itemCountBefore => 1 + (widget.header != null ? 1 : 0);
   Iterable<T> get items => _items;
-  AutoScrollController get scrollController => _scrollController;
 
   @override
   void initState() {
@@ -294,6 +293,17 @@ class SuperListState<T> extends State<SuperListView<T>> {
     if (!mounted) return;
     setState(() => _items.insert(0, item));
   }
+
+  void jumpTo(double value) => _scrollController?.jumpTo(value);
+
+  Future scrollToIndex(int index,
+          {Duration duration: scrollAnimationDuration,
+          AutoScrollPosition preferPosition}) =>
+      _scrollController?.scrollToIndex(
+        itemCountBefore + index,
+        duration: duration,
+        preferPosition: preferPosition,
+      );
 
   Widget _buildItem(BuildContext context, int i) {
     if (i == 0)

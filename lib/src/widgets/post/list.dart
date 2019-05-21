@@ -84,7 +84,7 @@ class _PostListWidget extends StatelessWidget {
           context,
           "top",
           alignment: Alignment.centerLeft,
-          onTap: () => state.scrollController.jumpTo(0),
+          onTap: () => state.jumpTo(0),
         ));
       }
     } else if (state.canFetchPrev) {
@@ -212,14 +212,13 @@ class _PostListWidget extends StatelessWidget {
     }
   }
 
-  void _scrollToPage(SuperListState state, int page) {
+  void _scrollToPage(SuperListState<_PostListItem> state, int page) {
     var i = -1;
     for (final item in state.items) {
       i++;
-      if (item.page != page) continue;
+      if (item.pageCurrent != page) continue;
 
-      state.scrollController
-          .scrollToIndex(i, preferPosition: AutoScrollPosition.begin);
+      state.scrollToIndex(i, preferPosition: AutoScrollPosition.begin);
       return;
     }
   }
