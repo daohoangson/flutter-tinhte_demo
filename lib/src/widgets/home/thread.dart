@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:tinhte_api/content_list.dart';
 import 'package:tinhte_api/post.dart';
 import 'package:tinhte_api/thread.dart';
 
@@ -11,9 +12,13 @@ import '../image.dart';
 const _kPaddingHorizontal = EdgeInsets.symmetric(horizontal: 10.0);
 
 class HomeThreadWidget extends StatelessWidget {
+  final ListItem item;
   final Thread thread;
 
-  HomeThreadWidget(this.thread, {Key key}) : super(key: key);
+  HomeThreadWidget(ThreadListItem tli, {Key key})
+      : item = tli?.item,
+        thread = tli?.thread,
+        super(key: key);
 
   @override
   Widget build(BuildContext context) => _buildCard(
@@ -57,9 +62,8 @@ class HomeThreadWidget extends StatelessWidget {
       text: thread?.creatorUsername ?? '■ ●● ▲▲▲',
     ));
 
-    if (thread?.threadCreateDate != null) {
-      final threadCreateDate = formatTimestamp(thread.threadCreateDate);
-      spans.add(TextSpan(text: " - $threadCreateDate"));
+    if (item?.itemDate != null) {
+      spans.add(TextSpan(text: " - ${formatTimestamp(item.itemDate)}"));
     }
 
     final threadViewCount = thread?.threadViewCount ?? 0;

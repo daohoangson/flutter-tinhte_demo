@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
+import 'package:tinhte_api/content_list.dart';
 import 'package:tinhte_api/feature_page.dart';
-import 'package:tinhte_api/thread.dart';
 
 import '../widgets/app_bar.dart';
 import '../widgets/home/feature_pages.dart';
@@ -64,8 +64,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
     final threadsJson = json['threads'] as List;
     for (final threadJson in threadsJson) {
-      final thread = Thread.fromJson(threadJson);
-      fc.addItem(_HomeListItem(thread: thread));
+      final tli = ThreadListItem.fromJson(threadJson);
+      fc.addItem(_HomeListItem(thread: tli));
 
       if (fc.id == FetchContextId.FetchInitial &&
           fc.items?.length == _kFeaturePagesIndex) {
@@ -84,7 +84,7 @@ class HomeScreenRoute extends MaterialPageRoute {
 
 class _HomeListItem {
   final bool featurePages;
-  final Thread thread;
+  final ThreadListItem thread;
 
   _HomeListItem({
     this.featurePages,
