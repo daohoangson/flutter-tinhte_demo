@@ -287,13 +287,31 @@ class SuperListState<T> extends State<SuperListView<T>> {
       );
 
   void itemsAppend(T item) {
-    if (!mounted) return;
-    setState(() => _items.add(item));
+    if (!mounted) {
+      _items.add(item);
+      return;
+    }
+
+    setState(() {
+      final index = _items.length;
+      _items.add(item);
+
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) => scrollToIndex(index, preferPosition: AutoScrollPosition.begin),
+      );
+    });
   }
 
   void itemsPrepend(T item) {
-    if (!mounted) return;
-    setState(() => _items.insert(0, item));
+    if (!mounted) {
+      _items.insert(0, item);
+      return;
+    }
+
+    setState(() {
+      _items.insert(0, item);
+      WidgetsBinding.instance.addPostFrameCallback((_) => jumpTo(0));
+    });
   }
 
   void jumpTo(double value) => _scrollController?.jumpTo(value);

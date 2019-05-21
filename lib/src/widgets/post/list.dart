@@ -25,9 +25,9 @@ class _PostListWidget extends StatelessWidget {
             : null,
         initialJson: initialJson,
         itemBuilder: _buildItem,
-        itemListenerRegisterPrepend: (prepend) =>
+        itemListenerRegisterAppend: (append) =>
             PostListInheritedWidget.of(context)
-                .addListener((post) => prepend(_PostListItem.post(post))),
+                .addListener((post) => append(_PostListItem.post(post))),
       );
 
   Widget _buildItem(
