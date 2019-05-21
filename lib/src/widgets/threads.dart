@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:tinhte_api/node.dart';
 import 'package:tinhte_api/thread.dart';
 
 import '../screens/thread_view.dart';
@@ -14,6 +15,7 @@ part 'thread/builders.dart';
 
 class ThreadsWidget extends StatelessWidget {
   final ApiMethod apiMethod;
+  final Forum forum;
   final Widget header;
   final Map initialJson;
   final String path;
@@ -21,6 +23,7 @@ class ThreadsWidget extends StatelessWidget {
 
   ThreadsWidget({
     this.apiMethod,
+    this.forum,
     this.header,
     this.initialJson,
     Key key,
@@ -45,6 +48,10 @@ class ThreadsWidget extends StatelessWidget {
     jsonThreads.forEach((j) {
       final thread = Thread.fromJson(j);
       if (thread.threadId == null || thread.firstPost == null) return;
+
+      if (thread.forum == null && thread.forumId == forum?.forumId) {
+        thread.forum = forum;
+      }
 
       fc.addItem(thread);
     });

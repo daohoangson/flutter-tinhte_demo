@@ -1,7 +1,8 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import 'post.dart';
 import 'src/_.dart';
+import 'node.dart';
+import 'post.dart';
 import 'thread_prefix.dart';
 
 part 'thread.g.dart';
@@ -42,6 +43,9 @@ class Thread {
   int threadUpdateDate;
   int threadViewCount;
   bool userIsIgnored;
+
+  @JsonKey(toJson: none)
+  Forum forum;
 
   @JsonKey(toJson: none)
   ThreadLinks links;

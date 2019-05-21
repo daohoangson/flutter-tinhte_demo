@@ -13,6 +13,9 @@ class ForumViewScreen extends StatelessWidget {
         appBar: AppBar(
           title: Text(forum.forumTitle),
         ),
-        body: ThreadsWidget(path: "threads?forum_id=${forum.forumId}"),
+        body: ThreadsWidget(
+          forum: forum,
+          path: "threads?forum_id=${forum.forumId}",
+        ),
       );
 }

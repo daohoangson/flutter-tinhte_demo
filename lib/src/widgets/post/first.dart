@@ -14,9 +14,9 @@ class _FirstPostWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var widget = buildPost(context, post);
+    var widget = _buildPost(context, post);
 
-    if (thread?.threadImage?.displayMode == 'cover') {
+    if (thread.threadImage?.displayMode == 'cover') {
       widget = Column(
         children: <Widget>[
           ThreadImageWidget(
@@ -31,17 +31,38 @@ class _FirstPostWidget extends StatelessWidget {
     return widget;
   }
 
-  Widget buildPost(BuildContext context, Post post) => Padding(
+  Widget _buildForum(BuildContext context, Forum forum) => forum != null
+      ? InkWell(
+          child: Padding(
+            child: Wrap(
+              children: <Widget>[
+                Text(
+                  forum.title,
+                  style: Theme.of(context).textTheme.caption,
+                ),
+              ],
+              spacing: 5,
+            ),
+            padding: const EdgeInsets.all(kPaddingHorizontal),
+          ),
+          onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => ForumViewScreen(forum)),
+              ),
+        )
+      : SizedBox.shrink();
+
+  Widget _buildPost(BuildContext context, Post post) => Padding(
         padding: const EdgeInsets.only(bottom: 20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
+            _buildForum(context, thread.forum),
             isThreadTitleRedundant(thread, post)
                 ? Container()
                 : Padding(
                     padding: const EdgeInsets.symmetric(
                       horizontal: kPaddingHorizontal,
-                      vertical: 10.0,
                     ),
                     child: Text(
                       thread.threadTitle,
@@ -50,7 +71,7 @@ class _FirstPostWidget extends StatelessWidget {
                     ),
                   ),
             TinhteHtmlWidget(post.postBodyHtml, isFirstPost: true),
-            buildTags(context, thread) ?? Container(),
+            _buildTags(context, thread) ?? Container(),
             thread.threadImage?.displayMode == 'cover'
                 ? Container()
                 : _PostAttachmentsWidget.forPost(post, thread: thread),
@@ -59,7 +80,7 @@ class _FirstPostWidget extends StatelessWidget {
         ),
       );
 
-  Widget buildTags(BuildContext context, Thread thread) {
+  Widget _buildTags(BuildContext context, Thread thread) {
     if (thread.threadTags?.isNotEmpty != true) return null;
 
     return Padding(
