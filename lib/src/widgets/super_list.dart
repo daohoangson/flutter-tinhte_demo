@@ -237,6 +237,8 @@ class SuperListState<T> extends State<SuperListView<T>> {
           if (!(scrollInfo is UserScrollNotification)) return;
 
           final m = scrollInfo.metrics;
+          if (m.axisDirection != AxisDirection.down) return;
+
           final lookAhead = widget.infiniteScrollingVh * m.viewportDimension;
           if (m.pixels < m.maxScrollExtent - lookAhead) return;
 
