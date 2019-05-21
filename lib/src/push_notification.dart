@@ -20,7 +20,7 @@ StreamSubscription<int> listenToNotification(void onData(int notificationId)) =>
 StreamSubscription<int> listenToUnread(void onData(int unread)) =>
     _unreadController.stream.listen(onData);
 
-_notifControllerAddFromFcmMessage(Map<String, dynamic> data) {
+_notifControllerAddFromFcmMessage(Map data) {
   if (!data.containsKey('notification_id')) return;
   final str = data['notification_id'] as String;
   final notificationId = int.parse(str);
@@ -30,7 +30,7 @@ _notifControllerAddFromFcmMessage(Map<String, dynamic> data) {
   _notifController.sink.add(notificationId);
 }
 
-_unreadControllerAddFromFcmMessage(Map<String, dynamic> data) {
+_unreadControllerAddFromFcmMessage(Map data) {
   if (!data.containsKey('user_unread_notification_count')) return;
   final str = data['user_unread_notification_count'] as String;
   final value = int.parse(str);
