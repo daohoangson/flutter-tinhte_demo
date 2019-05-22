@@ -63,12 +63,12 @@ class HomeThreadWidget extends StatelessWidget {
     ));
 
     if (item?.itemDate != null) {
-      spans.add(TextSpan(text: " - ${formatTimestamp(item.itemDate)}"));
+      spans.add(TextSpan(text: " • ${formatTimestamp(item.itemDate)}"));
     }
 
     final threadViewCount = thread?.threadViewCount ?? 0;
     if (threadViewCount > 1500) {
-      spans.add(TextSpan(text: " - ${formatNumber(threadViewCount)} views"));
+      spans.add(TextSpan(text: " • ${formatNumber(threadViewCount)} views"));
     }
 
     return RichText(
