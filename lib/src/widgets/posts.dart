@@ -4,11 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:tinhte_api/attachment.dart';
-import 'package:tinhte_api/node.dart';
 import 'package:tinhte_api/post.dart';
 import 'package:tinhte_api/thread.dart';
 
-import '../screens/forum_view.dart';
 import '../api.dart';
 import '../config.dart';
 import '../constants.dart';
@@ -18,6 +16,7 @@ import 'html.dart';
 import 'image.dart';
 import 'post_editor.dart';
 import 'super_list.dart';
+import 'threads.dart';
 
 part 'post/actions.dart';
 part 'post/attachments.dart';

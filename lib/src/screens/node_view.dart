@@ -6,7 +6,7 @@ import '../widgets/navigation.dart';
 class NodeViewScreen extends StatelessWidget {
   final navigation.Element element;
 
-  NodeViewScreen({this.element, Key key}) : super(key: key);
+  NodeViewScreen(this.element, {Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) => Scaffold(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tinhte_api/node.dart';
 
+import '../widgets/navigation.dart';
 import '../widgets/threads.dart';
 
 class ForumViewScreen extends StatelessWidget {
@@ -15,6 +16,10 @@ class ForumViewScreen extends StatelessWidget {
         ),
         body: ThreadsWidget(
           forum: forum,
+          header: NavigationWidget(
+            path: "navigation?parent=${forum.forumId}",
+            shrinkWrap: true,
+          ),
           path: "threads?forum_id=${forum.forumId}",
         ),
       );

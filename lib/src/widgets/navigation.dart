@@ -11,6 +11,7 @@ class NavigationWidget extends StatelessWidget {
   final Widget header;
   final List<navigation.Element> initialElements;
   final String path;
+  final bool shrinkWrap;
 
   NavigationWidget({
     this.footer,
@@ -18,6 +19,7 @@ class NavigationWidget extends StatelessWidget {
     this.initialElements = const [],
     Key key,
     @required this.path,
+    this.shrinkWrap,
   }) : super(key: key);
 
   @override
@@ -28,6 +30,7 @@ class NavigationWidget extends StatelessWidget {
         header: header,
         initialItems: initialElements,
         itemBuilder: (context, __, element) => _buildRow(context, element),
+        shrinkWrap: shrinkWrap,
       );
 
   Widget _buildRow(BuildContext context, navigation.Element e) => ListTile(
@@ -38,7 +41,7 @@ class NavigationWidget extends StatelessWidget {
               if (e.hasSubElements) {
                 Navigator.push(
                   context,
-                  NavigationRoute((_) => NodeViewScreen(element: e)),
+                  NavigationRoute((_) => NodeViewScreen(e)),
                 );
               }
               break;

@@ -31,33 +31,12 @@ class _FirstPostWidget extends StatelessWidget {
     return widget;
   }
 
-  Widget _buildForum(BuildContext context, Forum forum) => forum != null
-      ? InkWell(
-          child: Padding(
-            child: Wrap(
-              children: <Widget>[
-                Text(
-                  forum.title,
-                  style: Theme.of(context).textTheme.caption,
-                ),
-              ],
-              spacing: 5,
-            ),
-            padding: const EdgeInsets.all(kPaddingHorizontal),
-          ),
-          onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => ForumViewScreen(forum)),
-              ),
-        )
-      : SizedBox.shrink();
-
   Widget _buildPost(BuildContext context, Post post) => Padding(
         padding: const EdgeInsets.only(bottom: 20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            _buildForum(context, thread.forum),
+            ThreadNavigation(thread),
             isThreadTitleRedundant(thread, post)
                 ? Container()
                 : Padding(

@@ -1,9 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:tinhte_api/navigation.dart' as navigation;
 import 'package:tinhte_api/node.dart';
 import 'package:tinhte_api/thread.dart';
+import 'package:tinhte_demo/src/link.dart';
 
+import '../screens/forum_view.dart';
+import '../screens/node_view.dart';
 import '../screens/thread_view.dart';
 import '../api.dart';
 import '../constants.dart';
@@ -12,6 +16,7 @@ import 'super_list.dart';
 import 'image.dart';
 
 part 'thread/builders.dart';
+part 'thread/navigation.dart';
 
 class ThreadsWidget extends StatelessWidget {
   final ApiMethod apiMethod;

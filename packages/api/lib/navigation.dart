@@ -46,6 +46,8 @@ class Element {
 
 @JsonSerializable(createToJson: false)
 class ElementLinks {
+  String permalink;
+
   @JsonKey(name: 'sub-elements')
   String subElements;
 

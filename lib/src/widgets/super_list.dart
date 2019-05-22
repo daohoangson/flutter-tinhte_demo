@@ -22,6 +22,7 @@ class SuperListView<T> extends StatefulWidget {
   final int itemMaxWidth;
   final _ItemStreamRegister<T> itemStreamRegisterAppend;
   final _ItemStreamRegister<T> itemStreamRegisterPrepend;
+  final bool shrinkWrap;
 
   SuperListView({
     this.apiMethodInitial,
@@ -41,6 +42,7 @@ class SuperListView<T> extends StatefulWidget {
     this.itemStreamRegisterAppend,
     this.itemStreamRegisterPrepend,
     Key key,
+    this.shrinkWrap,
   })  : assert((fetchPathInitial != null) || (initialJson != null)),
         assert(fetchOnSuccess != null),
         assert(itemBuilder != null),
@@ -218,6 +220,7 @@ class SuperListState<T> extends State<SuperListView<T>> {
       itemCount: itemCountBefore + _items.length + itemCountAfter,
       controller: _scrollController,
       padding: const EdgeInsets.all(0),
+      shrinkWrap: widget.shrinkWrap == true,
     );
 
     if (_refreshIndicatorKey != null) {
