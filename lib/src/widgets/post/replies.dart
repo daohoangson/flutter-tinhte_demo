@@ -36,22 +36,22 @@ class _PostRepliesWidget extends StatefulWidget {
 class _PostRepliesWidgetState extends State<_PostRepliesWidget> {
   final List<Post> newPosts = List();
 
-  VoidCallback _removeListener;
+  StreamSubscription _newPostSub;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    if (_removeListener != null) _removeListener();
-    _removeListener = PostListInheritedWidget.of(context)
-        .addListener((post) => setState(() => newPosts.insert(0, post)));
+    if (_newPostSub != null) _newPostSub.cancel();
+    _newPostSub = Provider.of<NewPostStream>(context)
+        .listen((post) => setState(() => newPosts.insert(0, post)));
   }
 
   @override
   void deactivate() {
-    if (_removeListener != null) {
-      _removeListener();
-      _removeListener = null;
+    if (_newPostSub != null) {
+      _newPostSub.cancel();
+      _newPostSub = null;
     }
 
     super.deactivate();

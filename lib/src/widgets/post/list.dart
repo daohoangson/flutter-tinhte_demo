@@ -25,9 +25,9 @@ class _PostListWidget extends StatelessWidget {
             : null,
         initialJson: initialJson,
         itemBuilder: _buildItem,
-        itemListenerRegisterAppend: (append) =>
-            PostListInheritedWidget.of(context)
-                .addListener((post) => append(_PostListItem.post(post))),
+        itemStreamRegister: (sls) => Provider.of<NewPostStream>(context).listen(
+            (post) => sls.itemsInsert(
+                sls.fetchedPageMin == 1 ? 1 : 0, _PostListItem.post(post))),
       );
 
   Widget _buildItem(
@@ -147,32 +147,33 @@ class _PostListWidget extends StatelessWidget {
     SuperListState<_PostListItem> state,
     Post post,
   ) =>
-      _ParentPostInheritedWidget(
-        parentPost: post,
-        child: PostListInheritedWidget(
-          child: buildRow(
-            context,
-            buildPosterCircleAvatar(post.links.posterAvatar),
-            box: <Widget>[
-              buildPosterInfo(
-                context,
-                state,
-                post.posterUsername,
-                userId: post.posterUserId,
-                userHasVerifiedBadge: post.posterHasVerifiedBadge,
-                userRank: post.posterRank?.rankName,
-              ),
-              TinhteHtmlWidget(post.postBodyHtml),
-              _PostAttachmentsWidget.forPost(post),
-            ],
-            footer: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(left: kPaddingHorizontal),
-                child: _PostActionsWidget(post),
-              ),
-              _PostRepliesWidget(post),
-            ],
-          ),
+      MultiProvider(
+        providers: [
+          Provider<Post>.value(value: post),
+          NewPostStream.buildProvider(),
+        ],
+        child: buildRow(
+          context,
+          buildPosterCircleAvatar(post.links.posterAvatar),
+          box: <Widget>[
+            buildPosterInfo(
+              context,
+              state,
+              post.posterUsername,
+              userId: post.posterUserId,
+              userHasVerifiedBadge: post.posterHasVerifiedBadge,
+              userRank: post.posterRank?.rankName,
+            ),
+            TinhteHtmlWidget(post.postBodyHtml),
+            _PostAttachmentsWidget.forPost(post),
+          ],
+          footer: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(left: kPaddingHorizontal),
+              child: _PostActionsWidget(post),
+            ),
+            _PostRepliesWidget(post),
+          ],
         ),
       );
 

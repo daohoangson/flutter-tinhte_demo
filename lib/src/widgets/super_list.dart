@@ -17,11 +17,8 @@ class SuperListView<T> extends StatefulWidget {
   final Map initialJson;
   final Iterable<T> initialItems;
   final _ItemBuilder<T> itemBuilder;
-  final _ItemListenerRegister<T> itemListenerRegisterAppend;
-  final _ItemListenerRegister<T> itemListenerRegisterPrepend;
   final int itemMaxWidth;
-  final _ItemStreamRegister<T> itemStreamRegisterAppend;
-  final _ItemStreamRegister<T> itemStreamRegisterPrepend;
+  final _ItemStreamRegister<T> itemStreamRegister;
   final bool shrinkWrap;
 
   SuperListView({
@@ -36,11 +33,8 @@ class SuperListView<T> extends StatefulWidget {
     this.initialJson,
     this.initialItems,
     this.itemBuilder,
-    this.itemListenerRegisterAppend,
-    this.itemListenerRegisterPrepend,
     this.itemMaxWidth = 600,
-    this.itemStreamRegisterAppend,
-    this.itemStreamRegisterPrepend,
+    this.itemStreamRegister,
     Key key,
     this.shrinkWrap,
   })  : assert((fetchPathInitial != null) || (initialJson != null)),
@@ -106,10 +100,7 @@ class SuperListState<T> extends State<SuperListView<T>> {
   int _fetchedPageMax;
   int _fetchedPageMin;
   Map _initialJson;
-  VoidCallback _itemListenerRegisteredAppend;
-  VoidCallback _itemListenerRegisteredPrepend;
-  StreamSubscription _itemStreamSubAppend;
-  StreamSubscription _itemStreamSubPrepend;
+  StreamSubscription _itemStreamSub;
   GlobalKey<RefreshIndicatorState> _refreshIndicatorKey;
   AutoScrollController _scrollController;
 
@@ -131,11 +122,8 @@ class SuperListState<T> extends State<SuperListView<T>> {
 
     if (widget.initialItems != null) _items.addAll(widget.initialItems);
 
-    if (widget.itemStreamRegisterAppend != null) {
-      _itemStreamSubAppend = widget.itemStreamRegisterAppend(itemsAppend);
-    }
-    if (widget.itemStreamRegisterPrepend != null) {
-      _itemStreamSubPrepend = widget.itemStreamRegisterPrepend(itemsPrepend);
+    if (widget.itemStreamRegister != null) {
+      _itemStreamSub = widget.itemStreamRegister(this);
     }
 
     final enableRefreshIndicator =
@@ -150,44 +138,8 @@ class SuperListState<T> extends State<SuperListView<T>> {
   }
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    if (widget.itemListenerRegisterAppend != null) {
-      if (_itemListenerRegisteredAppend != null)
-        _itemListenerRegisteredAppend();
-      _itemListenerRegisteredAppend =
-          widget.itemListenerRegisterAppend(itemsAppend);
-    }
-
-    if (widget.itemListenerRegisterPrepend != null) {
-      if (_itemListenerRegisteredPrepend != null)
-        _itemListenerRegisteredPrepend();
-      _itemListenerRegisteredPrepend =
-          widget.itemListenerRegisterPrepend(itemsPrepend);
-    }
-  }
-
-  @override
-  void deactivate() {
-    if (_itemListenerRegisteredAppend != null) {
-      _itemListenerRegisteredAppend();
-      _itemListenerRegisteredAppend = null;
-    }
-
-    if (_itemListenerRegisteredPrepend != null) {
-      _itemListenerRegisteredPrepend();
-      _itemListenerRegisteredPrepend = null;
-    }
-
-    super.deactivate();
-  }
-
-  @override
   void dispose() {
-    _itemStreamSubAppend?.cancel();
-    _itemStreamSubPrepend?.cancel();
-
+    _itemStreamSub?.cancel();
     super.dispose();
   }
 
@@ -289,7 +241,7 @@ class SuperListState<T> extends State<SuperListView<T>> {
         onPreFetch: () => _fetchPathPrev = null,
       );
 
-  void itemsAppend(T item) {
+  void itemsAdd(T item) {
     if (!mounted) {
       _items.add(item);
       return;
@@ -305,15 +257,18 @@ class SuperListState<T> extends State<SuperListView<T>> {
     });
   }
 
-  void itemsPrepend(T item) {
+  void itemsInsert(int index, T item) {
     if (!mounted) {
-      _items.insert(0, item);
+      _items.insert(index, item);
       return;
     }
 
     setState(() {
-      _items.insert(0, item);
-      WidgetsBinding.instance.addPostFrameCallback((_) => jumpTo(0));
+      _items.insert(index, item);
+
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) => scrollToIndex(index, preferPosition: AutoScrollPosition.begin),
+      );
     });
   }
 
@@ -442,6 +397,4 @@ typedef Widget _ItemBuilder<T>(
   SuperListState<T> state,
   T item,
 );
-typedef void _ItemListener<T>(T item);
-typedef VoidCallback _ItemListenerRegister<T>(_ItemListener<T> listener);
-typedef StreamSubscription _ItemStreamRegister<T>(_ItemListener<T> listener);
+typedef StreamSubscription _ItemStreamRegister<T>(SuperListState<T> state);

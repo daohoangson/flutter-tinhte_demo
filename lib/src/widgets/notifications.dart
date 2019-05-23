@@ -16,8 +16,8 @@ class NotificationsWidget extends StatelessWidget {
         fetchPathInitial: 'notifications',
         fetchOnSuccess: _fetchOnSuccess,
         itemBuilder: (context, __, n) => _buildRow(context, n),
-        itemStreamRegisterPrepend: (prepend) => listenToNotification(
-            (i) => _onNotificationData(context, i, prepend)),
+        itemStreamRegister: (sls) => listenToNotification(
+            (i) => _onNotificationData(context, i, sls)),
       );
 
   Widget _buildRow(BuildContext context, api.Notification n) => Card(
@@ -81,7 +81,7 @@ class NotificationsWidget extends StatelessWidget {
   void _onNotificationData(
     BuildContext context,
     int newId,
-    void prepend(api.Notification n),
+    SuperListState<api.Notification> sls,
   ) {
     final data = ApiData.of(context);
     if (!data.hasToken) return;
@@ -100,7 +100,7 @@ class NotificationsWidget extends StatelessWidget {
       if (j.length != 1) return;
 
       final notification = api.Notification.fromJson(j.first);
-      prepend(notification);
+      sls.itemsInsert(0, notification);
     });
   }
 }

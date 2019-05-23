@@ -50,20 +50,27 @@ class _PostActionsWidgetState extends State<_PostActionsWidget> {
       ],
     );
 
-    if (!_isShowingEditor) return buttons;
+    final thread = Provider.of<Thread>(context);
+    if (!_isShowingEditor || thread == null) return buttons;
+
+    Post parentPost;
+    try {
+      parentPost = Provider.of<Post>(context);
+    } on ProviderNotFoundError catch (_) {
+      // ignore this error, it will happen when replying to first post
+    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
         buttons,
         PostEditor(
-          _ThreadInheritedWidget.of(context).thread.threadId,
+          thread.threadId,
           callback: (post) {
-            PostListInheritedWidget.of(context)?.notifyListeners(post);
+            Provider.of<NewPostStream>(context, listen: false)._add(post);
             setState(() => _isShowingEditor = false);
           },
-          parentPostId:
-              _ParentPostInheritedWidget.of(context)?.parentPost?.postId,
+          parentPostId: parentPost?.postId,
         )
       ],
     );
@@ -92,4 +99,32 @@ class _PostActionsWidgetState extends State<_PostActionsWidget> {
                 }),
             onComplete: () => setState(() => _isLiking = false));
       });
+}
+
+class NewPostStream {
+  // TODO: wait for https://github.com/dart-lang/linter/issues/1446
+  // ignore: close_sinks
+  final StreamController<Post> _controller = StreamController.broadcast();
+
+  void _add(Post post) => _controller.sink.add(post);
+
+  StreamSubscription<Post> listen(
+    void onData(Post post), {
+    Function onError,
+    void onDone(),
+    bool cancelOnError,
+  }) =>
+      _controller.stream.listen(
+        onData,
+        onError: onError,
+        onDone: onDone,
+        cancelOnError: cancelOnError,
+      );
+
+  static Provider<NewPostStream> buildProvider({Widget child}) =>
+      Provider<NewPostStream>(
+        builder: (_) => NewPostStream(),
+        child: child,
+        dispose: (_, stream) => stream._controller.close(),
+      );
 }
