@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tinhte_api/api.dart';
 import 'package:tinhte_api/oauth_token.dart';
@@ -59,7 +60,7 @@ void prepareForApiAction(
   VoidCallback onReady, {
   VoidCallback onError,
 }) async {
-  final apiData = ApiData._noInherit(state.context);
+  final apiData = Provider.of<ApiData>(state.context, listen: false);
 
   if (apiData._token == null) {
     final loggedIn = await Navigator.push(state.context, LoginScreenRoute());
@@ -126,7 +127,7 @@ void _setupApiJsonHandlers(
   ApiOnError onError,
   VoidCallback onComplete,
 ) {
-  final apiData = ApiData._noInherit(state.context);
+  final apiData = Provider.of<ApiData>(state.context, listen: false);
   final completer = Completer();
   apiData._enqueue(() => completer.complete(fetch(apiData)));
 
@@ -222,7 +223,7 @@ class ApiData extends State<ApiApp> {
 
   @override
   Widget build(BuildContext context) =>
-      _ApiDataInheritedWidget(child: widget.child, data: this);
+      Provider<ApiData>.value(child: widget.child, value: this);
 
   void setToken(OauthToken value, {bool savePref = true}) {
     if (savePref) {
@@ -315,26 +316,5 @@ class ApiData extends State<ApiApp> {
         .catchError((_) => setToken(null));
   }
 
-  static ApiData of(BuildContext context) =>
-      (context.inheritFromWidgetOfExactType(_ApiDataInheritedWidget)
-              as _ApiDataInheritedWidget)
-          .data;
-
-  static ApiData _noInherit(BuildContext context) =>
-      (context.ancestorWidgetOfExactType(_ApiDataInheritedWidget)
-              as _ApiDataInheritedWidget)
-          .data;
-}
-
-class _ApiDataInheritedWidget extends InheritedWidget {
-  final ApiData data;
-
-  _ApiDataInheritedWidget({
-    Widget child,
-    this.data,
-    Key key,
-  }) : super(child: child, key: key);
-
-  @override
-  bool updateShouldNotify(_ApiDataInheritedWidget old) => true;
+  static ApiData of(BuildContext context) => Provider.of<ApiData>(context);
 }
