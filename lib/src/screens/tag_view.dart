@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tinhte_api/tag.dart';
 
 import '../widgets/tag/tag_view_header.dart';
+import '../widgets/app_bar.dart';
 import '../widgets/threads.dart';
 
 class TagViewScreen extends StatelessWidget {
@@ -17,7 +18,7 @@ class TagViewScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
+        appBar: buildAppBar(
           title: Text("#${tag.tagText}"),
         ),
         body: ThreadsWidget(

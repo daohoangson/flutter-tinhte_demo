@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:tinhte_api/thread.dart';
 
+import '../widgets/app_bar.dart';
 import '../widgets/posts.dart';
 import '../intl.dart';
 import '../link.dart';
@@ -27,7 +28,7 @@ class _ThreadViewState extends State<ThreadViewScreen> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
+        appBar: buildAppBar(
           title: _buildAppBarTitle(),
         ),
         body: _buildBody(),

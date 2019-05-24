@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tinhte_api/navigation.dart' as navigation;
 
+import '../widgets/app_bar.dart';
 import '../widgets/navigation.dart';
 
 class NodeViewScreen extends StatelessWidget {
@@ -10,7 +11,7 @@ class NodeViewScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
+        appBar: buildAppBar(
           title: Text(element.node.title),
         ),
         body: NavigationWidget(path: element.links.subElements),

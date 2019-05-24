@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:tinhte_api/user.dart';
 
-import '../widgets/threads.dart';
 import '../widgets/user/member_view_header.dart';
+import '../widgets/app_bar.dart';
+import '../widgets/threads.dart';
 import '../api.dart';
 
 class MemberViewScreen extends StatelessWidget {
@@ -14,7 +15,7 @@ class MemberViewScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
+        appBar: buildAppBar(
           title: Text(user.username),
         ),
         body: ThreadsWidget(

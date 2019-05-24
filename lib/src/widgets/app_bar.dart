@@ -11,6 +11,13 @@ import '../link.dart';
 import '../push_notification.dart';
 import '../responsive_layout.dart';
 
+AppBar buildAppBar({Widget title}) => AppBar(
+      title: title,
+      actions: <Widget>[
+        AppBarNotificationButton(),
+      ],
+    );
+
 class AppBarDrawerHeader extends StatefulWidget {
   AppBarDrawerHeader({Key key}) : super(key: key);
 
@@ -119,43 +126,46 @@ class AppBarMenuIconButton extends StatelessWidget {
 
 class AppBarNotificationButton extends StatelessWidget {
   @override
-  Widget build(BuildContext _) =>
-      Consumer<PushNotificationUnread>(builder: (context, unread, __) {
-        final value = unread.value;
-        final onPressed = () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => NotificationListScreen()),
-            );
+  Widget build(BuildContext _) => Consumer2<PushNotificationUnread, User>(
+        builder: (context, unread, user, __) {
+          if (user.userId == 0) return SizedBox.shrink();
 
-        if (value == 0) {
-          return IconButton(
-            icon: Icon(Icons.notifications_none),
-            onPressed: onPressed,
-          );
-        }
+          final value = unread.value;
+          final onPressed = () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => NotificationListScreen()),
+              );
 
-        return Stack(
-          children: <Widget>[
-            IconButton(
-              icon: Icon(Icons.notifications),
+          if (value == 0) {
+            return IconButton(
+              icon: Icon(Icons.notifications_none),
               onPressed: onPressed,
-            ),
-            Positioned.fill(
-              child: Align(
-                alignment: Alignment.topRight,
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.redAccent,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(5.0),
+            );
+          }
+
+          return Stack(
+            alignment: Alignment.center,
+            children: <Widget>[
+              IconButton(
+                icon: Icon(Icons.notifications),
+                onPressed: onPressed,
+              ),
+              Positioned.fill(
+                child: Align(
+                  alignment: Alignment.topRight,
+                  child: Container(
                     child: Text(value > 99 ? '99+' : "$value"),
+                    decoration: BoxDecoration(
+                      color: Colors.redAccent,
+                      shape: BoxShape.circle,
+                    ),
+                    margin: const EdgeInsets.all(3),
+                    padding: const EdgeInsets.all(7),
                   ),
                 ),
-              ),
-            )
-          ],
-        );
-      });
+              )
+            ],
+          );
+        },
+      );
 }
