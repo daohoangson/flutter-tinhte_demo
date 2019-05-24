@@ -7,6 +7,7 @@ import '../widgets/app_bar.dart';
 import '../widgets/home/feature_pages.dart';
 import '../widgets/home/thread.dart';
 import '../widgets/super_list.dart';
+import 'search/thread.dart';
 
 const _kFeaturePagesIndex = 5;
 
@@ -52,6 +53,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
             return null;
           },
+        ),
+        floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.search),
+          onPressed: () => showSearch(
+            context: context,
+            delegate: ThreadSearchDelegate(),
+          ),
         ),
       );
 
