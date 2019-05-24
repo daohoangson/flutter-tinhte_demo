@@ -28,21 +28,6 @@ class _FeaturePagesWidgetState extends State<FeaturePagesWidget> {
   }
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    final user = ApiData.of(context).user;
-    if (pages?.isNotEmpty == true) {
-      final hasLinkFollow = pages.first.links?.follow?.isNotEmpty == true;
-      if (hasLinkFollow == (user == null)) {
-        // if no user but fp has link -> fetch
-        // if has user but fp doesn't have link -> also fetch
-        _fetch();
-      }
-    }
-  }
-
-  @override
   Widget build(BuildContext context) => Card(
         margin: const EdgeInsets.only(bottom: 10.0),
         child: Column(

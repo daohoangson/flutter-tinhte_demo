@@ -7,7 +7,6 @@ import '../widgets/app_bar.dart';
 import '../widgets/home/feature_pages.dart';
 import '../widgets/home/thread.dart';
 import '../widgets/super_list.dart';
-import '../push_notification.dart';
 
 const _kFeaturePagesIndex = 5;
 
@@ -76,10 +75,7 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 class HomeScreenRoute extends MaterialPageRoute {
-  HomeScreenRoute()
-      : super(
-          builder: (_) => PushNotificationApp(HomeScreen()),
-        );
+  HomeScreenRoute() : super(builder: (_) => HomeScreen());
 }
 
 class _HomeListItem {

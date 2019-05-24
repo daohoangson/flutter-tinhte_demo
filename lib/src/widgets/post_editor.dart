@@ -1,6 +1,8 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tinhte_api/post.dart';
+import 'package:tinhte_api/user.dart';
 
 import '../api.dart';
 import 'attachment_editor.dart';
@@ -36,84 +38,85 @@ class _PostEditorState extends State<PostEditor> {
   _PostEditorState(this._postBody);
 
   @override
-  Widget build(BuildContext context) {
-    final user = ApiData.of(context).user;
-
-    return Form(
-      key: formKey,
-      child: buildRow(
-        context,
-        buildPosterCircleAvatar(
-          user?.links?.avatar,
-          isPostReply: widget.parentPostId != null,
-        ),
-        box: <Widget>[
-          buildPosterInfo(
-            context,
-            this,
-            user?.username ?? '',
-            userHasVerifiedBadge: user?.userHasVerifiedBadge,
-            userRank: user?.rank?.rankName,
-          ),
-          Padding(
-            padding: kEdgeInsetsHorizontal,
-            child: TextFormField(
-              autofocus: true,
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                hintText: 'Enter your message to post',
+  Widget build(BuildContext _) => Consumer<User>(
+      builder: (context, user, __) => Form(
+            key: formKey,
+            child: buildPostRow(
+              context,
+              buildPosterCircleAvatar(
+                user?.links?.avatar,
+                isPostReply: widget.parentPostId != null,
               ),
-              initialValue: _postBody,
-              keyboardType: TextInputType.multiline,
-              maxLines: 3,
-              onSaved: (value) => _postBody = value,
-              style: getPostBodyTextStyle(context, false),
-              textCapitalization: TextCapitalization.sentences,
-              validator: (message) {
-                if (message.isEmpty) {
-                  return 'Please enter some text.';
-                }
-
-                return null;
-              },
-            ),
-          ),
-        ],
-        footer: <Widget>[
-          _attachmentHash != null
-              ? AttachmentEditor(
-                  "posts/attachments?thread_id=${widget.threadId}",
-                  _attachmentHash,
-                )
-              : null,
-          Padding(
-            padding: kEdgeInsetsHorizontal,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                _attachmentHash == null
-                    ? buildButton(
-                        context,
-                        'Upload images',
-                        onTap: () => setState(() => _attachmentHash =
-                            "${Random.secure().nextDouble()}"),
-                      )
-                    : Container(height: 0.0, width: 0.0),
-                buildButton(
+              box: <Widget>[
+                buildPosterInfo(
                   context,
-                  'Post',
-                  onTap: _isPosting ? null : _post,
+                  this,
+                  user?.username ?? '',
+                  userHasVerifiedBadge: user?.userHasVerifiedBadge,
+                  userRank: user?.rank?.rankName,
+                ),
+                Padding(
+                  padding: kEdgeInsetsHorizontal,
+                  child: _buildTextInputMessage(),
+                ),
+              ],
+              footer: <Widget>[
+                _attachmentHash != null
+                    ? AttachmentEditor(
+                        "posts/attachments?thread_id=${widget.threadId}",
+                        _attachmentHash,
+                      )
+                    : null,
+                Padding(
+                  padding: kEdgeInsetsHorizontal,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: _buildButtons(),
+                  ),
                 ),
               ],
             ),
-          ),
-        ],
-      ),
-    );
-  }
+          ));
 
-  _post() {
+  List<Widget> _buildButtons() => <Widget>[
+        _attachmentHash == null
+            ? buildPostButton(
+                context,
+                'Upload images',
+                onTap: () => setState(
+                    () => _attachmentHash = "${Random.secure().nextDouble()}"),
+              )
+            : SizedBox.shrink(),
+        buildPostButton(
+          context,
+          'Post',
+          onTap: _isPosting ? null : _post,
+        ),
+      ];
+
+  Widget _buildTextInputMessage() => TextFormField(
+        autofocus: true,
+        decoration: InputDecoration(
+          border: InputBorder.none,
+          hintText: 'Enter your message to post',
+        ),
+        initialValue: _postBody,
+        keyboardType: TextInputType.multiline,
+        maxLines: 3,
+        onSaved: (value) => _postBody = value,
+        style: getPostBodyTextStyle(context, false),
+        textCapitalization: TextCapitalization.sentences,
+        validator: (message) {
+          if (message.isEmpty) {
+            return 'Please enter some text.';
+          }
+
+          return null;
+        },
+      );
+
+  void _post() {
     final form = formKey.currentState;
     if (!form.validate()) return;
     form.save();

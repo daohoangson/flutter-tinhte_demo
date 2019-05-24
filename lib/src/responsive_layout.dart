@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tinhte_api/navigation.dart' as navigation;
 import 'package:tinhte_api/node.dart' as node;
 
@@ -6,6 +7,7 @@ import 'screens/home.dart';
 import 'screens/login.dart';
 import 'widgets/app_bar.dart';
 import 'widgets/navigation.dart';
+import 'push_notification.dart';
 
 const _kRouteHome = 'home';
 
@@ -13,19 +15,22 @@ bool isNarrow(BuildContext context) => MediaQuery.of(context).size.width < 1000;
 
 class ResponsiveLayout extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => ResponsiveState();
+  State<StatefulWidget> createState() => _ResponsiveLayoutState();
 }
 
-class ResponsiveState extends State<ResponsiveLayout> {
+class _ResponsiveLayoutState extends State<ResponsiveLayout> {
   final primaryNavKey = GlobalKey<NavigatorState>();
   final narrowKey = GlobalKey<ScaffoldState>();
   final wideKey = GlobalKey<ScaffoldState>();
 
   @override
-  Widget build(BuildContext _) => _ResponsiveLayoutInheritedWidget(
+  Widget build(BuildContext _) => PushNotificationApp(
         child: WillPopScope(
           child: OrientationBuilder(
-            builder: (c, _) => isNarrow(c) ? buildNarrow() : buildWide(),
+            builder: (c, _) => Provider<ResponsiveState>.value(
+                  child: isNarrow(c) ? buildNarrow() : buildWide(),
+                  value: ResponsiveState(this),
+                ),
           ),
           onWillPop: () async {
             final primary = primaryNavKey.currentState;
@@ -36,7 +41,7 @@ class ResponsiveState extends State<ResponsiveLayout> {
             return false;
           },
         ),
-        state: this,
+        primaryNavKey: primaryNavKey,
       );
 
   Widget buildNarrow() => Scaffold(
@@ -58,10 +63,6 @@ class ResponsiveState extends State<ResponsiveLayout> {
         ),
         key: wideKey,
       );
-
-  bool hasDrawer() => isNarrow(context);
-
-  void openDrawer() => narrowKey.currentState?.openDrawer();
 
   Widget _buildPrimaryNavigator() => Navigator(
         key: primaryNavKey,
@@ -89,24 +90,16 @@ class ResponsiveState extends State<ResponsiveLayout> {
           }
         },
       );
-
-  static ResponsiveState of(BuildContext context) =>
-      (context.inheritFromWidgetOfExactType(_ResponsiveLayoutInheritedWidget)
-              as _ResponsiveLayoutInheritedWidget)
-          .state;
 }
 
-class _ResponsiveLayoutInheritedWidget extends InheritedWidget {
-  final ResponsiveState state;
+class ResponsiveState {
+  final _ResponsiveLayoutState _rls;
 
-  _ResponsiveLayoutInheritedWidget({
-    Widget child,
-    this.state,
-    Key key,
-  }) : super(child: child, key: key);
+  ResponsiveState(this._rls);
 
-  @override
-  bool updateShouldNotify(_ResponsiveLayoutInheritedWidget old) => true;
+  bool hasDrawer() => isNarrow(_rls.context);
+
+  void openDrawer() => _rls.narrowKey.currentState?.openDrawer();
 }
 
 class _SidebarNavigator extends Navigator {
@@ -141,7 +134,7 @@ class _SidebarNavigatorState extends NavigatorState {
     }
 
     final f = _pushPrimary(route);
-    
+
     if (scaffold?.isDrawerOpen == true) {
       Navigator.of(scaffold.context).pop();
     }

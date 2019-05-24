@@ -5,7 +5,7 @@ const kEdgeInsetsHorizontal = EdgeInsets.symmetric(
   horizontal: kPaddingHorizontal,
 );
 
-Widget buildButton(
+Widget buildPostButton(
   BuildContext context,
   String text, {
   Color color,
@@ -35,6 +35,53 @@ Widget buildButton(
   }
 
   return button;
+}
+
+Widget buildPostRow(
+  BuildContext context,
+  Widget avatar, {
+  List<Widget> box,
+  List<Widget> footer,
+}) {
+  final List<Widget> children = List();
+
+  if (box != null) {
+    children.add(Padding(
+      padding: kEdgeInsetsHorizontal,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(3),
+        child: DecoratedBox(
+          decoration: BoxDecoration(color: Theme.of(context).highlightColor),
+          child: Padding(
+              padding: const EdgeInsets.only(top: 10.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: box.where((widget) => widget != null).toList(),
+              )),
+        ),
+      ),
+    ));
+  }
+
+  if (footer != null) {
+    children.addAll(footer.where((widget) => widget != null));
+  }
+
+  return Padding(
+    padding: const EdgeInsets.only(bottom: 10.0),
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        avatar,
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: children,
+          ),
+        ),
+      ],
+    ),
+  );
 }
 
 Widget buildPosterCircleAvatar(String url, {bool isPostReply = false}) =>
@@ -102,52 +149,5 @@ Widget buildPosterInfo(
   return Padding(
     padding: kEdgeInsetsHorizontal,
     child: built,
-  );
-}
-
-Widget buildRow(
-  BuildContext context,
-  Widget avatar, {
-  List<Widget> box,
-  List<Widget> footer,
-}) {
-  final List<Widget> children = List();
-
-  if (box != null) {
-    children.add(Padding(
-      padding: kEdgeInsetsHorizontal,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(3),
-        child: DecoratedBox(
-          decoration: BoxDecoration(color: Theme.of(context).highlightColor),
-          child: Padding(
-              padding: const EdgeInsets.only(top: 10.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: box.where((widget) => widget != null).toList(),
-              )),
-        ),
-      ),
-    ));
-  }
-
-  if (footer != null) {
-    children.addAll(footer.where((widget) => widget != null));
-  }
-
-  return Padding(
-    padding: const EdgeInsets.only(bottom: 10.0),
-    child: Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        avatar,
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: children,
-          ),
-        ),
-      ],
-    ),
   );
 }

@@ -14,7 +14,7 @@ class _PostWidgetState extends State<_PostWidget> {
     final post = Provider.of<Post>(context);
     final isPostReply = post.postReplyTo != null;
 
-    Widget built = buildRow(
+    Widget built = buildPostRow(
       context,
       buildPosterCircleAvatar(
         post.links.posterAvatar,

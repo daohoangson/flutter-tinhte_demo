@@ -31,7 +31,7 @@ class _PostActionsWidgetState extends State<_PostActionsWidget> {
 
           if (!postIsDeleted) {
             if (post.links?.likes?.isNotEmpty == true) {
-              buttons.add(buildButton(
+              buttons.add(buildPostButton(
                 context,
                 postIsLiked ? 'Unlike' : 'Like',
                 count: post.postLikeCount,
@@ -41,7 +41,7 @@ class _PostActionsWidgetState extends State<_PostActionsWidget> {
               ));
             }
 
-            buttons.add(buildButton(
+            buttons.add(buildPostButton(
               context,
               _isShowingEditor ? 'Cancel' : 'Reply',
               onTap: () => setState(() => _isShowingEditor = !_isShowingEditor),
@@ -49,7 +49,7 @@ class _PostActionsWidgetState extends State<_PostActionsWidget> {
           }
 
           if (widget.showPostCreateDate) {
-            buttons.add(buildButton(
+            buttons.add(buildPostButton(
               context,
               formatTimestamp(post.postCreateDate),
             ));

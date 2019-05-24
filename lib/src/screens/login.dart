@@ -15,7 +15,7 @@ final _googleSignIn = GoogleSignIn(
 );
 
 void logout(BuildContext context) {
-  final apiData = ApiData.of(context);
+  final apiData = ApiAuth.of(context, listen: false);
   final token = apiData.token;
 
   apiData.setToken(null);
@@ -117,10 +117,10 @@ class _LoginFormState extends State<LoginForm> {
 
     setState(() => _isLoggingIn = true);
 
-    final apiData = ApiData.of(context);
-    apiData.api
+    final apiAuth = ApiAuth.of(context, listen: false);
+    apiAuth.api
         .login(username, password)
-        .then((token) => _loginOnToken(apiData, token))
+        .then((token) => _loginOnToken(apiAuth, token))
         .catchError((e) => _showErrorDialog)
         .whenComplete(() => setState(() => _isLoggingIn = false));
   }
@@ -129,8 +129,8 @@ class _LoginFormState extends State<LoginForm> {
     if (_isLoggingIn) return;
     setState(() => _isLoggingIn = true);
 
-    final apiData = ApiData.of(context);
-    final api = apiData.api;
+    final apiAuth = ApiAuth.of(context, listen: false);
+    final api = apiAuth.api;
 
     _facebookLogin
         .logInWithReadPermissions(['email'])
@@ -152,7 +152,7 @@ class _LoginFormState extends State<LoginForm> {
             }))
         .then<OauthToken>(
             (json) => _loginOnExternalJson(api, ObtainMethod.Facebook, json))
-        .then((token) => _loginOnToken(apiData, token))
+        .then((token) => _loginOnToken(apiAuth, token))
         .catchError(_showErrorDialog)
         .whenComplete(() => setState(() => _isLoggingIn = false));
   }
@@ -161,8 +161,8 @@ class _LoginFormState extends State<LoginForm> {
     if (_isLoggingIn) return;
     setState(() => _isLoggingIn = true);
 
-    final apiData = ApiData.of(context);
-    final api = apiData.api;
+    final apiAuth = ApiAuth.of(context, listen: false);
+    final api = apiAuth.api;
 
     _googleSignIn
         .signIn()
@@ -189,7 +189,7 @@ class _LoginFormState extends State<LoginForm> {
             }))
         .then<OauthToken>(
             (json) => _loginOnExternalJson(api, ObtainMethod.Google, json))
-        .then((token) => _loginOnToken(apiData, token))
+        .then((token) => _loginOnToken(apiAuth, token))
         .catchError(_showErrorDialog)
         .whenComplete(() => setState(() => _isLoggingIn = false));
   }
@@ -227,10 +227,10 @@ class _LoginFormState extends State<LoginForm> {
     return OauthToken.fromJson(ObtainMethod.Google, jsonMap);
   }
 
-  _loginOnToken(ApiData apiData, OauthToken token) {
+  _loginOnToken(ApiAuth apiAuth, OauthToken token) {
     if (!mounted || token == null) return;
 
-    apiData.setToken(token);
+    apiAuth.setToken(token);
     Navigator.pop(context, true);
   }
 

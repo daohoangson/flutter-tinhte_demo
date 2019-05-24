@@ -18,10 +18,11 @@ void launchLink(State state, String link) async {
     final parsed = await parseLink(state, link: link);
     if (parsed) return;
 
-    final data = ApiData.of(state.context);
-    if (data.hasToken) {
-      link = "$configApiRoot?tools/login&oauth_token=${data.token.accessToken}&"
-          "redirect_uri=${Uri.encodeQueryComponent(link)}";
+    final apiAuth = ApiAuth.of(state.context, listen: false);
+    if (apiAuth.hasToken) {
+      link = "$configApiRoot?tools/login"
+          "&oauth_token=${apiAuth.token.accessToken}"
+          "&redirect_uri=${Uri.encodeQueryComponent(link)}";
     }
   }
 

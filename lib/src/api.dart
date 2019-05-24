@@ -64,9 +64,9 @@ void prepareForApiAction(
   VoidCallback onReady, {
   VoidCallback onError,
 }) async {
-  final apiData = Provider.of<ApiData>(state.context, listen: false);
+  final apiAuth = ApiAuth.of(state.context, listen: false);
 
-  if (apiData._token == null) {
+  if (!apiAuth.hasToken) {
     final loggedIn = await Navigator.push(state.context, LoginScreenRoute());
     if (loggedIn != true) {
       if (onError != null) onError();
@@ -131,9 +131,9 @@ void _setupApiJsonHandlers(
   ApiOnError onError,
   VoidCallback onComplete,
 ) {
-  final apiData = Provider.of<ApiData>(state.context, listen: false);
+  final aas = Provider.of<_ApiAppState>(state.context, listen: false);
   final completer = Completer();
-  apiData._enqueue(() => completer.complete(fetch(apiData)));
+  aas._enqueue(() => completer.complete(fetch(aas)));
 
   return _setupApiCompleter<dynamic>(
     state,
@@ -152,7 +152,7 @@ void _setupApiJsonHandlers(
   );
 }
 
-typedef Future ApiFetch(ApiData apiData);
+typedef Future ApiFetch(_ApiAppState aas);
 typedef void ApiMethod(
   State state,
   String path, {
@@ -175,28 +175,17 @@ class ApiApp extends StatefulWidget {
         super(key: key);
 
   @override
-  State<ApiApp> createState() => ApiData();
+  State<ApiApp> createState() => _ApiAppState();
 }
 
-class ApiData extends State<ApiApp> {
+class _ApiAppState extends State<ApiApp> {
   OauthToken _token;
   bool _tokenHasBeenSet = false;
-  User _user;
+  User _user = User(0);
 
   List<VoidCallback> _queue;
 
   Api get api => widget.api;
-  bool get hasToken => _token != null;
-  OauthToken get token => _token;
-  User get user {
-    if (_user == null) {
-      _user = User(0);
-
-      _fetchUser();
-    }
-
-    return _user;
-  }
 
   @override
   void initState() {
@@ -205,7 +194,7 @@ class ApiData extends State<ApiApp> {
     SharedPreferences.getInstance().then((SharedPreferences prefs) {
       final clientId = prefs.getString(kPrefKeyTokenClientId);
       if (clientId != api.clientId) {
-        return setToken(null, savePref: false);
+        return _setToken(null, savePref: false);
       }
 
       final t = prefs.getString(kPrefKeyTokenAccessToken);
@@ -215,49 +204,25 @@ class ApiData extends State<ApiApp> {
       final scope = prefs.getString(kPrefKeyTokenScope);
       final userId = prefs.getInt(kPrefKeyTokenUserId);
       if (t?.isNotEmpty != true || expiresAt < 1) {
-        return setToken(null, savePref: false);
+        return _setToken(null, savePref: false);
       }
 
       final now = DateTime.now().millisecondsSinceEpoch;
       final ei = ((expiresAt - now) / 1000).floor();
       debugPrint("Restored token $t, expires in $ei, refresh token $rt");
-      setToken(OauthToken(t, ei, rt, scope, userId), savePref: false);
+      _setToken(OauthToken(t, ei, rt, scope, userId), savePref: false);
     });
   }
 
   @override
-  Widget build(BuildContext context) =>
-      Provider<ApiData>.value(child: widget.child, value: this);
-
-  void setToken(OauthToken value, {bool savePref = true}) {
-    if (savePref) {
-      SharedPreferences.getInstance().then((SharedPreferences prefs) {
-        prefs.setString(kPrefKeyTokenAccessToken, value?.accessToken);
-        prefs.setString(kPrefKeyTokenClientId, api.clientId);
-        prefs.setInt(kPrefKeyTokenExpiresAtMillisecondsSinceEpoch,
-            value?.expiresAt?.millisecondsSinceEpoch);
-        prefs.setString(kPrefKeyTokenRefreshToken, value?.refreshToken);
-        prefs.setString(kPrefKeyTokenScope, value?.scope);
-        prefs.setInt(kPrefKeyTokenUserId, value?.userId);
-        debugPrint("Saved token ${value?.accessToken}, " +
-            "expires at ${value?.expiresAt}, " +
-            "refresh token ${value?.refreshToken}");
-      });
-    }
-
-    _token = value;
-    _tokenHasBeenSet = true;
-
-    if (_user != null) {
-      if (value != null) {
-        _fetchUser();
-      } else {
-        setState(() => _user = User(0));
-      }
-    }
-
-    _dequeue();
-  }
+  Widget build(BuildContext context) => MultiProvider(
+        providers: [
+          Provider<ApiAuth>.value(value: ApiAuth(this)),
+          Provider<User>.value(value: _user),
+          Provider<_ApiAppState>.value(value: this),
+        ],
+        child: widget.child,
+      );
 
   String _appendOauthToken(String path) {
     final accessToken = _token?.accessToken ?? api.buildOneTimeToken();
@@ -297,7 +262,7 @@ class ApiData extends State<ApiApp> {
 
   void _fetchUser() {
     _enqueue(() async {
-      if (!hasToken) return;
+      if (_token == null) return;
 
       try {
         final json = await api.getJson(_appendOauthToken('users/me'));
@@ -316,9 +281,51 @@ class ApiData extends State<ApiApp> {
   void _refreshToken() {
     api
         .refreshToken(_token)
-        .then((refreshedToken) => setToken(refreshedToken))
-        .catchError((_) => setToken(null));
+        .then((refreshedToken) => _setToken(refreshedToken))
+        .catchError((_) => _setToken(null));
   }
 
-  static ApiData of(BuildContext context) => Provider.of<ApiData>(context);
+  void _setToken(OauthToken value, {bool savePref = true}) {
+    if (savePref) {
+      SharedPreferences.getInstance().then((SharedPreferences prefs) {
+        prefs.setString(kPrefKeyTokenAccessToken, value?.accessToken);
+        prefs.setString(kPrefKeyTokenClientId, api.clientId);
+        prefs.setInt(kPrefKeyTokenExpiresAtMillisecondsSinceEpoch,
+            value?.expiresAt?.millisecondsSinceEpoch);
+        prefs.setString(kPrefKeyTokenRefreshToken, value?.refreshToken);
+        prefs.setString(kPrefKeyTokenScope, value?.scope);
+        prefs.setInt(kPrefKeyTokenUserId, value?.userId);
+        debugPrint("Saved token ${value?.accessToken}, "
+            "expires at ${value?.expiresAt}, "
+            "refresh token ${value?.refreshToken}");
+      });
+    }
+
+    _token = value;
+    _tokenHasBeenSet = true;
+
+    if (value != null) {
+      _fetchUser();
+    } else if (_user.userId != 0) {
+      setState(() => _user = User(0));
+    }
+
+    _dequeue();
+  }
+}
+
+class ApiAuth {
+  final _ApiAppState aas;
+
+  ApiAuth(this.aas);
+
+  Api get api => aas.api;
+
+  bool get hasToken => aas._token != null;
+  OauthToken get token => aas._token;
+
+  void setToken(OauthToken token) => aas._setToken(token);
+
+  static ApiAuth of(BuildContext context, {bool listen = true}) =>
+      Provider.of<ApiAuth>(context, listen: listen);
 }

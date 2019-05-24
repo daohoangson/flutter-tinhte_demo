@@ -1,23 +1,44 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 import 'package:tinhte_api/notification.dart' as api;
+import 'package:tinhte_api/oauth_token.dart';
+import 'package:tinhte_api/user.dart';
 
 import '../api.dart';
+import '../config.dart';
 import '../intl.dart';
 import '../push_notification.dart';
 import 'html.dart';
 import 'super_list.dart';
 
-class NotificationsWidget extends StatelessWidget {
+class NotificationsWidget extends StatefulWidget {
   NotificationsWidget({Key key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => SuperListView<api.Notification>(
-        fetchPathInitial: 'notifications',
-        fetchOnSuccess: _fetchOnSuccess,
-        itemBuilder: (context, __, n) => _buildRow(context, n),
-        itemStreamRegister: (sls) => listenToNotification(
-            (i) => _onNotificationData(context, i, sls)),
+  State<StatefulWidget> createState() => _NotificationsWidgetState();
+}
+
+int _subscribedUserId = 0;
+
+class _NotificationsWidgetState extends State<NotificationsWidget> {
+  @override
+  Widget build(BuildContext _) => Consumer2<PushNotificationToken, User>(
+        builder: (context, pnt, user, __) {
+          if (user.userId > 0 && user.userId != _subscribedUserId) {
+            final token = ApiAuth.of(context, listen: false).token;
+            _subscribe(pnt.value, token, user);
+          }
+
+          return SuperListView<api.Notification>(
+            fetchPathInitial: 'notifications',
+            fetchOnSuccess: _fetchOnSuccess,
+            itemBuilder: (context, __, n) => _buildRow(context, n),
+            itemStreamRegister: (sls) => listenToNotification(
+                (i) => _onNotificationData(context, i, sls)),
+          );
+        },
       );
 
   Widget _buildRow(BuildContext context, api.Notification n) => Card(
@@ -59,9 +80,7 @@ class NotificationsWidget extends StatelessWidget {
                     ),
               ),
         ),
-        child: TinhteHtmlWidget(
-          n.notificationHtml,
-        ),
+        child: TinhteHtmlWidget(n.notificationHtml),
       );
 
   Widget _buildTimestamp(BuildContext context, api.Notification n) => Text(
@@ -75,7 +94,9 @@ class NotificationsWidget extends StatelessWidget {
       list.forEach((j) => fc.addItem(api.Notification.fromJson(j)));
     }
 
-    apiPost(fc.state, 'notifications/read');
+    if (fc.id == FetchContextId.FetchInitial) {
+      apiPost(fc.state, 'notifications/read');
+    }
   }
 
   void _onNotificationData(
@@ -83,11 +104,11 @@ class NotificationsWidget extends StatelessWidget {
     int newId,
     SuperListState<api.Notification> sls,
   ) {
-    final data = ApiData.of(context);
-    if (!data.hasToken) return;
+    final apiAuth = ApiAuth.of(context, listen: false);
+    if (!apiAuth.hasToken) return;
 
-    data.api
-        .getJson("notifications?oauth_token=${data.token.accessToken}")
+    apiAuth.api
+        .getJson("notifications?oauth_token=${apiAuth.token.accessToken}")
         .then((json) {
       if (!json.containsKey('notifications')) return;
 
@@ -95,12 +116,47 @@ class NotificationsWidget extends StatelessWidget {
       final j = list.where((j) {
         if (!(j is Map)) return false;
         final m = j as Map;
-        return m.containsKey('notification_id') && m['notification_id'] == newId;
+        return m.containsKey('notification_id') &&
+            m['notification_id'] == newId;
       });
       if (j.length != 1) return;
 
       final notification = api.Notification.fromJson(j.first);
       sls.itemsInsert(0, notification);
     });
+  }
+
+  void _subscribe(String fcmToken, OauthToken token, User user) async {
+    debugPrint("before _subscribedUserId=$_subscribedUserId");
+    if (fcmToken?.isNotEmpty != true) return;
+
+    final url = "$configPushServer/subscribe";
+    final hubUri = "$configApiRoot?subscriptions";
+    final hubTopic = "user_notification_${user.userId}";
+
+    final response = await http.post(
+      url,
+      body: {
+        'device_type': 'firebase',
+        'device_id': fcmToken,
+        'hub_uri': hubUri,
+        'hub_topic': hubTopic,
+        'oauth_client_id': configClientId,
+        'oauth_token': token.accessToken,
+        'extra_data[click_action]': 'FLUTTER_NOTIFICATION_CLICK',
+        'extra_data[notification]': '1',
+        'extra_data[platform]': Theme.of(context).platform.toString(),
+        'extra_data[project]': configFcmProjectId,
+      },
+    );
+
+    if (response.statusCode == 202) {
+      debugPrint("Subscribed $fcmToken at $url for $hubUri/$hubTopic...");
+      _subscribedUserId = user.userId;
+      debugPrint("after _subscribedUserId=$_subscribedUserId");
+    } else {
+      debugPrint("Failed subscribing $fcmToken: "
+          "status=${response.statusCode}, body=${response.body}");
+    }
   }
 }
