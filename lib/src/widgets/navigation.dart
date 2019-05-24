@@ -11,6 +11,7 @@ class NavigationWidget extends StatelessWidget {
   final Widget header;
   final List<navigation.Element> initialElements;
   final String path;
+  final bool progressIndicator;
   final bool shrinkWrap;
 
   NavigationWidget({
@@ -19,6 +20,7 @@ class NavigationWidget extends StatelessWidget {
     this.initialElements = const [],
     Key key,
     @required this.path,
+    this.progressIndicator,
     this.shrinkWrap,
   }) : super(key: key);
 
@@ -30,6 +32,7 @@ class NavigationWidget extends StatelessWidget {
         header: header,
         initialItems: initialElements,
         itemBuilder: (context, __, element) => _buildRow(context, element),
+        progressIndicator: progressIndicator,
         shrinkWrap: shrinkWrap,
       );
 

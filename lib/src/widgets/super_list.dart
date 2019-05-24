@@ -19,6 +19,7 @@ class SuperListView<T> extends StatefulWidget {
   final _ItemBuilder<T> itemBuilder;
   final int itemMaxWidth;
   final _ItemStreamRegister<T> itemStreamRegister;
+  final bool progressIndicator;
   final bool shrinkWrap;
 
   SuperListView({
@@ -36,6 +37,7 @@ class SuperListView<T> extends StatefulWidget {
     this.itemMaxWidth = 600,
     this.itemStreamRegister,
     Key key,
+    this.progressIndicator,
     this.shrinkWrap,
   })  : assert((fetchPathInitial != null) || (initialJson != null)),
         assert(fetchOnSuccess != null),
@@ -109,8 +111,7 @@ class SuperListState<T> extends State<SuperListView<T>> {
   int get fetchedPageMax => _fetchedPageMax;
   int get fetchedPageMin => _fetchedPageMin;
   bool get isFetching => _isFetching;
-  int get itemCountAfter =>
-      (widget.footer != null ? 1 : 0) + (canFetchNext ? 1 : 0);
+  int get itemCountAfter => (widget.footer != null ? 1 : 0) + 1;
   int get itemCountBefore => 1 + (widget.header != null ? 1 : 0);
   Iterable<T> get items => _items;
 
@@ -284,8 +285,7 @@ class SuperListState<T> extends State<SuperListView<T>> {
       );
 
   Widget _buildItem(BuildContext context, int i) {
-    if (i == 0)
-      return canFetchPrev ? _buildProgressIndicator(_isFetching) : Container();
+    if (i == 0) return _buildProgressIndicator(canFetchPrev && _isFetching);
     i--;
 
     if (widget.header != null) {
@@ -301,17 +301,16 @@ class SuperListState<T> extends State<SuperListView<T>> {
       i--;
     }
 
-    if (i == 0) return _buildProgressIndicator(_isFetching);
-
-    return Container(width: 0, height: 0);
+    return _buildProgressIndicator(_isFetching);
   }
 
-  Widget _buildProgressIndicator(bool visible) => Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Center(
-          child: visible ? const CircularProgressIndicator() : Container(),
-        ),
-      );
+  Widget _buildProgressIndicator(bool visible) =>
+      widget.progressIndicator != false && visible
+          ? Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: const Center(child: CircularProgressIndicator()),
+            )
+          : SizedBox.shrink();
 
   Future<void> _fetch(
     FetchContext<T> fc, {

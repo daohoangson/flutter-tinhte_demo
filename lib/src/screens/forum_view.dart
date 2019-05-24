@@ -18,6 +18,7 @@ class ForumViewScreen extends StatelessWidget {
           forum: forum,
           header: NavigationWidget(
             path: "navigation?parent=${forum.forumId}",
+            progressIndicator: false,
             shrinkWrap: true,
           ),
           path: "threads?forum_id=${forum.forumId}",
