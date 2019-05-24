@@ -97,6 +97,7 @@ class SuperListState<T> extends State<SuperListView<T>> {
   final List<T> _items = [];
 
   var _isFetching = false;
+  var _isRefreshing = false;
   String _fetchPathNext;
   String _fetchPathPrev;
   int _fetchedPageMax;
@@ -179,7 +180,7 @@ class SuperListState<T> extends State<SuperListView<T>> {
     if (_refreshIndicatorKey != null) {
       built = RefreshIndicator(
         key: _refreshIndicatorKey,
-        onRefresh: fetchInitial,
+        onRefresh: _onRefresh,
         child: built,
       );
     }
@@ -305,7 +306,7 @@ class SuperListState<T> extends State<SuperListView<T>> {
   }
 
   Widget _buildProgressIndicator(bool visible) =>
-      widget.progressIndicator != false && visible
+      widget.progressIndicator != false && !_isRefreshing && visible
           ? Padding(
               padding: const EdgeInsets.all(8.0),
               child: const Center(child: CircularProgressIndicator()),
@@ -388,6 +389,12 @@ class SuperListState<T> extends State<SuperListView<T>> {
           );
         }
       });
+
+  Future<void> _onRefresh() {
+    if (_isRefreshing) return Future.value();
+    _isRefreshing = true;
+    return fetchInitial().whenComplete(() => _isRefreshing = false);
+  }
 }
 
 typedef void _FetchOnSuccess<T>(Map json, FetchContext<T> fetchContext);
