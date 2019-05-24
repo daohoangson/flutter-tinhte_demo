@@ -97,7 +97,7 @@ class _PostActionsWidgetState extends State<_PostActionsWidget> {
       );
 
   Widget _buildPopupMenu(BuildContext context, ActionablePost ap) {
-    return PopupMenuButton(
+    return PopupMenuButton<String>(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: kPaddingHorizontal),
         child: Text(

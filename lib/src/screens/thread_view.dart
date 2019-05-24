@@ -1,11 +1,16 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:share/share.dart';
 import 'package:tinhte_api/thread.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../widgets/app_bar.dart';
 import '../widgets/posts.dart';
 import '../intl.dart';
 import '../link.dart';
+
+const _kPopupActionOpenInBrowser = 'openInBrowser';
+const _kPopupActionShare = 'share';
 
 class ThreadViewScreen extends StatefulWidget {
   final Thread thread;
@@ -28,10 +33,37 @@ class _ThreadViewState extends State<ThreadViewScreen> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: buildAppBar(
+        appBar: AppBar(
           title: _buildAppBarTitle(),
+          actions: <Widget>[
+            AppBarNotificationButton(),
+            _buildAppBarPopupMenuButton(),
+          ],
         ),
         body: _buildBody(),
+      );
+
+  Widget _buildAppBarPopupMenuButton() => PopupMenuButton<String>(
+        itemBuilder: (context) => <PopupMenuEntry<String>>[
+              PopupMenuItem(
+                child: Text('Open in browser'),
+                value: _kPopupActionOpenInBrowser,
+              ),
+              PopupMenuItem(
+                child: Text('Share'),
+                value: _kPopupActionShare,
+              ),
+            ],
+        onSelected: (value) {
+          switch (value) {
+            case _kPopupActionOpenInBrowser:
+              launch(widget.thread.links?.permalink);
+              break;
+            case _kPopupActionShare:
+              Share.share(widget.thread.links?.permalink);
+              break;
+          }
+        },
       );
 
   Widget _buildAppBarTitle() => GestureDetector(
