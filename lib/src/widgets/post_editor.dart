@@ -4,7 +4,6 @@ import 'package:tinhte_api/post.dart';
 
 import '../api.dart';
 import 'attachment_editor.dart';
-import 'html.dart';
 import 'posts.dart';
 
 class PostEditor extends StatefulWidget {

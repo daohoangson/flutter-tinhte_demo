@@ -40,9 +40,10 @@ class _PostListWidget extends StatelessWidget {
 
     final post = item.post;
     if (post != null) {
-      return post.postIsFirstPost
-          ? _FirstPostWidget(thread, post)
-          : _buildPostRoot(context, state, post);
+      return ActionablePost.buildMultiProvider(
+        post,
+        post.postIsFirstPost ? _FirstPostWidget() : _PostWidget(),
+      );
     }
 
     return Container();
@@ -139,41 +140,6 @@ class _PostListWidget extends StatelessWidget {
               ),
             ),
           ),
-        ),
-      );
-
-  Widget _buildPostRoot(
-    BuildContext context,
-    SuperListState<_PostListItem> state,
-    Post post,
-  ) =>
-      MultiProvider(
-        providers: [
-          Provider<Post>.value(value: post),
-          NewPostStream.buildProvider(),
-        ],
-        child: buildRow(
-          context,
-          buildPosterCircleAvatar(post.links.posterAvatar),
-          box: <Widget>[
-            buildPosterInfo(
-              context,
-              state,
-              post.posterUsername,
-              userId: post.posterUserId,
-              userHasVerifiedBadge: post.posterHasVerifiedBadge,
-              userRank: post.posterRank?.rankName,
-            ),
-            TinhteHtmlWidget(post.postBodyHtml),
-            _PostAttachmentsWidget.forPost(post),
-          ],
-          footer: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(left: kPaddingHorizontal),
-              child: _PostActionsWidget(post),
-            ),
-            _PostRepliesWidget(post),
-          ],
         ),
       );
 

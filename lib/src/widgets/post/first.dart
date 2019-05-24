@@ -1,20 +1,11 @@
 part of '../posts.dart';
 
 class _FirstPostWidget extends StatelessWidget {
-  final Thread thread;
-  final Post post;
-
-  _FirstPostWidget(
-    this.thread,
-    this.post, {
-    Key key,
-  })  : assert(thread != null),
-        assert(post != null),
-        super(key: key);
-
   @override
   Widget build(BuildContext context) {
-    var widget = _buildPost(context, post);
+    final post = Provider.of<Post>(context);
+    final thread = Provider.of<Thread>(context);
+    var widget = _buildPost(context, post, thread);
 
     if (thread.threadImage?.displayMode == 'cover') {
       widget = Column(
@@ -31,14 +22,14 @@ class _FirstPostWidget extends StatelessWidget {
     return widget;
   }
 
-  Widget _buildPost(BuildContext context, Post post) => Padding(
+  Widget _buildPost(BuildContext context, Post post, Thread thread) => Padding(
         padding: const EdgeInsets.only(bottom: 20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             ThreadNavigation(thread),
             isThreadTitleRedundant(thread, post)
-                ? Container()
+                ? SizedBox.shrink()
                 : Padding(
                     padding: const EdgeInsets.symmetric(
                       horizontal: kPaddingHorizontal,
@@ -49,12 +40,12 @@ class _FirstPostWidget extends StatelessWidget {
                       style: Theme.of(context).textTheme.title,
                     ),
                   ),
-            TinhteHtmlWidget(post.postBodyHtml, isFirstPost: true),
-            _buildTags(context, thread) ?? Container(),
+            _PostBodyWidget(),
+            _buildTags(context, thread) ?? SizedBox.shrink(),
             thread.threadImage?.displayMode == 'cover'
-                ? Container()
-                : _PostAttachmentsWidget.forPost(post, thread: thread),
-            _PostActionsWidget(post, showPostCreateDate: false),
+                ? SizedBox.shrink()
+                : _PostAttachmentsWidget.forPost(post),
+            _PostActionsWidget(showPostCreateDate: false),
           ],
         ),
       );

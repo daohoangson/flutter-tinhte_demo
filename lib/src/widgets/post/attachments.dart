@@ -54,7 +54,7 @@ class _PostAttachmentsWidget extends StatelessWidget {
       return true;
     })?.toList();
 
-    if (attachments?.isNotEmpty != true) return Container();
+    if (attachments?.isNotEmpty != true) return SizedBox.shrink();
 
     return _PostAttachmentsWidget(attachments);
   }

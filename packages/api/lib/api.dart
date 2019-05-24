@@ -98,8 +98,8 @@ class Api {
     return OauthToken.fromJson(token.obtainMethod, json);
   }
 
-  Future<dynamic> deleteJson(String path) {
-    return sendRequest('DELETE', path, parseJson: true);
+  Future<dynamic> deleteJson(String path, {Map<String, String> bodyFields}) {
+    return sendRequest('DELETE', path, bodyFields: bodyFields, parseJson: true);
   }
 
   Future<dynamic> getJson(String path) {

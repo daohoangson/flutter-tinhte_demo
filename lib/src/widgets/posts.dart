@@ -8,6 +8,7 @@ import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:tinhte_api/attachment.dart';
 import 'package:tinhte_api/post.dart';
 import 'package:tinhte_api/thread.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../api.dart';
 import '../config.dart';
@@ -22,6 +23,7 @@ import 'threads.dart';
 
 part 'post/actions.dart';
 part 'post/attachments.dart';
+part 'post/body.dart';
 part 'post/builders.dart';
 part 'post/first.dart';
 part 'post/list.dart';

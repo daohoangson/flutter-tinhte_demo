@@ -7,6 +7,7 @@ import 'package:html/dom.dart' as dom;
 import 'package:photo_view/photo_view_gallery.dart';
 
 import '../config.dart';
+import '../constants.dart';
 import '../link.dart';
 import 'image.dart';
 
@@ -30,23 +31,16 @@ const _kSmilies = {
   'Er... what?': '😳',
 };
 
-const _kTextPadding = const EdgeInsets.symmetric(horizontal: 10);
-
-TextStyle getPostBodyTextStyle(BuildContext context, bool isFirstPost) {
-  final textStyle = Theme.of(context).textTheme.body1;
-  return textStyle.copyWith(
-    fontSize: textStyle.fontSize + (isFirstPost ? 1 : 0),
-  );
-}
+const _kTextPadding = const EdgeInsets.symmetric(horizontal: kPostBodyPadding);
 
 class TinhteHtmlWidget extends StatefulWidget {
   final String html;
-  final bool isFirstPost;
+  final TextStyle textStyle;
 
   TinhteHtmlWidget(
     this.html, {
-    this.isFirstPost = false,
     Key key,
+    this.textStyle,
   }) : super(key: key);
 
   @override
@@ -58,11 +52,11 @@ class _TinhteHtmlWidgetState extends State<TinhteHtmlWidget> {
   Widget build(BuildContext context) => HtmlWidget(
         "<html><body>${widget.html}</body></html>",
         baseUrl: Uri.parse(configSiteRoot),
-        bodyPadding: const EdgeInsets.only(top: 10),
+        bodyPadding: const EdgeInsets.only(top: kPostBodyPadding),
         factoryBuilder: (c, hw) => TinhteWidgetFactory(c, hw),
         hyperlinkColor: Theme.of(context).accentColor,
         onTapUrl: onTapUrl,
-        textStyle: getPostBodyTextStyle(context, widget.isFirstPost),
+        textStyle: widget.textStyle,
         webView: true,
       );
 

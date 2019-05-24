@@ -14,12 +14,16 @@ import 'constants.dart';
 final _oauthTokenRegEx = RegExp(r'oauth_token=.+(&|$)');
 
 void apiDelete(State state, String path,
-        {VoidCallback onComplete,
+        {Map<String, String> bodyFields,
+        VoidCallback onComplete,
         ApiOnError onError,
         ApiOnJsonMap onSuccess}) =>
     _setupApiJsonHandlers(
       state,
-      (d) => d.api.deleteJson(d._appendOauthToken(path)),
+      (d) => d.api.deleteJson(
+            d._appendOauthToken(path),
+            bodyFields: bodyFields,
+          ),
       onSuccess,
       onError,
       onComplete,

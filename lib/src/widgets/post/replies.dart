@@ -1,34 +1,55 @@
 part of '../posts.dart';
 
-Widget _buildPostReply(BuildContext context, State state, Post post) =>
-    buildRow(
+Widget _buildPostWidget(Post post) =>
+    ActionablePost.buildMultiProvider(post, _PostWidget());
+
+class _PostWidget extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => _PostWidgetState();
+}
+
+class _PostWidgetState extends State<_PostWidget> {
+  @override
+  Widget build(BuildContext context) {
+    final post = Provider.of<Post>(context);
+    final isPostReply = post.postReplyTo != null;
+
+    Widget built = buildRow(
       context,
-      buildPosterCircleAvatar(post.links.posterAvatar, isPostReply: true),
+      buildPosterCircleAvatar(
+        post.links.posterAvatar,
+        isPostReply: isPostReply,
+      ),
       box: <Widget>[
         buildPosterInfo(
           context,
-          state,
+          this,
           post.posterUsername,
           userId: post.posterUserId,
           userHasVerifiedBadge: post.posterHasVerifiedBadge,
           userRank: post.posterRank?.rankName,
         ),
-        TinhteHtmlWidget(post.postBodyHtml),
+        _PostBodyWidget(),
         _PostAttachmentsWidget.forPost(post),
       ],
       footer: <Widget>[
         Padding(
           padding: const EdgeInsets.only(left: kPaddingHorizontal),
-          child: _PostActionsWidget(post),
+          child: _PostActionsWidget(),
         ),
+        isPostReply ? SizedBox.shrink() : _PostRepliesWidget(),
       ],
     );
 
+    if (!isPostReply) {
+      built = NewPostStream.buildProvider(child: built);
+    }
+
+    return built;
+  }
+}
+
 class _PostRepliesWidget extends StatefulWidget {
-  final Post parentPost;
-
-  _PostRepliesWidget(this.parentPost, {Key key}) : super(key: key);
-
   @override
   State<StatefulWidget> createState() => _PostRepliesWidgetState();
 }
@@ -59,20 +80,21 @@ class _PostRepliesWidgetState extends State<_PostRepliesWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final postReplyCount = widget.parentPost?.postReplies?.length ?? 0;
+    final parentPost = Provider.of<Post>(context);
+    final postReplyCount = parentPost.postReplies?.length ?? 0;
     List<Widget> children = List(newPosts.length + postReplyCount);
 
     for (int i = 0; i < newPosts.length; i++) {
-      children[i] = _buildPostReply(context, this, newPosts[i]);
+      children[i] = _buildPostWidget(newPosts[i]);
     }
 
     for (int j = 0; j < postReplyCount; j++) {
-      final reply = widget.parentPost.postReplies[j];
+      final reply = parentPost.postReplies[j];
       children[newPosts.length + j] = reply.post != null
-          ? _buildPostReply(context, this, reply.post)
+          ? _buildPostWidget(reply.post)
           : reply.link?.isNotEmpty == true
               ? _PostReplyHiddenWidget(reply.link, reply.postReplyCount)
-              : Container(height: 0.0, width: 0.0);
+              : SizedBox.shrink();
     }
 
     return Padding(
@@ -134,7 +156,7 @@ class _PostReplyHiddenWidgetState extends State<_PostReplyHiddenWidget> {
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: _posts.map((p) => _buildPostReply(context, this, p)).toList(),
+      children: _posts.map((p) => _buildPostWidget(p)).toList(),
     );
   }
 
