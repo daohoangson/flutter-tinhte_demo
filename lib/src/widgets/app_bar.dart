@@ -125,6 +125,13 @@ class AppBarMenuIconButton extends StatelessWidget {
 }
 
 class AppBarNotificationButton extends StatelessWidget {
+  final bool visibleOnZero;
+
+  AppBarNotificationButton({
+    this.visibleOnZero = false,
+    Key key,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext _) => Consumer2<PushNotificationUnread, User>(
         builder: (context, unread, user, __) {
@@ -137,6 +144,8 @@ class AppBarNotificationButton extends StatelessWidget {
               );
 
           if (value == 0) {
+            if (!visibleOnZero) return SizedBox.shrink();
+
             return IconButton(
               icon: Icon(Icons.notifications_none),
               onPressed: onPressed,

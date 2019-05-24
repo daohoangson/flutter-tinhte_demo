@@ -36,7 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
           automaticallyImplyLeading: false,
           leading: AppBarMenuIconButton(),
           actions: <Widget>[
-            AppBarNotificationButton(),
+            AppBarNotificationButton(visibleOnZero: true),
           ],
         ),
         body: SuperListView<_HomeListItem>(
