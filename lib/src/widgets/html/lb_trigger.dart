@@ -76,7 +76,9 @@ class LbTrigger {
             thumbnail = buildGestureDetector(meta.context, index, thumbnail);
           }
 
-          return [wf.buildWrap([thumbnail])];
+          return [
+            wf.buildWrap([thumbnail])
+          ];
         }
 
         Widget full = AttachmentImageWidget(
@@ -199,11 +201,27 @@ class _ScreenState extends State<_Screen> {
               direction: DismissDirection.down,
               key: key,
               onDismissed: (_) => Navigator.pop(context),
+              resizeDuration: null,
             ),
             Padding(
               child: _buildCaption(_currentPage),
               padding: const EdgeInsets.fromLTRB(10, 0, 10, 30),
-            )
+            ),
+            Align(
+              alignment: Alignment.topRight,
+              child: InkWell(
+                child: SafeArea(
+                  child: Padding(
+                    child: Icon(
+                      Icons.close,
+                      color: Colors.white,
+                    ),
+                    padding: const EdgeInsets.all(10),
+                  ),
+                ),
+                onTap: () => Navigator.pop(context),
+              ),
+            ),
           ],
         ),
       ),
