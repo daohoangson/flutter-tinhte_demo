@@ -127,7 +127,6 @@ class _NotificationsWidgetState extends State<NotificationsWidget> {
   }
 
   void _subscribe(String fcmToken, OauthToken token, User user) async {
-    debugPrint("before _subscribedUserId=$_subscribedUserId");
     if (fcmToken?.isNotEmpty != true) return;
 
     final url = "$configPushServer/subscribe";
@@ -153,7 +152,6 @@ class _NotificationsWidgetState extends State<NotificationsWidget> {
     if (response.statusCode == 202) {
       debugPrint("Subscribed $fcmToken at $url for $hubUri/$hubTopic...");
       _subscribedUserId = user.userId;
-      debugPrint("after _subscribedUserId=$_subscribedUserId");
     } else {
       debugPrint("Failed subscribing $fcmToken: "
           "status=${response.statusCode}, body=${response.body}");
