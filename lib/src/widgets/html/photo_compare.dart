@@ -51,44 +51,42 @@ class _PhotoCompareState extends State<_PhotoCompareWidget>
   void initState() {
     super.initState();
 
-    controller =
-        AnimationController(duration: Duration(milliseconds: 100), vsync: this);
+    controller = AnimationController(
+      duration: Duration(milliseconds: 100),
+      vsync: this,
+    );
     controller.value = .5;
   }
 
   @override
   Widget build(BuildContext _) => LayoutBuilder(
-        builder: (context, _) => GestureDetector(
-              child: Stack(
-                children: <Widget>[
-                  widget.second,
-                  AnimatedBuilder(
-                    animation: controller,
-                    // TODO: avoid using ClipRect
-                    builder: (_, child) => ClipRect(
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: child,
-                            widthFactor: controller.value,
+        builder: (context, _) => Column(
+              children: <Widget>[
+                Stack(
+                  children: <Widget>[
+                    widget.second,
+                    AnimatedBuilder(
+                      animation: controller,
+                      // TODO: avoid using ClipRect
+                      builder: (_, __) => ClipRect(
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: widget.first,
+                              widthFactor: controller.value,
+                            ),
                           ),
-                        ),
-                    child: widget.first,
-                  ),
-                ],
-              ),
-              onTapUp: (details) => _onDrag(context, details.globalPosition),
-              onHorizontalDragUpdate: (details) =>
-                  _onDrag(context, details.globalPosition),
+                    ),
+                  ],
+                ),
+                Slider(
+                  value: controller.value,
+                  onChanged: (v) =>
+                      controller.animateTo(v, curve: Curves.easeInOut),
+                ),
+              ],
+              crossAxisAlignment: CrossAxisAlignment.stretch,
             ),
       );
-
-  void _onDrag(BuildContext context, Offset globalPosition) {
-    final box = context.findRenderObject() as RenderBox;
-    final local = box.globalToLocal(globalPosition);
-    final target = local.dx / box.size.width;
-
-    controller.animateTo(target, curve: Curves.easeInOut);
-  }
 }
 
 Widget _noPadding(Widget w) => w is Padding ? w.child : w;
