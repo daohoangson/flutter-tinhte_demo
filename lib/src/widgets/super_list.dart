@@ -69,8 +69,7 @@ class FetchContext<T> {
     this.apiMethod,
     @required this.id,
     @required this.path,
-  })  : assert(id != null),
-        assert(path != null);
+  })  : assert(id != null);
 
   void addItem(T item) {
     _items ??= [];

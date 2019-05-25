@@ -10,8 +10,7 @@ import 'widgets/navigation.dart';
 import 'push_notification.dart';
 
 const _kRouteHome = 'home';
-
-bool isNarrow(BuildContext context) => MediaQuery.of(context).size.width < 1000;
+const _kNarrowWidth = 1000;
 
 class ResponsiveLayout extends StatefulWidget {
   @override
@@ -26,11 +25,16 @@ class _ResponsiveLayoutState extends State<ResponsiveLayout> {
   @override
   Widget build(BuildContext _) => PushNotificationApp(
         child: WillPopScope(
-          child: OrientationBuilder(
-            builder: (c, _) => Provider<ResponsiveState>.value(
-                  child: isNarrow(c) ? buildNarrow() : buildWide(),
-                  value: ResponsiveState(this),
-                ),
+          child: LayoutBuilder(
+            builder: (_, bc) {
+              final isNarrow = bc.maxWidth < _kNarrowWidth;
+              final child = isNarrow ? buildNarrow() : buildWide();
+              final rs = ResponsiveState(
+                narrowKey: isNarrow ? narrowKey : null,
+              );
+
+              return Provider<ResponsiveState>.value(child: child, value: rs);
+            },
           ),
           onWillPop: () async {
             final primary = primaryNavKey.currentState;
@@ -93,13 +97,14 @@ class _ResponsiveLayoutState extends State<ResponsiveLayout> {
 }
 
 class ResponsiveState {
-  final _ResponsiveLayoutState _rls;
+  final GlobalKey<ScaffoldState> _narrowKey;
 
-  ResponsiveState(this._rls);
+  ResponsiveState({GlobalKey<ScaffoldState> narrowKey})
+      : _narrowKey = narrowKey;
 
-  bool hasDrawer() => isNarrow(_rls.context);
+  bool hasDrawer() => _narrowKey != null;
 
-  void openDrawer() => _rls.narrowKey.currentState?.openDrawer();
+  void openDrawer() => _narrowKey?.currentState?.openDrawer();
 }
 
 class _SidebarNavigator extends Navigator {
