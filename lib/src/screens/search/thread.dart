@@ -2,16 +2,21 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:tinhte_api/node.dart';
+import 'package:tinhte_api/user.dart';
 
 import '../../widgets/threads.dart';
 import '../../api.dart';
 
 class ThreadSearchDelegate extends SearchDelegate {
   final Forum forum;
+  final User user;
 
   _ApiQuery _apiQuery;
 
-  ThreadSearchDelegate({this.forum});
+  ThreadSearchDelegate({
+    this.forum,
+    this.user,
+  });
 
   @override
   List<Widget> buildActions(BuildContext context) => [
@@ -51,6 +56,9 @@ class ThreadSearchDelegate extends SearchDelegate {
     if (forum != null) {
       sb.write(" in forum '${forum.title}'");
     }
+    if (user != null) {
+      sb.write(" by user '${user.username}'");
+    }
 
     sb.write(query.isEmpty ? '...' : '.');
 
@@ -84,7 +92,8 @@ class _ApiQuery extends ApiCaller {
     apiPost(
       this,
       "search/threads?q=${Uri.encodeQueryComponent(query)}"
-      "&forum_id=${_delegate.forum?.forumId ?? 0}",
+      "&forum_id=${_delegate.forum?.forumId ?? 0}"
+      "&user_id=${_delegate.user?.userId ?? 0}",
       onSuccess: (jsonMap) => _completer.complete(jsonMap),
     );
   }

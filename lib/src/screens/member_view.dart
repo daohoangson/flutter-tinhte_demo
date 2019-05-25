@@ -5,6 +5,7 @@ import '../widgets/user/member_view_header.dart';
 import '../widgets/app_bar.dart';
 import '../widgets/threads.dart';
 import '../api.dart';
+import 'search/thread.dart';
 
 class MemberViewScreen extends StatelessWidget {
   final User user;
@@ -23,6 +24,13 @@ class MemberViewScreen extends StatelessWidget {
           header: MemberViewHeader(user),
           path: "search/threads?user_id=${user.userId}",
           threadsKey: 'data',
+        ),
+        floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.search),
+          onPressed: () => showSearch(
+                context: context,
+                delegate: ThreadSearchDelegate(user: user),
+              ),
         ),
       );
 }
