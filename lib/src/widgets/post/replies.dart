@@ -23,7 +23,6 @@ class _PostWidgetState extends State<_PostWidget> {
       box: <Widget>[
         buildPosterInfo(
           context,
-          this,
           post.posterUsername,
           userId: post.posterUserId,
           userHasVerifiedBadge: post.posterHasVerifiedBadge,
@@ -165,7 +164,7 @@ class _PostReplyHiddenWidgetState extends State<_PostReplyHiddenWidget> {
     setState(() => _hasFetched = true);
 
     return apiGet(
-      this,
+      ApiCaller.stateful(this),
       widget.link,
       onSuccess: (jsonMap) {
         if (!jsonMap.containsKey('replies')) {

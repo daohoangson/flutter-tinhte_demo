@@ -95,7 +95,6 @@ Widget buildPosterCircleAvatar(String url, {bool isPostReply = false}) =>
 
 Widget buildPosterInfo(
   BuildContext context,
-  State state,
   String username, {
   int userId,
   bool userHasVerifiedBadge,
@@ -142,7 +141,7 @@ Widget buildPosterInfo(
   if (userId != null) {
     built = GestureDetector(
       child: built,
-      onTap: () => launchMemberView(state, userId),
+      onTap: () => launchMemberView(context, userId),
     );
   }
 

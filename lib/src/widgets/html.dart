@@ -33,7 +33,7 @@ const _kSmilies = {
 
 const _kTextPadding = const EdgeInsets.symmetric(horizontal: kPostBodyPadding);
 
-class TinhteHtmlWidget extends StatefulWidget {
+class TinhteHtmlWidget extends StatelessWidget {
   final String html;
   final TextStyle textStyle;
 
@@ -44,23 +44,16 @@ class TinhteHtmlWidget extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _TinhteHtmlWidgetState();
-}
-
-class _TinhteHtmlWidgetState extends State<TinhteHtmlWidget> {
-  @override
   Widget build(BuildContext context) => HtmlWidget(
-        "<html><body>${widget.html}</body></html>",
+        "<html><body>$html</body></html>",
         baseUrl: Uri.parse(configSiteRoot),
         bodyPadding: const EdgeInsets.only(top: kPostBodyPadding),
         factoryBuilder: (c, hw) => TinhteWidgetFactory(c, hw),
         hyperlinkColor: Theme.of(context).accentColor,
-        onTapUrl: onTapUrl,
-        textStyle: widget.textStyle,
+        onTapUrl: (url) => launchLink(context, url),
+        textStyle: textStyle,
         webView: true,
       );
-
-  void onTapUrl(String url) => launchLink(this, url);
 }
 
 class TinhteWidgetFactory extends WidgetFactory {

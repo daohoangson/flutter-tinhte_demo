@@ -332,7 +332,7 @@ class SuperListState<T> extends State<SuperListView<T>> {
     final c = Completer();
     final apiMethod = fc.apiMethod ?? apiGet;
     apiMethod(
-      this,
+      ApiCaller.stateful(this),
       fc.path,
       onSuccess: (json) => _fetchOnSuccess(json, fc),
       onComplete: () {

@@ -66,23 +66,18 @@ class _FirstPostWidget extends StatelessWidget {
   }
 }
 
-class _TagChip extends StatefulWidget {
+class _TagChip extends StatelessWidget {
   final String tagText;
 
   _TagChip(this.tagText);
 
   @override
-  State<StatefulWidget> createState() => _TagChipState();
-}
-
-class _TagChipState extends State<_TagChip> {
-  @override
   Widget build(BuildContext context) => ActionChip(
-        label: Text("#${widget.tagText}", style: TextStyle(fontSize: 11)),
+        label: Text("#$tagText", style: TextStyle(fontSize: 11)),
         labelPadding: const EdgeInsets.symmetric(horizontal: 3),
         onPressed: () => launchLink(
-              this,
-              "$configSiteRoot/tags?t=${Uri.encodeQueryComponent(widget.tagText)}",
+              context,
+              "$configSiteRoot/tags?t=${Uri.encodeQueryComponent(tagText)}",
             ),
       );
 }

@@ -101,7 +101,7 @@ class _HomeThreadActionsWidget extends StatefulWidget {
 }
 
 class _HomeThreadActionsWidgetState extends State<_HomeThreadActionsWidget> {
-  bool isLiking = false;
+  var _isLiking = false;
 
   String get linkLikes => post?.links?.likes;
   Post get post => thread?.firstPost;
@@ -160,7 +160,7 @@ class _HomeThreadActionsWidgetState extends State<_HomeThreadActionsWidget> {
             ? const Icon(FontAwesomeIcons.solidHeart)
             : const Icon(FontAwesomeIcons.heart),
         label: postIsLiked ? const Text('Unlike') : const Text('Like'),
-        onPressed: isLiking
+        onPressed: _isLiking
             ? null
             : linkLikes?.isNotEmpty != true
                 ? null
@@ -184,27 +184,33 @@ class _HomeThreadActionsWidgetState extends State<_HomeThreadActionsWidget> {
       ? Text("${formatNumber(threadPostCount)} Posts")
       : Container(height: 0.0, width: 0.0);
 
-  _likePost() => prepareForApiAction(this, () {
-        if (isLiking) return;
-        setState(() => isLiking = true);
+  _likePost() => prepareForApiAction(context, () {
+        if (_isLiking) return;
+        setState(() => _isLiking = true);
 
-        apiPost(this, linkLikes,
-            onSuccess: (_) => setState(() {
-                  postIsLiked = true;
-                  postLikeCount++;
-                }),
-            onComplete: () => setState(() => isLiking = false));
+        apiPost(
+          ApiCaller.stateful(this),
+          linkLikes,
+          onSuccess: (_) => setState(() {
+                postIsLiked = true;
+                postLikeCount++;
+              }),
+          onComplete: () => setState(() => _isLiking = false),
+        );
       });
 
-  _unlikePost() => prepareForApiAction(this, () {
-        if (isLiking) return;
-        setState(() => isLiking = true);
+  _unlikePost() => prepareForApiAction(context, () {
+        if (_isLiking) return;
+        setState(() => _isLiking = true);
 
-        apiDelete(this, linkLikes,
-            onSuccess: (_) => setState(() {
-                  postIsLiked = false;
-                  if (postLikeCount > 0) postLikeCount--;
-                }),
-            onComplete: () => setState(() => isLiking = false));
+        apiDelete(
+          ApiCaller.stateful(this),
+          linkLikes,
+          onSuccess: (_) => setState(() {
+                postIsLiked = false;
+                if (postLikeCount > 0) postLikeCount--;
+              }),
+          onComplete: () => setState(() => _isLiking = false),
+        );
       });
 }

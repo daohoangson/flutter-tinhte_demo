@@ -120,7 +120,7 @@ class _PushNotificationAppState extends State<PushNotificationApp> {
     final id = data['notification_id'];
 
     return parseLink(
-      widget.primaryNavKey.currentState,
+      widget.primaryNavKey.currentState.context,
       path: "notifications/content?notification_id=$id",
     );
   }

@@ -12,7 +12,7 @@ import '../link.dart';
 const _kPopupActionOpenInBrowser = 'openInBrowser';
 const _kPopupActionShare = 'share';
 
-class ThreadViewScreen extends StatefulWidget {
+class ThreadViewScreen extends StatelessWidget {
   final Thread thread;
   final Map initialJson;
 
@@ -24,17 +24,9 @@ class ThreadViewScreen extends StatefulWidget {
         super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _ThreadViewState();
-}
-
-class _ThreadViewState extends State<ThreadViewScreen> {
-  Map get initialJson => widget.initialJson;
-  Thread get thread => widget.thread;
-
-  @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
-          title: _buildAppBarTitle(),
+          title: _buildAppBarTitle(context),
           actions: <Widget>[
             AppBarNotificationButton(),
             _buildAppBarPopupMenuButton(),
@@ -57,16 +49,16 @@ class _ThreadViewState extends State<ThreadViewScreen> {
         onSelected: (value) {
           switch (value) {
             case _kPopupActionOpenInBrowser:
-              launch(widget.thread.links?.permalink);
+              launch(thread.links?.permalink);
               break;
             case _kPopupActionShare:
-              Share.share(widget.thread.links?.permalink);
+              Share.share(thread.links?.permalink);
               break;
           }
         },
       );
 
-  Widget _buildAppBarTitle() => GestureDetector(
+  Widget _buildAppBarTitle(BuildContext context) => GestureDetector(
         child: Row(
           children: <Widget>[
             CircleAvatar(
@@ -102,7 +94,7 @@ class _ThreadViewState extends State<ThreadViewScreen> {
             ),
           ],
         ),
-        onTap: () => launchMemberView(this, thread.creatorUserId),
+        onTap: () => launchMemberView(context, thread.creatorUserId),
       );
 
   Widget _buildBody() => PostsWidget(

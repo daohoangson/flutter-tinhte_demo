@@ -13,13 +13,13 @@ import 'constants.dart';
 
 final _oauthTokenRegEx = RegExp(r'oauth_token=.+(&|$)');
 
-void apiDelete(State state, String path,
+void apiDelete(ApiCaller caller, String path,
         {Map<String, String> bodyFields,
         VoidCallback onComplete,
         ApiOnError onError,
         ApiOnJsonMap onSuccess}) =>
     _setupApiJsonHandlers(
-      state,
+      caller,
       (d) => d.api.deleteJson(
             d._appendOauthToken(path),
             bodyFields: bodyFields,
@@ -29,26 +29,26 @@ void apiDelete(State state, String path,
       onComplete,
     );
 
-void apiGet(State state, String path,
+void apiGet(ApiCaller caller, String path,
         {VoidCallback onComplete,
         ApiOnError onError,
         ApiOnJsonMap onSuccess}) =>
     _setupApiJsonHandlers(
-      state,
+      caller,
       (d) => d.api.getJson(d._appendOauthToken(path)),
       onSuccess,
       onError,
       onComplete,
     );
 
-void apiPost(State state, String path,
+void apiPost(ApiCaller caller, String path,
         {Map<String, String> bodyFields,
         Map<String, File> fileFields,
         VoidCallback onComplete,
         ApiOnError onError,
         ApiOnJsonMap onSuccess}) =>
     _setupApiJsonHandlers(
-      state,
+      caller,
       (d) => d.api.postJson(
             d._appendOauthToken(path),
             bodyFields: bodyFields,
@@ -60,14 +60,14 @@ void apiPost(State state, String path,
     );
 
 void prepareForApiAction(
-  State state,
+  BuildContext context,
   VoidCallback onReady, {
   VoidCallback onError,
 }) async {
-  final apiAuth = ApiAuth.of(state.context, listen: false);
+  final apiAuth = ApiAuth.of(context, listen: false);
 
   if (!apiAuth.hasToken) {
-    final loggedIn = await Navigator.push(state.context, LoginScreenRoute());
+    final loggedIn = await Navigator.push(context, LoginScreenRoute());
     if (loggedIn != true) {
       if (onError != null) onError();
       return;
@@ -95,7 +95,7 @@ Future showApiErrorDialog(
     );
 
 void _setupApiCompleter<T>(
-  State state,
+  ApiCaller caller,
   Completer<T> completer,
   ApiOnSuccess<T> onSuccess,
   ApiOnError onError,
@@ -105,19 +105,21 @@ void _setupApiCompleter<T>(
 
   if (onSuccess != null) {
     f = f.then(
-      (data) => (state.mounted && onSuccess != null) ? onSuccess(data) : null,
+      (data) => (caller.canReceiveCallback && onSuccess != null)
+          ? onSuccess(data)
+          : null,
     );
   }
 
   f = f.catchError((error) {
-    if (!state.mounted) return;
+    if (!caller.canReceiveCallback) return;
     if (onError != null) return onError(error);
-    showApiErrorDialog(state.context, error);
+    showApiErrorDialog(caller.context, error);
   });
 
   if (onComplete != null) {
     f.whenComplete(() {
-      if (!state.mounted) return;
+      if (!caller.canReceiveCallback) return;
       if (onComplete == null) return;
       onComplete();
     });
@@ -125,18 +127,18 @@ void _setupApiCompleter<T>(
 }
 
 void _setupApiJsonHandlers(
-  State state,
+  ApiCaller caller,
   ApiFetch fetch,
   ApiOnJsonMap onSuccess,
   ApiOnError onError,
   VoidCallback onComplete,
 ) {
-  final aas = Provider.of<_ApiAppState>(state.context, listen: false);
+  final aas = Provider.of<_ApiAppState>(caller.context, listen: false);
   final completer = Completer();
   aas._enqueue(() => completer.complete(fetch(aas)));
 
   return _setupApiCompleter<dynamic>(
-    state,
+    caller,
     completer,
     onSuccess != null
         ? (json) {
@@ -154,7 +156,7 @@ void _setupApiJsonHandlers(
 
 typedef Future ApiFetch(_ApiAppState aas);
 typedef void ApiMethod(
-  State state,
+  ApiCaller caller,
   String path, {
   VoidCallback onComplete,
   ApiOnError onError,
@@ -179,11 +181,10 @@ class ApiApp extends StatefulWidget {
 }
 
 class _ApiAppState extends State<ApiApp> {
-  OauthToken _token;
-  bool _tokenHasBeenSet = false;
-  User _user = User(0);
-
   List<VoidCallback> _queue;
+  OauthToken _token;
+  var _tokenHasBeenSet = false;
+  var _user = User(0);
 
   Api get api => widget.api;
 
@@ -191,11 +192,9 @@ class _ApiAppState extends State<ApiApp> {
   void initState() {
     super.initState();
 
-    SharedPreferences.getInstance().then((SharedPreferences prefs) {
+    SharedPreferences.getInstance().then((prefs) {
       final clientId = prefs.getString(kPrefKeyTokenClientId);
-      if (clientId != api.clientId) {
-        return _setToken(null, savePref: false);
-      }
+      if (clientId != api.clientId) return _setToken(null, savePref: false);
 
       final t = prefs.getString(kPrefKeyTokenAccessToken);
       final expiresAtKey = kPrefKeyTokenExpiresAtMillisecondsSinceEpoch;
@@ -251,39 +250,33 @@ class _ApiAppState extends State<ApiApp> {
       try {
         __callback();
       } catch (e) {
-        // print and ignore to avoid affecting others in batch
-        // this should not happen in normal circumstances because
-        // _setupApiFuture as a default onError handler
+        // print and ignore to avoid affecting other callbacks in the same batch
         print(e);
       }
     }
     batch.fetch();
   }
 
-  void _fetchUser() {
-    _enqueue(() async {
-      if (_token == null) return;
+  void _fetchUser() => _enqueue(() async {
+        if (_token == null) return;
 
-      try {
-        final json = await api.getJson(_appendOauthToken('users/me'));
-        if (json is Map && json.containsKey('user')) {
-          final user = User.fromJson(json['user']);
-          setState(() => _user = user);
+        try {
+          final json = await api.getJson(_appendOauthToken('users/me'));
+          if (json is Map && json.containsKey('user')) {
+            final user = User.fromJson(json['user']);
+            setState(() => _user = user);
+          }
+        } on ApiError catch (ae) {
+          debugPrint("_fetchUser encountered an api error: ${ae.message}");
+        } catch (e) {
+          print(e);
         }
-      } on ApiError catch (ae) {
-        debugPrint("_fetchUser encountered an api error: ${ae.message}");
-      } catch (e) {
-        print(e);
-      }
-    });
-  }
+      });
 
-  void _refreshToken() {
-    api
-        .refreshToken(_token)
-        .then((refreshedToken) => _setToken(refreshedToken))
-        .catchError((_) => _setToken(null));
-  }
+  void _refreshToken() => api
+      .refreshToken(_token)
+      .then((refreshedToken) => _setToken(refreshedToken))
+      .catchError((_) => _setToken(null));
 
   void _setToken(OauthToken value, {bool savePref = true}) {
     if (savePref) {
@@ -328,4 +321,30 @@ class ApiAuth {
 
   static ApiAuth of(BuildContext context, {bool listen = true}) =>
       Provider.of<ApiAuth>(context, listen: listen);
+}
+
+abstract class ApiCaller {
+  bool get canReceiveCallback;
+  BuildContext get context;
+
+  static ApiCaller stateful(State state) => _ApiCallerStateful(state);
+  static ApiCaller stateless(BuildContext context) =>
+      _ApiCallerStateless(context);
+}
+
+class _ApiCallerStateful extends ApiCaller {
+  final State _state;
+
+  _ApiCallerStateful(this._state);
+
+  bool get canReceiveCallback => _state.mounted;
+  BuildContext get context => _state.context;
+}
+
+class _ApiCallerStateless extends ApiCaller {
+  final BuildContext context;
+
+  _ApiCallerStateless(this.context);
+
+  bool get canReceiveCallback => true;
 }

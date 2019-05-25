@@ -13,22 +13,17 @@ import '../push_notification.dart';
 import 'html.dart';
 import 'super_list.dart';
 
-class NotificationsWidget extends StatefulWidget {
-  NotificationsWidget({Key key}) : super(key: key);
-
-  @override
-  State<StatefulWidget> createState() => _NotificationsWidgetState();
-}
-
 int _subscribedUserId = 0;
 
-class _NotificationsWidgetState extends State<NotificationsWidget> {
+class NotificationsWidget extends StatelessWidget {
+  NotificationsWidget({Key key}) : super(key: key);
+
   @override
   Widget build(BuildContext _) => Consumer2<PushNotificationToken, User>(
         builder: (context, pnt, user, __) {
           if (user.userId > 0 && user.userId != _subscribedUserId) {
             final token = ApiAuth.of(context, listen: false).token;
-            _subscribe(pnt.value, token, user);
+            _subscribe(context, pnt.value, token, user);
           }
 
           return SuperListView<api.Notification>(
@@ -95,7 +90,7 @@ class _NotificationsWidgetState extends State<NotificationsWidget> {
     }
 
     if (fc.id == FetchContextId.FetchInitial) {
-      apiPost(fc.state, 'notifications/read');
+      apiPost(ApiCaller.stateless(fc.state.context), 'notifications/read');
     }
   }
 
@@ -126,7 +121,12 @@ class _NotificationsWidgetState extends State<NotificationsWidget> {
     });
   }
 
-  void _subscribe(String fcmToken, OauthToken token, User user) async {
+  void _subscribe(
+    BuildContext context,
+    String fcmToken,
+    OauthToken token,
+    User user,
+  ) async {
     if (fcmToken?.isNotEmpty != true) return;
 
     final url = "$configPushServer/subscribe";

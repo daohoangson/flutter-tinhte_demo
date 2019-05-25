@@ -169,18 +169,18 @@ class _PostActionsWidgetState extends State<_PostActionsWidget> {
   }
 
   void _deletePost(ActionablePost ap, String reason) => apiDelete(
-        this,
+        ApiCaller.stateful(this),
         ap.post.links.detail,
         bodyFields: {'reason': reason},
         onSuccess: (_) => ap.setIsDeleted(),
       );
 
-  void _likePost(ActionablePost ap) => prepareForApiAction(this, () {
+  void _likePost(ActionablePost ap) => prepareForApiAction(context, () {
         if (_isLiking) return;
         setState(() => _isLiking = true);
 
         apiPost(
-          this,
+          ApiCaller.stateful(this),
           ap.post.links.likes,
           onSuccess: (_) => ap.setIsLiked(true),
           onComplete: () => setState(() => _isLiking = false),
@@ -188,9 +188,9 @@ class _PostActionsWidgetState extends State<_PostActionsWidget> {
       });
 
   void _reportPost(ActionablePost ap, String message) => prepareForApiAction(
-        this,
+        context,
         () => apiPost(
-              this,
+              ApiCaller.stateful(this),
               ap.post.links.report,
               bodyFields: {'message': message},
               onSuccess: (_) => Scaffold.of(context).showSnackBar(
@@ -199,12 +199,12 @@ class _PostActionsWidgetState extends State<_PostActionsWidget> {
             ),
       );
 
-  void _unlikePost(ActionablePost ap) => prepareForApiAction(this, () {
+  void _unlikePost(ActionablePost ap) => prepareForApiAction(context, () {
         if (_isLiking) return;
         setState(() => _isLiking = true);
 
         apiDelete(
-          this,
+          ApiCaller.stateful(this),
           ap.post.links.likes,
           onSuccess: (_) => ap.setIsLiked(false),
           onComplete: () => setState(() => _isLiking = false),

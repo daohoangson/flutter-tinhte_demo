@@ -115,7 +115,7 @@ class _FollowButton extends StatefulWidget {
 }
 
 class _FollowButtonState extends State<_FollowButton> {
-  bool _isFetching = false;
+  var _isRequesting = false;
 
   bool get isFollowed => widget.user.userIsFollowed == true;
 
@@ -125,28 +125,32 @@ class _FollowButtonState extends State<_FollowButton> {
           ? FlatButton(
               child: Text(isFollowed ? 'Unfollow' : 'Follow'),
               onPressed: widget.user.permissions?.follow == true
-                  ? (_isFetching ? null : isFollowed ? _unfollow : _follow)
+                  ? (_isRequesting ? null : isFollowed ? _unfollow : _follow)
                   : null,
             )
           : Container();
 
-  void _follow() => prepareForApiAction(this, () {
-        setState(() => _isFetching = true);
+  void _follow() => prepareForApiAction(context, () {
+        if (_isRequesting) return;
+        setState(() => _isRequesting = true);
+
         apiPost(
-          this,
+          ApiCaller.stateful(this),
           widget.user.links.followers,
           onSuccess: (_) => setState(() => widget.user.userIsFollowed = true),
-          onComplete: () => setState(() => _isFetching = false),
+          onComplete: () => setState(() => _isRequesting = false),
         );
       });
 
-  void _unfollow() => prepareForApiAction(this, () {
-        setState(() => _isFetching = true);
+  void _unfollow() => prepareForApiAction(context, () {
+        if (_isRequesting) return;
+        setState(() => _isRequesting = true);
+
         apiDelete(
-          this,
+          ApiCaller.stateful(this),
           widget.user.links.followers,
           onSuccess: (_) => setState(() => widget.user.userIsFollowed = false),
-          onComplete: () => setState(() => _isFetching = false),
+          onComplete: () => setState(() => _isRequesting = false),
         );
       });
 }
@@ -161,7 +165,7 @@ class _IgnoreButton extends StatefulWidget {
 }
 
 class _IgnoreButtonState extends State<_IgnoreButton> {
-  bool _isFetching = false;
+  var _isRequesting = false;
 
   bool get isIgnored => widget.user.userIsIgnored == true;
 
@@ -171,28 +175,32 @@ class _IgnoreButtonState extends State<_IgnoreButton> {
           ? FlatButton(
               child: Text(isIgnored ? 'Unignore' : 'Ignore'),
               onPressed: widget.user.permissions?.ignore == true
-                  ? (_isFetching ? null : isIgnored ? _unignore : _ignore)
+                  ? (_isRequesting ? null : isIgnored ? _unignore : _ignore)
                   : null,
             )
           : Container();
 
-  void _ignore() => prepareForApiAction(this, () {
-        setState(() => _isFetching = true);
+  void _ignore() => prepareForApiAction(context, () {
+        if (_isRequesting) return;
+        setState(() => _isRequesting = true);
+
         apiPost(
-          this,
+          ApiCaller.stateful(this),
           widget.user.links.ignore,
           onSuccess: (_) => setState(() => widget.user.userIsIgnored = true),
-          onComplete: () => setState(() => _isFetching = false),
+          onComplete: () => setState(() => _isRequesting = false),
         );
       });
 
-  void _unignore() => prepareForApiAction(this, () {
-        setState(() => _isFetching = true);
+  void _unignore() => prepareForApiAction(context, () {
+        if (_isRequesting) return;
+        setState(() => _isRequesting = true);
+
         apiDelete(
-          this,
+          ApiCaller.stateful(this),
           widget.user.links.ignore,
           onSuccess: (_) => setState(() => widget.user.userIsIgnored = false),
-          onComplete: () => setState(() => _isFetching = false),
+          onComplete: () => setState(() => _isRequesting = false),
         );
       });
 }

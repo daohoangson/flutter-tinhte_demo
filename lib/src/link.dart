@@ -13,12 +13,12 @@ import 'screens/member_view.dart';
 import 'screens/tag_view.dart';
 import 'screens/thread_view.dart';
 
-void launchLink(State state, String link) async {
+void launchLink(BuildContext context, String link) async {
   if (link.startsWith(configSiteRoot)) {
-    final parsed = await parseLink(state, link: link);
+    final parsed = await parseLink(context, link: link);
     if (parsed) return;
 
-    final apiAuth = ApiAuth.of(state.context, listen: false);
+    final apiAuth = ApiAuth.of(context, listen: false);
     if (apiAuth.hasToken) {
       link = "$configApiRoot?tools/login"
           "&oauth_token=${apiAuth.token.accessToken}"
@@ -31,17 +31,17 @@ void launchLink(State state, String link) async {
   launch(link);
 }
 
-void launchMemberView(State state, int userId) =>
-    launchLink(state, "$configSiteRoot/members/$userId/");
+void launchMemberView(BuildContext context, int userId) =>
+    launchLink(context, "$configSiteRoot/members/$userId/");
 
-Future<bool> parseLink(State state, {String link, String path}) {
+Future<bool> parseLink(BuildContext context, {String link, String path}) {
   assert((link == null) != (path == null));
   var cancelled = false;
   final completer = Completer<bool>();
   var parsed = false;
 
   showDialog(
-    context: state.context,
+    context: context,
     barrierDismissible: false,
     builder: (context) => AlertDialog(
           content: Text('Just a moment...'),
@@ -60,12 +60,12 @@ Future<bool> parseLink(State state, {String link, String path}) {
   final cancelDialog = () {
     if (cancelled) return;
 
-    Navigator.of(state.context, rootNavigator: true).pop();
+    Navigator.of(context, rootNavigator: true).pop();
     cancelled = true;
   };
 
   apiGet(
-    state,
+    ApiCaller.stateless(context),
     path ?? 'tools/parse-link?link=${Uri.encodeQueryComponent(link)}',
     onSuccess: (json) {
       if (cancelled) return;
@@ -82,7 +82,7 @@ Future<bool> parseLink(State state, {String link, String path}) {
       if (route != null) {
         parsed = true;
         cancelDialog();
-        Navigator.of(state.context).push(route);
+        Navigator.of(context).push(route);
       }
     },
     onError: (error) {

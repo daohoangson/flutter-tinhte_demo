@@ -63,7 +63,7 @@ class _FeaturePagesWidgetState extends State<FeaturePagesWidget> {
       );
 
   void _fetch() => apiGet(
-        this,
+        ApiCaller.stateful(this),
         'feature-pages?order=promoted&limit=20',
         onSuccess: (jsonMap) {
           if (!jsonMap.containsKey('pages')) return;

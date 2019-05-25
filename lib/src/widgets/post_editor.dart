@@ -50,7 +50,6 @@ class _PostEditorState extends State<PostEditor> {
               box: <Widget>[
                 buildPosterInfo(
                   context,
-                  this,
                   user?.username ?? '',
                   userHasVerifiedBadge: user?.userHasVerifiedBadge,
                   userRank: user?.rank?.rankName,
@@ -121,27 +120,30 @@ class _PostEditorState extends State<PostEditor> {
     if (!form.validate()) return;
     form.save();
 
-    prepareForApiAction(this, () {
+    prepareForApiAction(context, () {
       if (_isPosting) return;
       setState(() => _isPosting = true);
 
-      apiPost(this, 'posts',
-          bodyFields: {
-            'attachment_hash': _attachmentHash ?? '',
-            'post_body': _postBody,
-            'quote_post_id': widget.parentPostId?.toString() ?? '',
-            'thread_id': widget.threadId.toString(),
-          },
-          onSuccess: (jsonMap) {
-            if (jsonMap.containsKey('post')) {
-              final post = Post.fromJson(jsonMap['post']);
-              if (widget.callback != null) {
-                widget.callback(post);
-              }
+      apiPost(
+        ApiCaller.stateful(this),
+        'posts',
+        bodyFields: {
+          'attachment_hash': _attachmentHash ?? '',
+          'post_body': _postBody,
+          'quote_post_id': widget.parentPostId?.toString() ?? '',
+          'thread_id': widget.threadId.toString(),
+        },
+        onSuccess: (jsonMap) {
+          if (jsonMap.containsKey('post')) {
+            final post = Post.fromJson(jsonMap['post']);
+            if (widget.callback != null) {
+              widget.callback(post);
             }
-          },
-          onError: (e) => showApiErrorDialog(context, e, title: 'Post error'),
-          onComplete: () => setState(() => _isPosting = false));
+          }
+        },
+        onError: (e) => showApiErrorDialog(context, e, title: 'Post error'),
+        onComplete: () => setState(() => _isPosting = false),
+      );
     });
   }
 }

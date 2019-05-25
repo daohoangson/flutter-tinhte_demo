@@ -74,7 +74,7 @@ class _FollowButton extends StatefulWidget {
 }
 
 class _FollowButtonState extends State<_FollowButton> {
-  bool _isFetching = false;
+  var _isRequesting = false;
 
   bool get isFollowed => widget.fp.isFollowed == true;
 
@@ -83,27 +83,32 @@ class _FollowButtonState extends State<_FollowButton> {
       widget.fp.links?.follow?.isNotEmpty == true
           ? FlatButton(
               child: Text(isFollowed ? 'Unfollow' : 'Follow'),
-              onPressed: _isFetching ? null : isFollowed ? _unfollow : _follow,
+              onPressed:
+                  _isRequesting ? null : isFollowed ? _unfollow : _follow,
             )
           : Container();
 
-  void _follow() => prepareForApiAction(this, () {
-        setState(() => _isFetching = true);
+  void _follow() => prepareForApiAction(context, () {
+        if (_isRequesting) return;
+        setState(() => _isRequesting = true);
+
         apiPost(
-          this,
+          ApiCaller.stateful(this),
           widget.fp.links.follow,
           onSuccess: (_) => setState(() => widget.fp.isFollowed = true),
-          onComplete: () => setState(() => _isFetching = false),
+          onComplete: () => setState(() => _isRequesting = false),
         );
       });
 
-  void _unfollow() => prepareForApiAction(this, () {
-        setState(() => _isFetching = true);
+  void _unfollow() => prepareForApiAction(context, () {
+        if (_isRequesting) return;
+        setState(() => _isRequesting = true);
+
         apiDelete(
-          this,
+          ApiCaller.stateful(this),
           widget.fp.links.follow,
           onSuccess: (_) => setState(() => widget.fp.isFollowed = false),
-          onComplete: () => setState(() => _isFetching = false),
+          onComplete: () => setState(() => _isRequesting = false),
         );
       });
 }

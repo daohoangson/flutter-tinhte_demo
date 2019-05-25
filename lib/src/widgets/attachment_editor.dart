@@ -91,14 +91,18 @@ class _AttachmentEditorState extends State<AttachmentEditor> {
     final attachment = _Attachment(image);
     setState(() => attachments.add(attachment));
 
-    apiPost(this, widget.path,
-        bodyFields: {'attachment_hash': widget.attachmentHash},
-        fileFields: {'file': attachment.file}, onSuccess: (jsonMap) {
-      if (jsonMap.containsKey('attachment')) {
-        final apiData = Attachment.fromJson(jsonMap['attachment']);
-        setState(() => attachment.apiData = apiData);
-      }
-    });
+    apiPost(
+      ApiCaller.stateful(this),
+      widget.path,
+      bodyFields: {'attachment_hash': widget.attachmentHash},
+      fileFields: {'file': attachment.file},
+      onSuccess: (jsonMap) {
+        if (jsonMap.containsKey('attachment')) {
+          final apiData = Attachment.fromJson(jsonMap['attachment']);
+          setState(() => attachment.apiData = apiData);
+        }
+      },
+    );
   }
 }
 

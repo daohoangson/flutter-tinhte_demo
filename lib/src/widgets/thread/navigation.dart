@@ -78,7 +78,7 @@ class _ThreadNavigationState extends State<ThreadNavigation> {
           }
 
           if (e.links?.permalink?.isNotEmpty == true) {
-            launchLink(this, e.links.permalink);
+            launchLink(context, e.links.permalink);
           }
         },
       );
@@ -96,27 +96,25 @@ class _ThreadNavigationState extends State<ThreadNavigation> {
       ),
       padding: const EdgeInsets.symmetric(vertical: _kThreadNavigationMargin));
 
-  void _fetch() {
-    apiGet(
-      this,
-      "threads/${widget.thread.threadId}/navigation",
-      onSuccess: (jsonMap) {
-        if (!jsonMap.containsKey('elements')) return;
+  void _fetch() => apiGet(
+        ApiCaller.stateful(this),
+        "threads/${widget.thread.threadId}/navigation",
+        onSuccess: (jsonMap) {
+          if (!jsonMap.containsKey('elements')) return;
 
-        final newElements = <navigation.Element>[];
-        final list = jsonMap['elements'] as List;
-        for (final Map map in list) {
-          final element = navigation.Element.fromJson(map);
-          newElements.add(element);
-        }
+          final newElements = <navigation.Element>[];
+          final list = jsonMap['elements'] as List;
+          for (final Map map in list) {
+            final element = navigation.Element.fromJson(map);
+            newElements.add(element);
+          }
 
-        if (newElements.isNotEmpty) {
-          setState(() {
-            elements.clear();
-            elements.addAll(newElements);
-          });
-        }
-      },
-    );
-  }
+          if (newElements.isNotEmpty) {
+            setState(() {
+              elements.clear();
+              elements.addAll(newElements);
+            });
+          }
+        },
+      );
 }

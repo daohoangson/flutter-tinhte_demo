@@ -18,14 +18,9 @@ AppBar buildAppBar({Widget title}) => AppBar(
       ],
     );
 
-class AppBarDrawerHeader extends StatefulWidget {
+class AppBarDrawerHeader extends StatelessWidget {
   AppBarDrawerHeader({Key key}) : super(key: key);
 
-  @override
-  State<StatefulWidget> createState() => _AppBarDrawerHeaderState();
-}
-
-class _AppBarDrawerHeaderState extends State<AppBarDrawerHeader> {
   @override
   Widget build(BuildContext _) => Consumer<User>(
         builder: (context, user, _) => DrawerHeader(
@@ -77,7 +72,7 @@ class _AppBarDrawerHeaderState extends State<AppBarDrawerHeader> {
     if (user.userId > 0) {
       built = GestureDetector(
         child: built,
-        onTap: () => launchMemberView(this, user.userId),
+        onTap: () => launchMemberView(context, user.userId),
       );
     }
 
