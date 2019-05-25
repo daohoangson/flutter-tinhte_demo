@@ -4,6 +4,7 @@ import 'package:tinhte_api/node.dart';
 import '../widgets/app_bar.dart';
 import '../widgets/navigation.dart';
 import '../widgets/threads.dart';
+import 'search/thread.dart';
 
 class ForumViewScreen extends StatelessWidget {
   final Forum forum;
@@ -23,6 +24,13 @@ class ForumViewScreen extends StatelessWidget {
             shrinkWrap: true,
           ),
           path: "threads?forum_id=${forum.forumId}",
+        ),
+        floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.search),
+          onPressed: () => showSearch(
+                context: context,
+                delegate: ThreadSearchDelegate(forum: forum),
+              ),
         ),
       );
 }

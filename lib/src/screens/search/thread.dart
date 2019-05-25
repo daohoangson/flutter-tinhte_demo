@@ -1,12 +1,17 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:tinhte_api/node.dart';
 
 import '../../widgets/threads.dart';
 import '../../api.dart';
 
 class ThreadSearchDelegate extends SearchDelegate {
+  final Forum forum;
+
   _ApiQuery _apiQuery;
+
+  ThreadSearchDelegate({this.forum});
 
   @override
   List<Widget> buildActions(BuildContext context) => [
@@ -33,9 +38,29 @@ class ThreadSearchDelegate extends SearchDelegate {
 
   @override
   Widget buildSuggestions(BuildContext context) =>
-      _apiQuery == null ? SizedBox.shrink() : _buildResults(context);
+      _apiQuery != null ? _buildResults(context) : _buildExplain();
 
-  _buildResults(BuildContext context) => FutureBuilder<Map>(
+  Widget _buildExplain() {
+    final sb = StringBuffer();
+    if (query.isEmpty) {
+      sb.write("Enter something to search");
+    } else {
+      sb.write("Submit to search for '$query'");
+    }
+
+    if (forum != null) {
+      sb.write(" in forum '${forum.title}'");
+    }
+
+    sb.write(query.isEmpty ? '...' : '.');
+
+    return Padding(
+      child: Text(sb.toString()),
+      padding: const EdgeInsets.all(10),
+    );
+  }
+
+  Widget _buildResults(BuildContext context) => FutureBuilder<Map>(
         future: _apiQuery.future,
         builder: (context, snapshot) => snapshot.hasData
             ? ThreadsWidget(
@@ -58,7 +83,8 @@ class _ApiQuery extends ApiCaller {
   _ApiQuery(this.context, this.query, this._delegate) {
     apiPost(
       this,
-      "search/threads?q=${Uri.encodeQueryComponent(query)}",
+      "search/threads?q=${Uri.encodeQueryComponent(query)}"
+      "&forum_id=${_delegate.forum?.forumId ?? 0}",
       onSuccess: (jsonMap) => _completer.complete(jsonMap),
     );
   }
