@@ -7,6 +7,8 @@ import '../../api.dart';
 import '../../constants.dart';
 import 'header.dart';
 
+const _kFeaturePageHeight = 100.0;
+
 class FeaturePagesWidget extends StatefulWidget {
   final List<FeaturePage> pages;
 
@@ -35,22 +37,19 @@ class _FeaturePagesWidgetState extends State<FeaturePagesWidget> {
           children: <Widget>[
             HeaderWidget('Cộng đồng'),
             SizedBox(
-              height: 200,
-              child: GridView.count(
-                childAspectRatio: 0.75,
-                crossAxisSpacing: 8,
-                crossAxisCount: 2,
-                mainAxisSpacing: 10,
-                scrollDirection: Axis.horizontal,
-                children: pages.isNotEmpty
-                    ? pages.map((p) => _FpWidget(p)).toList()
-                    : [
-                        _FpWidget(null),
-                        _FpWidget(null),
-                        _FpWidget(null),
-                      ],
-              ),
-            ),
+                height: _kFeaturePageHeight * 2,
+                child: GridView.builder(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    childAspectRatio: 0.75,
+                    crossAxisSpacing: 8,
+                    crossAxisCount: 2,
+                    mainAxisSpacing: 10,
+                  ),
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (_, i) =>
+                      _FpWidget(i < pages.length ? pages[i] : null),
+                  itemCount: pages.isNotEmpty ? pages.length : 6,
+                )),
             Center(
               child: FlatButton(
                 child: Text('View all communities'),
@@ -64,7 +63,9 @@ class _FeaturePagesWidgetState extends State<FeaturePagesWidget> {
 
   void _fetch() => apiGet(
         ApiCaller.stateful(this),
-        'feature-pages?order=promoted&limit=20',
+        'feature-pages?order=promoted'
+        "&_bdImageApiFeaturePageThumbnailSize=${(_kFeaturePageHeight*2).toInt()}"
+        '&_bdImageApiFeaturePageThumbnailMode=sw',
         onSuccess: (jsonMap) {
           if (!jsonMap.containsKey('pages')) return;
 
@@ -90,14 +91,16 @@ class _FpWidget extends StatelessWidget {
         _buildBox(
           fp?.links?.image?.isNotEmpty == true
               ? Image(
-                  image: CachedNetworkImageProvider(fp?.links?.image),
+                  image: CachedNetworkImageProvider(
+                    fp.links.thumbnail ?? fp.links.image,
+                  ),
                   fit: BoxFit.cover,
                 )
               : null,
           Padding(
             padding: const EdgeInsets.all(5),
             child: Text(
-              fp?.fullName ?? '',
+              fp?.fullName ?? 'Loading...',
               style: TextStyle(
                 fontSize: 11,
                 fontWeight: FontWeight.bold,

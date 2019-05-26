@@ -44,6 +44,7 @@ class FeaturePageLinks {
   String follow;
   String image;
   String permalink;
+  String thumbnail;
 
   FeaturePageLinks();
   factory FeaturePageLinks.fromJson(Map<String, dynamic> json) =>
