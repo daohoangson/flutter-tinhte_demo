@@ -22,6 +22,8 @@ class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey<RefreshIndicatorState> refreshIndicatorKey = GlobalKey();
 
   final _featurePages = <FeaturePage>[];
+
+  var _fabIsVisible = true;
   String _title = '';
 
   @override
@@ -40,27 +42,37 @@ class _HomeScreenState extends State<HomeScreen> {
             AppBarNotificationButton(visibleOnZero: true),
           ],
         ),
-        body: SuperListView<_HomeListItem>(
-          fetchPathInitial: 'lists/1/threads',
-          fetchOnSuccess: _fetchOnSuccess,
-          itemBuilder: (context, state, item) {
-            if (item.featurePages == true)
-              return SuperListItemFullWidth(
-                child: FeaturePagesWidget(_featurePages),
-              );
+        body: NotificationListener<ScrollNotification>(
+          child: SuperListView<_HomeListItem>(
+            fetchPathInitial: 'lists/1/threads',
+            fetchOnSuccess: _fetchOnSuccess,
+            itemBuilder: (context, state, item) {
+              if (item.featurePages == true)
+                return SuperListItemFullWidth(
+                  child: FeaturePagesWidget(_featurePages),
+                );
 
-            if (item.thread != null) return HomeThreadWidget(item.thread);
+              if (item.thread != null) return HomeThreadWidget(item.thread);
 
-            return null;
+              return null;
+            },
+          ),
+          onNotification: (scrollInfo) {
+            if (scrollInfo is ScrollUpdateNotification) {
+              setState(() => _fabIsVisible = scrollInfo.scrollDelta < 0.0);
+            }
           },
         ),
-        floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.search),
-          onPressed: () => showSearch(
-            context: context,
-            delegate: ThreadSearchDelegate(),
-          ),
-        ),
+        floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
+        floatingActionButton: _fabIsVisible
+            ? FloatingActionButton(
+                child: Icon(Icons.search),
+                onPressed: () => showSearch(
+                      context: context,
+                      delegate: ThreadSearchDelegate(),
+                    ),
+              )
+            : null,
       );
 
   void _detectTitle() => PackageInfo.fromPlatform().then(

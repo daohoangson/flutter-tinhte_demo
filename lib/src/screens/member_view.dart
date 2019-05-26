@@ -7,7 +7,7 @@ import '../widgets/threads.dart';
 import '../api.dart';
 import 'search/thread.dart';
 
-class MemberViewScreen extends StatelessWidget {
+class MemberViewScreen extends StatefulWidget {
   final User user;
 
   MemberViewScreen(this.user, {Key key})
@@ -15,22 +15,41 @@ class MemberViewScreen extends StatelessWidget {
         super(key: key);
 
   @override
+  State<StatefulWidget> createState() => _MemberViewScreenState();
+}
+
+class _MemberViewScreenState extends State<MemberViewScreen> {
+  var _fabIsVisible = true;
+
+  User get user => widget.user;
+
+  @override
   Widget build(BuildContext context) => Scaffold(
         appBar: buildAppBar(
           title: Text(user.username),
         ),
-        body: ThreadsWidget(
-          apiMethod: apiPost,
-          header: MemberViewHeader(user),
-          path: "search/threads?user_id=${user.userId}",
-          threadsKey: 'data',
+        body: NotificationListener<ScrollNotification>(
+          child: ThreadsWidget(
+            apiMethod: apiPost,
+            header: MemberViewHeader(user),
+            path: "search/threads?user_id=${user.userId}",
+            threadsKey: 'data',
+          ),
+          onNotification: (scrollInfo) {
+            if (scrollInfo is ScrollUpdateNotification) {
+              setState(() => _fabIsVisible = scrollInfo.scrollDelta < 0.0);
+            }
+          },
         ),
-        floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.search),
-          onPressed: () => showSearch(
-                context: context,
-                delegate: ThreadSearchDelegate(user: user),
-              ),
-        ),
+        floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
+        floatingActionButton: _fabIsVisible
+            ? FloatingActionButton(
+                child: Icon(Icons.search),
+                onPressed: () => showSearch(
+                      context: context,
+                      delegate: ThreadSearchDelegate(user: user),
+                    ),
+              )
+            : null,
       );
 }
