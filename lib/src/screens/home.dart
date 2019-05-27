@@ -46,7 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
         body: NotificationListener<ScrollNotification>(
           child: SuperListView<_HomeListItem>(
             fetchPathInitial: 'lists/1/threads?limit=20'
-                '&_bdImageApiThreadThumbnailWidth=${(_kHomeThreadThumbnailWidth * 2).toInt()}'
+                '&_bdImageApiThreadThumbnailWidth=${(_kHomeThreadThumbnailWidth * 3).toInt()}'
                 '&_bdImageApiThreadThumbnailHeight=sh',
             fetchOnSuccess: _fetchOnSuccess,
             itemBuilder: (context, state, item) {
