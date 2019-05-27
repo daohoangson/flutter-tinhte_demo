@@ -128,8 +128,8 @@ class _HomeTop5WidgetThread extends StatelessWidget {
   Widget _buildImage() => ClipRRect(
         borderRadius: BorderRadius.circular(3),
         child: LayoutBuilder(
-          builder: (_, box) => ThreadImageWidget(
-                image: _chooseImageForBox(thread, box),
+          builder: (context, box) => ThreadImageWidget(
+                image: _chooseImageForBox(thread, context, box),
                 threadId: thread.threadId,
               ),
         ),
@@ -162,19 +162,20 @@ class _HomeTop5WidgetThread extends StatelessWidget {
         maxLines: maxLines,
       );
 
-  ThreadImage _chooseImageForBox(Thread thread, BoxConstraints box) {
-    if (thread.threadThumbnail == null) return thread.threadImage;
+  ThreadImage _chooseImageForBox(Thread t, BuildContext c, BoxConstraints bc) {
+    if (t.threadThumbnail == null) return t.threadImage;
 
-    final thumbnail = thread.threadThumbnail;
+    final devicePixelRatio = MediaQuery.of(c).devicePixelRatio;
+    final thumbnail = t.threadThumbnail;
     switch (thumbnail.mode) {
       case 'sh':
-        if (box.maxWidth < thumbnail.size) return thumbnail;
+        if (devicePixelRatio * bc.maxWidth < thumbnail.size) return thumbnail;
         break;
       case 'sw':
-        if (box.maxHeight < thumbnail.size) return thumbnail;
+        if (devicePixelRatio * bc.maxHeight < thumbnail.size) return thumbnail;
         break;
     }
 
-    return thread.threadImage;
+    return t.threadImage;
   }
 }
