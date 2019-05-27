@@ -1,8 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:share/share.dart';
 import 'package:tinhte_api/navigation.dart' as navigation;
 import 'package:tinhte_api/node.dart';
+import 'package:tinhte_api/post.dart';
 import 'package:tinhte_api/thread.dart';
 import 'package:tinhte_demo/src/link.dart';
 
@@ -15,8 +17,8 @@ import '../intl.dart';
 import 'super_list.dart';
 import 'image.dart';
 
-part 'thread/builders.dart';
 part 'thread/navigation.dart';
+part 'thread/widget.dart';
 
 class ThreadsWidget extends StatelessWidget {
   final ApiMethod apiMethod;
@@ -37,13 +39,13 @@ class ThreadsWidget extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => SuperListView<Thread>(
+  Widget build(BuildContext _) => SuperListView<Thread>(
         apiMethodInitial: apiMethod,
         fetchOnSuccess: _fetchOnSuccess,
         fetchPathInitial: path,
         initialJson: initialJson,
         header: header,
-        itemBuilder: (context, _, thread) => buildThreadRow(context, thread),
+        itemBuilder: (_, __, thread) => ThreadWidget(thread),
       );
 
   void _fetchOnSuccess(Map json, FetchContext<Thread> fc) {

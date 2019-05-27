@@ -94,11 +94,13 @@ class AttachmentImageWidget extends StatelessWidget {
 class ThreadImageWidget extends StatelessWidget {
   final int threadId;
   final ThreadImage image;
+  final bool useImageRatio;
 
   ThreadImageWidget({
     @required this.image,
     Key key,
     @required this.threadId,
+    this.useImageRatio = false,
   }) : super(key: key);
 
   @override
@@ -118,7 +120,12 @@ class ThreadImageWidget extends StatelessWidget {
     );
 
     return AspectRatio(
-      aspectRatio: kThreadImageAspectRatio,
+      aspectRatio: useImageRatio == true &&
+              image.width != null &&
+              image.height != null &&
+              image.height != 0
+          ? image.width / image.height
+          : kThreadImageAspectRatio,
       child: threadId != null
           ? Hero(child: img, tag: "threadImageHero--$threadId")
           : img,

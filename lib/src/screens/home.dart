@@ -6,10 +6,11 @@ import 'package:tinhte_api/feature_page.dart';
 import '../widgets/app_bar.dart';
 import '../widgets/home/feature_pages.dart';
 import '../widgets/home/thread.dart';
+import '../widgets/home/top_5.dart';
 import '../widgets/super_list.dart';
 import 'search/thread.dart';
 
-const _kFeaturePagesIndex = 5;
+const _kHomeThreadThumbnailWidth = 200.0;
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({Key key}) : super(key: key);
@@ -44,15 +45,25 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         body: NotificationListener<ScrollNotification>(
           child: SuperListView<_HomeListItem>(
-            fetchPathInitial: 'lists/1/threads',
+            fetchPathInitial: 'lists/1/threads?limit=20'
+                '&_bdImageApiThreadThumbnailWidth=${(_kHomeThreadThumbnailWidth * 2).toInt()}'
+                '&_bdImageApiThreadThumbnailHeight=sh',
             fetchOnSuccess: _fetchOnSuccess,
             itemBuilder: (context, state, item) {
+              if (item.top5?.length == 5) {
+                return HomeTop5Widget(item.top5);
+              }
+
               if (item.featurePages == true)
                 return SuperListItemFullWidth(
                   child: FeaturePagesWidget(_featurePages),
                 );
 
-              if (item.thread != null) return HomeThreadWidget(item.thread);
+              if (item.thread != null)
+                return HomeThreadWidget(
+                  item.thread,
+                  imageWidth: _kHomeThreadThumbnailWidth,
+                );
 
               return null;
             },
@@ -81,14 +92,21 @@ class _HomeScreenState extends State<HomeScreen> {
   void _fetchOnSuccess(Map json, FetchContext<_HomeListItem> fc) {
     if (!json.containsKey('threads')) return;
 
+    List<ThreadListItem> top5;
+    if (fc.id == FetchContextId.FetchInitial) {
+      top5 = [];
+      fc.addItem(_HomeListItem(top5: top5));
+      fc.addItem(_HomeListItem(featurePages: true));
+    }
+
     final threadsJson = json['threads'] as List;
     for (final threadJson in threadsJson) {
       final tli = ThreadListItem.fromJson(threadJson);
-      fc.addItem(_HomeListItem(thread: tli));
 
-      if (fc.id == FetchContextId.FetchInitial &&
-          fc.items?.length == _kFeaturePagesIndex) {
-        fc.addItem(_HomeListItem(featurePages: true));
+      if (top5 != null && top5.length < 5) {
+        top5.add(tli);
+      } else {
+        fc.addItem(_HomeListItem(thread: tli));
       }
     }
   }
@@ -101,9 +119,11 @@ class HomeScreenRoute extends MaterialPageRoute {
 class _HomeListItem {
   final bool featurePages;
   final ThreadListItem thread;
+  final List<ThreadListItem> top5;
 
   _HomeListItem({
     this.featurePages,
     this.thread,
+    this.top5,
   });
 }

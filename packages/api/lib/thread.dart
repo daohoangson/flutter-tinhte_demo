@@ -70,15 +70,15 @@ class Thread {
 @JsonSerializable(createToJson: false)
 class ThreadImage {
   @JsonKey(name: "display_mode")
-  final String displayMode;
+  String displayMode;
 
-  final int height;
-
+  int height;
   final String link;
+  String mode;
+  int size;
+  int width;
 
-  final int width;
-
-  ThreadImage(this.displayMode, this.height, this.link, this.width);
+  ThreadImage(this.link);
   factory ThreadImage.fromJson(Map<String, dynamic> json) =>
       _$ThreadImageFromJson(json);
 }

@@ -1,74 +1,82 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tinhte_api/content_list.dart';
-import 'package:tinhte_api/post.dart';
 import 'package:tinhte_api/thread.dart';
 
 import '../../screens/thread_view.dart';
-import '../../api.dart';
 import '../../intl.dart';
 import '../image.dart';
 
-const _kPaddingHorizontal = EdgeInsets.symmetric(horizontal: 10.0);
-
 class HomeThreadWidget extends StatelessWidget {
+  final double imageWidth;
   final ListItem item;
   final Thread thread;
 
-  HomeThreadWidget(ThreadListItem tli, {Key key})
-      : item = tli?.item,
-        thread = tli?.thread,
+  HomeThreadWidget(
+    ThreadListItem tli, {
+    this.imageWidth,
+    Key key,
+  })  : assert(tli?.item != null),
+        assert(tli?.thread != null),
+        assert(imageWidth != null),
+        item = tli.item,
+        thread = tli.thread,
         super(key: key);
 
   @override
-  Widget build(BuildContext context) => _buildCard(
-        context,
-        <Widget>[
-          _buildImage(),
-          const SizedBox(height: 10.0),
-          _buildTextPadding(_buildInfoRow(context)),
-          const SizedBox(height: 5.0),
-          _buildTextPadding(_buildTitle(context)),
-          const SizedBox(height: 10.0),
-          _HomeThreadActionsWidget(thread),
-        ],
+  Widget build(BuildContext _) => LayoutBuilder(
+        builder: (context, box) => Padding(
+              child: _buildBox(
+                context,
+                <Widget>[
+                  _buildImage(box.maxWidth > 480 ? 1 : 0.75),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Column(
+                      children: <Widget>[
+                        _buildInfo(Theme.of(context)),
+                        const SizedBox(height: 5),
+                        _buildTitle(),
+                      ],
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                    ),
+                  ),
+                ],
+              ),
+              padding: const EdgeInsets.all(10),
+            ),
       );
 
-  Widget _buildCard(BuildContext context, List<Widget> children) => Card(
-        margin: const EdgeInsets.only(bottom: 10.0),
-        child: GestureDetector(
-          child: Column(
-            children: children,
-            crossAxisAlignment: CrossAxisAlignment.start,
+  Widget _buildBox(BuildContext context, List<Widget> children) => InkWell(
+        child: Row(
+          children: children,
+          crossAxisAlignment: CrossAxisAlignment.start,
+        ),
+        onTap: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => ThreadViewScreen(thread)),
+            ),
+      );
+
+  Widget _buildImage(double imageScale) => ClipRRect(
+        borderRadius: BorderRadius.circular(3),
+        child: SizedBox(
+          child: ThreadImageWidget(
+            image: thread.threadThumbnail,
+            threadId: thread.threadId,
           ),
-          onTap: () => Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => ThreadViewScreen(thread)),
-              ),
+          width: imageWidth * imageScale,
         ),
       );
 
-  Widget _buildImage() =>
-      ThreadImageWidget(image: thread?.threadImage, threadId: thread?.threadId);
-
-  Widget _buildInfoRow(BuildContext context) {
+  Widget _buildInfo(ThemeData theme) {
     final List<TextSpan> spans = List();
-    final theme = Theme.of(context);
 
     spans.add(TextSpan(
-      style: TextStyle(
-        color: thread != null ? theme.accentColor : theme.disabledColor,
-        fontWeight: FontWeight.bold,
-      ),
-      text: thread?.creatorUsername ?? '■ ●● ▲▲▲',
+      style: TextStyle(color: theme.accentColor),
+      text: thread.creatorUsername,
     ));
 
     if (item?.itemDate != null) {
-      spans.add(TextSpan(text: " • ${formatTimestamp(item.itemDate)}"));
-    }
-
-    final threadViewCount = thread?.threadViewCount ?? 0;
-    if (threadViewCount > 1500) {
-      spans.add(TextSpan(text: " • ${formatNumber(threadViewCount)} views"));
+      spans.add(TextSpan(text: " ${formatTimestamp(item.itemDate)}"));
     }
 
     return RichText(
@@ -76,141 +84,14 @@ class HomeThreadWidget extends StatelessWidget {
       overflow: TextOverflow.ellipsis,
       text: TextSpan(
         children: spans,
-        style: theme.textTheme.body1,
+        style: theme.textTheme.caption,
       ),
     );
   }
 
-  Widget _buildTextPadding(Widget child) =>
-      Padding(padding: _kPaddingHorizontal, child: child);
-
-  Widget _buildTitle(BuildContext context) => Text(
-        thread?.threadTitle ?? '▲  □■   ○●○    ▼◁▲▷',
-        maxLines: 3,
-        style: Theme.of(context).textTheme.title,
+  Widget _buildTitle() => Text(
+        thread.threadTitle,
+        maxLines: 4,
+        overflow: TextOverflow.ellipsis,
       );
-}
-
-class _HomeThreadActionsWidget extends StatefulWidget {
-  final Thread thread;
-
-  _HomeThreadActionsWidget(this.thread, {Key key}) : super(key: key);
-
-  @override
-  State<StatefulWidget> createState() => _HomeThreadActionsWidgetState();
-}
-
-class _HomeThreadActionsWidgetState extends State<_HomeThreadActionsWidget> {
-  var _isLiking = false;
-
-  String get linkLikes => post?.links?.likes;
-  Post get post => thread?.firstPost;
-  bool get postIsLiked => post?.postIsLiked == true;
-  int get postLikeCount => post?.postLikeCount ?? 0;
-  Thread get thread => widget.thread;
-  int get threadPostCount => thread?.threadPostCount ?? 0;
-
-  set postIsLiked(bool value) => post?.postIsLiked = value;
-  set postLikeCount(int value) => post?.postLikeCount = value;
-
-  @override
-  Widget build(BuildContext context) => Column(children: <Widget>[
-        DefaultTextStyle(
-          style: Theme.of(context).textTheme.caption,
-          child: Padding(
-            padding: _kPaddingHorizontal,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                _buildCounterLike(),
-                _buildCounterPost(),
-              ],
-            ),
-          ),
-        ),
-        Divider(indent: 10.0),
-        IconTheme(
-          data: Theme.of(context).iconTheme.copyWith(size: 20.0),
-          child: Row(
-            children: <Widget>[
-              Expanded(
-                child: _buildButtonLike(),
-              ),
-              Expanded(
-                child: FlatButton.icon(
-                  icon: Icon(FontAwesomeIcons.commentAlt),
-                  label: Text('Reply'),
-                  onPressed: null,
-                ),
-              ),
-              Expanded(
-                child: FlatButton.icon(
-                  icon: Icon(FontAwesomeIcons.shareAlt),
-                  label: Text('Share'),
-                  onPressed: null,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ]);
-
-  _buildButtonLike() => FlatButton.icon(
-        icon: postIsLiked
-            ? const Icon(FontAwesomeIcons.solidHeart)
-            : const Icon(FontAwesomeIcons.heart),
-        label: postIsLiked ? const Text('Unlike') : const Text('Like'),
-        onPressed: _isLiking
-            ? null
-            : linkLikes?.isNotEmpty != true
-                ? null
-                : postIsLiked ? _unlikePost : _likePost,
-      );
-
-  _buildCounterLike() => postLikeCount > 0
-      ? Row(
-          children: <Widget>[
-            Icon(
-              FontAwesomeIcons.solidHeart,
-              color: Theme.of(context).accentColor,
-              size: 13.0,
-            ),
-            Text(" ${formatNumber(postLikeCount)}"),
-          ],
-        )
-      : Container(height: 0.0, width: 0.0);
-
-  _buildCounterPost() => threadPostCount > 0
-      ? Text("${formatNumber(threadPostCount)} Posts")
-      : Container(height: 0.0, width: 0.0);
-
-  _likePost() => prepareForApiAction(context, () {
-        if (_isLiking) return;
-        setState(() => _isLiking = true);
-
-        apiPost(
-          ApiCaller.stateful(this),
-          linkLikes,
-          onSuccess: (_) => setState(() {
-                postIsLiked = true;
-                postLikeCount++;
-              }),
-          onComplete: () => setState(() => _isLiking = false),
-        );
-      });
-
-  _unlikePost() => prepareForApiAction(context, () {
-        if (_isLiking) return;
-        setState(() => _isLiking = true);
-
-        apiDelete(
-          ApiCaller.stateful(this),
-          linkLikes,
-          onSuccess: (_) => setState(() {
-                postIsLiked = false;
-                if (postLikeCount > 0) postLikeCount--;
-              }),
-          onComplete: () => setState(() => _isLiking = false),
-        );
-      });
 }
