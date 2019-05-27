@@ -59,33 +59,34 @@ class _PhotoCompareState extends State<_PhotoCompareWidget>
   }
 
   @override
-  Widget build(BuildContext _) => LayoutBuilder(
-        builder: (context, _) => Column(
-              children: <Widget>[
-                Stack(
-                  children: <Widget>[
-                    widget.second,
-                    AnimatedBuilder(
-                      animation: controller,
-                      // TODO: avoid using ClipRect
-                      builder: (_, __) => ClipRect(
-                            child: Align(
-                              alignment: Alignment.centerLeft,
-                              child: widget.first,
-                              widthFactor: controller.value,
-                            ),
-                          ),
+  Widget build(BuildContext context) => Column(
+        children: <Widget>[
+          Stack(
+            children: <Widget>[
+              widget.second,
+              AnimatedBuilder(
+                animation: controller,
+                // TODO: avoid using ClipRect
+                builder: (_, __) => ClipRect(
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: widget.first,
+                        widthFactor: controller.value,
+                      ),
                     ),
-                  ],
-                ),
-                Slider(
+              ),
+            ],
+          ),
+          AnimatedBuilder(
+            animation: controller,
+            builder: (_, __) => Slider(
                   value: controller.value,
                   onChanged: (v) =>
                       controller.animateTo(v, curve: Curves.easeInOut),
                 ),
-              ],
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-            ),
+          ),
+        ],
+        crossAxisAlignment: CrossAxisAlignment.stretch,
       );
 }
 
