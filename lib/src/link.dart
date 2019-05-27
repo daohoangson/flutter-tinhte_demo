@@ -34,7 +34,12 @@ void launchLink(BuildContext context, String link) async {
 void launchMemberView(BuildContext context, int userId) =>
     launchLink(context, "$configSiteRoot/members/$userId/");
 
-Future<bool> parseLink(BuildContext context, {String link, String path}) {
+Future<bool> parseLink(
+  BuildContext context, {
+  String link,
+  NavigatorState navigator,
+  String path,
+}) {
   assert((link == null) != (path == null));
   var cancelled = false;
   final completer = Completer<bool>();
@@ -82,7 +87,7 @@ Future<bool> parseLink(BuildContext context, {String link, String path}) {
       if (route != null) {
         parsed = true;
         cancelDialog();
-        Navigator.of(context).push(route);
+        (navigator ?? Navigator.of(context)).push(route);
       }
     },
     onError: (error) {

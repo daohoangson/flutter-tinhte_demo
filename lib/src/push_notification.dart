@@ -45,7 +45,8 @@ class PushNotificationApp extends StatefulWidget {
     this.child,
     Key key,
     this.primaryNavKey,
-  }) : super(key: key);
+  })  : assert(primaryNavKey != null),
+        super(key: key);
 
   @override
   State<StatefulWidget> createState() => _PushNotificationAppState();
@@ -111,18 +112,18 @@ class _PushNotificationAppState extends State<PushNotificationApp> {
         },
       );
 
-  Future _onLaunchOrResume(Map m) {
-    debugPrint("FCM._onLaunchOrResume: $m");
-    final data = m.containsKey('data') ? m['data'] as Map : m;
+  Future<bool> _onLaunchOrResume(Map message) {
+    debugPrint("FCM._onLaunchOrResume: $message");
+    final Map d = message.containsKey('data') ? message['data'] : message;
+    if (!d.containsKey('notification_id')) return Future.value(false);
 
     // TODO: use message.data.links.content when it is available
-    if (!data.containsKey('notification_id')) return Future.value(false);
-    final id = data['notification_id'];
+    final p = "notifications/content?notification_id=${d['notification_id']}";
 
-    return parseLink(
-      widget.primaryNavKey.currentState.context,
-      path: "notifications/content?notification_id=$id",
-    );
+    final navigator = widget.primaryNavKey.currentState;
+    if (navigator == null) return Future.value(false);
+
+    return parseLink(navigator.context, navigator: navigator, path: p);
   }
 
   void _unregister() async {
