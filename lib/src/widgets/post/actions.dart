@@ -89,7 +89,9 @@ class _PostActionsWidgetState extends State<_PostActionsWidget> {
                   Provider.of<NewPostStream>(context, listen: false)._add(post);
                   setState(() => _isShowingEditor = false);
                 },
-                parentPostId: parentPost?.postId,
+                parentPostId: parentPost?.postIsFirstPost == true
+                    ? 0
+                    : parentPost?.postId,
               )
             ],
           );
