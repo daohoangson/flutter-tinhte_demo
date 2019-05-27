@@ -25,7 +25,7 @@ class _MemberViewScreenState extends State<MemberViewScreen> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: buildAppBar(
+        appBar: AppBar(
           title: Text(user.username),
         ),
         body: NotificationListener<ScrollNotification>(
