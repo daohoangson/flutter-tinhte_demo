@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:tinhte_api/user.dart';
 
 import '../widgets/user/member_view_header.dart';
-import '../widgets/app_bar.dart';
 import '../widgets/threads.dart';
 import '../api.dart';
 import 'search/thread.dart';
