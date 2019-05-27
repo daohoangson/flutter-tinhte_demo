@@ -1,8 +1,5 @@
 import 'package:flutter/widgets.dart';
 
-const kColorHomeFpBox = Color(0xFFFFFFFF);
-const kColorHomeFpBoxShadow = Color(0xFFDEDEE0);
-const kColorHomeFpCheckedIcon = Color(0xFFFC7E1F);
 const kColorUserRank = Color(0xFFEAB363);
 const kColorUserVerifiedBadge = Color(0xFF2477C6);
 

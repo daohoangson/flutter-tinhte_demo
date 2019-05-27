@@ -1,13 +1,13 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:tinhte_api/feature_page.dart';
 
-import '../../screens/fp_view.dart';
+import '../../screens/search/feature_page.dart';
+import '../../widgets/feature_page.dart';
 import '../../api.dart';
-import '../../constants.dart';
 import 'header.dart';
 
 const _kFeaturePageHeight = 100.0;
+const _kFeaturePagesMax = 20;
 
 class FeaturePagesWidget extends StatefulWidget {
   final List<FeaturePage> pages;
@@ -37,26 +37,36 @@ class _FeaturePagesWidgetState extends State<FeaturePagesWidget> {
           children: <Widget>[
             HeaderWidget('Cộng đồng'),
             SizedBox(
-                height: _kFeaturePageHeight * 2,
-                child: GridView.builder(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    childAspectRatio: 0.75,
-                    crossAxisSpacing: 8,
-                    crossAxisCount: 2,
-                    mainAxisSpacing: 10,
-                  ),
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (_, i) =>
-                      _FpWidget(i < pages.length ? pages[i] : null),
-                  itemCount: pages.isNotEmpty ? pages.length : 6,
-                )),
-            Center(
-              child: FlatButton(
-                child: Text('View all communities'),
-                textColor: Theme.of(context).accentColor,
-                onPressed: null,
+              height: _kFeaturePageHeight * 2,
+              child: GridView.builder(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  childAspectRatio: 0.75,
+                  crossAxisSpacing: 8,
+                  crossAxisCount: 2,
+                  mainAxisSpacing: 10,
+                ),
+                scrollDirection: Axis.horizontal,
+                itemBuilder: (_, i) =>
+                    FpWidget(i < pages.length ? pages[i] : null),
+                itemCount: pages.isEmpty
+                    ? 6
+                    : pages.length < _kFeaturePagesMax
+                        ? pages.length
+                        : _kFeaturePagesMax,
               ),
             ),
+            pages.length > _kFeaturePagesMax
+                ? Center(
+                    child: FlatButton(
+                      child: Text('View all communities'),
+                      textColor: Theme.of(context).accentColor,
+                      onPressed: () => showSearch(
+                            context: context,
+                            delegate: FpSearchDelegate(pages),
+                          ),
+                    ),
+                  )
+                : SizedBox.shrink(),
           ],
         ),
       );
@@ -64,7 +74,7 @@ class _FeaturePagesWidgetState extends State<FeaturePagesWidget> {
   void _fetch() => apiGet(
         ApiCaller.stateful(this),
         'feature-pages?order=promoted'
-        "&_bdImageApiFeaturePageThumbnailSize=${(_kFeaturePageHeight*2).toInt()}"
+        "&_bdImageApiFeaturePageThumbnailSize=${(_kFeaturePageHeight * 2).toInt()}"
         '&_bdImageApiFeaturePageThumbnailMode=sw',
         onSuccess: (jsonMap) {
           if (!jsonMap.containsKey('pages')) return;
@@ -75,79 +85,7 @@ class _FeaturePagesWidgetState extends State<FeaturePagesWidget> {
 
           setState(() => widget.pages
             ..clear()
-            ..addAll(newPages.take(20)));
+            ..addAll(newPages));
         },
-      );
-}
-
-class _FpWidget extends StatelessWidget {
-  final FeaturePage fp;
-
-  _FpWidget(this.fp);
-
-  @override
-  Widget build(BuildContext context) => _buildGestureDetector(
-        context,
-        _buildBox(
-          fp?.links?.image?.isNotEmpty == true
-              ? Image(
-                  image: CachedNetworkImageProvider(
-                    fp.links.thumbnail ?? fp.links.image,
-                  ),
-                  fit: BoxFit.cover,
-                )
-              : null,
-          Padding(
-            padding: const EdgeInsets.all(5),
-            child: Text(
-              fp?.fullName ?? 'Loading...',
-              style: TextStyle(
-                fontSize: 11,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ),
-      );
-
-  Widget _buildBox(Widget head, Widget body) => Padding(
-        child: DecoratedBox(
-          decoration: BoxDecoration(
-            color: kColorHomeFpBox,
-            borderRadius: BorderRadius.circular(5),
-            boxShadow: <BoxShadow>[
-              BoxShadow(
-                color: kColorHomeFpBoxShadow,
-                offset: Offset(0, 1),
-                blurRadius: 2,
-                spreadRadius: 1.0,
-              ),
-            ],
-          ),
-          child: ClipRRect(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                AspectRatio(
-                  aspectRatio: 2,
-                  child: head,
-                ),
-                Expanded(
-                  child: Align(child: body, alignment: Alignment.centerLeft),
-                ),
-              ],
-            ),
-            borderRadius: BorderRadius.circular(5),
-          ),
-        ),
-        padding: const EdgeInsets.fromLTRB(2, 0, 2, 5),
-      );
-
-  Widget _buildGestureDetector(BuildContext context, Widget child) =>
-      GestureDetector(
-        child: child,
-        onTap: () => Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => FpViewScreen(fp)),
-            ),
       );
 }
