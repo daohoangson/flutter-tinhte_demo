@@ -40,19 +40,23 @@ class HomeTop5Widget extends StatelessWidget {
         children: <Widget>[
           w1,
           const SizedBox(height: 10),
-          AspectRatio(
-            child: Row(children: <Widget>[
+          Row(
+            children: <Widget>[
               Expanded(child: w21),
               const SizedBox(width: 10),
               Expanded(child: w22),
-            ]),
-            aspectRatio: 1.5,
+            ],
+            crossAxisAlignment: CrossAxisAlignment.start,
           ),
-          Row(children: <Widget>[
-            Expanded(child: w31),
-            const SizedBox(width: 10),
-            Expanded(child: w32),
-          ]),
+          const SizedBox(height: 10),
+          Row(
+            children: <Widget>[
+              Expanded(child: w31),
+              const SizedBox(width: 10),
+              Expanded(child: w32),
+            ],
+            crossAxisAlignment: CrossAxisAlignment.start,
+          ),
         ],
         crossAxisAlignment: CrossAxisAlignment.stretch,
       );
