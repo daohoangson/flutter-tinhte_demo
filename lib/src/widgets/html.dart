@@ -52,6 +52,7 @@ class TinhteHtmlWidget extends StatelessWidget {
         hyperlinkColor: Theme.of(context).accentColor,
         onTapUrl: (url) => launchLink(context, url),
         textStyle: textStyle,
+        unsupportedWebViewWorkaroundForIssue37: true,
         webView: true,
       );
 }
