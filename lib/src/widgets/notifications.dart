@@ -64,19 +64,17 @@ class NotificationsWidget extends StatelessWidget {
         backgroundImage: CachedNetworkImageProvider(n.links.creatorAvatar),
       );
 
-  Widget _buildHtmlWidget(BuildContext context, api.Notification n) => Theme(
-        data: Theme.of(context).copyWith(
-          accentColor: Theme.of(context).primaryColor,
-          textTheme: Theme.of(context).textTheme.copyWith(
-                body1: Theme.of(context).textTheme.title.copyWith(
-                      fontWeight: n.notificationIsUnread
-                          ? FontWeight.bold
-                          : FontWeight.normal,
-                    ),
-              ),
-        ),
-        child: TinhteHtmlWidget(n.notificationHtml),
-      );
+  Widget _buildHtmlWidget(BuildContext context, api.Notification n) {
+    final textStyle = Theme.of(context).textTheme.title.copyWith(
+        fontWeight:
+            n.notificationIsUnread ? FontWeight.bold : FontWeight.normal);
+
+    return TinhteHtmlWidget(
+      n.notificationHtml,
+      hyperlinkColor: textStyle.color,
+      textStyle: textStyle,
+    );
+  }
 
   Widget _buildTimestamp(BuildContext context, api.Notification n) => Text(
         formatTimestamp(n.notificationCreateDate),

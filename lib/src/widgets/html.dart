@@ -35,10 +35,12 @@ const _kTextPadding = const EdgeInsets.symmetric(horizontal: kPostBodyPadding);
 
 class TinhteHtmlWidget extends StatelessWidget {
   final String html;
+  final Color hyperlinkColor;
   final TextStyle textStyle;
 
   TinhteHtmlWidget(
     this.html, {
+    this.hyperlinkColor,
     Key key,
     this.textStyle,
   }) : super(key: key);
@@ -49,7 +51,7 @@ class TinhteHtmlWidget extends StatelessWidget {
         baseUrl: Uri.parse(configSiteRoot),
         bodyPadding: const EdgeInsets.only(top: kPostBodyPadding),
         factoryBuilder: (c, hw) => TinhteWidgetFactory(c, hw),
-        hyperlinkColor: Theme.of(context).accentColor,
+        hyperlinkColor: hyperlinkColor,
         onTapUrl: (url) => launchLink(context, url),
         textStyle: textStyle,
         unsupportedWebViewWorkaroundForIssue37: true,
