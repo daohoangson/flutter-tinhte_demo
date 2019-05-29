@@ -80,7 +80,7 @@ class TinhteWidgetFactory extends WidgetFactory {
       final url = constructFullUrl(a['href']);
       if (url?.isEmpty != false) return null;
 
-      return [WebView(url, aspectRatio: 16 / 9, getDimensions: true)];
+      return [buildWebView(url)];
     });
     return _chrOp;
   }
@@ -102,15 +102,13 @@ class TinhteWidgetFactory extends WidgetFactory {
 
   BuildOp get webViewDataUriOp {
     _webViewDataUriOp ??= BuildOp(
-      onWidgets: (meta, _) {
-        final url = Uri.dataFromString(
-          "<html><body>${meta.domElement.outerHtml}</body></html",
-          encoding: Encoding.getByName('utf-8'),
-          mimeType: 'text/html',
-        ).toString();
-        debugPrint(url);
-        return [WebView(url, aspectRatio: 10, getDimensions: true)];
-      },
+      onWidgets: (meta, _) => [
+            buildWebView(Uri.dataFromString(
+              "<html><body>${meta.domElement.outerHtml}</body></html",
+              encoding: Encoding.getByName('utf-8'),
+              mimeType: 'text/html',
+            ).toString())
+          ],
     );
     return _webViewDataUriOp;
   }
