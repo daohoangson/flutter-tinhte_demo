@@ -23,6 +23,9 @@ List<Post> decodePostsAndTheirReplies(List jsonPosts) {
           }
         }
       }
+
+      print("Parent post #${post.postReplyTo} not found for #${post.postId}");
+      return;
     }
 
     posts.add(post);
