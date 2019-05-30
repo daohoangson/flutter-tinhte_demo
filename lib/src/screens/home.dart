@@ -4,13 +4,13 @@ import 'package:tinhte_api/content_list.dart';
 import 'package:tinhte_api/feature_page.dart';
 
 import '../widgets/app_bar.dart';
+import '../widgets/home/channels.dart';
 import '../widgets/home/feature_pages.dart';
 import '../widgets/home/thread.dart';
 import '../widgets/home/top_5.dart';
 import '../widgets/super_list.dart';
 import 'search/thread.dart';
-
-const _kHomeThreadThumbnailWidth = 200.0;
+import 'content_list_view.dart';
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({Key key}) : super(key: key);
@@ -20,8 +20,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final GlobalKey<RefreshIndicatorState> refreshIndicatorKey = GlobalKey();
-
   final _featurePages = <FeaturePage>[];
 
   var _fabIsVisible = true;
@@ -46,23 +44,20 @@ class _HomeScreenState extends State<HomeScreen> {
         body: NotificationListener<ScrollNotification>(
           child: SuperListView<_HomeListItem>(
             fetchPathInitial: 'lists/1/threads?limit=20'
-                '&_bdImageApiThreadThumbnailWidth=${(_kHomeThreadThumbnailWidth * 3).toInt()}'
+                '&_bdImageApiThreadThumbnailWidth=${(kContentListViewThumbnailWidth * 3).toInt()}'
                 '&_bdImageApiThreadThumbnailHeight=sh',
             fetchOnSuccess: _fetchOnSuccess,
             itemBuilder: (context, state, item) {
+              if (item.widget != null) return item.widget;
+
               if (item.top5?.length == 5) {
                 return HomeTop5Widget(item.top5);
               }
 
-              if (item.featurePages == true)
-                return SuperListItemFullWidth(
-                  child: FeaturePagesWidget(_featurePages),
-                );
-
               if (item.thread != null)
                 return HomeThreadWidget(
                   item.thread,
-                  imageWidth: _kHomeThreadThumbnailWidth,
+                  imageWidth: kContentListViewThumbnailWidth,
                 );
 
               return null;
@@ -96,7 +91,12 @@ class _HomeScreenState extends State<HomeScreen> {
     if (fc.id == FetchContextId.FetchInitial) {
       top5 = [];
       fc.addItem(_HomeListItem(top5: top5));
-      fc.addItem(_HomeListItem(featurePages: true));
+      fc.addItem(_HomeListItem(widget: ChannelsWidget()));
+      fc.addItem(_HomeListItem(
+        widget: SuperListItemFullWidth(
+          child: FeaturePagesWidget(_featurePages),
+        ),
+      ));
     }
 
     final threadsJson = json['threads'] as List;
@@ -117,13 +117,13 @@ class HomeScreenRoute extends MaterialPageRoute {
 }
 
 class _HomeListItem {
-  final bool featurePages;
   final ThreadListItem thread;
   final List<ThreadListItem> top5;
+  final Widget widget;
 
   _HomeListItem({
-    this.featurePages,
     this.thread,
     this.top5,
+    this.widget,
   });
 }
