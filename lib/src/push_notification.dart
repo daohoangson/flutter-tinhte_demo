@@ -42,10 +42,11 @@ class PushNotificationApp extends StatefulWidget {
   final GlobalKey<NavigatorState> primaryNavKey;
 
   PushNotificationApp({
-    this.child,
+    @required this.child,
     Key key,
-    this.primaryNavKey,
-  })  : assert(primaryNavKey != null),
+    @required this.primaryNavKey,
+  })  : assert(child != null),
+        assert(primaryNavKey != null),
         super(key: key);
 
   @override

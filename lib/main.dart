@@ -1,8 +1,9 @@
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 
+import 'src/screens/home.dart';
 import 'src/api.dart';
-import 'src/responsive_layout.dart';
+import 'src/push_notification.dart';
 
 void main() {
   FlutterError.onError = (e) => Crashlytics.instance.onError(e);
@@ -10,16 +11,20 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  static final _primaryNavKey = GlobalKey<NavigatorState>();
+
   @override
   Widget build(BuildContext context) => ApiApp(
-        MaterialApp(
-          title: 'Tinh tế Demo',
-          theme: ThemeData(
-            accentColor: const Color(0xFF00BAD7),
-            primaryColor: const Color(0xFF192533),
-            brightness: Brightness.light,
+        child: PushNotificationApp(
+          child: MaterialApp(
+            title: 'Tinh tế Demo',
+            theme: ThemeData(brightness: Brightness.dark),
+            home: Navigator(
+              key: _primaryNavKey,
+              onGenerateRoute: (_) => HomeScreenRoute(),
+            ),
           ),
-          home: ResponsiveLayout(),
+          primaryNavKey: _primaryNavKey,
         ),
       );
 }

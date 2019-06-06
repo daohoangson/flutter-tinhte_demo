@@ -4,10 +4,10 @@ import 'package:tinhte_api/feature_page.dart';
 
 import '../screens/fp_view.dart';
 
-const _kFpBoxColor = Color(0xFFFFFFFF);
-const _kFpBoxShadowColor = Color(0xFFDEDEE0);
-
 class FpWidget extends StatelessWidget {
+  static final kPreferAspectRatio = 1.25;
+  static final kPreferWidth = 150.0;
+
   final FeaturePage fp;
 
   FpWidget(this.fp);
@@ -16,6 +16,7 @@ class FpWidget extends StatelessWidget {
   Widget build(BuildContext context) => _buildGestureDetector(
         context,
         _buildBox(
+          context,
           fp?.links?.image?.isNotEmpty == true
               ? Image(
                   image: CachedNetworkImageProvider(
@@ -37,21 +38,18 @@ class FpWidget extends StatelessWidget {
         ),
       );
 
-  Widget _buildBox(Widget head, Widget body) => Padding(
-        child: DecoratedBox(
-          decoration: BoxDecoration(
-            color: _kFpBoxColor,
-            borderRadius: BorderRadius.circular(5),
-            boxShadow: <BoxShadow>[
-              BoxShadow(
-                color: _kFpBoxShadowColor,
-                offset: Offset(0, 1),
-                blurRadius: 2,
-                spreadRadius: 1.0,
-              ),
-            ],
-          ),
-          child: ClipRRect(
+  Widget _buildBox(BuildContext context, Widget head, Widget body) {
+    final theme = Theme.of(context);
+
+    return Padding(
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: theme.backgroundColor,
+          borderRadius: BorderRadius.circular(5),
+        ),
+        child: ClipRRect(
+          child: AspectRatio(
+            aspectRatio: kPreferAspectRatio,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -64,11 +62,13 @@ class FpWidget extends StatelessWidget {
                 ),
               ],
             ),
-            borderRadius: BorderRadius.circular(5),
           ),
+          borderRadius: BorderRadius.circular(5),
         ),
-        padding: const EdgeInsets.fromLTRB(2, 0, 2, 5),
-      );
+      ),
+      padding: const EdgeInsets.fromLTRB(2, 0, 2, 5),
+    );
+  }
 
   Widget _buildGestureDetector(BuildContext context, Widget child) =>
       GestureDetector(

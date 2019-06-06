@@ -81,7 +81,7 @@ class ThreadWidget extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              _buildInfoUsername(style),
+              _buildInfoUsername(theme, style),
               const SizedBox(height: 3),
               RichText(
                 text: TextSpan(
@@ -103,7 +103,7 @@ class ThreadWidget extends StatelessWidget {
         radius: 20,
       );
 
-  Widget _buildInfoUsername(TextStyle style) {
+  Widget _buildInfoUsername(ThemeData theme, TextStyle style) {
     final children = <Widget>[
       RichText(
         text: TextSpan(
@@ -118,7 +118,7 @@ class ThreadWidget extends StatelessWidget {
     if (thread?.creatorHasVerifiedBadge == true) {
       children.add(Icon(
         FontAwesomeIcons.solidCheckCircle,
-        color: kColorUserVerifiedBadge,
+        color: theme.accentColor,
         size: style.fontSize,
       ));
     }

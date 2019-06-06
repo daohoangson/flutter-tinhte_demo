@@ -6,10 +6,8 @@ import 'package:tinhte_api/user.dart';
 import '../screens/login.dart';
 import '../screens/notification_list.dart';
 import '../api.dart';
-import '../constants.dart';
 import '../link.dart';
 import '../push_notification.dart';
-import '../responsive_layout.dart';
 
 AppBar buildAppBar({Widget title}) => AppBar(
       title: title,
@@ -23,20 +21,16 @@ class AppBarDrawerHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext _) => Consumer<User>(
-        builder: (context, user, _) => DrawerHeader(
-              decoration: BoxDecoration(
-                color: Theme.of(context).highlightColor,
+        builder: (context, user, _) => user.userId > 0
+            ? DrawerHeader(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).highlightColor,
+                ),
+                child: _buildVisitorPanel(context, user))
+            : ListTile(
+                title: const Text('Login'),
+                onTap: () => Navigator.push(context, LoginScreenRoute()),
               ),
-              child: user.userId > 0
-                  ? _buildVisitorPanel(context, user)
-                  : GestureDetector(
-                      child: ConstrainedBox(
-                        child: const Text('Login'),
-                        constraints: BoxConstraints.expand(),
-                      ),
-                      onTap: () => Navigator.push(context, LoginScreenRoute()),
-                    ),
-            ),
       );
 
   Widget _buildAvatar(User user) => AspectRatio(
@@ -82,7 +76,7 @@ class AppBarDrawerHeader extends StatelessWidget {
   TextSpan _compileUserRank(BuildContext context, User user) => TextSpan(
         text: " ${user.rank?.rankName ?? ''}",
         style: Theme.of(context).textTheme.subhead.copyWith(
-              color: kColorUserRank,
+              color: Theme.of(context).hintColor,
               fontWeight: FontWeight.bold,
             ),
       );
@@ -105,18 +99,6 @@ class AppBarDrawerFooter extends StatelessWidget {
               onTap: () => logout(context),
             )
           : SizedBox.shrink());
-}
-
-class AppBarMenuIconButton extends StatelessWidget {
-  @override
-  Widget build(BuildContext _) => Consumer<ResponsiveState>(
-        builder: (_, rs, __) => rs.hasDrawer()
-            ? IconButton(
-                icon: const Icon(Icons.menu),
-                onPressed: () => rs.openDrawer(),
-              )
-            : SizedBox.shrink(),
-      );
 }
 
 class AppBarNotificationButton extends StatelessWidget {
