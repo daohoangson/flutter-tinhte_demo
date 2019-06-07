@@ -9,6 +9,7 @@ import '../widgets/home/channels.dart';
 import '../widgets/home/feature_pages.dart';
 import '../widgets/home/thread.dart';
 import '../widgets/home/top_5.dart';
+import '../widgets/home/top_threads.dart';
 import '../widgets/home/trending_tags.dart';
 import '../widgets/super_list.dart';
 import 'content_list_view.dart';
@@ -89,7 +90,9 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     final threadsJson = json['threads'] as List;
-    for (final threadJson in threadsJson) {
+    final l = threadsJson.length;
+    for (int i = 0; i < l; i++) {
+      final Map threadJson = threadsJson[i];
       final tli = ThreadListItem.fromJson(threadJson);
 
       if (top5 != null && top5.length < 5) {
@@ -97,12 +100,20 @@ class _HomeScreenState extends State<HomeScreen> {
       } else {
         fc.addItem(_HomeListItem(thread: tli));
       }
+
+      if (fc.id == FetchContextId.FetchInitial && i == l - 4) {
+        fc.addItem(_HomeListItem(
+          widget: SuperListItemFullWidth(
+            child: TrendingTagsWidget(),
+          ),
+        ));
+      }
     }
 
     if (fc.id == FetchContextId.FetchInitial) {
       fc.addItem(_HomeListItem(
         widget: SuperListItemFullWidth(
-          child: TrendingTagsWidget(),
+          child: TopThreadsWidget(),
         ),
       ));
     }
