@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tinhte_api/feature_page.dart';
 
 import '../../screens/search/feature_page.dart';
-import '../../widgets/feature_page.dart';
+import '../../widgets/tag/widget.dart';
 import '../../api.dart';
 import 'header.dart';
 
@@ -38,7 +38,7 @@ class _FeaturePagesWidgetState extends State<FeaturePagesWidget> {
                 builder: (_, bc) =>
                     _buildGrid((bc.maxWidth / FpWidget.kPreferWidth).ceil()),
               ),
-              padding: const EdgeInsets.all(2),
+              padding: const EdgeInsets.all(kTagWidgetPadding),
             ),
             Center(
               child: FlatButton(

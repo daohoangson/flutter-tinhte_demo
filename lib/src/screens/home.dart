@@ -9,6 +9,7 @@ import '../widgets/home/channels.dart';
 import '../widgets/home/feature_pages.dart';
 import '../widgets/home/thread.dart';
 import '../widgets/home/top_5.dart';
+import '../widgets/home/trending_tags.dart';
 import '../widgets/super_list.dart';
 import 'content_list_view.dart';
 
@@ -96,6 +97,14 @@ class _HomeScreenState extends State<HomeScreen> {
       } else {
         fc.addItem(_HomeListItem(thread: tli));
       }
+    }
+
+    if (fc.id == FetchContextId.FetchInitial) {
+      fc.addItem(_HomeListItem(
+        widget: SuperListItemFullWidth(
+          child: TrendingTagsWidget(),
+        ),
+      ));
     }
   }
 }

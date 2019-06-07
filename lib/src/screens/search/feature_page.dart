@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tinhte_api/feature_page.dart';
 
-import '../../widgets/feature_page.dart';
+import '../../widgets/tag/widget.dart';
 
 class FpSearchDelegate extends SearchDelegate {
   final List<FeaturePage> pages;
