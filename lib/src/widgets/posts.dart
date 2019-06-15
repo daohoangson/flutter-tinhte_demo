@@ -28,29 +28,3 @@ part 'post/builders.dart';
 part 'post/first.dart';
 part 'post/list.dart';
 part 'post/replies.dart';
-
-class PostsWidget extends StatelessWidget {
-  final Map initialJson;
-  final String path;
-  final Thread thread;
-
-  PostsWidget({
-    this.initialJson,
-    Key key,
-    this.path,
-    this.thread,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) => MultiProvider(
-        providers: [
-          Provider<Thread>.value(value: thread),
-          NewPostStream.buildProvider(),
-        ],
-        child: _PostListWidget(
-          thread,
-          initialJson: initialJson,
-          path: path,
-        ),
-      );
-}

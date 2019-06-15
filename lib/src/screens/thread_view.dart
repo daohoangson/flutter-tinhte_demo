@@ -98,8 +98,8 @@ class ThreadViewScreen extends StatelessWidget {
       );
 
   Widget _buildBody() => PostsWidget(
+        thread,
         path: thread.links?.posts,
         initialJson: initialJson,
-        thread: thread,
       );
 }

@@ -95,6 +95,13 @@ class _HomeScreenState extends State<HomeScreen> {
       final Map threadJson = threadsJson[i];
       final tli = ThreadListItem.fromJson(threadJson);
 
+      if (tli?.thread?.threadImage != null) {
+        // force display mode for edge case: when thread has custom home image
+        // thread view will have an annoying jump effect (no cover -> has cover)
+        // we know home thread always has cover image so it's safe to do this
+        tli.thread.threadImage.displayMode = 'cover';
+      }
+
       if (top5 != null && top5.length < 5) {
         top5.add(tli);
       } else {

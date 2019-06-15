@@ -69,7 +69,7 @@ class FetchContext<T> {
     this.apiMethod,
     @required this.id,
     @required this.path,
-  })  : assert(id != null);
+  }) : assert(id != null);
 
   void addItem(T item) {
     _items ??= [];
@@ -124,7 +124,8 @@ class SuperListState<T> extends State<SuperListView<T>> {
     if (widget.initialItems != null) _items.addAll(widget.initialItems);
 
     if (widget.itemStreamRegister != null) {
-      _itemStreamSub = widget.itemStreamRegister(this);
+      WidgetsBinding.instance.addPostFrameCallback(
+          (_) => _itemStreamSub = widget.itemStreamRegister(this));
     }
 
     final enableRefreshIndicator =
