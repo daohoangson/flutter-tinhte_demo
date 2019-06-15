@@ -5,7 +5,13 @@ import 'src/api.dart';
 import 'src/responsive_layout.dart';
 
 void main() {
-  FlutterError.onError = (e) => Crashlytics.instance.onError(e);
+  var skipCrashlytics = false;
+  assert(skipCrashlytics = true);
+  if (!skipCrashlytics) {
+    // only setup Crashlytics on release builds
+    FlutterError.onError = (e) => Crashlytics.instance.onError(e);
+  }
+
   runApp(MyApp());
 }
 
