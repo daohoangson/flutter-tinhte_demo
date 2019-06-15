@@ -170,8 +170,11 @@ class ApiApp extends StatefulWidget {
   final Api api;
   final Widget child;
 
-  ApiApp(this.child, {Key key})
-      : api = Api(configApiRoot, configClientId, configClientSecret)
+  ApiApp({
+    @required this.child,
+    Key key,
+  })  : assert(child != null),
+        api = Api(configApiRoot, configClientId, configClientSecret)
           ..httpHeaders['Api-Bb-Code-Chr'] = '1'
           ..httpHeaders['Api-Post-Tree'] = '1',
         super(key: key);

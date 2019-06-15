@@ -17,7 +17,7 @@ class SuperListView<T> extends StatefulWidget {
   final Map initialJson;
   final Iterable<T> initialItems;
   final _ItemBuilder<T> itemBuilder;
-  final int itemMaxWidth;
+  final double itemMaxWidth;
   final _ItemStreamRegister<T> itemStreamRegister;
   final bool progressIndicator;
   final bool shrinkWrap;
@@ -153,7 +153,7 @@ class SuperListState<T> extends State<SuperListView<T>> {
         if (widget.itemMaxWidth != null && !(built is SuperListItemFullWidth)) {
           built = Center(
             child: ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: 600),
+              constraints: BoxConstraints(maxWidth: widget.itemMaxWidth),
               child: built,
             ),
           );

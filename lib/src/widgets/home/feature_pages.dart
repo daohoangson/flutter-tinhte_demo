@@ -2,12 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:tinhte_api/feature_page.dart';
 
 import '../../screens/search/feature_page.dart';
-import '../../widgets/feature_page.dart';
+import '../../widgets/tag/widget.dart';
 import '../../api.dart';
 import 'header.dart';
-
-const _kFeaturePageHeight = 100.0;
-const _kFeaturePagesMax = 20;
 
 class FeaturePagesWidget extends StatefulWidget {
   final List<FeaturePage> pages;
@@ -36,46 +33,53 @@ class _FeaturePagesWidgetState extends State<FeaturePagesWidget> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             HeaderWidget('Cộng đồng'),
-            SizedBox(
-              height: _kFeaturePageHeight * 2,
-              child: GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  childAspectRatio: 0.75,
-                  crossAxisSpacing: 8,
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 10,
-                ),
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (_, i) =>
-                    FpWidget(i < pages.length ? pages[i] : null),
-                itemCount: pages.isEmpty
-                    ? 6
-                    : pages.length < _kFeaturePagesMax
-                        ? pages.length
-                        : _kFeaturePagesMax,
+            Padding(
+              child: LayoutBuilder(
+                builder: (_, bc) =>
+                    _buildGrid((bc.maxWidth / FpWidget.kPreferWidth).ceil()),
               ),
+              padding: const EdgeInsets.all(kTagWidgetPadding),
             ),
-            pages.length > _kFeaturePagesMax
-                ? Center(
-                    child: FlatButton(
-                      child: Text('View all communities'),
-                      textColor: Theme.of(context).accentColor,
-                      onPressed: () => showSearch(
-                            context: context,
-                            delegate: FpSearchDelegate(pages),
-                          ),
+            Center(
+              child: FlatButton(
+                child: Text('View all communities'),
+                textColor: Theme.of(context).accentColor,
+                onPressed: () => showSearch(
+                      context: context,
+                      delegate: FpSearchDelegate(pages),
                     ),
-                  )
-                : SizedBox.shrink(),
+              ),
+            )
           ],
         ),
       );
 
+  Widget _buildGrid(int cols) {
+    final children = <List<Widget>>[<Widget>[], <Widget>[]];
+
+    for (int row = 0; row < children.length; row++) {
+      for (int col = 0; col < cols; col++) {
+        final i = row * cols + col;
+        final built = Expanded(
+          child: FpWidget(i < pages.length ? pages[i] : null),
+        );
+        children[row].add(built);
+      }
+    }
+
+    return Column(
+      children: <Widget>[
+        Row(children: children[0]),
+        Row(children: children[1]),
+      ],
+    );
+  }
+
   void _fetch() => apiGet(
         ApiCaller.stateful(this),
         'feature-pages?order=promoted'
-        "&_bdImageApiFeaturePageThumbnailSize=${(_kFeaturePageHeight * 2).toInt()}"
-        '&_bdImageApiFeaturePageThumbnailMode=sw',
+        "&_bdImageApiFeaturePageThumbnailSize=${(FpWidget.kPreferWidth * 3).toInt()}"
+        '&_bdImageApiFeaturePageThumbnailMode=sh',
         onSuccess: (jsonMap) {
           if (!jsonMap.containsKey('pages')) return;
 

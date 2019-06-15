@@ -12,7 +12,6 @@ import '../screens/forum_view.dart';
 import '../screens/node_view.dart';
 import '../screens/thread_view.dart';
 import '../api.dart';
-import '../constants.dart';
 import '../intl.dart';
 import 'super_list.dart';
 import 'image.dart';
