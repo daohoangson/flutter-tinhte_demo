@@ -34,10 +34,7 @@ class _PostAttachmentsWidget extends StatelessWidget {
         aspectRatio: attachment.attachmentWidth / attachment.attachmentHeight,
         child: ClipRRect(
           borderRadius: BorderRadius.circular(3),
-          child: CachedNetworkImage(
-            imageUrl: attachment.links.thumbnail,
-            fit: BoxFit.cover,
-          ),
+          child: buildCachedNetworkImage(attachment.links.thumbnail),
         ),
       );
 

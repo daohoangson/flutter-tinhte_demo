@@ -8,6 +8,16 @@ const kThreadImageAspectRatio = 594 / 368;
 
 const _apiUrlAttachments = "$configApiRoot?attachments";
 
+Widget buildCachedNetworkImage(String imageUrl) => CachedNetworkImage(
+      imageUrl: imageUrl,
+      errorWidget: (_, __, ___) => const DecoratedBox(
+            decoration: BoxDecoration(
+              color: Colors.grey,
+            ),
+          ),
+      fit: BoxFit.cover,
+    );
+
 String getResizedUrl({
   @required String apiUrl,
   double boxWidth,
