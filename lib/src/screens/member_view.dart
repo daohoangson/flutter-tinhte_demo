@@ -38,6 +38,7 @@ class _MemberViewScreenState extends State<MemberViewScreen> {
             if (scrollInfo is ScrollUpdateNotification) {
               setState(() => _fabIsVisible = scrollInfo.scrollDelta < 0.0);
             }
+            return false;
           },
         ),
         floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,

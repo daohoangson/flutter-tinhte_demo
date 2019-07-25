@@ -39,6 +39,7 @@ class _ForumViewScreenState extends State<ForumViewScreen> {
             if (scrollInfo is ScrollUpdateNotification) {
               setState(() => _fabIsVisible = scrollInfo.scrollDelta < 0.0);
             }
+            return false;
           },
         ),
         floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,

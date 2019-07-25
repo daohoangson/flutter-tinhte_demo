@@ -75,7 +75,7 @@ class _PushNotificationAppState extends State<PushNotificationApp> {
 
     _firebaseMessaging.configure(
       onLaunch: _onLaunchOrResume,
-      onMessage: (m) {
+      onMessage: (m) async {
         debugPrint("FCM.onMessage: $m");
         final data = m.containsKey('data') ? m['data'] as Map : m;
         _notifControllerAddFromFcmMessage(data);

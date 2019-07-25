@@ -143,6 +143,8 @@ class _LoginFormState extends State<LoginForm> {
             case FacebookLoginStatus.error:
               return Future.error(result.errorMessage);
           }
+
+          return Future.error(result.status.toString());
         })
         .then((facebookToken) =>
             api.postJson('oauth/token/facebook', bodyFields: {

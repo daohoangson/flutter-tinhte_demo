@@ -75,7 +75,7 @@ class Galleria {
         if (widget is Text) {
           source = widget.data;
         } else if (widget is RichText) {
-          caption = widget.text.text;
+          caption = widget.text.toPlainText();
         } else {
           image = widget;
         }

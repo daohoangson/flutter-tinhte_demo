@@ -189,17 +189,18 @@ class SuperListState<T> extends State<SuperListView<T>> {
       built = NotificationListener<ScrollNotification>(
         child: built,
         onNotification: (scrollInfo) {
-          if (_isFetching) return;
-          if (_scrollController?.isAutoScrolling == true) return;
-          if (!(scrollInfo is UserScrollNotification)) return;
+          if (_isFetching) return false;
+          if (_scrollController?.isAutoScrolling == true) return false;
+          if (!(scrollInfo is UserScrollNotification)) return false;
 
           final m = scrollInfo.metrics;
-          if (m.axisDirection != AxisDirection.down) return;
+          if (m.axisDirection != AxisDirection.down) return false;
 
           final lookAhead = widget.infiniteScrollingVh * m.viewportDimension;
-          if (m.pixels < m.maxScrollExtent - lookAhead) return;
+          if (m.pixels < m.maxScrollExtent - lookAhead) return false;
 
           if (canFetchNext) fetchNext();
+          return false;
         },
       );
     }
