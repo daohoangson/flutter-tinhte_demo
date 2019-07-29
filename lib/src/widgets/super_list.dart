@@ -136,7 +136,8 @@ class SuperListState<T> extends State<SuperListView<T>> {
 
     if (widget.enableScrollToIndex) _scrollController = AutoScrollController();
 
-    fetchInitial(clearItems: false);
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => fetchInitial(clearItems: false));
   }
 
   @override
