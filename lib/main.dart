@@ -25,10 +25,8 @@ class MyApp extends StatelessWidget {
           child: MaterialApp(
             title: 'Tinh tế Demo',
             theme: ThemeData(brightness: Brightness.dark),
-            home: Navigator(
-              key: _primaryNavKey,
-              onGenerateRoute: (_) => HomeScreenRoute(),
-            ),
+            navigatorKey: _primaryNavKey,
+            home: HomeScreen(),
           ),
           primaryNavKey: _primaryNavKey,
         ),
