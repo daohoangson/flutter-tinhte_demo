@@ -62,8 +62,8 @@ class HomeThreadWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
         ),
         onTap: () => Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => ThreadViewScreen(thread)),
-            ),
+          MaterialPageRoute(builder: (_) => ThreadViewScreen(thread)),
+        ),
       );
 
   Widget _buildImage(double imageScale) => ClipRRect(
@@ -106,9 +106,5 @@ class HomeThreadWidget extends StatelessWidget {
         style: style,
       );
 
-  Widget _buildTitle() => Text(
-        thread.threadTitle,
-        maxLines: 4,
-        overflow: TextOverflow.ellipsis,
-      );
+  Widget _buildTitle() => Text(thread.threadTitle);
 }
