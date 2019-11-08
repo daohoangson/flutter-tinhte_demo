@@ -29,7 +29,7 @@ dependencies:
   intl: ^0.16.0
   package_info: ^0.4.0+10
   photo_view: ^0.4.2
-  provider: ^2.0.1
+  provider: ^3.1.0+1
   share: ^0.6.3+1
   shared_preferences: ^0.5.4+3
   scroll_to_index: ^1.0.3
