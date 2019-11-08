@@ -25,7 +25,7 @@ dependencies:
   font_awesome_flutter: ^8.5.0
   google_sign_in: ^4.0.11
   http: any
-  image_picker: ^0.5.2
+  image_picker: ^0.6.1+10
   intl: ^0.15.7
   package_info: ^0.4.0+10
   photo_view: ^0.4.2
