@@ -4,40 +4,47 @@ class PhotoCompare {
   final TinhteWidgetFactory wf;
 
   BuildOp _buildOp;
-  BuildOp _imgOp;
 
   PhotoCompare(this.wf);
 
   BuildOp get buildOp {
     _buildOp ??= BuildOp(
       onChild: (meta, e) =>
-          e.localName == 'img' ? lazySet(meta, buildOp: imgOp) : meta,
-      onWidgets: (meta, widgets) => widgets.length == 2
-          ? [
-              _PhotoCompareWidget(
-                _noPadding(widgets.first),
-                _noPadding(widgets.last),
-              ),
-            ]
-          : null,
+          e.localName == 'img' ? lazySet(meta, isBlockElement: true) : meta,
+      onWidgets: (meta, widgets) {
+        final images = widgets.where((w) => w is core.ImageLayout);
+        if (images.length != 2) return null;
+
+        final widget0 = images.first as core.ImageLayout;
+        final widget1 = images.last as core.ImageLayout;
+        if (widget0.height == null ||
+            widget0.width == null ||
+            widget0.height == 0) return null;
+
+        return [
+          _PhotoCompareWidget(
+            aspectRatio: widget0.width / widget0.height,
+            image0: widget0.image,
+            image1: widget1.image,
+          ),
+        ];
+      },
     );
 
     return _buildOp;
   }
-
-  BuildOp get imgOp {
-    _imgOp ??= BuildOp(
-      defaultStyles: (_, __) => ['LbTrigger', 'skipOnTap'],
-    );
-    return _imgOp;
-  }
 }
 
 class _PhotoCompareWidget extends StatefulWidget {
-  final Widget first;
-  final Widget second;
+  final double aspectRatio;
+  final ImageProvider image0;
+  final ImageProvider image1;
 
-  _PhotoCompareWidget(this.first, this.second);
+  _PhotoCompareWidget({
+    this.aspectRatio,
+    this.image0,
+    this.image1,
+  });
 
   @override
   State<StatefulWidget> createState() => _PhotoCompareState();
@@ -63,31 +70,35 @@ class _PhotoCompareState extends State<_PhotoCompareWidget>
         children: <Widget>[
           Stack(
             children: <Widget>[
-              widget.second,
+              AspectRatio(
+                aspectRatio: widget.aspectRatio,
+                child: Image(image: widget.image0),
+              ),
               AnimatedBuilder(
                 animation: controller,
                 // TODO: avoid using ClipRect
                 builder: (_, __) => ClipRect(
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: widget.first,
-                        widthFactor: controller.value,
-                      ),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: AspectRatio(
+                      aspectRatio: widget.aspectRatio,
+                      child: Image(image: widget.image1),
                     ),
+                    widthFactor: controller.value,
+                  ),
+                ),
               ),
             ],
           ),
           AnimatedBuilder(
             animation: controller,
             builder: (_, __) => Slider(
-                  value: controller.value,
-                  onChanged: (v) =>
-                      controller.animateTo(v, curve: Curves.easeInOut),
-                ),
+              value: controller.value,
+              onChanged: (v) =>
+                  controller.animateTo(v, curve: Curves.easeInOut),
+            ),
           ),
         ],
         crossAxisAlignment: CrossAxisAlignment.stretch,
       );
 }
-
-Widget _noPadding(Widget w) => w is Padding ? w.child : w;
