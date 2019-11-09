@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 
@@ -6,14 +7,11 @@ import 'src/api.dart';
 import 'src/push_notification.dart';
 
 void main() {
-  var skipCrashlytics = false;
-  assert(skipCrashlytics = true);
-  if (!skipCrashlytics) {
-    // only setup Crashlytics on release builds
-    FlutterError.onError = (e) => Crashlytics.instance.onError(e);
-  }
+  FlutterError.onError = Crashlytics.instance.recordFlutterError;
 
-  runApp(MyApp());
+  runZoned<Future<void>>(() async {
+    runApp(MyApp());
+  }, onError: Crashlytics.instance.recordError);
 }
 
 class MyApp extends StatelessWidget {
