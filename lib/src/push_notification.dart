@@ -124,7 +124,7 @@ class _PushNotificationAppState extends State<PushNotificationApp> {
     final navigator = widget.primaryNavKey.currentState;
     if (navigator == null) return Future.value(false);
 
-    return parseLink(navigator.context, navigator: navigator, path: p);
+    return parseLink(path: p, rootNavigator: navigator);
   }
 
   void _unregister() async {

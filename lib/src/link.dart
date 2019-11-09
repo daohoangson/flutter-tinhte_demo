@@ -15,7 +15,7 @@ import 'screens/thread_view.dart';
 
 void launchLink(BuildContext context, String link) async {
   if (link.startsWith(configSiteRoot)) {
-    final parsed = await parseLink(context, link: link);
+    final parsed = await parseLink(context: context, link: link);
     if (parsed) return;
 
     final apiAuth = ApiAuth.of(context, listen: false);
@@ -34,43 +34,43 @@ void launchLink(BuildContext context, String link) async {
 void launchMemberView(BuildContext context, int userId) =>
     launchLink(context, "$configSiteRoot/members/$userId/");
 
-Future<bool> parseLink(
-  BuildContext context, {
+Future<bool> parseLink({
+  BuildContext context,
   String link,
-  NavigatorState navigator,
+  NavigatorState rootNavigator,
   String path,
 }) {
+  assert((context == null) != (rootNavigator == null));
   assert((link == null) != (path == null));
+  final navigator = rootNavigator ?? Navigator.of(context);
   var cancelled = false;
   final completer = Completer<bool>();
   var parsed = false;
+  var userCancelled = false;
 
-  showDialog(
-    context: context,
-    barrierDismissible: false,
-    builder: (context) => AlertDialog(
-          content: Text('Just a moment...'),
-          actions: <Widget>[
-            FlatButton(
-              child: Text('Cancel'),
-              onPressed: () {
-                cancelled = true;
-                Navigator.of(context).pop();
-              },
-            )
-          ],
-        ),
-  );
+  navigator.push(_DialogRoute((_) => AlertDialog(
+        content: Text('Just a moment...'),
+        actions: <Widget>[
+          FlatButton(
+            child: Text('Cancel'),
+            onPressed: () {
+              cancelled = true;
+              userCancelled = true;
+              navigator.pop();
+            },
+          )
+        ],
+      )));
 
   final cancelDialog = () {
     if (cancelled) return;
 
-    Navigator.of(context, rootNavigator: true).pop();
+    navigator.pop();
     cancelled = true;
   };
 
   apiGet(
-    ApiCaller.stateless(context),
+    ApiCaller.stateless(context ?? rootNavigator.context),
     path ?? 'tools/parse-link?link=${Uri.encodeQueryComponent(link)}',
     onSuccess: (json) {
       if (cancelled) return;
@@ -83,19 +83,18 @@ Future<bool> parseLink(
       } else if (json.containsKey('user')) {
         route = _parseUser(json);
       }
+      if (cancelled) return;
 
       if (route != null) {
         parsed = true;
         cancelDialog();
-        (navigator ?? Navigator.of(context)).push(route);
+        navigator.push(route);
       }
     },
-    onError: (error) {
-      debugPrint("$error");
-    },
+    onError: (error) => debugPrint("$error"),
     onComplete: () {
       cancelDialog();
-      completer.complete(parsed);
+      completer.complete(parsed || userCancelled);
     },
   );
 
@@ -137,4 +136,27 @@ Route _parseUser(Map json) {
   return MaterialPageRoute(
     builder: (_) => MemberViewScreen(user),
   );
+}
+
+class _DialogRoute extends PopupRoute {
+  final WidgetBuilder builder;
+
+  _DialogRoute(this.builder);
+
+  @override
+  bool get barrierDismissible => false;
+
+  @override
+  String get barrierLabel => '';
+
+  @override
+  Color get barrierColor => Colors.black54;
+
+  @override
+  Widget buildPage(BuildContext context, Animation<double> animation,
+          Animation<double> secondaryAnimation) =>
+      SafeArea(child: Builder(builder: builder));
+
+  @override
+  Duration get transitionDuration => Duration.zero;
 }
