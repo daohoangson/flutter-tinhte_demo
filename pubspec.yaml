@@ -13,33 +13,29 @@ environment:
   sdk: ">=2.1.0 <3.0.0"
 
 dependencies:
-  convert: ^2.0.2
-  crypto: ^2.0.6
+  convert: ^2.1.1
+  crypto: ^2.1.3
   flutter:
     sdk: flutter
   firebase_messaging: ^4.0.0+1
-  firebase_crashlytics: ^0.0.4+3
-  flutter_facebook_login: ^2.0.0
+  firebase_crashlytics: ^0.1.1+2
+  flutter_facebook_login: ^3.0.0
   flutter_widget_from_html:
     path: ./packages/flutter_widget_from_html
-  font_awesome_flutter: ^8.1.0
-  google_sign_in: ^4.0.1+3
+  font_awesome_flutter: ^8.5.0
+  google_sign_in: ^4.0.11
   http: any
-  image_picker: ^0.5.2
-  intl: ^0.15.7
-  package_info: ^0.4.0+2
-  photo_view: ^0.4.2
-  provider: ^2.0.1
-  share: ^0.6.1+1
-  shared_preferences: ^0.5.1+2
+  image_picker: ^0.6.1+10
+  intl: ^0.16.0
+  package_info: ^0.4.0+10
+  photo_view: ^0.8.0
+  provider: ^3.1.0+1
+  share: ^0.6.3+1
+  shared_preferences: ^0.5.4+3
   scroll_to_index: ^1.0.3
-  timeago: ^2.0.8
+  timeago: ^2.0.21
   tinhte_api:
     path: ./packages/api
-
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^0.1.2
 
 dev_dependencies:
   flutter_test:

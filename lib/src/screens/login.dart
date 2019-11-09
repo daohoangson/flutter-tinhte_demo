@@ -133,7 +133,7 @@ class _LoginFormState extends State<LoginForm> {
     final api = apiAuth.api;
 
     _facebookLogin
-        .logInWithReadPermissions(['email'])
+        .logIn(['email'])
         .then<String>((result) {
           switch (result.status) {
             case FacebookLoginStatus.loggedIn:

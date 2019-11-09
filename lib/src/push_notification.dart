@@ -105,7 +105,7 @@ class _PushNotificationAppState extends State<PushNotificationApp> {
               ),
               StreamProvider<PushNotificationUnread>.value(
                 initialData: PushNotificationUnread(0),
-                stream: _unreadController.stream,
+                value: _unreadController.stream,
               ),
             ],
             child: widget.child,
