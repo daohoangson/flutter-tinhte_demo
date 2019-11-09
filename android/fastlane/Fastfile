@@ -5,7 +5,7 @@ platform :android do
   lane :beta do
     upload_to_play_store(
       track: 'beta',
-      apk: '../build/app/outputs/apk/release/app-release.apk',
+      aab: '../build/app/outputs/bundle/release/app.aab',
       skip_upload_screenshots: true,
       skip_upload_images: true
     )

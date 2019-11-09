@@ -10,7 +10,7 @@ if [ -z "$FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD" ]; then
 fi
 
 cd "$_pwd"
-flutter build apk --release
+flutter build appbundle --release
 cd android && fastlane beta
 
 cd "$_pwd"
