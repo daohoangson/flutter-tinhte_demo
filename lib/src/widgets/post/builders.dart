@@ -20,7 +20,7 @@ Widget buildPostButton(
       (count > 0 ? "$count • " : '') + text,
       style: TextStyle(
         color: onTap != null
-            ? color ?? theme.primaryColor
+            ? color ?? theme.buttonColor
             : color ?? theme.disabledColor,
         fontSize: theme.textTheme.button.fontSize - 2,
       ),
@@ -117,7 +117,7 @@ Widget buildPosterInfo(
   if (userHasVerifiedBadge == true) {
     children.add(Icon(
       FontAwesomeIcons.solidCheckCircle,
-      color: kColorUserVerifiedBadge,
+      color: theme.accentColor,
       size: style.fontSize,
     ));
   }
@@ -127,7 +127,7 @@ Widget buildPosterInfo(
       text: TextSpan(
         text: userRank,
         style: style.copyWith(
-          color: kColorUserRank,
+          color: theme.hintColor,
         ),
       ),
     ));

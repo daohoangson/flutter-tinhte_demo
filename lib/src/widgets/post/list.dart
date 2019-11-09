@@ -2,12 +2,12 @@ part of '../posts.dart';
 
 const _kPageIndicatorHeight = 40.0;
 
-class _PostListWidget extends StatelessWidget {
+class PostsWidget extends StatefulWidget {
   final Map initialJson;
   final String path;
   final Thread thread;
 
-  _PostListWidget(
+  PostsWidget(
     this.thread, {
     this.initialJson,
     Key key,
@@ -16,18 +16,40 @@ class _PostListWidget extends StatelessWidget {
         super(key: key);
 
   @override
-  Widget build(BuildContext context) => SuperListView<_PostListItem>(
-        enableScrollToIndex: true,
-        fetchPathInitial: path,
-        fetchOnSuccess: _fetchOnSuccess,
-        initialItems: thread.firstPost != null
-            ? [_PostListItem.post(thread.firstPost)]
-            : null,
-        initialJson: initialJson,
-        itemBuilder: _buildItem,
-        itemStreamRegister: (sls) => Provider.of<NewPostStream>(context).listen(
-            (post) => sls.itemsInsert(
-                sls.fetchedPageMin == 1 ? 1 : 0, _PostListItem.post(post))),
+  State<StatefulWidget> createState() => _PostsWidgetState();
+}
+
+class _PostsWidgetState extends State<PostsWidget> {
+  Thread thread;
+
+  @override
+  void initState() {
+    super.initState();
+
+    thread = widget.thread;
+  }
+
+  @override
+  Widget build(BuildContext context) => MultiProvider(
+        providers: [
+          Provider<Thread>.value(value: thread),
+          NewPostStream.buildProvider(),
+        ],
+        child: SuperListView<_PostListItem>(
+          enableScrollToIndex: true,
+          fetchPathInitial: widget.path,
+          fetchOnSuccess: _fetchOnSuccess,
+          initialItems: widget.thread.firstPost != null
+              ? [_PostListItem.post(widget.thread.firstPost)]
+              : null,
+          initialJson: widget.initialJson,
+          itemBuilder: _buildItem,
+          itemStreamRegister: (sls) => Provider.of<NewPostStream>(sls.context)
+              .listen((post) => sls.itemsInsert(
+                    sls.fetchedPageMin == 1 ? 1 : 0,
+                    _PostListItem.post(post),
+                  )),
+        ),
       );
 
   Widget _buildItem(
@@ -176,6 +198,11 @@ class _PostListWidget extends StatelessWidget {
       }
 
       fc.addItem(_PostListItem.post(post));
+    }
+
+    if (json.containsKey('thread')) {
+      final thread = Thread.fromJson(json['thread']);
+      setState(() => this.thread = thread);
     }
   }
 

@@ -1,11 +1,11 @@
 import 'dart:io';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/animation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tinhte_api/attachment.dart';
 
 import '../api.dart';
+import 'image.dart';
 
 const kSize = 50.0;
 
@@ -45,9 +45,8 @@ class _AttachmentEditorState extends State<AttachmentEditor> {
               child: Opacity(
                 opacity: attachment.ok ? 1.0 : 0.5,
                 child: attachment.ok
-                    ? CachedNetworkImage(
-                        imageUrl: attachment.apiData.links.thumbnail,
-                        fit: BoxFit.cover,
+                    ? buildCachedNetworkImage(
+                        attachment.apiData.links.thumbnail,
                       )
                     : Image.file(
                         attachment.file,

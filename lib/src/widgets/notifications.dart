@@ -65,14 +65,13 @@ class NotificationsWidget extends StatelessWidget {
       );
 
   Widget _buildHtmlWidget(BuildContext context, api.Notification n) {
-    final textStyle = Theme.of(context).textTheme.title.copyWith(
-        fontWeight:
-            n.notificationIsUnread ? FontWeight.bold : FontWeight.normal);
+    final w = n.notificationIsUnread ? FontWeight.bold : FontWeight.normal;
+    final s = DefaultTextStyle.of(context).style.copyWith(fontWeight: w);
 
     return TinhteHtmlWidget(
       n.notificationHtml,
-      hyperlinkColor: textStyle.color,
-      textStyle: textStyle,
+      hyperlinkColor: s.color,
+      textStyle: s,
     );
   }
 

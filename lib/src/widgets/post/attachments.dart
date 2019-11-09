@@ -16,14 +16,11 @@ class _PostAttachmentsWidget extends StatelessWidget {
       child: SizedBox(
         height: 100,
         child: ListView.separated(
-          itemBuilder: (context, i) => lbTrigger.buildGestureDetector(
-                context,
-                i,
-                _buildAttachment(attachments[i]),
-              ),
+          itemBuilder: (c, i) => lbTrigger.buildGestureDetectorWithContext(
+              c, i, _buildAttachment(attachments[i])),
           itemCount: attachments.length,
           scrollDirection: Axis.horizontal,
-          separatorBuilder: (context, i) => const SizedBox(width: 10.0),
+          separatorBuilder: (context, _) => const SizedBox(width: 10.0),
         ),
       ),
       padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
@@ -34,10 +31,7 @@ class _PostAttachmentsWidget extends StatelessWidget {
         aspectRatio: attachment.attachmentWidth / attachment.attachmentHeight,
         child: ClipRRect(
           borderRadius: BorderRadius.circular(3),
-          child: CachedNetworkImage(
-            imageUrl: attachment.links.thumbnail,
-            fit: BoxFit.cover,
-          ),
+          child: buildCachedNetworkImage(attachment.links.thumbnail),
         ),
       );
 
@@ -54,7 +48,7 @@ class _PostAttachmentsWidget extends StatelessWidget {
       return true;
     })?.toList();
 
-    if (attachments?.isNotEmpty != true) return SizedBox.shrink();
+    if (attachments?.isNotEmpty != true) return null;
 
     return _PostAttachmentsWidget(attachments);
   }

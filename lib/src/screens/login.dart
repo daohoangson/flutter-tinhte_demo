@@ -133,7 +133,7 @@ class _LoginFormState extends State<LoginForm> {
     final api = apiAuth.api;
 
     _facebookLogin
-        .logInWithReadPermissions(['email'])
+        .logIn(['email'])
         .then<String>((result) {
           switch (result.status) {
             case FacebookLoginStatus.loggedIn:
@@ -143,6 +143,8 @@ class _LoginFormState extends State<LoginForm> {
             case FacebookLoginStatus.error:
               return Future.error(result.errorMessage);
           }
+
+          return Future.error(result.status.toString());
         })
         .then((facebookToken) =>
             api.postJson('oauth/token/facebook', bodyFields: {

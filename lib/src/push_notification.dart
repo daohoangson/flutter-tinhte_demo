@@ -42,10 +42,11 @@ class PushNotificationApp extends StatefulWidget {
   final GlobalKey<NavigatorState> primaryNavKey;
 
   PushNotificationApp({
-    this.child,
+    @required this.child,
     Key key,
-    this.primaryNavKey,
-  })  : assert(primaryNavKey != null),
+    @required this.primaryNavKey,
+  })  : assert(child != null),
+        assert(primaryNavKey != null),
         super(key: key);
 
   @override
@@ -74,7 +75,7 @@ class _PushNotificationAppState extends State<PushNotificationApp> {
 
     _firebaseMessaging.configure(
       onLaunch: _onLaunchOrResume,
-      onMessage: (m) {
+      onMessage: (m) async {
         debugPrint("FCM.onMessage: $m");
         final data = m.containsKey('data') ? m['data'] as Map : m;
         _notifControllerAddFromFcmMessage(data);
@@ -104,7 +105,7 @@ class _PushNotificationAppState extends State<PushNotificationApp> {
               ),
               StreamProvider<PushNotificationUnread>.value(
                 initialData: PushNotificationUnread(0),
-                stream: _unreadController.stream,
+                value: _unreadController.stream,
               ),
             ],
             child: widget.child,

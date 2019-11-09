@@ -19,6 +19,9 @@ class Galleria {
           case 'a':
             meta = lazySet(meta, buildOp: childOpA);
             break;
+          case 'img':
+            meta = lazySet(meta, isBlockElement: true);
+            break;
           case 'li':
             meta = lazySet(meta, buildOp: childOpLi);
             break;
@@ -41,7 +44,7 @@ class Galleria {
             lb.captions[i] = item.caption;
           }
 
-          children.add(lb.buildGestureDetector(meta.context, i, item.image));
+          children.add(lb.buildGestureDetector(i, item.image));
         }
 
         if (children.isEmpty) return [Container()];
@@ -68,22 +71,21 @@ class Galleria {
 
   BuildOp get childOpLi {
     _childOpLi ??= BuildOp(onWidgets: (meta, widgets) {
+      Widget caption, image;
       String source;
-      Widget image;
-      String caption;
       for (final widget in widgets) {
-        if (widget is Text) {
+        if (widget is WidgetPlaceholder<TextBlock>) {
+          caption = widget;
+        } else if (widget is core.ImageLayout) {
+          image = Image(image: widget.image, fit: BoxFit.cover);
+        } else if (widget is Text) {
           source = widget.data;
-        } else if (widget is RichText) {
-          caption = widget.text.text;
-        } else {
-          image = widget;
         }
       }
 
       if (source?.isNotEmpty != true || image == null) return null;
 
-      return [_GalleriaItem(source, image, caption)];
+      return [_GalleriaItem(caption, image, source)];
     });
 
     return _childOpLi;
@@ -115,21 +117,25 @@ class _GalleriaGrid extends StatelessWidget {
 }
 
 class _GalleriaItem extends StatelessWidget {
-  final String caption;
+  final Widget caption;
   final Widget image;
   final String source;
 
-  _GalleriaItem(this.source, this.image, this.caption)
-      : assert(source != null),
-        assert(image != null);
+  _GalleriaItem(this.caption, this.image, this.source)
+      : assert(image != null),
+        assert(source != null);
 
   @override
   Widget build(BuildContext context) => image;
 }
 
 Widget _unwrapImage(Widget widget) {
+  if (widget is GestureDetector) return _unwrapImage(widget.child);
   if (widget is InkWell) return _unwrapImage(widget.child);
-  if (widget is Wrap) return _unwrapImage(widget.children.first);
+  if (widget is MultiChildRenderObjectWidget)
+    return _unwrapImage(widget.children.first);
+  if (widget is SingleChildRenderObjectWidget)
+    return _unwrapImage(widget.child);
 
   return widget;
 }

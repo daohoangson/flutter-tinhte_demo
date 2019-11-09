@@ -29,7 +29,7 @@ class _FirstPostWidget extends StatelessWidget {
           children: <Widget>[
             ThreadNavigation(thread),
             isThreadTitleRedundant(thread, post)
-                ? SizedBox.shrink()
+                ? widget0
                 : Padding(
                     padding: const EdgeInsets.symmetric(
                       horizontal: kPaddingHorizontal,
@@ -41,10 +41,10 @@ class _FirstPostWidget extends StatelessWidget {
                     ),
                   ),
             _PostBodyWidget(),
-            _buildTags(context, thread) ?? SizedBox.shrink(),
+            _buildTags(context, thread) ?? widget0,
             thread.threadImage?.displayMode == 'cover'
-                ? SizedBox.shrink()
-                : _PostAttachmentsWidget.forPost(post),
+                ? widget0
+                : _PostAttachmentsWidget.forPost(post) ?? widget0,
             _PostActionsWidget(showPostCreateDate: false),
           ],
         ),
@@ -76,8 +76,8 @@ class _TagChip extends StatelessWidget {
         label: Text("#$tagText", style: TextStyle(fontSize: 11)),
         labelPadding: const EdgeInsets.symmetric(horizontal: 3),
         onPressed: () => launchLink(
-              context,
-              "$configSiteRoot/tags?t=${Uri.encodeQueryComponent(tagText)}",
-            ),
+          context,
+          "$configSiteRoot/tags?t=${Uri.encodeQueryComponent(tagText)}",
+        ),
       );
 }

@@ -81,12 +81,14 @@ class ThreadViewScreen extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(fontSize: (kToolbarHeight - 10) / 2),
+                      textScaleFactor: 1,
                     ),
                     Text(
                       formatTimestamp(thread.threadCreateDate),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(fontSize: (kToolbarHeight - 10) / 4),
+                      textScaleFactor: 1,
                     ),
                   ],
                 ),
@@ -98,8 +100,8 @@ class ThreadViewScreen extends StatelessWidget {
       );
 
   Widget _buildBody() => PostsWidget(
+        thread,
         path: thread.links?.posts,
         initialJson: initialJson,
-        thread: thread,
       );
 }

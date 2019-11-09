@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tinhte_api/feature_page.dart';
 
-import '../../widgets/feature_page.dart';
+import '../../widgets/tag/widget.dart';
 
 class FpSearchDelegate extends SearchDelegate {
   final List<FeaturePage> pages;
@@ -29,14 +29,20 @@ class FpSearchDelegate extends SearchDelegate {
   Widget buildSuggestions(BuildContext context) =>
       _buildResults(_filterItems());
 
-  Widget _buildResults(List<FeaturePage> items) => GridView.builder(
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        childAspectRatio: 1.25,
-        crossAxisCount: 3,
-      ),
-      scrollDirection: Axis.vertical,
-      itemBuilder: (_, i) => FpWidget(items[i]),
-      itemCount: items.length);
+  Widget _buildResults(List<FeaturePage> items) => Padding(
+        child: LayoutBuilder(
+          builder: (_, bc) => GridView.builder(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  childAspectRatio: FpWidget.kPreferAspectRatio,
+                  crossAxisCount: (bc.maxWidth / FpWidget.kPreferWidth).ceil(),
+                ),
+                itemBuilder: (_, i) => FpWidget(items[i]),
+                itemCount: items.length,
+                scrollDirection: Axis.vertical,
+              ),
+        ),
+        padding: const EdgeInsets.all(2),
+      );
 
   List<FeaturePage> _filterItems() => query.isEmpty
       ? pages

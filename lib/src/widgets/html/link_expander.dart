@@ -50,11 +50,11 @@ class LinkExpander {
   BuildOp get thumbnailOp {
     _thumbnailOp ??= BuildOp(
       onWidgets: (meta, widgets) => [
-            _Thumbnail(
-              widgets.first,
-              isCover: meta.domElement.classes.contains('thumbnail-cover'),
-            ),
-          ],
+        _Thumbnail(
+          widgets.first,
+          isCover: meta.domElement.classes.contains('thumbnail-cover'),
+        ),
+      ],
     );
     return _thumbnailOp;
   }
@@ -91,11 +91,11 @@ class LinkExpander {
     final onTap = wf.buildGestureTapCallbackForUrl(fullUrl);
 
     return wf.buildGestureDetector(
-      DecoratedBox(
-        decoration: BoxDecoration(
-          color: Theme.of(meta.context).cardColor,
+      Builder(
+        builder: (context) => DecoratedBox(
+          decoration: BoxDecoration(color: Theme.of(context).cardColor),
+          child: child,
         ),
-        child: child,
       ),
       onTap,
     );

@@ -18,18 +18,18 @@ class HomeTop5Widget extends StatelessWidget {
         child: LayoutBuilder(
           builder: (_, box) => box.maxWidth > 480
               ? _build23(
-                  _HomeTop5WidgetThread(items[0], maxLines: 4),
-                  _HomeTop5WidgetThread(items[1], maxLines: 4),
-                  _HomeTop5WidgetThread(items[2], maxLines: 4),
-                  _HomeTop5WidgetThread(items[3], maxLines: 4),
-                  _HomeTop5WidgetThread(items[4], maxLines: 4),
+                  _HomeTop5WidgetThread(items[0]),
+                  _HomeTop5WidgetThread(items[1]),
+                  _HomeTop5WidgetThread(items[2]),
+                  _HomeTop5WidgetThread(items[3]),
+                  _HomeTop5WidgetThread(items[4]),
                 )
               : _build122(
                   _HomeTop5WidgetThread(items[0]),
-                  _HomeTop5WidgetThread(items[1], maxLines: 4),
-                  _HomeTop5WidgetThread(items[2], maxLines: 4),
-                  _HomeTop5WidgetThread(items[3], maxLines: 4),
-                  _HomeTop5WidgetThread(items[4], maxLines: 4),
+                  _HomeTop5WidgetThread(items[1]),
+                  _HomeTop5WidgetThread(items[2]),
+                  _HomeTop5WidgetThread(items[3]),
+                  _HomeTop5WidgetThread(items[4]),
                 ),
         ),
         padding: const EdgeInsets.all(10),
@@ -90,14 +90,10 @@ class HomeTop5Widget extends StatelessWidget {
 
 class _HomeTop5WidgetThread extends StatelessWidget {
   final ListItem item;
-  final int maxLines;
   final Thread thread;
 
-  _HomeTop5WidgetThread(
-    ThreadListItem tli, {
-    Key key,
-    this.maxLines = 2,
-  })  : assert(tli?.item != null),
+  _HomeTop5WidgetThread(ThreadListItem tli, {Key key})
+      : assert(tli?.item != null),
         assert(tli?.thread != null),
         item = tli.item,
         thread = tli.thread,
@@ -121,17 +117,17 @@ class _HomeTop5WidgetThread extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
         ),
         onTap: () => Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => ThreadViewScreen(thread)),
-            ),
+          MaterialPageRoute(builder: (_) => ThreadViewScreen(thread)),
+        ),
       );
 
   Widget _buildImage() => ClipRRect(
         borderRadius: BorderRadius.circular(3),
         child: LayoutBuilder(
           builder: (context, box) => ThreadImageWidget(
-                image: _chooseImageForBox(thread, context, box),
-                threadId: thread.threadId,
-              ),
+            image: _chooseImageForBox(thread, context, box),
+            threadId: thread.threadId,
+          ),
         ),
       );
 
@@ -157,10 +153,7 @@ class _HomeTop5WidgetThread extends StatelessWidget {
     );
   }
 
-  Widget _buildTitle() => Text(
-        thread.threadTitle,
-        maxLines: maxLines,
-      );
+  Widget _buildTitle() => Text(thread.threadTitle);
 
   ThreadImage _chooseImageForBox(Thread t, BuildContext c, BoxConstraints bc) {
     if (t.threadThumbnail == null) return t.threadImage;

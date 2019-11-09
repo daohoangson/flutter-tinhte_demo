@@ -274,7 +274,7 @@ class ActionablePost extends ChangeNotifier {
       MultiProvider(providers: [
         Provider<Post>.value(value: post),
         ChangeNotifierProvider<ActionablePost>.value(
-          notifier: ActionablePost(post),
+          value: ActionablePost(post),
         ),
       ], child: child);
 }

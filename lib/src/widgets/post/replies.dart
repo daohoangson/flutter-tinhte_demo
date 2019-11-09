@@ -13,6 +13,7 @@ class _PostWidgetState extends State<_PostWidget> {
   Widget build(BuildContext context) {
     final post = Provider.of<Post>(context);
     final isPostReply = post.postReplyTo != null;
+    final attachments = _PostAttachmentsWidget.forPost(post);
 
     Widget built = buildPostRow(
       context,
@@ -28,8 +29,8 @@ class _PostWidgetState extends State<_PostWidget> {
           userHasVerifiedBadge: post.posterHasVerifiedBadge,
           userRank: post.posterRank?.rankName,
         ),
-        _PostBodyWidget(),
-        _PostAttachmentsWidget.forPost(post),
+        _PostBodyWidget(needBottomMargin: attachments != null),
+        attachments ?? widget0,
       ],
       footer: <Widget>[
         Padding(

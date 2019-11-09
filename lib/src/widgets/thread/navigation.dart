@@ -62,19 +62,21 @@ class _ThreadNavigationState extends State<ThreadNavigation> {
         child: _buildText(context, e.node.title),
         onTap: () {
           if (e.node is Forum) {
-            return Navigator.push(
+            Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (_) => ForumViewScreen(e.node),
               ),
             );
+            return;
           }
 
           if (e.links?.subElements?.isNotEmpty == true) {
-            return Navigator.push(
+            Navigator.push(
               context,
               MaterialPageRoute(builder: (_) => NodeViewScreen(e)),
             );
+            return;
           }
 
           if (e.links?.permalink?.isNotEmpty == true) {

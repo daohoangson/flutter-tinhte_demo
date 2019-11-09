@@ -170,8 +170,11 @@ class ApiApp extends StatefulWidget {
   final Api api;
   final Widget child;
 
-  ApiApp(this.child, {Key key})
-      : api = Api(configApiRoot, configClientId, configClientSecret)
+  ApiApp({
+    @required this.child,
+    Key key,
+  })  : assert(child != null),
+        api = Api(configApiRoot, configClientId, configClientSecret)
           ..httpHeaders['Api-Bb-Code-Chr'] = '1'
           ..httpHeaders['Api-Post-Tree'] = '1',
         super(key: key);
@@ -181,6 +184,7 @@ class ApiApp extends StatefulWidget {
 }
 
 class _ApiAppState extends State<ApiApp> {
+  var _isRefreshingToken = false;
   List<VoidCallback> _queue;
   OauthToken _token;
   var _tokenHasBeenSet = false;
@@ -273,25 +277,31 @@ class _ApiAppState extends State<ApiApp> {
         }
       });
 
-  void _refreshToken() => api
-      .refreshToken(_token)
-      .then((refreshedToken) => _setToken(refreshedToken))
-      .catchError((_) => _setToken(null));
+  void _refreshToken() {
+    if (_isRefreshingToken) return;
+    _isRefreshingToken = true;
 
-  void _setToken(OauthToken value, {bool savePref = true}) {
+    api
+        .refreshToken(_token)
+        .then((refreshedToken) => _setToken(refreshedToken))
+        .catchError((_) => _setToken(null))
+        .whenComplete(() => _isRefreshingToken = false);
+  }
+
+  void _setToken(OauthToken value, {bool savePref = true}) async {
     if (savePref) {
-      SharedPreferences.getInstance().then((SharedPreferences prefs) {
-        prefs.setString(kPrefKeyTokenAccessToken, value?.accessToken);
-        prefs.setString(kPrefKeyTokenClientId, api.clientId);
-        prefs.setInt(kPrefKeyTokenExpiresAtMillisecondsSinceEpoch,
-            value?.expiresAt?.millisecondsSinceEpoch);
-        prefs.setString(kPrefKeyTokenRefreshToken, value?.refreshToken);
-        prefs.setString(kPrefKeyTokenScope, value?.scope);
-        prefs.setInt(kPrefKeyTokenUserId, value?.userId);
-        debugPrint("Saved token ${value?.accessToken}, "
-            "expires at ${value?.expiresAt}, "
-            "refresh token ${value?.refreshToken}");
-      });
+      final prefs = await SharedPreferences.getInstance();
+
+      prefs.setString(kPrefKeyTokenAccessToken, value?.accessToken);
+      prefs.setString(kPrefKeyTokenClientId, api.clientId);
+      prefs.setInt(kPrefKeyTokenExpiresAtMillisecondsSinceEpoch,
+          value?.expiresAt?.millisecondsSinceEpoch);
+      prefs.setString(kPrefKeyTokenRefreshToken, value?.refreshToken);
+      prefs.setString(kPrefKeyTokenScope, value?.scope);
+      prefs.setInt(kPrefKeyTokenUserId, value?.userId);
+      debugPrint("Saved token ${value?.accessToken}, "
+          "expires at ${value?.expiresAt}, "
+          "refresh token ${value?.refreshToken}");
     }
 
     _token = value;

@@ -8,6 +8,10 @@ TextStyle getPostBodyTextStyle(BuildContext context, bool isFirstPost) {
 }
 
 class _PostBodyWidget extends StatelessWidget {
+  final bool needBottomMargin;
+
+  _PostBodyWidget({this.needBottomMargin});
+
   @override
   Widget build(BuildContext context) => Consumer<ActionablePost>(
         builder: (context, ap, _) {
@@ -18,14 +22,15 @@ class _PostBodyWidget extends StatelessWidget {
               child: Text(
                 'Deleted post.',
                 style: Theme.of(context).textTheme.caption.copyWith(
-                  decoration: TextDecoration.lineThrough,
-                ),
+                      decoration: TextDecoration.lineThrough,
+                    ),
               ),
               padding: const EdgeInsets.all(kPostBodyPadding),
             );
 
           return TinhteHtmlWidget(
             ap.post.postBodyHtml,
+            needBottomMargin: needBottomMargin,
             textStyle: getPostBodyTextStyle(context, post.postIsFirstPost),
           );
         },

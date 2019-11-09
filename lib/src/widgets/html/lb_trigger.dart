@@ -1,8 +1,8 @@
 part of '../html.dart';
 
 class LbTrigger {
+  final captions = Map<int, Widget>();
   final sources = <String>[];
-  final captions = Map<int, String>();
   final WidgetFactory wf;
 
   BuildOp _buildOp;
@@ -10,115 +10,90 @@ class LbTrigger {
 
   LbTrigger({this.wf});
 
-  Widget buildGestureDetector(BuildContext context, int index, Widget child) =>
+  Widget buildGestureDetector(int index, Widget child) =>
+      Builder(builder: (c) => buildGestureDetectorWithContext(c, index, child));
+
+  Widget buildGestureDetectorWithContext(BuildContext c, int i, Widget child) =>
       GestureDetector(
         child: child,
         onTap: () => Navigator.push(
-              context,
-              _SlideUpRoute(
-                page: _Screen(
-                  captions: captions,
-                  initialPage: index,
-                  sources: sources,
-                ),
-              ),
-            ),
+          c,
+          _SlideUpRoute(
+            page: _Screen(captions: captions, initialPage: i, sources: sources),
+          ),
+        ),
       );
+
+  BuildOp prepareBuildOpForATag(NodeMetadata meta, dom.Element e) {
+    final a = e.attributes;
+    if (!a.containsKey('data-height') ||
+        !a.containsKey('data-width') ||
+        !a.containsKey('href')) return null;
+
+    final href = a['href'];
+    final url = wf.constructFullUrl(href);
+    if (url == null) return null;
+
+    final height = double.tryParse(a['data-height']);
+    final width = double.tryParse(a['data-width']);
+    if (height == null || width == null) return null;
+
+    var childHeight = 265.0 / 2;
+    var childWidth = 265.0 / 2;
+    final ratio = width / height;
+    if (ratio > 1) {
+      childHeight = childWidth / ratio;
+    } else {
+      childWidth = childHeight * ratio;
+    }
+
+    final index = sources.length;
+    sources.add(url);
+
+    return BuildOp(
+      onChild: (meta, e) {
+        if (e.localName != 'img') return meta;
+
+        return lazySet(
+          meta,
+          styles: [
+            'height',
+            "${childHeight.toString()}px",
+            'width',
+            "${childWidth.toString()}px",
+          ],
+        );
+      },
+      onPieces: (meta, pieces) =>
+          pieces.map((piece) => piece.hasWidgets ? piece : piece
+            ..block.rebuildBits(
+              (b) => b is WidgetBit
+                  ? b.rebuild(
+                      child: buildGestureDetector(
+                        index,
+                        b.widgetSpan.child,
+                      ),
+                    )
+                  : b,
+            )),
+    );
+  }
 
   BuildOp get buildOp {
     _buildOp ??= BuildOp(
-      onChild: (meta, e) =>
-          e.localName == 'img' ? lazySet(null, buildOp: imgOp) : meta,
-      onWidgets: (meta, widgets) {
-        var skipOnTap = false;
-        meta.styles((key, value) => key == 'LbTrigger' && value == 'skipOnTap'
-            ? skipOnTap = true
-            : null);
+      onChild: (meta, e) {
+        if (e.localName != 'img') return meta;
 
-        final a = meta.domElement.attributes;
-        final src = a.containsKey('src') ? a['src'] : null;
-        final href = a.containsKey('href') ? a['href'] : src;
-        if (href?.isNotEmpty != true) return null;
-
-        final h = a.containsKey('data-height') ? a['data-height'] : null;
-        final p = a.containsKey('data-permalink') ? a['data-permalink'] : href;
-        final w = a.containsKey('data-width') ? a['data-width'] : null;
-        final height = h != null ? int.tryParse(h) : null;
-        final width = w != null ? int.tryParse(w) : null;
-
-        final index = sources.length;
-        sources.add(p);
-
-        final imgs = widgets.where((w) => w is _Img);
-        if (imgs.length == 1) {
-          var childHeight = 265.0 / 2;
-          var childWidth = 265.0 / 2;
-          if (height != null && width != null && height > 0) {
-            final ratio = width / height;
-            if (ratio > 1) {
-              childHeight = childWidth / ratio;
-            } else {
-              childWidth = childHeight * ratio;
-            }
-          }
-
-          Widget thumbnail = ClipRRect(
-            borderRadius: BorderRadius.circular(3),
-            child: Image(
-              image: CachedNetworkImageProvider((imgs.first as _Img).src),
-              fit: BoxFit.cover,
-              height: childHeight,
-              width: childWidth,
-            ),
-          );
-
-          if (!skipOnTap) {
-            thumbnail = buildGestureDetector(meta.context, index, thumbnail);
-          }
-
-          return [
-            wf.buildWrap([thumbnail])
-          ];
-        }
-
-        Widget full = AttachmentImageWidget(
-          height: height,
-          permalink: p,
-          src: src,
-          width: width,
+        return lazySet(
+          meta,
+          isBlockElement: true,
+          styles: ['margin', '0.5em 0'],
         );
-
-        if (!skipOnTap) {
-          full = buildGestureDetector(meta.context, index, full);
-        }
-
-        return [wf.buildPadding(full, const EdgeInsets.symmetric(vertical: 5))];
       },
     );
 
     return _buildOp;
   }
-
-  BuildOp get imgOp {
-    _imgOp ??= BuildOp(
-      onWidgets: (meta, _) {
-        final a = meta.domElement.attributes;
-        final src = a.containsKey('src') ? a['src'] : null;
-        if (src == null) return null;
-        return [_Img(src)];
-      },
-    );
-    return _imgOp;
-  }
-}
-
-class _Img extends StatelessWidget {
-  final String src;
-
-  _Img(this.src);
-
-  @override
-  Widget build(BuildContext context) => Container();
 }
 
 class _SlideUpRoute extends PageRouteBuilder {
@@ -139,19 +114,19 @@ class _SlideUpRoute extends PageRouteBuilder {
             Widget child,
           ) =>
               SlideTransition(
-                position: Tween<Offset>(
-                  begin: const Offset(0, 1),
-                  end: Offset.zero,
-                ).animate(animation),
-                child: child,
-              ),
+            position: Tween<Offset>(
+              begin: const Offset(0, 1),
+              end: Offset.zero,
+            ).animate(animation),
+            child: child,
+          ),
         );
 }
 
 class _Screen extends StatefulWidget {
   final Decoration backgroundDecoration;
   final TextStyle captionStyle;
-  final Map<int, String> captions;
+  final Map<int, Widget> captions;
   final int initialPage;
   final PageController pageController;
   final List<String> sources;
@@ -228,12 +203,12 @@ class _ScreenState extends State<_Screen> {
     );
   }
 
-  Widget _buildCaption(int index) => Text(
-        widget.captions.containsKey(index)
-            ? widget.captions[index]
-            : "${index + 1} of ${widget.sources.length}",
-        style: widget.captionStyle,
-      );
+  Widget _buildCaption(int index) => widget.captions.containsKey(index)
+      ? widget.captions[index]
+      : Text(
+          "${index + 1} of ${widget.sources.length}",
+          style: widget.captionStyle,
+        );
 
   PhotoViewGalleryPageOptions _buildItem(BuildContext context, int index) =>
       PhotoViewGalleryPageOptions(

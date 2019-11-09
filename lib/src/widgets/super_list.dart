@@ -17,7 +17,7 @@ class SuperListView<T> extends StatefulWidget {
   final Map initialJson;
   final Iterable<T> initialItems;
   final _ItemBuilder<T> itemBuilder;
-  final int itemMaxWidth;
+  final double itemMaxWidth;
   final _ItemStreamRegister<T> itemStreamRegister;
   final bool progressIndicator;
   final bool shrinkWrap;
@@ -69,7 +69,7 @@ class FetchContext<T> {
     this.apiMethod,
     @required this.id,
     @required this.path,
-  })  : assert(id != null);
+  }) : assert(id != null);
 
   void addItem(T item) {
     _items ??= [];
@@ -124,7 +124,8 @@ class SuperListState<T> extends State<SuperListView<T>> {
     if (widget.initialItems != null) _items.addAll(widget.initialItems);
 
     if (widget.itemStreamRegister != null) {
-      _itemStreamSub = widget.itemStreamRegister(this);
+      WidgetsBinding.instance.addPostFrameCallback(
+          (_) => _itemStreamSub = widget.itemStreamRegister(this));
     }
 
     final enableRefreshIndicator =
@@ -135,7 +136,8 @@ class SuperListState<T> extends State<SuperListView<T>> {
 
     if (widget.enableScrollToIndex) _scrollController = AutoScrollController();
 
-    fetchInitial(clearItems: false);
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => fetchInitial(clearItems: false));
   }
 
   @override
@@ -153,7 +155,7 @@ class SuperListState<T> extends State<SuperListView<T>> {
         if (widget.itemMaxWidth != null && !(built is SuperListItemFullWidth)) {
           built = Center(
             child: ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: 600),
+              constraints: BoxConstraints(maxWidth: widget.itemMaxWidth),
               child: built,
             ),
           );
@@ -188,17 +190,18 @@ class SuperListState<T> extends State<SuperListView<T>> {
       built = NotificationListener<ScrollNotification>(
         child: built,
         onNotification: (scrollInfo) {
-          if (_isFetching) return;
-          if (_scrollController?.isAutoScrolling == true) return;
-          if (!(scrollInfo is UserScrollNotification)) return;
+          if (_isFetching) return false;
+          if (_scrollController?.isAutoScrolling == true) return false;
+          if (!(scrollInfo is UserScrollNotification)) return false;
 
           final m = scrollInfo.metrics;
-          if (m.axisDirection != AxisDirection.down) return;
+          if (m.axisDirection != AxisDirection.down) return false;
 
           final lookAhead = widget.infiniteScrollingVh * m.viewportDimension;
-          if (m.pixels < m.maxScrollExtent - lookAhead) return;
+          if (m.pixels < m.maxScrollExtent - lookAhead) return false;
 
           if (canFetchNext) fetchNext();
+          return false;
         },
       );
     }
@@ -252,9 +255,7 @@ class SuperListState<T> extends State<SuperListView<T>> {
       final index = _items.length;
       _items.add(item);
 
-      WidgetsBinding.instance.addPostFrameCallback(
-        (_) => scrollToIndex(index, preferPosition: AutoScrollPosition.begin),
-      );
+      scrollToIndex(index, preferPosition: AutoScrollPosition.begin);
     });
   }
 
@@ -266,23 +267,24 @@ class SuperListState<T> extends State<SuperListView<T>> {
 
     setState(() {
       _items.insert(index, item);
-
-      WidgetsBinding.instance.addPostFrameCallback(
-        (_) => scrollToIndex(index, preferPosition: AutoScrollPosition.begin),
-      );
+      scrollToIndex(index, preferPosition: AutoScrollPosition.begin);
     });
   }
 
   void jumpTo(double value) => _scrollController?.jumpTo(value);
 
-  Future scrollToIndex(int index,
-          {Duration duration: scrollAnimationDuration,
-          AutoScrollPosition preferPosition}) =>
-      _scrollController?.scrollToIndex(
-        itemCountBefore + index,
-        duration: duration,
-        preferPosition: preferPosition,
-      );
+  void scrollToIndex(int index,
+      {Duration duration: scrollAnimationDuration,
+      AutoScrollPosition preferPosition}) {
+    if (_scrollController == null) return;
+
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => _scrollController.scrollToIndex(
+              itemCountBefore + index,
+              duration: duration,
+              preferPosition: preferPosition,
+            ));
+  }
 
   Widget _buildItem(BuildContext context, int i) {
     if (i == 0) return _buildProgressIndicator(canFetchPrev && _isFetching);
@@ -377,13 +379,10 @@ class SuperListState<T> extends State<SuperListView<T>> {
           }
         }
 
-        if (_scrollController != null && fc.scrollToRelativeIndex != null) {
-          var scrollToIndex = itemCountBefore + fc.scrollToRelativeIndex;
-          if (fc.id != FetchContextId.FetchPrev) {
-            scrollToIndex += itemsLengthBefore;
-          }
-          _scrollController.scrollToIndex(
-            scrollToIndex,
+        if (fc.scrollToRelativeIndex != null) {
+          scrollToIndex(
+            (fc.id != FetchContextId.FetchPrev ? itemsLengthBefore : 0) +
+                fc.scrollToRelativeIndex,
             preferPosition: AutoScrollPosition.begin,
           );
         }
