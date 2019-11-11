@@ -71,16 +71,15 @@ class LinkExpander {
     if (info == null) return null;
 
     return [
-      Padding(
-        child: Wrap(
-          children: <Widget>[
-            thumbnail?.isCover != false
-                ? _buildCover(meta, thumbnail, info)
-                : _buildSquare(meta, thumbnail, info),
-          ],
-        ),
-        padding: const EdgeInsets.symmetric(vertical: 10),
+      core.SpacingPlaceholder(height: CssLength(0.5, unit: CssLengthUnit.em), meta: meta),
+      Wrap(
+        children: <Widget>[
+          thumbnail?.isCover != false
+              ? _buildCover(meta, thumbnail, info)
+              : _buildSquare(meta, thumbnail, info),
+        ],
       ),
+      core.SpacingPlaceholder(height: CssLength(0.5, unit: CssLengthUnit.em), meta: meta),
     ];
   }
 
@@ -164,6 +163,6 @@ class _Info extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Padding(
         child: child,
-        padding: const EdgeInsets.all(5),
+        padding: const EdgeInsets.all(kPostBodyPadding),
       );
 }
