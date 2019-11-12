@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../widgets/menu/dark_theme.dart';
 import '../widgets/app_bar.dart';
 
 class MenuScreen extends StatelessWidget {
@@ -11,6 +12,7 @@ class MenuScreen extends StatelessWidget {
         body: ListView(
           children: <Widget>[
             AppBarDrawerHeader(),
+            MenuDarkTheme(),
             AppBarDrawerFooter(),
           ],
         ),

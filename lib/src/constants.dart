@@ -1,3 +1,5 @@
+const kPrefKeyDarkTheme = 'darkTheme';
+
 const kPrefKeyTokenAccessToken = 'token__accessToken';
 const kPrefKeyTokenClientId = 'token__clientId';
 const kPrefKeyTokenExpiresAtMillisecondsSinceEpoch = 'token__expiresAtMs';
