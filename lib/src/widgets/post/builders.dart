@@ -20,7 +20,7 @@ Widget buildPostButton(
       (count > 0 ? "$count • " : '') + text,
       style: TextStyle(
         color: onTap != null
-            ? color ?? theme.buttonColor
+            ? color ?? theme.colorScheme.onSurface
             : color ?? theme.disabledColor,
         fontSize: theme.textTheme.button.fontSize - 2,
       ),
