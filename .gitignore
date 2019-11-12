@@ -2,6 +2,8 @@
 /android/fastlane/report.xml
 /ios/fastlane/README.md
 /ios/fastlane/report.xml
+/ios/*.cer
+/ios/*.mobileprovision
 /ios/Runner.*
 /git-crypt.key
 
