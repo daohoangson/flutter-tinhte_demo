@@ -93,7 +93,7 @@ class _PostRepliesWidgetState extends State<_PostRepliesWidget> {
       children[newPosts.length + j] = reply.post != null
           ? _buildPostWidget(reply.post)
           : reply.link?.isNotEmpty == true
-              ? _PostReplyHiddenWidget(reply.link, reply.postReplyCount)
+              ? _PostReplyHiddenWidget(parentPost, reply)
               : SizedBox.shrink();
     }
 
@@ -108,10 +108,10 @@ class _PostRepliesWidgetState extends State<_PostRepliesWidget> {
 }
 
 class _PostReplyHiddenWidget extends StatefulWidget {
-  final String link;
-  final int postReplyCount;
+  final Post parentPost;
+  final PostReply postReply;
 
-  _PostReplyHiddenWidget(this.link, this.postReplyCount, {Key key})
+  _PostReplyHiddenWidget(this.parentPost, this.postReply, {Key key})
       : super(key: key);
 
   @override
@@ -121,6 +121,10 @@ class _PostReplyHiddenWidget extends StatefulWidget {
 class _PostReplyHiddenWidgetState extends State<_PostReplyHiddenWidget> {
   bool _hasFetched = false;
   List<Post> _posts;
+
+  String get link => widget.postReply.link;
+  int get parentPostId => widget.parentPost.postId;
+  int get postReplyCount => widget.postReply.postReplyCount;
 
   @override
   Widget build(BuildContext context) {
@@ -147,7 +151,7 @@ class _PostReplyHiddenWidgetState extends State<_PostReplyHiddenWidget> {
         child: GestureDetector(
           child: _buildText(
             context,
-            "Tap to load ${widget.postReplyCount} hidden replies...",
+            "Tap to load $postReplyCount hidden replies...",
           ),
           onTap: fetch,
         ),
@@ -161,19 +165,22 @@ class _PostReplyHiddenWidgetState extends State<_PostReplyHiddenWidget> {
   }
 
   void fetch() {
-    if (_hasFetched || widget.link == null) return;
+    if (_hasFetched) return;
     setState(() => _hasFetched = true);
 
     return apiGet(
       ApiCaller.stateful(this),
-      widget.link,
+      link,
       onSuccess: (jsonMap) {
         if (!jsonMap.containsKey('replies')) {
           setState(() => _posts = List(0));
           return;
         }
 
-        final posts = decodePostsAndTheirReplies(jsonMap['replies']);
+        final posts = decodePostsAndTheirReplies(
+          jsonMap['replies'],
+          parentPostId: parentPostId,
+        );
         setState(() => _posts = posts);
       },
     );

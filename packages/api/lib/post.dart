@@ -6,29 +6,37 @@ import 'user.dart';
 
 part 'post.g.dart';
 
-List<Post> decodePostsAndTheirReplies(List jsonPosts) {
-  List<Post> posts = List();
+List<Post> decodePostsAndTheirReplies(List jsonPosts, {int parentPostId}) {
+  final posts = <Post>[];
+  final postById = Map<int, Post>();
 
   jsonPosts.forEach((jsonPost) {
     final post = Post.fromJson(jsonPost);
+    postById[post.postId] = post;
 
-    if (post.postReplyTo != null) {
-      for (final _post in posts) {
-        if (_post.postId == post.postReplyTo) {
-          for (final _postReply in _post.postReplies) {
-            if (_postReply.postId == post.postId) {
-              _postReply.post = post;
-              return;
-            }
-          }
-        }
-      }
+    if (post.postReplyTo == parentPostId) {
+      posts.add(post);
+      return;
+    }
 
+    if (post.postReplyTo == null) {
+      print("Unexpected root post #${post.postId}");
+      return;
+    }
+
+    if (!postById.containsKey(post.postReplyTo)) {
       print("Parent post #${post.postReplyTo} not found for #${post.postId}");
       return;
     }
 
-    posts.add(post);
+    for (final _postReply in postById[post.postReplyTo].postReplies) {
+      if (_postReply.postId == post.postId) {
+        _postReply.post = post;
+        return;
+      }
+    }
+
+    print("Reply slot not found in #${post.postReplyTo} for #${post.postId}");
   });
 
   return posts;
