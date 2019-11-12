@@ -46,5 +46,6 @@ class HomeBottomBar extends StatelessWidget {
               break;
           }
         },
+        type: BottomNavigationBarType.fixed,
       );
 }

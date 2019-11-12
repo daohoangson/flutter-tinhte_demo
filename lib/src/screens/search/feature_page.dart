@@ -30,18 +30,18 @@ class FpSearchDelegate extends SearchDelegate {
       _buildResults(_filterItems());
 
   Widget _buildResults(List<FeaturePage> items) => Padding(
-        child: LayoutBuilder(
-          builder: (_, bc) => GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  childAspectRatio: FpWidget.kPreferAspectRatio,
-                  crossAxisCount: (bc.maxWidth / FpWidget.kPreferWidth).ceil(),
-                ),
-                itemBuilder: (_, i) => FpWidget(items[i]),
-                itemCount: items.length,
-                scrollDirection: Axis.vertical,
-              ),
+        child: GridView.builder(
+          gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+            childAspectRatio: FpWidget.kPreferAspectRatio,
+            crossAxisSpacing: 3,
+            mainAxisSpacing: 3,
+            maxCrossAxisExtent: FpWidget.kPreferWidth,
+          ),
+          itemBuilder: (_, i) => FpWidget(items[i]),
+          itemCount: items.length,
+          scrollDirection: Axis.vertical,
         ),
-        padding: const EdgeInsets.all(2),
+        padding: const EdgeInsets.all(kTagWidgetPadding),
       );
 
   List<FeaturePage> _filterItems() => query.isEmpty

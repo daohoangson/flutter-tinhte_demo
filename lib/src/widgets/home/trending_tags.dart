@@ -45,7 +45,10 @@ class _TrendingTagsWidgetState extends State<TrendingTagsWidget> {
       for (int col = 0; col < cols; col++) {
         final i = row * cols + col;
         final built = Expanded(
-          child: _buildTagWidget(i < _tags.length ? _tags[i] : null),
+          child: Padding(
+            child: _buildTagWidget(i < _tags.length ? _tags[i] : null),
+            padding: const EdgeInsets.all(kTagWidgetPadding),
+          ),
         );
         rowWidgets.add(built);
       }

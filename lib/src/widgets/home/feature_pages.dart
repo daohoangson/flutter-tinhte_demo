@@ -61,7 +61,10 @@ class _FeaturePagesWidgetState extends State<FeaturePagesWidget> {
       for (int col = 0; col < cols; col++) {
         final i = row * cols + col;
         final built = Expanded(
-          child: FpWidget(i < pages.length ? pages[i] : null),
+          child: Padding(
+            child: FpWidget(i < pages.length ? pages[i] : null),
+            padding: const EdgeInsets.all(kTagWidgetPadding),
+          ),
         );
         children[row].add(built);
       }

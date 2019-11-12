@@ -7,7 +7,7 @@ import '../../screens/fp_view.dart';
 const kTagWidgetPadding = 2.5;
 
 class FpWidget extends StatelessWidget {
-  static final kPreferAspectRatio = 1.25;
+  static final kPreferAspectRatio = 1.3;
   static final kPreferWidth = 150.0;
 
   final FeaturePage fp;
@@ -47,13 +47,18 @@ class TagWidget extends StatelessWidget {
                   fit: BoxFit.cover,
                 )
               : null,
-          Text(
-            label ?? 'Loading...',
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              fontSize: 11,
-              fontWeight: FontWeight.bold,
+          LayoutBuilder(
+            builder: (_, bc) => Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                child: Text(
+                  label ?? 'Loading...',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(fontSize: bc.biggest.height / 2),
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 5),
+              ),
             ),
           ),
         ),
@@ -62,33 +67,30 @@ class TagWidget extends StatelessWidget {
   Widget _buildBox(BuildContext context, Widget head, Widget body) {
     final theme = Theme.of(context);
 
-    return Padding(
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          color: theme.backgroundColor,
-          borderRadius: BorderRadius.circular(5),
-        ),
-        child: ClipRRect(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              AspectRatio(
-                aspectRatio: 2,
-                child: head,
-              ),
-              Padding(
-                child: body,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 5,
-                  vertical: 10,
-                ),
-              ),
-            ],
-          ),
-          borderRadius: BorderRadius.circular(5),
-        ),
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: theme.colorScheme.secondaryVariant,
+        borderRadius: BorderRadius.circular(5),
       ),
-      padding: const EdgeInsets.all(kTagWidgetPadding),
+      child: ClipRRect(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            AspectRatio(
+              aspectRatio: 2,
+              child: head,
+            ),
+            AspectRatio(
+              aspectRatio: 4,
+              child: DefaultTextStyle(
+                child: body,
+                style: TextStyle(color: theme.colorScheme.onSecondary),
+              ),
+            ),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(5),
+      ),
     );
   }
 

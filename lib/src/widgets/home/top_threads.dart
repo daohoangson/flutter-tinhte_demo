@@ -180,7 +180,7 @@ class _ThreadWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(5),
       ),
       decoration: BoxDecoration(
-        color: theme.backgroundColor,
+        color: theme.disabledColor,
         borderRadius: BorderRadius.circular(5),
       ),
       height: height,

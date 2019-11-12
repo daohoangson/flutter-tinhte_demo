@@ -22,7 +22,8 @@ class MyApp extends StatelessWidget {
         child: PushNotificationApp(
           child: MaterialApp(
             title: 'Tinh tế Demo',
-            theme: ThemeData(brightness: Brightness.dark),
+            theme: ThemeData(brightness: Brightness.light),
+            darkTheme: ThemeData(brightness: Brightness.dark),
             navigatorKey: _primaryNavKey,
             home: HomeScreen(),
           ),
