@@ -9,6 +9,7 @@ class LinkExpander {
 
   BuildOp _buildOp;
   BuildOp _infoOp;
+  BuildOp _oembedOp;
   BuildOp _thumbnailOp;
 
   BuildOp get buildOp {
@@ -47,6 +48,17 @@ class LinkExpander {
     return _infoOp;
   }
 
+  BuildOp get oembedOp {
+    _oembedOp ??= BuildOp(
+      onWidgets: (meta, _) => [
+        _buildSpacing(meta),
+        _buildOembedWebView(meta.domElement.outerHtml),
+        _buildSpacing(meta),
+      ],
+    );
+    return _oembedOp;
+  }
+
   BuildOp get thumbnailOp {
     _thumbnailOp ??= BuildOp(
       onWidgets: (meta, widgets) => [
@@ -71,7 +83,7 @@ class LinkExpander {
     if (info == null) return null;
 
     return [
-      core.SpacingPlaceholder(height: CssLength(0.5, unit: CssLengthUnit.em), meta: meta),
+      _buildSpacing(meta),
       Wrap(
         children: <Widget>[
           thumbnail?.isCover != false
@@ -79,7 +91,7 @@ class LinkExpander {
               : _buildSquare(meta, thumbnail, info),
         ],
       ),
-      core.SpacingPlaceholder(height: CssLength(0.5, unit: CssLengthUnit.em), meta: meta),
+      _buildSpacing(meta),
     ];
   }
 
@@ -137,6 +149,30 @@ class LinkExpander {
         ),
         width: 480,
       );
+
+  Widget _buildOembedWebView(String html) {
+    html = html.replaceAll('src="//', 'src="https://');
+
+    return WebView(
+      Uri.dataFromString(
+        """<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+</head>
+<body>$html</body>
+</html>""",
+        mimeType: 'text/html',
+        encoding: Encoding.getByName('utf-8'),
+      ).toString(),
+      aspectRatio: 16 / 9,
+      getDimensions: true,
+    );
+  }
+
+  Widget _buildSpacing(NodeMetadata meta) => core.SpacingPlaceholder(
+      height: CssLength(0.5, unit: CssLengthUnit.em), meta: meta);
 }
 
 class _Thumbnail extends StatelessWidget {

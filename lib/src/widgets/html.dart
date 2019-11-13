@@ -237,6 +237,12 @@ class TinhteWidgetFactory extends WidgetFactory {
         break;
       case 'blockquote':
         return lazySet(null, buildOp: blockquoteOp);
+      case 'div':
+        if (e.classes.contains('LinkExpander') &&
+            e.classes.contains('is-oembed')) {
+          return lazySet(null, buildOp: linkExpander.oembedOp);
+        }
+        break;
       case 'script':
         if (e.attributes.containsKey('src') &&
             e.attributes['src'] == 'https://e.infogr.am/js/embed.js') {
