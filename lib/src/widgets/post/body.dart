@@ -28,10 +28,12 @@ class _PostBodyWidget extends StatelessWidget {
               padding: const EdgeInsets.all(kPostBodyPadding),
             );
 
-          return TinhteHtmlWidget(
-            ap.post.postBodyHtml,
-            needBottomMargin: needBottomMargin,
-            textStyle: getPostBodyTextStyle(context, post.postIsFirstPost),
+          return DefaultTextStyle(
+            child: TinhteHtmlWidget(
+              ap.post.postBodyHtml,
+              needBottomMargin: needBottomMargin,
+            ),
+            style: getPostBodyTextStyle(context, post.postIsFirstPost),
           );
         },
       );

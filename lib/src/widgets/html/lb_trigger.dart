@@ -6,7 +6,6 @@ class LbTrigger {
   final WidgetFactory wf;
 
   BuildOp _buildOp;
-  BuildOp _imgOp;
 
   LbTrigger({this.wf});
 
@@ -125,7 +124,6 @@ class _SlideUpRoute extends PageRouteBuilder {
 
 class _Screen extends StatefulWidget {
   final Decoration backgroundDecoration;
-  final TextStyle captionStyle;
   final Map<int, Widget> captions;
   final int initialPage;
   final PageController pageController;
@@ -133,7 +131,6 @@ class _Screen extends StatefulWidget {
 
   _Screen({
     this.backgroundDecoration = const BoxDecoration(color: Colors.black),
-    this.captionStyle = const TextStyle(color: Colors.white),
     this.captions,
     this.initialPage,
     this.sources,
@@ -179,7 +176,7 @@ class _ScreenState extends State<_Screen> {
               resizeDuration: null,
             ),
             Padding(
-              child: _buildCaption(_currentPage),
+              child: _buildCaption(context, _currentPage),
               padding: const EdgeInsets.fromLTRB(10, 0, 10, 30),
             ),
             Align(
@@ -203,12 +200,12 @@ class _ScreenState extends State<_Screen> {
     );
   }
 
-  Widget _buildCaption(int index) => widget.captions.containsKey(index)
-      ? widget.captions[index]
-      : Text(
-          "${index + 1} of ${widget.sources.length}",
-          style: widget.captionStyle,
-        );
+  Widget _buildCaption(BuildContext context, int index) => DefaultTextStyle(
+        style: TextStyle(color: Colors.white70),
+        child: widget.captions.containsKey(index)
+            ? widget.captions[index]
+            : Text("${index + 1} of ${widget.sources.length}"),
+      );
 
   PhotoViewGalleryPageOptions _buildItem(BuildContext context, int index) =>
       PhotoViewGalleryPageOptions(
