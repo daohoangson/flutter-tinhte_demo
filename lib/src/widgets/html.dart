@@ -35,6 +35,9 @@ const _kSmilies = {
 
 const _kTextPadding = const EdgeInsets.symmetric(horizontal: kPostBodyPadding);
 
+Widget _buildSpacing(NodeMetadata meta) => core.SpacingPlaceholder(
+    height: CssLength(0.5, unit: CssLengthUnit.em), tsb: meta.tsb);
+
 class TinhteHtmlWidget extends StatelessWidget {
   final String html;
   final Color hyperlinkColor;
@@ -54,7 +57,7 @@ class TinhteHtmlWidget extends StatelessWidget {
         builder: (c, bc) => HtmlWidget(
           "<html><body>$html</body></html>",
           baseUrl: Uri.parse(configSiteRoot),
-          bodyPadding: const EdgeInsets.only(top: kPostBodyPadding),
+          bodyPadding: const EdgeInsets.all(0),
           factoryBuilder: (config) => TinhteWidgetFactory(
             config,
             maxWidth: bc.biggest.width * MediaQuery.of(c).devicePixelRatio,
@@ -72,8 +75,6 @@ class TinhteHtmlWidget extends StatelessWidget {
 class TinhteWidgetFactory extends WidgetFactory {
   final double maxWidth;
   final bool needBottomMargin;
-
-  var _isBuildingBody = 0;
 
   BuildOp _blockquoteOp;
   BuildOp _chrOp;
@@ -121,7 +122,11 @@ class TinhteWidgetFactory extends WidgetFactory {
       final url = constructFullUrl(a['href']);
       if (url?.isEmpty != false) return null;
 
-      return [buildWebView(url)];
+      return [
+        _buildSpacing(meta),
+        buildWebView(url),
+        _buildSpacing(meta),
+      ];
     });
     return _chrOp;
   }
@@ -177,11 +182,9 @@ class TinhteWidgetFactory extends WidgetFactory {
 
   @override
   Widget buildBody(Iterable<Widget> children) {
-    _isBuildingBody++;
-    final built = super.buildBody(children);
-    _isBuildingBody--;
-
-    return built;
+    final WidgetPlaceholder placeholder = super.buildBody(children);
+    placeholder.wrapWith(_buildTextPadding);
+    return placeholder;
   }
 
   @override
@@ -195,21 +198,6 @@ class TinhteWidgetFactory extends WidgetFactory {
 
     return super.buildImage(resizedUrl ?? url,
         height: height, text: text, width: width);
-  }
-
-  @override
-  List<Widget> fixOverlappingSpacings(List<Widget> widgets) {
-    var fixed = super.fixOverlappingSpacings(widgets);
-    if (_isBuildingBody == 0 || fixed?.isNotEmpty != true) return fixed;
-
-    final lastIsText = _checkIsText(fixed.last);
-    fixed = fixed.map(_buildTextPadding).toList();
-
-    if (lastIsText || needBottomMargin == true) {
-      fixed.add(SizedBox(height: kPostBodyPadding));
-    }
-
-    return fixed;
   }
 
   @override
@@ -265,8 +253,20 @@ class TinhteWidgetFactory extends WidgetFactory {
     return super.parseElement(meta, e);
   }
 
-  Widget _buildTextPadding(Widget widget) =>
-      _checkIsText(widget) ? buildPadding(widget, _kTextPadding) : widget;
+  Iterable<Widget> _buildTextPadding(
+      BuilderContext bc, Iterable<Widget> ws, _) {
+    final output = <Widget>[SizedBox(height: kPostBodyPadding)];
 
-  bool _checkIsText(Widget widget) => widget is WidgetPlaceholder<TextBlock>;
+    final last = ws.last;
+    for (final widget in ws) {
+      final isText = widget is RichText;
+      output.add(isText ? buildPadding(widget, _kTextPadding) : widget);
+
+      if (widget == last && (isText || needBottomMargin == true)) {
+        output.add(SizedBox(height: kPostBodyPadding));
+      }
+    }
+
+    return output;
+  }
 }

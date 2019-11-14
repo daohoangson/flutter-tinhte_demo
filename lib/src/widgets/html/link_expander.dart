@@ -101,14 +101,17 @@ class LinkExpander {
     final fullUrl = wf.constructFullUrl(href) ?? href;
     final onTap = wf.buildGestureTapCallbackForUrl(fullUrl);
 
-    return wf.buildGestureDetector(
-      Builder(
-        builder: (context) => DecoratedBox(
-          decoration: BoxDecoration(color: Theme.of(context).cardColor),
-          child: child,
+    return WidgetPlaceholder(
+      builder: wf.buildGestureDetectors,
+      children: [
+        Builder(
+          builder: (context) => wf.buildDecoratedBox(
+            child,
+            color: Theme.of(context).cardColor,
+          ),
         ),
-      ),
-      onTap,
+      ],
+      input: onTap,
     );
   }
 
@@ -170,9 +173,6 @@ class LinkExpander {
       getDimensions: true,
     );
   }
-
-  Widget _buildSpacing(NodeMetadata meta) => core.SpacingPlaceholder(
-      height: CssLength(0.5, unit: CssLengthUnit.em), meta: meta);
 }
 
 class _Thumbnail extends StatelessWidget {

@@ -17,7 +17,7 @@ class Galleria {
       onChild: (meta, e) {
         switch (e.localName) {
           case 'a':
-            meta = lazySet(meta, buildOp: childOpA);
+            meta = lazySet(null, buildOp: childOpA);
             break;
           case 'img':
             meta = lazySet(meta, isBlockElement: true);
@@ -60,7 +60,7 @@ class Galleria {
     _childOpA ??= BuildOp(onWidgets: (meta, widgets) {
       final a = meta.domElement.attributes;
       if (a.containsKey('href') && widgets.length == 1) {
-        return [Text(a['href']), _unwrapImage(widgets.first)];
+        return [Text(a['href']), widgets.first];
       }
 
       return null;
@@ -127,15 +127,4 @@ class _GalleriaItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => image;
-}
-
-Widget _unwrapImage(Widget widget) {
-  if (widget is GestureDetector) return _unwrapImage(widget.child);
-  if (widget is InkWell) return _unwrapImage(widget.child);
-  if (widget is MultiChildRenderObjectWidget)
-    return _unwrapImage(widget.children.first);
-  if (widget is SingleChildRenderObjectWidget)
-    return _unwrapImage(widget.child);
-
-  return widget;
 }
