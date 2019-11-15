@@ -60,7 +60,8 @@ class TinhteHtmlWidget extends StatelessWidget {
           bodyPadding: const EdgeInsets.all(0),
           factoryBuilder: (config) => TinhteWidgetFactory(
             config,
-            maxWidth: bc.biggest.width * MediaQuery.of(c).devicePixelRatio,
+            devicePixelRatio: MediaQuery.of(c).devicePixelRatio,
+            deviceWidth: bc.biggest.width,
             needBottomMargin: needBottomMargin,
           ),
           hyperlinkColor: hyperlinkColor,
@@ -73,7 +74,8 @@ class TinhteHtmlWidget extends StatelessWidget {
 }
 
 class TinhteWidgetFactory extends WidgetFactory {
-  final double maxWidth;
+  final double devicePixelRatio;
+  final double deviceWidth;
   final bool needBottomMargin;
 
   BuildOp _blockquoteOp;
@@ -88,7 +90,8 @@ class TinhteWidgetFactory extends WidgetFactory {
 
   TinhteWidgetFactory(
     HtmlWidgetConfig config, {
-    this.maxWidth,
+    this.devicePixelRatio,
+    this.deviceWidth,
     this.needBottomMargin,
   }) : super(config);
 
@@ -191,7 +194,7 @@ class TinhteWidgetFactory extends WidgetFactory {
   Widget buildImage(String url, {double height, String text, double width}) {
     final resizedUrl = getResizedUrl(
       apiUrl: url,
-      boxWidth: maxWidth,
+      boxWidth: devicePixelRatio * deviceWidth,
       imageHeight: height,
       imageWidth: width,
     );
@@ -259,7 +262,10 @@ class TinhteWidgetFactory extends WidgetFactory {
 
     final last = ws.last;
     for (final widget in ws) {
-      final isText = widget is RichText;
+      final isText = widget is RichText ||
+          (widget is core.ImageLayout &&
+              widget.width != null &&
+              widget.width < deviceWidth);
       output.add(isText ? buildPadding(widget, _kTextPadding) : widget);
 
       if (widget == last && (isText || needBottomMargin == true)) {
