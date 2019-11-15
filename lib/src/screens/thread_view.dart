@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:share/share.dart';
 import 'package:tinhte_api/thread.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -37,15 +38,15 @@ class ThreadViewScreen extends StatelessWidget {
 
   Widget _buildAppBarPopupMenuButton() => PopupMenuButton<String>(
         itemBuilder: (context) => <PopupMenuEntry<String>>[
-              PopupMenuItem(
-                child: Text('Open in browser'),
-                value: _kPopupActionOpenInBrowser,
-              ),
-              PopupMenuItem(
-                child: Text('Share'),
-                value: _kPopupActionShare,
-              ),
-            ],
+          PopupMenuItem(
+            child: Text('Open in browser'),
+            value: _kPopupActionOpenInBrowser,
+          ),
+          PopupMenuItem(
+            child: Text('Share'),
+            value: _kPopupActionShare,
+          ),
+        ],
         onSelected: (value) {
           switch (value) {
             case _kPopupActionOpenInBrowser:
@@ -76,13 +77,7 @@ class ThreadViewScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
-                    Text(
-                      thread.creatorUsername,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(fontSize: (kToolbarHeight - 10) / 2),
-                      textScaleFactor: 1,
-                    ),
+                    _buildAppBarUsername(),
                     Text(
                       formatTimestamp(thread.threadCreateDate),
                       maxLines: 1,
@@ -98,6 +93,32 @@ class ThreadViewScreen extends StatelessWidget {
         ),
         onTap: () => launchMemberView(context, thread.creatorUserId),
       );
+
+  Widget _buildAppBarUsername() {
+    final fontSize = (kToolbarHeight - 10) / 2;
+    final buffer = StringBuffer(thread.creatorUsername);
+    final inlineSpans = <InlineSpan>[];
+
+    if (thread.creatorHasVerifiedBadge == true) {
+      buffer.write(' ');
+      final icon = Icon(FontAwesomeIcons.solidCheckCircle, size: fontSize);
+      inlineSpans.add(WidgetSpan(child: icon));
+    }
+
+    return Builder(
+        builder: (context) => RichText(
+              text: TextSpan(
+                children: inlineSpans,
+                text: buffer.toString(),
+                style: DefaultTextStyle.of(context)
+                    .style
+                    .copyWith(fontSize: fontSize),
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              textScaleFactor: 1,
+            ));
+  }
 
   Widget _buildBody() => PostsWidget(
         thread,
