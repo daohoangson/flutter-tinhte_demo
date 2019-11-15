@@ -154,51 +154,49 @@ class _ScreenState extends State<_Screen> {
   void onPageChanged(int page) => setState(() => _currentPage = page);
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        decoration: widget.backgroundDecoration,
-        child: Stack(
-          alignment: Alignment.bottomCenter,
-          children: <Widget>[
-            Dismissible(
-              child: PhotoViewGallery.builder(
-                scrollPhysics: const BouncingScrollPhysics(),
-                builder: _buildItem,
-                itemCount: widget.sources.length,
-                backgroundDecoration: widget.backgroundDecoration,
-                pageController: widget.pageController,
-                onPageChanged: onPageChanged,
-              ),
-              direction: DismissDirection.down,
-              key: key,
-              onDismissed: (_) => Navigator.pop(context),
-              resizeDuration: null,
-            ),
-            Padding(
-              child: _buildCaption(context, _currentPage),
-              padding: const EdgeInsets.fromLTRB(10, 0, 10, 30),
-            ),
-            Align(
-              alignment: Alignment.topRight,
-              child: InkWell(
-                child: SafeArea(
-                  child: Padding(
-                    child: Icon(
-                      Icons.close,
-                      color: Colors.white,
+  Widget build(BuildContext context) => Dismissible(
+        child: Scaffold(
+          body: Container(
+            decoration: widget.backgroundDecoration,
+            child: Stack(
+              alignment: Alignment.bottomCenter,
+              children: <Widget>[
+                PhotoViewGallery.builder(
+                  scrollPhysics: const BouncingScrollPhysics(),
+                  builder: _buildItem,
+                  itemCount: widget.sources.length,
+                  backgroundDecoration: widget.backgroundDecoration,
+                  pageController: widget.pageController,
+                  onPageChanged: onPageChanged,
+                ),
+                Padding(
+                  child: _buildCaption(context, _currentPage),
+                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 30),
+                ),
+                Align(
+                  alignment: Alignment.topRight,
+                  child: InkWell(
+                    child: SafeArea(
+                      child: Padding(
+                        child: Icon(
+                          Icons.close,
+                          color: Colors.white,
+                        ),
+                        padding: const EdgeInsets.all(10),
+                      ),
                     ),
-                    padding: const EdgeInsets.all(10),
+                    onTap: () => Navigator.pop(context),
                   ),
                 ),
-                onTap: () => Navigator.pop(context),
-              ),
+              ],
             ),
-          ],
+          ),
         ),
-      ),
-    );
-  }
+        direction: DismissDirection.down,
+        key: key,
+        onDismissed: (_) => Navigator.pop(context),
+        resizeDuration: null,
+      );
 
   Widget _buildCaption(BuildContext context, int index) => DefaultTextStyle(
         style: TextStyle(color: Colors.white70),
