@@ -280,11 +280,11 @@ class ActionablePost extends ChangeNotifier {
 }
 
 class NewPostStream {
-  // TODO: wait for https://github.com/dart-lang/linter/issues/1446
-  // ignore: close_sinks
   final StreamController<Post> _controller = StreamController.broadcast();
 
   void _add(Post post) => _controller.sink.add(post);
+
+  void dispose() => _controller.close();
 
   StreamSubscription<Post> listen(
     void onData(Post post), {
@@ -303,6 +303,6 @@ class NewPostStream {
       Provider<NewPostStream>(
         builder: (_) => NewPostStream(),
         child: child,
-        dispose: (_, stream) => stream._controller.close(),
+        dispose: (_, stream) => stream.dispose(),
       );
 }

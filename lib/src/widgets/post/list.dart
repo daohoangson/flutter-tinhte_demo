@@ -20,20 +20,35 @@ class PostsWidget extends StatefulWidget {
 }
 
 class _PostsWidgetState extends State<PostsWidget> {
+  final superList = GlobalKey<SuperListState<_PostListItem>>();
+  final newPostStream = NewPostStream();
+
   Thread thread;
 
   @override
   void initState() {
     super.initState();
 
+    newPostStream.listen((post) {
+      final sls = superList.currentState;
+      final item = _PostListItem.post(post);
+      sls.itemsInsert(sls.fetchedPageMin == 1 ? 1 : 0, item);
+    });
+
     thread = widget.thread;
+  }
+
+  @override
+  dispose() {
+    super.dispose();
+    newPostStream.dispose();
   }
 
   @override
   Widget build(BuildContext context) => MultiProvider(
         providers: [
+          Provider<NewPostStream>.value(value: newPostStream),
           Provider<Thread>.value(value: thread),
-          NewPostStream.buildProvider(),
           ThreadNavigationWidget.buildProvider(),
         ],
         child: SuperListView<_PostListItem>(
@@ -45,11 +60,7 @@ class _PostsWidgetState extends State<PostsWidget> {
               : null,
           initialJson: widget.initialJson,
           itemBuilder: _buildItem,
-          itemStreamRegister: (sls) => Provider.of<NewPostStream>(sls.context)
-              .listen((post) => sls.itemsInsert(
-                    sls.fetchedPageMin == 1 ? 1 : 0,
-                    _PostListItem.post(post),
-                  )),
+          key: superList,
         ),
       );
 

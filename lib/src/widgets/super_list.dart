@@ -20,7 +20,6 @@ class SuperListView<T> extends StatefulWidget {
   final Iterable<T> initialItems;
   final _ItemBuilder<T> itemBuilder;
   final double itemMaxWidth;
-  final _ItemStreamRegister<T> itemStreamRegister;
   final bool progressIndicator;
   final bool shrinkWrap;
 
@@ -38,7 +37,6 @@ class SuperListView<T> extends StatefulWidget {
     this.initialItems,
     this.itemBuilder,
     this.itemMaxWidth = 600,
-    this.itemStreamRegister,
     Key key,
     this.progressIndicator,
     this.shrinkWrap,
@@ -127,11 +125,6 @@ class SuperListState<T> extends State<SuperListView<T>> {
 
     if (widget.initialItems != null) _items.addAll(widget.initialItems);
 
-    if (widget.itemStreamRegister != null) {
-      WidgetsBinding.instance.addPostFrameCallback(
-          (_) => _itemStreamSub = widget.itemStreamRegister(this));
-    }
-
     final enableRefreshIndicator =
         widget.enableRefreshIndicator ?? widget.fetchPathInitial != null;
     if (enableRefreshIndicator) {
@@ -147,12 +140,6 @@ class SuperListState<T> extends State<SuperListView<T>> {
 
     WidgetsBinding.instance
         .addPostFrameCallback((_) => fetchInitial(clearItems: false));
-  }
-
-  @override
-  void dispose() {
-    _itemStreamSub?.cancel();
-    super.dispose();
   }
 
   @override
@@ -420,7 +407,6 @@ typedef Widget _ItemBuilder<T>(
   SuperListState<T> state,
   T item,
 );
-typedef StreamSubscription _ItemStreamRegister<T>(SuperListState<T> state);
 
 typedef SuperListComplexItemRegistration SuperListComplexItemRegister();
 typedef void SuperListComplexItemClearer();
