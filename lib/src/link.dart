@@ -14,6 +14,10 @@ import 'screens/tag_view.dart';
 import 'screens/thread_view.dart';
 
 void launchLink(BuildContext context, String link) async {
+  // automatically cancel launching for CHR links
+  // TODO: reconsider when https://github.com/daohoangson/flutter_widget_from_html/pull/116 is merged
+  if (link.contains('misc/api-chr')) return;
+
   if (link.startsWith(configSiteRoot)) {
     final parsed = await parseLink(context: context, link: link);
     if (parsed) return;
