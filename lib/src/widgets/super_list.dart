@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
@@ -96,8 +97,7 @@ class SuperListItemFullWidth extends StatelessWidget {
 }
 
 class SuperListState<T> extends State<SuperListView<T>> {
-  final List<SuperListComplexItemRegistration> _complexItems = [];
-  final List<T> _items = [];
+  final _complexItems = <SuperListComplexItemRegistration>[];
 
   var _isFetching = false;
   var _isRefreshing = false;
@@ -106,7 +106,9 @@ class SuperListState<T> extends State<SuperListView<T>> {
   int _fetchedPageMax;
   int _fetchedPageMin;
   Map _initialJson;
-  StreamSubscription _itemStreamSub;
+  int _itemCountAfter;
+  int _itemCountBefore;
+  _SuperListModel<T> _model;
   GlobalKey<RefreshIndicatorState> _refreshIndicatorKey;
   AutoScrollController _scrollController;
 
@@ -115,9 +117,7 @@ class SuperListState<T> extends State<SuperListView<T>> {
   int get fetchedPageMax => _fetchedPageMax;
   int get fetchedPageMin => _fetchedPageMin;
   bool get isFetching => _isFetching;
-  int get itemCountAfter => (widget.footer != null ? 1 : 0) + 1;
-  int get itemCountBefore => 1 + (widget.header != null ? 1 : 0);
-  Iterable<T> get items => _items;
+  Iterable<T> get items => UnmodifiableListView<T>(_model._items);
 
   @override
   void initState() {
@@ -125,12 +125,13 @@ class SuperListState<T> extends State<SuperListView<T>> {
 
     _initialJson = widget.initialJson;
 
-    if (widget.initialItems != null) _items.addAll(widget.initialItems);
-
     if (widget.itemStreamRegister != null) {
       WidgetsBinding.instance.addPostFrameCallback(
           (_) => _itemStreamSub = widget.itemStreamRegister(this));
     }
+    _itemCountAfter = (widget.footer != null ? 1 : 0) + 1;
+    _itemCountBefore = 1 + (widget.header != null ? 1 : 0);
+    _model = _SuperListModel<T>(_itemCountBefore);
 
     final enableRefreshIndicator =
         widget.enableRefreshIndicator ?? widget.fetchPathInitial != null;
@@ -145,8 +146,10 @@ class SuperListState<T> extends State<SuperListView<T>> {
       if (registration != null) _complexItems.add(registration);
     });
 
-    WidgetsBinding.instance
-        .addPostFrameCallback((_) => fetchInitial(clearItems: false));
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (widget.initialItems != null) _model.addAll(widget.initialItems);
+      fetchInitial(clearItems: false);
+    });
   }
 
   @override
@@ -157,8 +160,8 @@ class SuperListState<T> extends State<SuperListView<T>> {
 
   @override
   Widget build(BuildContext context) {
-    Widget built = ListView.builder(
-      itemBuilder: (context, i) {
+    Widget built = AnimatedList(
+      itemBuilder: (context, i, animation) {
         Widget built = _buildItem(context, i) ?? Container();
 
         if (widget.itemMaxWidth != null && !(built is SuperListItemFullWidth)) {
@@ -169,6 +172,16 @@ class SuperListState<T> extends State<SuperListView<T>> {
             ),
           );
         }
+
+        built = SlideTransition(
+          position: animation.drive(
+            Tween<Offset>(
+              begin: Offset(1, 0),
+              end: Offset(0, 0),
+            ),
+          ),
+          child: built,
+        );
 
         if (_scrollController != null) {
           built = AutoScrollTag(
@@ -181,7 +194,8 @@ class SuperListState<T> extends State<SuperListView<T>> {
 
         return built;
       },
-      itemCount: itemCountBefore + _items.length + itemCountAfter,
+      initialItemCount: _itemCountBefore + _itemCountAfter,
+      key: _model._key,
       controller: _scrollController,
       padding: const EdgeInsets.all(0),
       shrinkWrap: widget.shrinkWrap == true,
@@ -234,14 +248,16 @@ class SuperListState<T> extends State<SuperListView<T>> {
           path: widget.fetchPathInitial,
         ),
         onPreFetch: () {
-          if (clearItems) _items.clear();
+          if (clearItems) {
+            _model.clear();
+            _complexItems.forEach((r) => r._clear != null ? r._clear() : null);
+          }
+
           _fetchPathNext = null;
           _fetchPathPrev = null;
           _fetchedPageMax = null;
           _fetchedPageMin = null;
           _initialJson = null;
-
-          _complexItems.forEach((r) => r._clear != null ? r._clear() : null);
         },
         preFetchedJson: _initialJson,
       );
@@ -265,29 +281,17 @@ class SuperListState<T> extends State<SuperListView<T>> {
       );
 
   void itemsAdd(T item) {
-    if (!mounted) {
-      _items.add(item);
-      return;
-    }
+    _model.add(item);
+    if (!mounted) return;
 
-    setState(() {
-      final index = _items.length;
-      _items.add(item);
-
-      scrollToIndex(index, preferPosition: AutoScrollPosition.begin);
-    });
+    scrollToIndex(_model.length - 1, preferPosition: AutoScrollPosition.begin);
   }
 
   void itemsInsert(int index, T item) {
-    if (!mounted) {
-      _items.insert(index, item);
-      return;
-    }
+    _model.insert(index, item);
+    if (!mounted) return;
 
-    setState(() {
-      _items.insert(index, item);
-      scrollToIndex(index, preferPosition: AutoScrollPosition.begin);
-    });
+    scrollToIndex(index, preferPosition: AutoScrollPosition.begin);
   }
 
   void jumpTo(double value) => _scrollController?.jumpTo(value);
@@ -299,7 +303,7 @@ class SuperListState<T> extends State<SuperListView<T>> {
 
     WidgetsBinding.instance
         .addPostFrameCallback((_) => _scrollController.scrollToIndex(
-              itemCountBefore + index,
+              _itemCountBefore + index,
               duration: duration,
               preferPosition: preferPosition,
             ));
@@ -314,8 +318,9 @@ class SuperListState<T> extends State<SuperListView<T>> {
       i--;
     }
 
-    if (i < _items.length) return widget.itemBuilder(context, this, _items[i]);
-    i -= _items.length;
+    final l = _model.length;
+    if (i < l) return widget.itemBuilder(context, this, _model.elementAt(i));
+    i -= l;
 
     if (widget.footer != null) {
       if (i == 0) return widget.footer;
@@ -389,18 +394,18 @@ class SuperListState<T> extends State<SuperListView<T>> {
           _fetchedPageMax = linksPage;
         }
 
-        final itemsLengthBefore = _items.length;
+        final l = _model.length;
         if (fc._items != null) {
           if (fc.id == FetchContextId.FetchPrev) {
-            _items.insertAll(0, fc._items);
+            _model.insertAll(0, fc._items);
           } else {
-            _items.addAll(fc._items);
+            _model.addAll(fc._items);
           }
         }
 
         if (fc.scrollToRelativeIndex != null) {
           scrollToIndex(
-            (fc.id != FetchContextId.FetchPrev ? itemsLengthBefore : 0) +
+            (fc.id != FetchContextId.FetchPrev ? l : 0) +
                 fc.scrollToRelativeIndex,
             preferPosition: AutoScrollPosition.begin,
           );
@@ -411,6 +416,56 @@ class SuperListState<T> extends State<SuperListView<T>> {
     if (_isRefreshing) return Future.value();
     _isRefreshing = true;
     return fetchInitial().whenComplete(() => _isRefreshing = false);
+  }
+}
+
+class _SuperListModel<T> {
+  final int indexPadding;
+
+  final _key = GlobalKey<AnimatedListState>();
+  final _items = <T>[];
+
+  _SuperListModel(this.indexPadding);
+
+  int get length => _items.length;
+
+  void add(T item) {
+    _items.add(item);
+    _key.currentState.insertItem(indexPadding + length - 1);
+  }
+
+  void addAll(Iterable<T> items) {
+    final l = length;
+    _items.addAll(items);
+
+    for (var i = 0; i < items.length; i++) {
+      _key.currentState.insertItem(indexPadding + l + i);
+    }
+  }
+
+  void clear() {
+    final l = length;
+    _items.clear();
+
+    for (var i = 0; i < l; i++) {
+      _key.currentState
+          .removeItem(indexPadding + 0, (_, __) => SizedBox.shrink());
+    }
+  }
+
+  T elementAt(int index) => _items.elementAt(index);
+
+  void insert(int index, T item) {
+    _items.insert(index, item);
+    _key.currentState.insertItem(indexPadding + index);
+  }
+
+  void insertAll(int index, Iterable<T> items) {
+    _items.insertAll(index, items);
+
+    for (var i = 0; i < items.length; i++) {
+      _key.currentState.insertItem(indexPadding + index + i);
+    }
   }
 }
 

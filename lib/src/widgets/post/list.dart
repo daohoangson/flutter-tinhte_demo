@@ -169,8 +169,8 @@ class _PostsWidgetState extends State<PostsWidget> {
   void _fetchOnSuccess(Map json, FetchContext<_PostListItem> fc) {
     if (!json.containsKey('posts')) return;
 
-    final firstItemPostId =
-        fc.state.items.isEmpty ? null : fc.state.items.first.post?.postId;
+    final items = fc.state.items;
+    final firstItemPostId = items.isEmpty ? null : items.first.post?.postId;
     final linksPage = fc.linksPage ?? 1;
     int pageOfPostId =
         json.containsKey('page_of_post_id') ? json['page_of_post_id'] : null;
