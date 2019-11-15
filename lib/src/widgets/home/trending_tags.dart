@@ -1,41 +1,42 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../api.dart';
 import '../../config.dart';
 import '../../link.dart';
 import '../tag/widget.dart';
+import '../super_list.dart';
 import 'header.dart';
 
 const _kTrendingTagsMax = 6;
 
-class TrendingTagsWidget extends StatefulWidget {
-  State<StatefulWidget> createState() => _TrendingTagsWidgetState();
-}
-
-class _TrendingTagsWidgetState extends State<TrendingTagsWidget> {
-  final _tags = <_Tag>[];
-
+class TrendingTagsWidget extends StatelessWidget {
   @override
-  void initState() {
-    super.initState();
-    _fetch();
-  }
+  Widget build(BuildContext _) => LayoutBuilder(
+        builder: (_, bc) => Consumer<_TrendingTagsData>(
+          builder: (context, data, _) {
+            if (data.tags == null) {
+              data.tags = [];
+              _fetch(context, data);
+            }
 
-  @override
-  Widget build(BuildContext context) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          HeaderWidget('#trending tags'),
-          Padding(
-            child: LayoutBuilder(
-              builder: (_, bc) => _buildGrid(bc.maxWidth > 600 ? 3 : 2),
-            ),
-            padding: const EdgeInsets.all(kTagWidgetPadding),
-          ),
-        ],
+            final cols = bc.maxWidth > 600 ? 3 : 2;
+
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                HeaderWidget('#trending tags'),
+                Padding(
+                  child: _buildGrid(context, data.tags, cols),
+                  padding: const EdgeInsets.all(kTagWidgetPadding),
+                ),
+              ],
+            );
+          },
+        ),
       );
 
-  Widget _buildGrid(int cols) {
+  Widget _buildGrid(BuildContext context, List<_Tag> tags, int cols) {
     final rows = (_kTrendingTagsMax / cols).floor();
     final widgets = <Widget>[];
 
@@ -44,9 +45,10 @@ class _TrendingTagsWidgetState extends State<TrendingTagsWidget> {
 
       for (int col = 0; col < cols; col++) {
         final i = row * cols + col;
+        final tag = i < tags.length ? tags[i] : null;
         final built = Expanded(
           child: Padding(
-            child: _buildTagWidget(i < _tags.length ? _tags[i] : null),
+            child: _buildTagWidget(context, tag),
             padding: const EdgeInsets.all(kTagWidgetPadding),
           ),
         );
@@ -59,7 +61,7 @@ class _TrendingTagsWidgetState extends State<TrendingTagsWidget> {
     return Column(children: widgets);
   }
 
-  Widget _buildTagWidget(_Tag tag) => TagWidget(
+  Widget _buildTagWidget(BuildContext context, _Tag tag) => TagWidget(
         image: tag?.tagImg,
         label: tag?.tagName != null ? "#${tag.tagName}" : null,
         onTap: tag?.tagName != null
@@ -70,8 +72,8 @@ class _TrendingTagsWidgetState extends State<TrendingTagsWidget> {
             : null,
       );
 
-  void _fetch() => apiGet(
-        ApiCaller.stateful(this),
+  void _fetch(BuildContext context, _TrendingTagsData data) => apiGet(
+        ApiCaller.stateless(context),
         "tinhte/threads-in-trending-tags?limit=$_kTrendingTagsMax",
         onSuccess: (jsonMap) {
           if (!jsonMap.containsKey('trending_tag_threads')) return;
@@ -90,9 +92,17 @@ class _TrendingTagsWidgetState extends State<TrendingTagsWidget> {
             ));
           }
 
-          setState(() => _tags.addAll(tags));
+          data.update(tags);
         },
       );
+
+  static SuperListComplexItemRegistration registerSuperListComplexItem() {
+    final data = _TrendingTagsData();
+    return SuperListComplexItemRegistration(
+      ChangeNotifierProvider<_TrendingTagsData>.value(value: data),
+      () => data.tags = null,
+    );
+  }
 }
 
 class _Tag {
@@ -101,4 +111,13 @@ class _Tag {
   final String tagName;
 
   _Tag({this.tagId, this.tagImg, this.tagName});
+}
+
+class _TrendingTagsData extends ChangeNotifier {
+  List<_Tag> tags;
+
+  void update(Iterable<_Tag> newTags) {
+    tags.addAll(newTags);
+    notifyListeners();
+  }
 }

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:tinhte_api/links.dart';
 
@@ -7,6 +8,7 @@ import '../api.dart';
 
 class SuperListView<T> extends StatefulWidget {
   final ApiMethod apiMethodInitial;
+  final List<SuperListComplexItemRegister> complexItems;
   final bool enableRefreshIndicator;
   final bool enableScrollToIndex;
   final String fetchPathInitial;
@@ -24,6 +26,7 @@ class SuperListView<T> extends StatefulWidget {
 
   SuperListView({
     this.apiMethodInitial,
+    this.complexItems,
     this.enableRefreshIndicator,
     this.enableScrollToIndex = false,
     this.fetchPathInitial,
@@ -93,6 +96,7 @@ class SuperListItemFullWidth extends StatelessWidget {
 }
 
 class SuperListState<T> extends State<SuperListView<T>> {
+  final List<SuperListComplexItemRegistration> _complexItems = [];
   final List<T> _items = [];
 
   var _isFetching = false;
@@ -135,6 +139,11 @@ class SuperListState<T> extends State<SuperListView<T>> {
     }
 
     if (widget.enableScrollToIndex) _scrollController = AutoScrollController();
+
+    widget.complexItems?.forEach((register) {
+      final registration = register();
+      if (registration != null) _complexItems.add(registration);
+    });
 
     WidgetsBinding.instance
         .addPostFrameCallback((_) => fetchInitial(clearItems: false));
@@ -206,6 +215,14 @@ class SuperListState<T> extends State<SuperListView<T>> {
       );
     }
 
+    if (_complexItems.isNotEmpty) {
+      built = MultiProvider(
+        child: built,
+        providers:
+            _complexItems.map((r) => r._provider).toList(growable: false),
+      );
+    }
+
     return built;
   }
 
@@ -223,6 +240,8 @@ class SuperListState<T> extends State<SuperListView<T>> {
           _fetchedPageMax = null;
           _fetchedPageMin = null;
           _initialJson = null;
+
+          _complexItems.forEach((r) => r._clear());
         },
         preFetchedJson: _initialJson,
       );
@@ -402,3 +421,18 @@ typedef Widget _ItemBuilder<T>(
   T item,
 );
 typedef StreamSubscription _ItemStreamRegister<T>(SuperListState<T> state);
+
+typedef SuperListComplexItemRegistration SuperListComplexItemRegister();
+typedef void SuperListComplexItemClearer();
+
+class SuperListComplexItemRegistration {
+  SingleChildCloneableWidget _provider;
+  SuperListComplexItemClearer _clear;
+
+  SuperListComplexItemRegistration(
+      SingleChildCloneableWidget provider, SuperListComplexItemClearer clear)
+      : assert(provider != null),
+        assert(clear != null),
+        _provider = provider,
+        _clear = clear;
+}

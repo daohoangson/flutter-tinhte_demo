@@ -1,30 +1,30 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tinhte_api/thread.dart';
 
 import '../../screens/thread_view.dart';
 import '../../api.dart';
 import '../../intl.dart';
+import '../super_list.dart';
 import 'header.dart';
 
 const _kTopThreadHeight = 200.0;
 const _kTopThreadPadding = 5.0;
 
-class TopThreadsWidget extends StatefulWidget {
-  State<StatefulWidget> createState() => _TopThreadsWidgetState();
-}
-
-class _TopThreadsWidgetState extends State<TopThreadsWidget> {
-  final _threads = <Thread>[];
-
+class TopThreadsWidget extends StatelessWidget {
   @override
-  void initState() {
-    super.initState();
-    _fetch();
-  }
+  Widget build(BuildContext _) => Consumer<_TopThreadsData>(
+        builder: (context, data, __) {
+          if (data.threads == null) {
+            data.threads = [];
+            _fetch(context, data);
+          }
+          return _build(data.threads);
+        },
+      );
 
-  @override
-  Widget build(BuildContext _) => LayoutBuilder(
+  Widget _build(List<Thread> threads) => LayoutBuilder(
         builder: (context, bc) {
           final isWide = bc.maxWidth > 600;
           final height = _kTopThreadHeight +
@@ -39,15 +39,15 @@ class _TopThreadsWidgetState extends State<TopThreadsWidget> {
                 child: SizedBox(
                   child: ListView.builder(
                     itemBuilder: (_, i) => Padding(
-                          child: _ThreadWidget(
-                            _threads[i],
-                            height: height,
-                            isWide: isWide,
-                            width: width,
-                          ),
-                          padding: const EdgeInsets.all(_kTopThreadPadding),
-                        ),
-                    itemCount: _threads.length,
+                      child: _ThreadWidget(
+                        threads[i],
+                        height: height,
+                        isWide: isWide,
+                        width: width,
+                      ),
+                      padding: const EdgeInsets.all(_kTopThreadPadding),
+                    ),
+                    itemCount: threads.length,
                     scrollDirection: Axis.horizontal,
                   ),
                   height: height + 2 * _kTopThreadPadding,
@@ -59,25 +59,25 @@ class _TopThreadsWidgetState extends State<TopThreadsWidget> {
         },
       );
 
-  void _fetch() => apiGet(
-        ApiCaller.stateful(this),
+  void _fetch(BuildContext context, _TopThreadsData data) => apiGet(
+        ApiCaller.stateless(context),
         'lists/7/threads?limit=15'
         '&_bdImageApiThreadThumbnailWidth=${_kTopThreadHeight.toInt()}'
         '&_bdImageApiThreadThumbnailHeight=sh',
         onSuccess: (jsonMap) {
           if (!jsonMap.containsKey('threads')) return;
-
           final list = jsonMap['threads'] as List;
-          final threads = <Thread>[];
-
-          for (final Map map in list) {
-            final thread = Thread.fromJson(map);
-            threads.add(thread);
-          }
-
-          setState(() => _threads.addAll(threads));
+          data.update(list.map((map) => Thread.fromJson(map)));
         },
       );
+
+  static SuperListComplexItemRegistration registerSuperListComplexItem() {
+    final data = _TopThreadsData();
+    return SuperListComplexItemRegistration(
+      ChangeNotifierProvider<_TopThreadsData>.value(value: data),
+      () => data.threads = null,
+    );
+  }
 }
 
 class _ThreadWidget extends StatelessWidget {
@@ -192,7 +192,16 @@ class _ThreadWidget extends StatelessWidget {
       GestureDetector(
         child: child,
         onTap: () => Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => ThreadViewScreen(thread)),
-            ),
+          MaterialPageRoute(builder: (_) => ThreadViewScreen(thread)),
+        ),
       );
+}
+
+class _TopThreadsData extends ChangeNotifier {
+  List<Thread> threads;
+
+  void update(Iterable<Thread> newThreads) {
+    threads.addAll(newThreads);
+    notifyListeners();
+  }
 }

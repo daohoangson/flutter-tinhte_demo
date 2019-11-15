@@ -41,6 +41,10 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
         body: SuperListView<_HomeListItem>(
+          complexItems: [
+            TopThreadsWidget.registerSuperListComplexItem,
+            TrendingTagsWidget.registerSuperListComplexItem,
+          ],
           fetchPathInitial: 'lists/1/threads?limit=20'
               '&_bdImageApiThreadThumbnailWidth=${(kContentListViewThumbnailWidth * 3).toInt()}'
               '&_bdImageApiThreadThumbnailHeight=sh',
