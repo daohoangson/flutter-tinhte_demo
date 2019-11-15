@@ -22,8 +22,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final _featurePages = <FeaturePage>[];
-
   String _title = '';
 
   @override
@@ -42,6 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         body: SuperListView<_HomeListItem>(
           complexItems: [
+            FeaturePagesWidget.registerSuperListComplexItem,
             TopThreadsWidget.registerSuperListComplexItem,
             TrendingTagsWidget.registerSuperListComplexItem,
           ],
@@ -88,7 +87,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ));
       fc.addItem(_HomeListItem(
         widget: SuperListItemFullWidth(
-          child: FeaturePagesWidget(_featurePages),
+          child: FeaturePagesWidget(),
         ),
       ));
     }

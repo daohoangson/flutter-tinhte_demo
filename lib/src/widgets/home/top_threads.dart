@@ -75,7 +75,7 @@ class TopThreadsWidget extends StatelessWidget {
     final data = _TopThreadsData();
     return SuperListComplexItemRegistration(
       ChangeNotifierProvider<_TopThreadsData>.value(value: data),
-      () => data.threads = null,
+      clear: () => data.threads = null,
     );
   }
 }

@@ -241,7 +241,7 @@ class SuperListState<T> extends State<SuperListView<T>> {
           _fetchedPageMin = null;
           _initialJson = null;
 
-          _complexItems.forEach((r) => r._clear());
+          _complexItems.forEach((r) => r._clear != null ? r._clear() : null);
         },
         preFetchedJson: _initialJson,
       );
@@ -430,9 +430,9 @@ class SuperListComplexItemRegistration {
   SuperListComplexItemClearer _clear;
 
   SuperListComplexItemRegistration(
-      SingleChildCloneableWidget provider, SuperListComplexItemClearer clear)
-      : assert(provider != null),
-        assert(clear != null),
+    SingleChildCloneableWidget provider, {
+    SuperListComplexItemClearer clear,
+  })  : assert(provider != null),
         _provider = provider,
         _clear = clear;
 }

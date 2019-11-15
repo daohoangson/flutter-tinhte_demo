@@ -100,7 +100,7 @@ class TrendingTagsWidget extends StatelessWidget {
     final data = _TrendingTagsData();
     return SuperListComplexItemRegistration(
       ChangeNotifierProvider<_TrendingTagsData>.value(value: data),
-      () => data.tags = null,
+      clear: () => data.tags = null,
     );
   }
 }

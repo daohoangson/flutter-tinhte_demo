@@ -1,43 +1,39 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tinhte_api/feature_page.dart';
 
 import '../../screens/search/feature_page.dart';
 import '../../widgets/tag/widget.dart';
+import '../../widgets/super_list.dart';
 import '../../api.dart';
 import 'header.dart';
 
-class FeaturePagesWidget extends StatefulWidget {
-  final List<FeaturePage> pages;
-
-  FeaturePagesWidget(this.pages, {Key key})
-      : assert(pages != null),
-        super(key: key);
-
+class FeaturePagesWidget extends StatelessWidget {
   @override
-  State<StatefulWidget> createState() => _FeaturePagesWidgetState();
-}
+  Widget build(BuildContext _) => LayoutBuilder(
+        builder: (_, bc) => Consumer<_FeaturePagesData>(
+          builder: (context, data, __) {
+            if (data.pages == null) {
+              data.pages = [];
+              _fetch(context, data);
+            }
 
-class _FeaturePagesWidgetState extends State<FeaturePagesWidget> {
-  List<FeaturePage> get pages => widget.pages;
+            final cols = (bc.maxWidth / FpWidget.kPreferWidth).ceil();
 
-  @override
-  void initState() {
-    super.initState();
-    if (pages.isEmpty) _fetch();
-  }
+            return _build(context, data.pages, cols);
+          },
+        ),
+      );
 
-  @override
-  Widget build(BuildContext context) => Card(
+  Widget _build(BuildContext context, List<FeaturePage> pages, int cols) =>
+      Card(
         margin: const EdgeInsets.only(bottom: 10.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             HeaderWidget('Cộng đồng'),
             Padding(
-              child: LayoutBuilder(
-                builder: (_, bc) =>
-                    _buildGrid((bc.maxWidth / FpWidget.kPreferWidth).ceil()),
-              ),
+              child: _buildGrid(pages, cols),
               padding: const EdgeInsets.all(kTagWidgetPadding),
             ),
             Center(
@@ -45,16 +41,16 @@ class _FeaturePagesWidgetState extends State<FeaturePagesWidget> {
                 child: Text('View all communities'),
                 textColor: Theme.of(context).accentColor,
                 onPressed: () => showSearch(
-                      context: context,
-                      delegate: FpSearchDelegate(pages),
-                    ),
+                  context: context,
+                  delegate: FpSearchDelegate(pages),
+                ),
               ),
             )
           ],
         ),
       );
 
-  Widget _buildGrid(int cols) {
+  Widget _buildGrid(List<FeaturePage> pages, int cols) {
     final children = <List<Widget>>[<Widget>[], <Widget>[]];
 
     for (int row = 0; row < children.length; row++) {
@@ -78,8 +74,8 @@ class _FeaturePagesWidgetState extends State<FeaturePagesWidget> {
     );
   }
 
-  void _fetch() => apiGet(
-        ApiCaller.stateful(this),
+  void _fetch(BuildContext context, _FeaturePagesData data) => apiGet(
+        ApiCaller.stateless(context),
         'feature-pages?order=promoted'
         "&_bdImageApiFeaturePageThumbnailSize=${(FpWidget.kPreferWidth * 3).toInt()}"
         '&_bdImageApiFeaturePageThumbnailMode=sh',
@@ -87,12 +83,24 @@ class _FeaturePagesWidgetState extends State<FeaturePagesWidget> {
           if (!jsonMap.containsKey('pages')) return;
 
           final list = jsonMap['pages'] as List;
-          final newPages = list.map((json) => FeaturePage.fromJson(json));
-          if (newPages.isEmpty) return;
-
-          setState(() => widget.pages
-            ..clear()
-            ..addAll(newPages));
+          final pages = list.map((json) => FeaturePage.fromJson(json));
+          if (pages.isNotEmpty) data.update(pages);
         },
       );
+
+  static SuperListComplexItemRegistration registerSuperListComplexItem() {
+    final data = _FeaturePagesData();
+    return SuperListComplexItemRegistration(
+      ChangeNotifierProvider<_FeaturePagesData>.value(value: data),
+    );
+  }
+}
+
+class _FeaturePagesData extends ChangeNotifier {
+  List<FeaturePage> pages;
+
+  void update(Iterable<FeaturePage> newPages) {
+    pages.addAll(newPages);
+    notifyListeners();
+  }
 }
