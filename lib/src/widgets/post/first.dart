@@ -27,7 +27,7 @@ class _FirstPostWidget extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            ThreadNavigation(thread),
+            ThreadNavigationWidget(thread),
             isThreadTitleRedundant(thread, post)
                 ? widget0
                 : Padding(
