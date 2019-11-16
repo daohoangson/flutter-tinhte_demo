@@ -29,3 +29,49 @@ part 'post/builders.dart';
 part 'post/first.dart';
 part 'post/list.dart';
 part 'post/replies.dart';
+
+List<_PostListItem> decodePostsAndTheirReplies(List jsonPosts,
+    {int parentPostId}) {
+  final items = <_PostListItem>[];
+  final postReplyItemById = Map<int, _PostListItem>();
+
+  jsonPosts.forEach((jsonPost) {
+    final Map<String, dynamic> map = jsonPost;
+    final post = Post.fromJson(map);
+    final postReplies = post.postReplies?.map((postReply) {
+      final item = _PostListItem.postReply(
+        postReply,
+        (post.postReplyDepth ?? 0) + 1,
+      );
+      postReplyItemById[postReply.postId] = item;
+      return item;
+    });
+
+    if (post.postReplyTo == parentPostId) {
+      items.add(_PostListItem.post(post));
+      if (postReplies != null) items.addAll(postReplies);
+      return;
+    }
+
+    if (post.postReplyTo == null) {
+      print("Unexpected root post #${post.postId}");
+      return;
+    }
+
+    if (!postReplyItemById.containsKey(post.postId)) {
+      print("Unexpected reply-to post #${post.postId}");
+      return;
+    }
+
+    final postReplyItem = postReplyItemById[post.postId];
+    postReplyItem.postReplyPost = post;
+
+    if (postReplies != null) {
+      final index = items.indexOf(postReplyItem);
+      assert(index != -1);
+      items.insertAll(index + 1, postReplies);
+    }
+  });
+
+  return items;
+}

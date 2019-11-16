@@ -61,7 +61,7 @@ class _PostsWidgetState extends State<PostsWidget> {
     if (item.pageCurrent != null)
       return _buildPageIndicator(context, state, item);
 
-    final post = item.post;
+    final post = item.post ?? item.postReplyPost;
     if (post != null) {
       return ActionablePost.buildMultiProvider(
         post,
@@ -69,7 +69,18 @@ class _PostsWidgetState extends State<PostsWidget> {
       );
     }
 
-    return Container();
+    final postReply = item.postReply;
+    if (postReply != null) {
+      final superListIndex = state.indexOf(item);
+      assert(superListIndex > -1);
+      return _PostReplyHiddenWidget(
+        item.postReplyDepth,
+        postReply,
+        superListIndex,
+      );
+    }
+
+    return null;
   }
 
   Widget _buildPageIndicator(
@@ -176,29 +187,23 @@ class _PostsWidgetState extends State<PostsWidget> {
         json.containsKey('page_of_post_id') ? json['page_of_post_id'] : null;
 
     if (firstItemPostId != null || linksPage != 1) {
-      fc.addItem(_PostListItem.page(linksPage, total: fc.linksPages));
+      fc.addItem(_PostListItem.page(linksPage, fc.linksPages));
     }
 
-    final posts = decodePostsAndTheirReplies(json['posts'])
-        .where((p) => p.postId != firstItemPostId);
-    for (final post in posts) {
+    final items = decodePostsAndTheirReplies(json['posts']);
+    for (final item in items) {
+      if (item.post != null && item.post.postId == firstItemPostId) continue;
+
       if (firstItemPostId == null && linksPage == 1) {
         if (fc.items?.length == 1) {
-          fc.addItem(_PostListItem.page(linksPage, total: fc.linksPages));
+          fc.addItem(_PostListItem.page(linksPage, fc.linksPages));
         }
       }
 
-      if (pageOfPostId != null && fc.scrollToRelativeIndex == null) {
-        if (post.postId == pageOfPostId) {
-          fc.scrollToRelativeIndex = fc.items?.length ?? 0;
-        } else {
-          post.postReplies?.forEach((reply) => reply.postId == pageOfPostId
-              ? fc.scrollToRelativeIndex = fc.items?.length ?? 0
-              : null);
-        }
-      }
+      if (pageOfPostId != null && item.postId == pageOfPostId)
+        fc.scrollToRelativeIndex = fc.items?.length ?? 0;
 
-      fc.addItem(_PostListItem.post(post));
+      fc.addItem(item);
     }
 
     if (json.containsKey('thread')) {
@@ -220,17 +225,23 @@ class _PostsWidgetState extends State<PostsWidget> {
 }
 
 class _PostListItem {
-  final int pageCurrent;
-  final int pageTotal;
-  final Post post;
+  int pageCurrent;
+  int pageTotal;
 
-  _PostListItem.post(this.post)
-      : pageCurrent = null,
-        pageTotal = null,
-        assert(post != null);
+  Post post;
 
-  _PostListItem.page(this.pageCurrent, {int total})
-      : pageTotal = total,
-        post = null,
-        assert(pageCurrent != null);
+  PostReply postReply;
+  int postReplyDepth;
+  Post postReplyPost;
+
+  _PostListItem.post(this.post) : assert(post != null);
+
+  _PostListItem.postReply(this.postReply, this.postReplyDepth)
+      : assert(postReply != null),
+        assert(postReplyDepth != null);
+
+  _PostListItem.page(this.pageCurrent, this.pageTotal)
+      : assert(pageCurrent != null);
+
+  int get postId => (post ?? postReplyPost)?.postId;
 }

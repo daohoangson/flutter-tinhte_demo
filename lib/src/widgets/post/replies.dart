@@ -1,14 +1,21 @@
 part of '../posts.dart';
 
-Widget _buildPostWidget(Post post) =>
-    ActionablePost.buildMultiProvider(post, _PostWidget());
+Widget _buildReplyToPadding(Widget child, int depth) =>
+    depth == null || depth == 0
+        ? child
+        : Padding(
+            child: child,
+            padding: EdgeInsets.only(
+              left: 2 * kPaddingHorizontal +
+                  kAvatarRootRadius +
+                  (depth > 1
+                      ? (depth - 1) *
+                          (2 * kPaddingHorizontal + kAvatarReplyToRadius)
+                      : 0),
+            ),
+          );
 
-class _PostWidget extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() => _PostWidgetState();
-}
-
-class _PostWidgetState extends State<_PostWidget> {
+class _PostWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final post = Provider.of<Post>(context);
@@ -37,152 +44,82 @@ class _PostWidgetState extends State<_PostWidget> {
           padding: const EdgeInsets.only(left: kPaddingHorizontal),
           child: _PostActionsWidget(),
         ),
-        isPostReply ? SizedBox.shrink() : _PostRepliesWidget(),
       ],
     );
 
-    if (!isPostReply) {
-      built = NewPostStream.buildProvider(child: built);
-    }
+    built = NewPostStream.buildProvider(child: built);
+
+    built = _buildReplyToPadding(built, post.postReplyDepth);
 
     return built;
   }
 }
 
-class _PostRepliesWidget extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() => _PostRepliesWidgetState();
-}
-
-class _PostRepliesWidgetState extends State<_PostRepliesWidget> {
-  final List<Post> newPosts = List();
-
-  StreamSubscription _newPostSub;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    if (_newPostSub != null) _newPostSub.cancel();
-    _newPostSub = Provider.of<NewPostStream>(context)
-        .listen((post) => setState(() => newPosts.insert(0, post)));
-  }
-
-  @override
-  void deactivate() {
-    if (_newPostSub != null) {
-      _newPostSub.cancel();
-      _newPostSub = null;
-    }
-
-    super.deactivate();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final parentPost = Provider.of<Post>(context);
-    final postReplyCount = parentPost.postReplies?.length ?? 0;
-    List<Widget> children = List(newPosts.length + postReplyCount);
-
-    for (int i = 0; i < newPosts.length; i++) {
-      children[i] = _buildPostWidget(newPosts[i]);
-    }
-
-    for (int j = 0; j < postReplyCount; j++) {
-      final reply = parentPost.postReplies[j];
-      children[newPosts.length + j] = reply.post != null
-          ? _buildPostWidget(reply.post)
-          : reply.link?.isNotEmpty == true
-              ? _PostReplyHiddenWidget(parentPost, reply)
-              : SizedBox.shrink();
-    }
-
-    return Padding(
-      padding: const EdgeInsets.only(top: 10.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: children,
-      ),
-    );
-  }
-}
-
 class _PostReplyHiddenWidget extends StatefulWidget {
-  final Post parentPost;
+  final int depth;
   final PostReply postReply;
+  final int superListIndex;
 
-  _PostReplyHiddenWidget(this.parentPost, this.postReply, {Key key})
-      : super(key: key);
+  _PostReplyHiddenWidget(
+    this.depth,
+    this.postReply,
+    this.superListIndex, {
+    Key key,
+  })  : assert(depth != null),
+        assert(superListIndex != null),
+        assert(postReply != null),
+        super(key: key);
 
   @override
   State<StatefulWidget> createState() => _PostReplyHiddenWidgetState();
 }
 
 class _PostReplyHiddenWidgetState extends State<_PostReplyHiddenWidget> {
-  bool _hasFetched = false;
-  List<Post> _posts;
-
-  String get link => widget.postReply.link;
-  int get parentPostId => widget.parentPost.postId;
-  int get postReplyCount => widget.postReply.postReplyCount;
+  bool _isFetching = false;
 
   @override
   Widget build(BuildContext context) {
-    if (_posts == null) {
-      if (_hasFetched) {
-        return Padding(
-          padding: const EdgeInsets.fromLTRB(
-            kPaddingHorizontal,
-            0.0,
-            kPaddingHorizontal,
-            15.0,
-          ),
-          child: _buildText(context, 'Loading...'),
-        );
-      }
+    Widget built = _isFetching
+        ? _buildText(context, 'Loading...')
+        : GestureDetector(
+            child: _buildText(
+              context,
+              "Tap to load ${widget.postReply.postReplyCount} hidden replies...",
+            ),
+            onTap: fetch,
+          );
 
-      return Padding(
-        padding: const EdgeInsets.fromLTRB(
-          kPaddingHorizontal,
-          0.0,
-          kPaddingHorizontal,
-          15.0,
-        ),
-        child: GestureDetector(
-          child: _buildText(
-            context,
-            "Tap to load $postReplyCount hidden replies...",
-          ),
-          onTap: fetch,
-        ),
-      );
-    }
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: _posts.map((p) => _buildPostWidget(p)).toList(),
+    built = Padding(
+      padding: const EdgeInsets.symmetric(
+        vertical: 7.5,
+        horizontal: kPaddingHorizontal,
+      ),
+      child: built,
     );
+
+    built = _buildReplyToPadding(built, widget.depth);
+
+    return built;
   }
 
   void fetch() {
-    if (_hasFetched) return;
-    setState(() => _hasFetched = true);
+    if (_isFetching) return;
+    setState(() => _isFetching = true);
 
     return apiGet(
       ApiCaller.stateful(this),
-      link,
+      widget.postReply.link,
       onSuccess: (jsonMap) {
-        if (!jsonMap.containsKey('replies')) {
-          setState(() => _posts = List(0));
-          return;
-        }
-
-        final posts = decodePostsAndTheirReplies(
-          jsonMap['replies'],
-          parentPostId: parentPostId,
-        );
-        setState(() => _posts = posts);
+        final sls = Provider.of<SuperListState<_PostListItem>>(context);
+        final items = jsonMap.containsKey('replies')
+            ? decodePostsAndTheirReplies(
+                jsonMap['replies'],
+                parentPostId: widget.postReply.postReplyTo,
+              )
+            : <_PostListItem>[];
+        sls.itemsReplace(widget.superListIndex, items);
       },
+      onComplete: () => setState(() => _isFetching = false),
     );
   }
 
