@@ -56,17 +56,14 @@ class _PostWidget extends StatelessWidget {
 }
 
 class _PostReplyHiddenWidget extends StatefulWidget {
-  final int depth;
   final PostReply postReply;
   final int superListIndex;
 
   _PostReplyHiddenWidget(
-    this.depth,
     this.postReply,
     this.superListIndex, {
     Key key,
-  })  : assert(depth != null),
-        assert(superListIndex != null),
+  })  : assert(superListIndex != null),
         assert(postReply != null),
         super(key: key);
 
@@ -97,7 +94,10 @@ class _PostReplyHiddenWidgetState extends State<_PostReplyHiddenWidget> {
       child: built,
     );
 
-    built = _buildReplyToPadding(built, widget.depth);
+    built = _buildReplyToPadding(built, widget.postReply.postReplyDepth + 1);
+
+    // this is required to go full width
+    built = Row(children: <Widget>[built]);
 
     return built;
   }
@@ -125,6 +125,8 @@ class _PostReplyHiddenWidgetState extends State<_PostReplyHiddenWidget> {
 
   Widget _buildText(BuildContext context, String data) => Text(
         data,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
         style: Theme.of(context).textTheme.caption,
       );
 }

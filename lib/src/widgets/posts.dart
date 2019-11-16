@@ -39,10 +39,7 @@ List<_PostListItem> decodePostsAndTheirReplies(List jsonPosts,
     final Map<String, dynamic> map = jsonPost;
     final post = Post.fromJson(map);
     final postReplies = post.postReplies?.map((postReply) {
-      final item = _PostListItem.postReply(
-        postReply,
-        (post.postReplyDepth ?? 0) + 1,
-      );
+      final item = _PostListItem.postReply(postReply);
       postReplyItemById[postReply.postId] = item;
       return item;
     });

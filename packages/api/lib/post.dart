@@ -89,6 +89,7 @@ class PostReply {
   String link;
   int postId;
   int postReplyCount;
+  int postReplyDepth;
   int postReplyTo;
   int to;
 

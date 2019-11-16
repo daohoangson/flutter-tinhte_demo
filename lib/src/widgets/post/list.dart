@@ -74,7 +74,6 @@ class _PostsWidgetState extends State<PostsWidget> {
       final superListIndex = state.indexOf(item);
       assert(superListIndex > -1);
       return _PostReplyHiddenWidget(
-        item.postReplyDepth,
         postReply,
         superListIndex,
       );
@@ -231,14 +230,12 @@ class _PostListItem {
   Post post;
 
   PostReply postReply;
-  int postReplyDepth;
   Post postReplyPost;
 
   _PostListItem.post(this.post) : assert(post != null);
 
-  _PostListItem.postReply(this.postReply, this.postReplyDepth)
-      : assert(postReply != null),
-        assert(postReplyDepth != null);
+  _PostListItem.postReply(this.postReply)
+      : assert(postReply != null);
 
   _PostListItem.page(this.pageCurrent, this.pageTotal)
       : assert(pageCurrent != null);
