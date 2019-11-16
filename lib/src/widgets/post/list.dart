@@ -37,6 +37,7 @@ class _PostsWidgetState extends State<PostsWidget> {
           ThreadNavigationWidget.buildProvider(),
         ],
         child: SuperListView<_PostListItem>(
+          enableAnimation: true,
           enableScrollToIndex: true,
           fetchPathInitial: widget.path,
           fetchOnSuccess: _fetchOnSuccess,

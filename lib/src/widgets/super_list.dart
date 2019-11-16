@@ -10,6 +10,7 @@ import '../api.dart';
 class SuperListView<T> extends StatefulWidget {
   final ApiMethod apiMethodInitial;
   final List<SuperListComplexItemRegister> complexItems;
+  final bool enableAnimation;
   final bool enableRefreshIndicator;
   final bool enableScrollToIndex;
   final String fetchPathInitial;
@@ -28,6 +29,7 @@ class SuperListView<T> extends StatefulWidget {
   SuperListView({
     this.apiMethodInitial,
     this.complexItems,
+    this.enableAnimation = false,
     this.enableRefreshIndicator,
     this.enableScrollToIndex = false,
     this.fetchPathInitial,
@@ -161,46 +163,8 @@ class SuperListState<T> extends State<SuperListView<T>> {
 
   @override
   Widget build(BuildContext context) {
-    Widget built = AnimatedList(
-      itemBuilder: (context, i, animation) {
-        Widget built = _buildItem(context, i) ?? Container();
-
-        if (widget.itemMaxWidth != null && !(built is SuperListItemFullWidth)) {
-          built = Center(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: widget.itemMaxWidth),
-              child: built,
-            ),
-          );
-        }
-
-        built = SlideTransition(
-          position: animation.drive(
-            Tween<Offset>(
-              begin: Offset(1, 0),
-              end: Offset(0, 0),
-            ),
-          ),
-          child: built,
-        );
-
-        if (_scrollController != null) {
-          built = AutoScrollTag(
-            child: built,
-            controller: _scrollController,
-            index: i,
-            key: ValueKey(i),
-          );
-        }
-
-        return built;
-      },
-      initialItemCount: _itemCountBefore + _itemCountAfter,
-      key: _model._key,
-      controller: _scrollController,
-      padding: const EdgeInsets.all(0),
-      shrinkWrap: widget.shrinkWrap == true,
-    );
+    Widget built =
+        widget.enableAnimation ? _buildListAnimated() : _buildListView();
 
     if (_refreshIndicatorKey != null) {
       built = RefreshIndicator(
@@ -310,7 +274,44 @@ class SuperListState<T> extends State<SuperListView<T>> {
             ));
   }
 
-  Widget _buildItem(BuildContext context, int i) {
+  Widget _buildItem(
+    BuildContext context,
+    int i,
+    Animation<double> animation,
+  ) {
+    Widget built = _buildItemWidget(context, i) ?? Container();
+
+    if (widget.itemMaxWidth != null && !(built is SuperListItemFullWidth))
+      built = Center(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: widget.itemMaxWidth),
+          child: built,
+        ),
+      );
+
+    if (animation != null)
+      built = SlideTransition(
+        position: animation.drive(
+          Tween<Offset>(
+            begin: Offset(1, 0),
+            end: Offset(0, 0),
+          ),
+        ),
+        child: built,
+      );
+
+    if (_scrollController != null)
+      built = AutoScrollTag(
+        child: built,
+        controller: _scrollController,
+        index: i,
+        key: ValueKey(i),
+      );
+
+    return built;
+  }
+
+  Widget _buildItemWidget(BuildContext context, int i) {
     if (i == 0) return _buildProgressIndicator(canFetchPrev && _isFetching);
     i--;
 
@@ -330,6 +331,24 @@ class SuperListState<T> extends State<SuperListView<T>> {
 
     return _buildProgressIndicator(_isFetching);
   }
+
+  Widget _buildListView() => ListView.builder(
+        itemBuilder: (context, i) => _buildItem(context, i, null),
+        itemCount: _itemCountBefore + _model.length + _itemCountAfter,
+        key: _model._key,
+        controller: _scrollController,
+        padding: const EdgeInsets.all(0),
+        shrinkWrap: widget.shrinkWrap == true,
+      );
+
+  Widget _buildListAnimated() => AnimatedList(
+        itemBuilder: _buildItem,
+        initialItemCount: _itemCountBefore + _itemCountAfter,
+        key: _model._key,
+        controller: _scrollController,
+        padding: const EdgeInsets.all(0),
+        shrinkWrap: widget.shrinkWrap == true,
+      );
 
   Widget _buildProgressIndicator(bool visible) =>
       widget.progressIndicator != false && !_isRefreshing && visible
@@ -432,41 +451,50 @@ class _SuperListModel<T> {
 
   void add(T item) {
     _items.add(item);
-    _key.currentState.insertItem(indexPadding + length - 1);
+
+    final als = _key.currentState;
+    if (als != null) als.insertItem(indexPadding + length - 1);
   }
 
   void addAll(Iterable<T> items) {
     final l = length;
     _items.addAll(items);
 
-    for (var i = 0; i < items.length; i++) {
-      _key.currentState.insertItem(indexPadding + l + i);
-    }
+    final als = _key.currentState;
+    if (als != null)
+      for (var i = 0; i < items.length; i++) {
+        als.insertItem(indexPadding + l + i);
+      }
   }
 
   void clear() {
     final l = length;
     _items.clear();
 
-    for (var i = 0; i < l; i++) {
-      _key.currentState
-          .removeItem(indexPadding + 0, (_, __) => SizedBox.shrink());
-    }
+    final als = _key.currentState;
+    if (als != null)
+      for (var i = 0; i < l; i++) {
+        als.removeItem(indexPadding + 0, (_, __) => SizedBox.shrink());
+      }
   }
 
   T elementAt(int index) => _items.elementAt(index);
 
   void insert(int index, T item) {
     _items.insert(index, item);
-    _key.currentState.insertItem(indexPadding + index);
+
+    final als = _key.currentState;
+    if (als != null) als.insertItem(indexPadding + index);
   }
 
   void insertAll(int index, Iterable<T> items) {
     _items.insertAll(index, items);
 
-    for (var i = 0; i < items.length; i++) {
-      _key.currentState.insertItem(indexPadding + index + i);
-    }
+    final als = _key.currentState;
+    if (als != null)
+      for (var i = 0; i < items.length; i++) {
+        als.insertItem(indexPadding + index + i);
+      }
   }
 }
 
