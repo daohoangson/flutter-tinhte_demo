@@ -106,6 +106,7 @@ class SuperListState<T> extends State<SuperListView<T>> {
   int _fetchedPageMax;
   int _fetchedPageMin;
   Map _initialJson;
+  StreamSubscription _itemStreamSub;
   int _itemCountAfter;
   int _itemCountBefore;
   _SuperListModel<T> _model;
