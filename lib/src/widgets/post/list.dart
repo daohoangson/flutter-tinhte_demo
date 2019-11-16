@@ -33,7 +33,6 @@ class _PostsWidgetState extends State<PostsWidget> {
   Widget build(BuildContext context) => MultiProvider(
         providers: [
           Provider<Thread>.value(value: thread),
-          NewPostStream.buildProvider(),
           ThreadNavigationWidget.buildProvider(),
         ],
         child: SuperListView<_PostListItem>(
@@ -45,11 +44,6 @@ class _PostsWidgetState extends State<PostsWidget> {
               : null,
           initialJson: widget.initialJson,
           itemBuilder: _buildItem,
-          itemStreamRegister: (sls) => Provider.of<NewPostStream>(sls.context)
-              .listen((post) => sls.itemsInsert(
-                    sls.fetchedPageMin == 1 ? 1 : 0,
-                    _PostListItem.post(post),
-                  )),
         ),
       );
 
@@ -61,7 +55,7 @@ class _PostsWidgetState extends State<PostsWidget> {
     if (item.pageCurrent != null)
       return _buildPageIndicator(context, state, item);
 
-    final post = item.post ?? item.postReplyPost;
+    final post = item.post;
     if (post != null) {
       return ActionablePost.buildMultiProvider(
         post,
@@ -226,11 +220,8 @@ class _PostsWidgetState extends State<PostsWidget> {
 class _PostListItem {
   int pageCurrent;
   int pageTotal;
-
   Post post;
-
   PostReply postReply;
-  Post postReplyPost;
 
   _PostListItem.post(this.post) : assert(post != null);
 

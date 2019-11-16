@@ -47,8 +47,6 @@ class _PostWidget extends StatelessWidget {
       ],
     );
 
-    built = NewPostStream.buildProvider(child: built);
-
     built = _buildReplyToPadding(built, post.postReplyDepth);
 
     return built;

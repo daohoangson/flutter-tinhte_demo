@@ -61,7 +61,7 @@ List<_PostListItem> decodePostsAndTheirReplies(List jsonPosts,
     }
 
     final postReplyItem = postReplyItemById[post.postId];
-    postReplyItem.postReplyPost = post;
+    postReplyItem.post = post;
 
     if (postReplies != null) {
       final index = items.indexOf(postReplyItem);
