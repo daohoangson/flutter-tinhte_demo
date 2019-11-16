@@ -191,7 +191,7 @@ class _PostsWidgetState extends State<PostsWidget> {
 
     final items = decodePostsAndTheirReplies(json['posts']);
     for (final item in items) {
-      if (item.post != null && item.post.postId == firstItemPostId) continue;
+      if (firstItemPostId != null && item.postId == firstItemPostId) continue;
 
       if (firstItemPostId == null && linksPage == 1) {
         if (fc.items?.length == 1) {
@@ -234,11 +234,10 @@ class _PostListItem {
 
   _PostListItem.post(this.post) : assert(post != null);
 
-  _PostListItem.postReply(this.postReply)
-      : assert(postReply != null);
+  _PostListItem.postReply(this.postReply) : assert(postReply != null);
 
   _PostListItem.page(this.pageCurrent, this.pageTotal)
       : assert(pageCurrent != null);
 
-  int get postId => (post ?? postReplyPost)?.postId;
+  int get postId => post?.postId ?? postReply?.postId;
 }
