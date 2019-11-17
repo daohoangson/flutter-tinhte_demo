@@ -89,8 +89,7 @@ class _PostActionsWidgetState extends State<_PostActionsWidget> {
                   final sls = Provider.of<SuperListState<_PostListItem>>(
                       context,
                       listen: false);
-                  final insertIndex =
-                      _findInsertIndexForNewPost(sls, parentPost);
+                  final insertIndex = _findInsertIndexForNewPost(sls, post);
                   sls.itemsInsert(insertIndex, _PostListItem.post(post));
 
                   setState(() => _isShowingEditor = false);
@@ -220,16 +219,16 @@ class _PostActionsWidgetState extends State<_PostActionsWidget> {
       });
 
   static int _findInsertIndexForNewPost(
-      SuperListState<_PostListItem> sls, Post parentPost) {
+      SuperListState<_PostListItem> sls, Post post) {
     final items = sls.items;
-    if (parentPost == null) return items.length;
-    final parentDepth = parentPost.postReplyDepth ?? 0;
+    final depth = post.postReplyDepth ?? 0;
+    final parentPostId = post.postReplyTo ?? 0;
 
     int i = 0;
     bool found = false;
     for (final item in items) {
       if (!found) {
-        if (item.postId == parentPost.postId) {
+        if (item.postId == parentPostId) {
           found = true;
         }
       } else {
@@ -237,7 +236,7 @@ class _PostActionsWidgetState extends State<_PostActionsWidget> {
         if (itemPost == null) continue;
 
         final itemDepth = itemPost.postReplyDepth ?? 0;
-        if (itemDepth <= parentDepth) return i;
+        if (itemDepth < depth) return i;
       }
       i++;
     }
