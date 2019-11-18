@@ -24,7 +24,7 @@ class NotificationsWidget extends StatefulWidget {
 }
 
 class _NotificationsState extends State<NotificationsWidget> {
-  final superList = GlobalKey<SuperListState<api.Notification>>();
+  final _slsKey = GlobalKey<SuperListState<api.Notification>>();
 
   StreamSubscription subscription;
 
@@ -52,7 +52,7 @@ class _NotificationsState extends State<NotificationsWidget> {
             fetchPathInitial: 'notifications',
             fetchOnSuccess: _fetchOnSuccess,
             itemBuilder: (context, __, n) => _buildRow(context, n),
-            key: superList,
+            key: _slsKey,
           );
         },
       );
@@ -131,7 +131,7 @@ class _NotificationsState extends State<NotificationsWidget> {
       if (j.length != 1) return;
 
       final notification = api.Notification.fromJson(j.first);
-      superList.currentState.itemsInsert(0, notification);
+      _slsKey.currentState.itemsInsert(0, notification);
     });
   }
 

@@ -52,7 +52,7 @@ class _PostEditorState extends State<PostEditorWidget> {
                     : _buildPlaceholder(data),
               ),
             ),
-            AttachmentEditorWidget(key: data._keyAes),
+            AttachmentEditorWidget(key: data._aesKey),
           ],
           crossAxisAlignment: CrossAxisAlignment.stretch,
         );
@@ -63,7 +63,7 @@ class _PostEditorState extends State<PostEditorWidget> {
           Expanded(child: _buildTextInputMessage(focusNode: data._focusNode)),
           InkWell(
             child: Icon(Icons.image),
-            onTap: () => data._keyAes.currentState?.pickGallery(),
+            onTap: () => data._aesKey.currentState?.pickGallery(),
           ),
           InkWell(
             child: Padding(
@@ -133,7 +133,7 @@ class _PostEditorState extends State<PostEditorWidget> {
 
   void _post(PostEditorData data) {
     if (data.sessionId != _sessionId) return;
-    final attachmentHash = data._keyAes.currentState?.attachmentHash ?? '';
+    final attachmentHash = data._aesKey.currentState?.attachmentHash ?? '';
     final parentPost = data._parentPost;
     final quotePostId = parentPost?.postIsFirstPost != false
         ? ''
@@ -176,7 +176,7 @@ class PostEditorData extends ChangeNotifier {
   final Thread thread;
 
   final _focusNode = FocusNode();
-  final _keyAes = GlobalKey<AttachmentEditorState>();
+  final _aesKey = GlobalKey<AttachmentEditorState>();
 
   var _counter = 0;
   var _isEnabled = false;
@@ -195,7 +195,7 @@ class PostEditorData extends ChangeNotifier {
   void _disable(BuildContext context) {
     _counter++;
     _parentPost = null;
-    _keyAes.currentState?.setPath();
+    _aesKey.currentState?.setPath();
 
     _isEnabled = false;
     notifyListeners();
@@ -205,7 +205,7 @@ class PostEditorData extends ChangeNotifier {
 
   void _enable(BuildContext context) {
     _counter++;
-    _keyAes.currentState
+    _aesKey.currentState
         ?.setPath("posts/attachments?thread_id=${thread.threadId}");
 
     _isEnabled = true;

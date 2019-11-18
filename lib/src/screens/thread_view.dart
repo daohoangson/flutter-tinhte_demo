@@ -31,7 +31,7 @@ class ThreadViewScreen extends StatefulWidget {
 }
 
 class _ThreadViewState extends State<ThreadViewScreen> {
-  final _keyPs = GlobalKey<PostsState>();
+  final _postsKey = GlobalKey<PostsState>();
 
   PostEditorData _ped;
 
@@ -152,14 +152,14 @@ class _ThreadViewState extends State<ThreadViewScreen> {
             Expanded(
               child: PostsWidget(
                 thread,
-                key: _keyPs,
+                key: _postsKey,
                 path: thread.links?.posts,
                 initialJson: initialJson,
               ),
             ),
             Container(
               child: PostEditorWidget(
-                callback: (p) => _keyPs.currentState?.insertNewPost(p),
+                callback: (p) => _postsKey.currentState?.insertNewPost(p),
               ),
               decoration: BoxDecoration(
                 border: Border(
