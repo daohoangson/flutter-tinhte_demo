@@ -1,124 +1,149 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tinhte_api/post.dart';
-import 'package:tinhte_api/user.dart';
+import 'package:tinhte_api/thread.dart';
 
 import '../api.dart';
 import 'attachment_editor.dart';
 import 'posts.dart';
 
-class PostEditor extends StatefulWidget {
+class PostEditorWidget extends StatefulWidget {
   final PostEditorCallback callback;
-  final int parentPostId;
-  final Post post;
-  final int threadId;
 
-  PostEditor(
-    this.threadId, {
-    this.callback,
-    Key key,
-    this.parentPostId,
-    this.post,
-  })  : assert(threadId != null),
-        super(key: key);
+  PostEditorWidget({this.callback}) : assert(callback != null);
 
   @override
-  State<StatefulWidget> createState() =>
-      _PostEditorState(post?.postBodyPlainText ?? '');
+  State<StatefulWidget> createState() => _PostEditorState();
+
+  static void enable(BuildContext context, {Post parentPost}) =>
+      Provider.of<PostEditorData>(context, listen: false)
+        .._parentPost = parentPost
+        .._enable(context);
 }
 
-class _PostEditorState extends State<PostEditor> {
-  final formKey = GlobalKey<FormState>();
+class _PostEditorState extends State<PostEditorWidget> {
+  final _controller = TextEditingController();
 
-  String _attachmentHash;
+  String _sessionId;
   bool _isPosting = false;
-  String _postBody;
 
-  _PostEditorState(this._postBody);
+  _PostEditorState();
 
   @override
-  Widget build(BuildContext _) => Consumer<User>(
-      builder: (context, user, __) => Form(
-            key: formKey,
-            child: buildPostRow(
-              context,
-              buildPosterCircleAvatar(
-                user?.links?.avatar,
-                isPostReply: widget.parentPostId != null,
+  Widget build(BuildContext _) =>
+      Consumer<PostEditorData>(builder: (context, data, __) {
+        if (data.sessionId != _sessionId) {
+          _sessionId = data.sessionId;
+          _controller.text = '';
+        }
+
+        return Column(
+          children: <Widget>[
+            _buildIntro(data),
+            Container(
+              decoration: BoxDecoration(
+                color: Theme.of(context).highlightColor,
+                borderRadius: BorderRadius.circular(kPaddingHorizontal),
               ),
-              box: <Widget>[
-                buildPosterInfo(
-                  context,
-                  user?.username ?? '',
-                  userHasVerifiedBadge: user?.userHasVerifiedBadge,
-                  userRank: user?.rank?.rankName,
-                ),
-                Padding(
-                  padding: kEdgeInsetsHorizontal,
-                  child: _buildTextInputMessage(),
-                ),
-              ],
-              footer: <Widget>[
-                _attachmentHash != null
-                    ? AttachmentEditor(
-                        "posts/attachments?thread_id=${widget.threadId}",
-                        _attachmentHash,
-                      )
-                    : null,
-                Padding(
-                  padding: kEdgeInsetsHorizontal,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: _buildButtons(),
-                  ),
-                ),
-              ],
+              child: Padding(
+                padding: const EdgeInsets.only(left: kPaddingHorizontal),
+                child: data._isEnabled
+                    ? _buildInputs(data)
+                    : _buildPlaceholder(data),
+              ),
             ),
-          ));
+            AttachmentEditorWidget(key: data._keyAes),
+          ],
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+        );
+      });
 
-  List<Widget> _buildButtons() => <Widget>[
-        _attachmentHash == null
-            ? buildPostButton(
-                context,
-                'Upload images',
-                onTap: () => setState(
-                    () => _attachmentHash = "${Random.secure().nextDouble()}"),
-              )
-            : SizedBox.shrink(),
-        buildPostButton(
-          context,
-          'Post',
-          onTap: _isPosting ? null : _post,
+  Widget _buildInputs(PostEditorData data) => Row(
+        children: <Widget>[
+          Expanded(child: _buildTextInputMessage(focusNode: data._focusNode)),
+          InkWell(
+            child: Icon(Icons.image),
+            onTap: () => data._keyAes.currentState?.pickGallery(),
+          ),
+          InkWell(
+            child: Padding(
+              child: Icon(Icons.done),
+              padding: const EdgeInsets.symmetric(
+                vertical: kPaddingHorizontal,
+                horizontal: kPaddingHorizontal,
+              ),
+            ),
+            onTap: _isPosting ? null : () => _post(data),
+          )
+        ],
+      );
+
+  Widget _buildIntro(PostEditorData data) {
+    final parentPost = data._parentPost;
+    if (parentPost?.postIsFirstPost != false) return const SizedBox.shrink();
+    final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
+    return Padding(
+      child: RichText(
+        text: TextSpan(
+          text: 'Replying to @',
+          style: textTheme.body1,
+          children: [
+            TextSpan(
+              text: parentPost.posterUsername + ' ',
+              style: textTheme.body1.copyWith(
+                color: theme.accentColor,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            TextSpan(
+              text: parentPost.postBodyPlainText.replaceAll('\n', ' '),
+              style: textTheme.caption,
+            ),
+          ],
         ),
-      ];
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+      ),
+      padding: const EdgeInsets.only(bottom: kPaddingHorizontal / 2),
+    );
+  }
 
-  Widget _buildTextInputMessage() => TextFormField(
-        autofocus: true,
+  Widget _buildPlaceholder(PostEditorData data) => GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        child: _buildTextInputMessage(),
+        onTap: () => data._enable(context),
+      );
+
+  Widget _buildTextInputMessage({FocusNode focusNode}) => TextFormField(
+        controller: focusNode != null ? _controller : null,
         decoration: InputDecoration(
           border: InputBorder.none,
           hintText: 'Enter your message to post',
         ),
-        initialValue: _postBody,
+        enabled: focusNode != null,
+        focusNode: focusNode,
+        key: focusNode != null ? ValueKey(focusNode.hashCode) : null,
         keyboardType: TextInputType.multiline,
         maxLines: 3,
-        onSaved: (value) => _postBody = value,
+        minLines: 1,
         style: getPostBodyTextStyle(context, false),
         textCapitalization: TextCapitalization.sentences,
-        validator: (message) {
-          if (message.isEmpty) {
-            return 'Please enter some text.';
-          }
-
-          return null;
-        },
       );
 
-  void _post() {
-    final form = formKey.currentState;
-    if (!form.validate()) return;
-    form.save();
+  void _post(PostEditorData data) {
+    if (data.sessionId != _sessionId) return;
+    final attachmentHash = data._keyAes.currentState?.attachmentHash ?? '';
+    final parentPost = data._parentPost;
+    final quotePostId = parentPost?.postIsFirstPost != false
+        ? ''
+        : parentPost?.postId?.toString() ?? '';
+    final text = _controller.text.trim();
+    final threadId = data.thread.threadId.toString();
+    if (text.isEmpty) {
+      data._disable(context);
+      return;
+    }
 
     prepareForApiAction(context, () {
       if (_isPosting) return;
@@ -128,18 +153,15 @@ class _PostEditorState extends State<PostEditor> {
         ApiCaller.stateful(this),
         'posts',
         bodyFields: {
-          'attachment_hash': _attachmentHash ?? '',
-          'post_body': _postBody,
-          'quote_post_id': widget.parentPostId?.toString() ?? '',
-          'thread_id': widget.threadId.toString(),
+          'attachment_hash': attachmentHash,
+          'post_body': text,
+          'quote_post_id': quotePostId,
+          'thread_id': threadId,
         },
         onSuccess: (jsonMap) {
-          if (jsonMap.containsKey('post')) {
-            final post = Post.fromJson(jsonMap['post']);
-            if (widget.callback != null) {
-              widget.callback(post);
-            }
-          }
+          if (!jsonMap.containsKey('post')) return;
+          widget.callback(Post.fromJson(jsonMap['post']));
+          data._disable(context);
         },
         onError: (e) => showApiErrorDialog(context, e, title: 'Post error'),
         onComplete: () => setState(() => _isPosting = false),
@@ -149,3 +171,47 @@ class _PostEditorState extends State<PostEditor> {
 }
 
 typedef void PostEditorCallback(Post post);
+
+class PostEditorData extends ChangeNotifier {
+  final Thread thread;
+
+  final _focusNode = FocusNode();
+  final _keyAes = GlobalKey<AttachmentEditorState>();
+
+  var _counter = 0;
+  var _isEnabled = false;
+  Post _parentPost;
+
+  PostEditorData(this.thread) : assert(thread != null);
+
+  String get sessionId => "$hashCode-$_counter";
+
+  @override
+  void dispose() {
+    super.dispose();
+    _focusNode.dispose();
+  }
+
+  void _disable(BuildContext context) {
+    _counter++;
+    _parentPost = null;
+    _keyAes.currentState?.setPath();
+
+    _isEnabled = false;
+    notifyListeners();
+
+    FocusScope.of(context).requestFocus(new FocusNode());
+  }
+
+  void _enable(BuildContext context) {
+    _counter++;
+    _keyAes.currentState
+        ?.setPath("posts/attachments?thread_id=${thread.threadId}");
+
+    _isEnabled = true;
+    notifyListeners();
+
+    WidgetsBinding.instance.addPostFrameCallback(
+        (_) => FocusScope.of(context).requestFocus(_focusNode));
+  }
+}

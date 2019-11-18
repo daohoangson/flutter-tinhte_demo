@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
 import 'package:tinhte_api/content_list.dart';
-import 'package:tinhte_api/feature_page.dart';
 
 import '../widgets/app_bar.dart';
 import '../widgets/home/bottom_bar.dart';

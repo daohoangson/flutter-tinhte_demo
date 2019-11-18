@@ -1,11 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:share/share.dart';
 import 'package:tinhte_api/thread.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../widgets/app_bar.dart';
+import '../widgets/post_editor.dart';
 import '../widgets/posts.dart';
 import '../intl.dart';
 import '../link.dart';
@@ -13,7 +15,7 @@ import '../link.dart';
 const _kPopupActionOpenInBrowser = 'openInBrowser';
 const _kPopupActionShare = 'share';
 
-class ThreadViewScreen extends StatelessWidget {
+class ThreadViewScreen extends StatefulWidget {
   final Thread thread;
   final Map initialJson;
 
@@ -23,6 +25,30 @@ class ThreadViewScreen extends StatelessWidget {
     Key key,
   })  : assert(thread != null),
         super(key: key);
+
+  @override
+  State<StatefulWidget> createState() => _ThreadViewState();
+}
+
+class _ThreadViewState extends State<ThreadViewScreen> {
+  final _keyPs = GlobalKey<PostsState>();
+
+  PostEditorData _ped;
+
+  Map get initialJson => widget.initialJson;
+  Thread get thread => widget.thread;
+
+  @override
+  void initState() {
+    super.initState();
+    _ped = PostEditorData(thread);
+  }
+
+  @override
+  void dispose() {
+    _ped.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -120,9 +146,37 @@ class ThreadViewScreen extends StatelessWidget {
             ));
   }
 
-  Widget _buildBody() => PostsWidget(
-        thread,
-        path: thread.links?.posts,
-        initialJson: initialJson,
+  Widget _buildBody() => MultiProvider(
+        child: Column(
+          children: <Widget>[
+            Expanded(
+              child: PostsWidget(
+                thread,
+                key: _keyPs,
+                path: thread.links?.posts,
+                initialJson: initialJson,
+              ),
+            ),
+            Container(
+              child: PostEditorWidget(
+                callback: (p) => _keyPs.currentState?.insertNewPost(p),
+              ),
+              decoration: BoxDecoration(
+                border: Border(
+                  top: BorderSide(color: Theme.of(context).dividerColor),
+                ),
+              ),
+              padding: const EdgeInsets.fromLTRB(
+                kPaddingHorizontal,
+                kPaddingHorizontal / 2,
+                kPaddingHorizontal,
+                kPaddingHorizontal / 4,
+              ),
+            ),
+          ],
+        ),
+        providers: [
+          ChangeNotifierProvider<PostEditorData>.value(value: _ped),
+        ],
       );
 }

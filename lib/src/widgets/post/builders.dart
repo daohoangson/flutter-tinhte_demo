@@ -4,6 +4,8 @@ const kPaddingHorizontal = 10.0;
 const kEdgeInsetsHorizontal = EdgeInsets.symmetric(
   horizontal: kPaddingHorizontal,
 );
+const kAvatarRootRadius = kToolbarHeight / 4;
+const kAvatarReplyToRadius = kToolbarHeight / 5;
 
 Widget buildPostButton(
   BuildContext context,
@@ -68,7 +70,7 @@ Widget buildPostRow(
   }
 
   return Padding(
-    padding: const EdgeInsets.only(bottom: 10.0),
+    padding: const EdgeInsets.symmetric(vertical: 5),
     child: Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -89,7 +91,7 @@ Widget buildPosterCircleAvatar(String url, {bool isPostReply = false}) =>
       padding: const EdgeInsets.only(left: kPaddingHorizontal),
       child: CircleAvatar(
         backgroundImage: url != null ? CachedNetworkImageProvider(url) : null,
-        radius: isPostReply ? kToolbarHeight / 5 : kToolbarHeight / 4,
+        radius: isPostReply ? kAvatarReplyToRadius : kAvatarRootRadius,
       ),
     );
 

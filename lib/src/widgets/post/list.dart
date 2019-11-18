@@ -16,39 +16,24 @@ class PostsWidget extends StatefulWidget {
         super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _PostsWidgetState();
+  State<StatefulWidget> createState() => PostsState();
 }
 
-class _PostsWidgetState extends State<PostsWidget> {
-  final superList = GlobalKey<SuperListState<_PostListItem>>();
-  final newPostStream = NewPostStream();
+class PostsState extends State<PostsWidget> {
+  final _slsKey = GlobalKey<SuperListState<_PostListItem>>();
 
-  Thread thread;
+  Thread _thread;
 
   @override
   void initState() {
     super.initState();
-
-    newPostStream.listen((post) {
-      final sls = superList.currentState;
-      final item = _PostListItem.post(post);
-      sls.itemsInsert(sls.fetchedPageMin == 1 ? 1 : 0, item);
-    });
-
-    thread = widget.thread;
-  }
-
-  @override
-  dispose() {
-    super.dispose();
-    newPostStream.dispose();
+    _thread = widget.thread;
   }
 
   @override
   Widget build(BuildContext context) => MultiProvider(
         providers: [
-          Provider<NewPostStream>.value(value: newPostStream),
-          Provider<Thread>.value(value: thread),
+          Provider<Thread>.value(value: _thread),
           ThreadNavigationWidget.buildProvider(),
         ],
         child: SuperListView<_PostListItem>(
@@ -60,9 +45,17 @@ class _PostsWidgetState extends State<PostsWidget> {
               : null,
           initialJson: widget.initialJson,
           itemBuilder: _buildItem,
-          key: superList,
+          key: _slsKey,
         ),
       );
+
+  void insertNewPost(Post post) {
+    final sls = _slsKey.currentState;
+    if (sls == null) return;
+
+    final index = _PostListItem.indexOfNewPost(sls.items, post);
+    sls.itemsInsert(index, _PostListItem.post(post));
+  }
 
   Widget _buildItem(
     BuildContext context,
@@ -80,7 +73,17 @@ class _PostsWidgetState extends State<PostsWidget> {
       );
     }
 
-    return Container();
+    final postReply = item.postReply;
+    if (postReply != null) {
+      final superListIndex = state.indexOf(item);
+      assert(superListIndex > -1);
+      return _PostReplyHiddenWidget(
+        postReply,
+        superListIndex,
+      );
+    }
+
+    return null;
   }
 
   Widget _buildPageIndicator(
@@ -187,34 +190,28 @@ class _PostsWidgetState extends State<PostsWidget> {
         json.containsKey('page_of_post_id') ? json['page_of_post_id'] : null;
 
     if (firstItemPostId != null || linksPage != 1) {
-      fc.addItem(_PostListItem.page(linksPage, total: fc.linksPages));
+      fc.addItem(_PostListItem.page(linksPage, fc.linksPages));
     }
 
-    final posts = decodePostsAndTheirReplies(json['posts'])
-        .where((p) => p.postId != firstItemPostId);
-    for (final post in posts) {
+    final items = decodePostsAndTheirReplies(json['posts']);
+    for (final item in items) {
+      if (firstItemPostId != null && item.postId == firstItemPostId) continue;
+
       if (firstItemPostId == null && linksPage == 1) {
         if (fc.items?.length == 1) {
-          fc.addItem(_PostListItem.page(linksPage, total: fc.linksPages));
+          fc.addItem(_PostListItem.page(linksPage, fc.linksPages));
         }
       }
 
-      if (pageOfPostId != null && fc.scrollToRelativeIndex == null) {
-        if (post.postId == pageOfPostId) {
-          fc.scrollToRelativeIndex = fc.items?.length ?? 0;
-        } else {
-          post.postReplies?.forEach((reply) => reply.postId == pageOfPostId
-              ? fc.scrollToRelativeIndex = fc.items?.length ?? 0
-              : null);
-        }
-      }
+      if (pageOfPostId != null && item.postId == pageOfPostId)
+        fc.scrollToRelativeIndex = fc.items?.length ?? 0;
 
-      fc.addItem(_PostListItem.post(post));
+      fc.addItem(item);
     }
 
     if (json.containsKey('thread')) {
       final thread = Thread.fromJson(json['thread']);
-      setState(() => this.thread = thread);
+      setState(() => _thread = thread);
     }
   }
 
@@ -231,17 +228,41 @@ class _PostsWidgetState extends State<PostsWidget> {
 }
 
 class _PostListItem {
-  final int pageCurrent;
-  final int pageTotal;
-  final Post post;
+  int pageCurrent;
+  int pageTotal;
+  Post post;
+  PostReply postReply;
 
-  _PostListItem.post(this.post)
-      : pageCurrent = null,
-        pageTotal = null,
-        assert(post != null);
+  _PostListItem.post(this.post) : assert(post != null);
 
-  _PostListItem.page(this.pageCurrent, {int total})
-      : pageTotal = total,
-        post = null,
-        assert(pageCurrent != null);
+  _PostListItem.postReply(this.postReply) : assert(postReply != null);
+
+  _PostListItem.page(this.pageCurrent, this.pageTotal)
+      : assert(pageCurrent != null);
+
+  int get postId => post?.postId ?? postReply?.postId;
+
+  static int indexOfNewPost(Iterable<_PostListItem> items, Post post) {
+    final depth = post.postReplyDepth ?? 0;
+    final parentPostId = post.postReplyTo ?? 0;
+
+    int i = -1;
+    bool found = false;
+    for (final item in items) {
+      i++;
+      if (!found) {
+        if (item.postId == parentPostId) {
+          found = true;
+        }
+      } else {
+        final itemPost = item.post;
+        if (itemPost == null) continue;
+
+        final itemDepth = itemPost.postReplyDepth ?? 0;
+        if (itemDepth < depth) return i;
+      }
+    }
+
+    return items.length;
+  }
 }

@@ -161,6 +161,7 @@ class SuperListState<T> extends State<SuperListView<T>> {
           built = AutoScrollTag(
             child: built,
             controller: _scrollController,
+            highlightColor: Theme.of(context).accentColor.withOpacity(.1),
             index: i,
             key: ValueKey(i),
           );
@@ -202,13 +203,11 @@ class SuperListState<T> extends State<SuperListView<T>> {
       );
     }
 
-    if (_complexItems.isNotEmpty) {
-      built = MultiProvider(
-        child: built,
-        providers:
-            _complexItems.map((r) => r._provider).toList(growable: false),
-      );
-    }
+    built = MultiProvider(
+      child: built,
+      providers: _complexItems.map((r) => r._provider).toList()
+        ..add(Provider<SuperListState<T>>.value(value: this)),
+    );
 
     return built;
   }
@@ -251,6 +250,8 @@ class SuperListState<T> extends State<SuperListView<T>> {
         onPreFetch: () => _fetchPathPrev = null,
       );
 
+  int indexOf(T item) => _items.indexOf(item);
+
   void itemsAdd(T item) {
     if (!mounted) {
       _items.add(item);
@@ -277,6 +278,19 @@ class SuperListState<T> extends State<SuperListView<T>> {
     });
   }
 
+  void itemsReplace(int index, Iterable<T> items) {
+    if (!mounted) {
+      _items.removeAt(index);
+      if (items != null) _items.insertAll(index, items);
+      return;
+    }
+
+    setState(() {
+      _items.removeAt(index);
+      if (items != null) _items.insertAll(index, items);
+    });
+  }
+
   void jumpTo(double value) => _scrollController?.jumpTo(value);
 
   void scrollToIndex(int index,
@@ -284,12 +298,13 @@ class SuperListState<T> extends State<SuperListView<T>> {
       AutoScrollPosition preferPosition}) {
     if (_scrollController == null) return;
 
-    WidgetsBinding.instance
-        .addPostFrameCallback((_) => _scrollController.scrollToIndex(
-              itemCountBefore + index,
-              duration: duration,
-              preferPosition: preferPosition,
-            ));
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final i = itemCountBefore + index;
+      final d = duration;
+      final p = preferPosition;
+      await _scrollController.scrollToIndex(i, duration: d, preferPosition: p);
+      _scrollController.highlight(i);
+    });
   }
 
   Widget _buildItem(BuildContext context, int i) {
