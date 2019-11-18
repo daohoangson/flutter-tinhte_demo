@@ -6,42 +6,6 @@ import 'user.dart';
 
 part 'post.g.dart';
 
-List<Post> decodePostsAndTheirReplies(List jsonPosts, {int parentPostId}) {
-  final posts = <Post>[];
-  final postById = Map<int, Post>();
-
-  jsonPosts.forEach((jsonPost) {
-    final post = Post.fromJson(jsonPost);
-    postById[post.postId] = post;
-
-    if (post.postReplyTo == parentPostId) {
-      posts.add(post);
-      return;
-    }
-
-    if (post.postReplyTo == null) {
-      print("Unexpected root post #${post.postId}");
-      return;
-    }
-
-    if (!postById.containsKey(post.postReplyTo)) {
-      print("Parent post #${post.postReplyTo} not found for #${post.postId}");
-      return;
-    }
-
-    for (final _postReply in postById[post.postReplyTo].postReplies) {
-      if (_postReply.postId == post.postId) {
-        _postReply.post = post;
-        return;
-      }
-    }
-
-    print("Reply slot not found in #${post.postReplyTo} for #${post.postId}");
-  });
-
-  return posts;
-}
-
 @JsonSerializable(fieldRename: FieldRename.snake)
 class Post {
   int postAttachmentCount;
@@ -125,11 +89,9 @@ class PostReply {
   String link;
   int postId;
   int postReplyCount;
+  int postReplyDepth;
   int postReplyTo;
   int to;
-
-  @JsonKey(ignore: true)
-  Post post;
 
   PostReply();
   factory PostReply.fromJson(Map<String, dynamic> json) =>

@@ -17,7 +17,6 @@ class _PostActionsWidget extends StatefulWidget {
 }
 
 class _PostActionsWidgetState extends State<_PostActionsWidget> {
-  bool _isShowingEditor = false;
   bool _isLiking = false;
 
   @override
@@ -43,8 +42,11 @@ class _PostActionsWidgetState extends State<_PostActionsWidget> {
 
             buttons.add(buildPostButton(
               context,
-              _isShowingEditor ? 'Cancel' : 'Reply',
-              onTap: () => setState(() => _isShowingEditor = !_isShowingEditor),
+              'Reply',
+              onTap: () => PostEditorWidget.enable(
+                context,
+                parentPost: Provider.of<Post>(context),
+              ),
             ));
           }
 
@@ -69,32 +71,7 @@ class _PostActionsWidgetState extends State<_PostActionsWidget> {
             children: buttons,
           );
 
-          if (!_isShowingEditor) return row;
-
-          Post parentPost;
-          try {
-            parentPost = Provider.of<Post>(context);
-          } on ProviderNotFoundError catch (_) {
-            // ignore this error, it will happen when replying to first post
-          }
-          final thread = Provider.of<Thread>(context);
-
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              row,
-              PostEditor(
-                thread.threadId,
-                callback: (post) {
-                  Provider.of<NewPostStream>(context, listen: false)._add(post);
-                  setState(() => _isShowingEditor = false);
-                },
-                parentPostId: parentPost?.postIsFirstPost == true
-                    ? 0
-                    : parentPost?.postId,
-              )
-            ],
-          );
+          return row;
         },
       );
 
@@ -118,9 +95,9 @@ class _PostActionsWidgetState extends State<_PostActionsWidget> {
             final reason = await showDialog(
               context: context,
               builder: (context) => _PostActionsDialogReason(
-                    button: 'Delete',
-                    hint: 'Reason to delete post.',
-                  ),
+                button: 'Delete',
+                hint: 'Reason to delete post.',
+              ),
             );
             if (reason != null) _deletePost(ap, reason);
             break;
@@ -131,9 +108,9 @@ class _PostActionsWidgetState extends State<_PostActionsWidget> {
             final message = await showDialog(
               context: context,
               builder: (context) => _PostActionsDialogReason(
-                    button: 'Report',
-                    hint: 'Problem to be reported.',
-                  ),
+                button: 'Report',
+                hint: 'Problem to be reported.',
+              ),
             );
             if (message != null) _reportPost(ap, message);
             break;
@@ -192,13 +169,13 @@ class _PostActionsWidgetState extends State<_PostActionsWidget> {
   void _reportPost(ActionablePost ap, String message) => prepareForApiAction(
         context,
         () => apiPost(
-              ApiCaller.stateful(this),
-              ap.post.links.report,
-              bodyFields: {'message': message},
-              onSuccess: (_) => Scaffold.of(context).showSnackBar(
-                    SnackBar(content: Text('Thank you for your report!')),
-                  ),
-            ),
+          ApiCaller.stateful(this),
+          ap.post.links.report,
+          bodyFields: {'message': message},
+          onSuccess: (_) => Scaffold.of(context).showSnackBar(
+            SnackBar(content: Text('Thank you for your report!')),
+          ),
+        ),
       );
 
   void _unlikePost(ActionablePost ap) => prepareForApiAction(context, () {
@@ -277,32 +254,4 @@ class ActionablePost extends ChangeNotifier {
           value: ActionablePost(post),
         ),
       ], child: child);
-}
-
-class NewPostStream {
-  // TODO: wait for https://github.com/dart-lang/linter/issues/1446
-  // ignore: close_sinks
-  final StreamController<Post> _controller = StreamController.broadcast();
-
-  void _add(Post post) => _controller.sink.add(post);
-
-  StreamSubscription<Post> listen(
-    void onData(Post post), {
-    Function onError,
-    void onDone(),
-    bool cancelOnError,
-  }) =>
-      _controller.stream.listen(
-        onData,
-        onError: onError,
-        onDone: onDone,
-        cancelOnError: cancelOnError,
-      );
-
-  static Provider<NewPostStream> buildProvider({Widget child}) =>
-      Provider<NewPostStream>(
-        builder: (_) => NewPostStream(),
-        child: child,
-        dispose: (_, stream) => stream._controller.close(),
-      );
 }

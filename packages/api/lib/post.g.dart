@@ -113,6 +113,7 @@ PostReply _$PostReplyFromJson(Map<String, dynamic> json) {
     ..link = json['link'] as String
     ..postId = json['post_id'] as int
     ..postReplyCount = json['post_reply_count'] as int
+    ..postReplyDepth = json['post_reply_depth'] as int
     ..postReplyTo = json['post_reply_to'] as int
     ..to = json['to'] as int;
 }
