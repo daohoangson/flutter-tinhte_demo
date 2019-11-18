@@ -36,7 +36,7 @@ class _NotificationsState extends State<NotificationsWidget> {
 
   @override
   void dispose() {
-    subscription?.cancel();
+    subscription.cancel();
     super.dispose();
   }
 
@@ -131,7 +131,7 @@ class _NotificationsState extends State<NotificationsWidget> {
       if (j.length != 1) return;
 
       final notification = api.Notification.fromJson(j.first);
-      _slsKey.currentState.itemsInsert(0, notification);
+      _slsKey.currentState?.itemsInsert(0, notification);
     });
   }
 
