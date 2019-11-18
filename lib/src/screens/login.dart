@@ -45,18 +45,18 @@ class _LoginFormState extends State<LoginForm> {
   @override
   Widget build(BuildContext context) => LayoutBuilder(
         builder: (_, box) => Form(
-              key: formKey,
-              child: _buildBox(
-                box,
-                <Widget>[
-                  _buildInputPadding(_buildUsername()),
-                  _buildInputPadding(_buildPassword()),
-                  _buildButton('Submit', _login),
-                  _buildButton('Login with Facebook', _loginFacebook),
-                  _buildButton('Login with Google', _loginGoogle),
-                ],
-              ),
-            ),
+          key: formKey,
+          child: _buildBox(
+            box,
+            <Widget>[
+              _buildInputPadding(_buildUsername()),
+              _buildInputPadding(_buildPassword()),
+              _buildButton('Submit', _login),
+              _buildButton('Login with Facebook', _loginFacebook),
+              _buildButton('Login with Google', _loginGoogle),
+            ],
+          ),
+        ),
       );
 
   Widget _buildBox(BoxConstraints box, List<Widget> children) => ListView(
@@ -112,7 +112,7 @@ class _LoginFormState extends State<LoginForm> {
     if (_isLoggingIn) return;
 
     final form = formKey.currentState;
-    if (!form.validate()) return;
+    if (form?.validate() != true) return;
     form.save();
 
     setState(() => _isLoggingIn = true);
@@ -291,9 +291,9 @@ class _LoginFormState extends State<LoginForm> {
   void _showErrorDialog(error) => showDialog(
         context: context,
         builder: (c) => AlertDialog(
-              title: Text('Login error'),
-              content: Text(error is ApiError ? error.message : "$error"),
-            ),
+          title: Text('Login error'),
+          content: Text(error is ApiError ? error.message : "$error"),
+        ),
       );
 }
 
@@ -301,8 +301,8 @@ class LoginScreenRoute extends MaterialPageRoute {
   LoginScreenRoute()
       : super(
           builder: (_) => Scaffold(
-                appBar: AppBar(title: Text('Login')),
-                body: LoginForm(),
-              ),
+            appBar: AppBar(title: Text('Login')),
+            body: LoginForm(),
+          ),
         );
 }

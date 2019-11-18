@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -16,9 +15,9 @@ import '../config.dart';
 import '../constants.dart';
 import '../intl.dart';
 import '../link.dart';
+import 'post_editor.dart';
 import 'html.dart';
 import 'image.dart';
-import 'post_editor.dart';
 import 'super_list.dart';
 import 'threads.dart';
 

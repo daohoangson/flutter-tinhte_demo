@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 import 'package:flutter/animation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -7,34 +8,35 @@ import 'package:tinhte_api/attachment.dart';
 import '../api.dart';
 import 'image.dart';
 
-const kSize = 50.0;
-
-class AttachmentEditor extends StatefulWidget {
-  final String path;
-  final String attachmentHash;
-
-  AttachmentEditor(this.path, this.attachmentHash, {Key key}) : super(key: key);
+class AttachmentEditorWidget extends StatefulWidget {
+  AttachmentEditorWidget({Key key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _AttachmentEditorState();
+  State<StatefulWidget> createState() => AttachmentEditorState();
 }
 
-class _AttachmentEditorState extends State<AttachmentEditor> {
-  final List<_Attachment> attachments = List();
+class AttachmentEditorState extends State<AttachmentEditorWidget> {
+  final List<_Attachment> _attachments = List();
+
+  String _apiPostPath;
+  String _attachmentHash;
+
+  String get attachmentHash => _attachmentHash;
 
   @override
-  Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: SizedBox(
-          height: kSize,
-          child: ListView.builder(
-            itemBuilder: (context, i) =>
-                i == 0 ? _buildButton() : _buildAttachment(attachments[i - 1]),
-            itemCount: 1 + attachments.length,
-            scrollDirection: Axis.horizontal,
+  Widget build(BuildContext _) => _attachments.isNotEmpty
+      ? Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: SizedBox(
+            height: 50,
+            child: ListView.builder(
+              itemBuilder: (_, i) => _buildAttachment(_attachments[i]),
+              itemCount: _attachments.length,
+              scrollDirection: Axis.horizontal,
+            ),
           ),
-        ),
-      );
+        )
+      : const SizedBox.shrink();
 
   Widget _buildAttachment(_Attachment attachment) => Stack(
         children: <Widget>[
@@ -67,19 +69,7 @@ class _AttachmentEditorState extends State<AttachmentEditor> {
         ],
       );
 
-  Widget _buildButton() => GestureDetector(
-        child: SizedBox(
-          height: kSize,
-          width: kSize,
-          child: Icon(
-            Icons.add,
-            size: kSize,
-          ),
-        ),
-        onTap: _pickGallery,
-      );
-
-  void _pickGallery() async {
+  void pickGallery() async {
     var image = await ImagePicker.pickImage(
       maxHeight: 2048.0,
       maxWidth: 2048.0,
@@ -88,12 +78,12 @@ class _AttachmentEditorState extends State<AttachmentEditor> {
     if (image == null) return;
 
     final attachment = _Attachment(image);
-    setState(() => attachments.add(attachment));
+    setState(() => _attachments.add(attachment));
 
     apiPost(
       ApiCaller.stateful(this),
-      widget.path,
-      bodyFields: {'attachment_hash': widget.attachmentHash},
+      _apiPostPath,
+      bodyFields: {'attachment_hash': _attachmentHash},
       fileFields: {'file': attachment.file},
       onSuccess: (jsonMap) {
         if (jsonMap.containsKey('attachment')) {
@@ -103,6 +93,13 @@ class _AttachmentEditorState extends State<AttachmentEditor> {
       },
     );
   }
+
+  void setPath([String path]) => setState(() {
+        _apiPostPath = path;
+        _attachmentHash = "${Random.secure().nextDouble()}";
+
+        _attachments.clear();
+      });
 }
 
 class _Attachment {

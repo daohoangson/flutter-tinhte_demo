@@ -17,7 +17,6 @@ class _PostActionsWidget extends StatefulWidget {
 }
 
 class _PostActionsWidgetState extends State<_PostActionsWidget> {
-  bool _isShowingEditor = false;
   bool _isLiking = false;
 
   @override
@@ -43,8 +42,11 @@ class _PostActionsWidgetState extends State<_PostActionsWidget> {
 
             buttons.add(buildPostButton(
               context,
-              _isShowingEditor ? 'Cancel' : 'Reply',
-              onTap: () => setState(() => _isShowingEditor = !_isShowingEditor),
+              'Reply',
+              onTap: () => PostEditorWidget.enable(
+                context,
+                parentPost: Provider.of<Post>(context),
+              ),
             ));
           }
 
@@ -69,37 +71,7 @@ class _PostActionsWidgetState extends State<_PostActionsWidget> {
             children: buttons,
           );
 
-          if (!_isShowingEditor) return row;
-
-          Post parentPost;
-          try {
-            parentPost = Provider.of<Post>(context);
-          } on ProviderNotFoundError catch (_) {
-            // ignore this error, it will happen when replying to first post
-          }
-          final thread = Provider.of<Thread>(context);
-
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              row,
-              PostEditor(
-                thread.threadId,
-                callback: (post) {
-                  final sls = Provider.of<SuperListState<_PostListItem>>(
-                      context,
-                      listen: false);
-                  final insertIndex = _findInsertIndexForNewPost(sls, post);
-                  sls.itemsInsert(insertIndex, _PostListItem.post(post));
-
-                  setState(() => _isShowingEditor = false);
-                },
-                parentPostId: parentPost?.postIsFirstPost == true
-                    ? 0
-                    : parentPost?.postId,
-              )
-            ],
-          );
+          return row;
         },
       );
 
@@ -217,32 +189,6 @@ class _PostActionsWidgetState extends State<_PostActionsWidget> {
           onComplete: () => setState(() => _isLiking = false),
         );
       });
-
-  static int _findInsertIndexForNewPost(
-      SuperListState<_PostListItem> sls, Post post) {
-    final items = sls.items;
-    final depth = post.postReplyDepth ?? 0;
-    final parentPostId = post.postReplyTo ?? 0;
-
-    int i = 0;
-    bool found = false;
-    for (final item in items) {
-      if (!found) {
-        if (item.postId == parentPostId) {
-          found = true;
-        }
-      } else {
-        final itemPost = item.post;
-        if (itemPost == null) continue;
-
-        final itemDepth = itemPost.postReplyDepth ?? 0;
-        if (itemDepth < depth) return i;
-      }
-      i++;
-    }
-
-    return items.length;
-  }
 }
 
 class _PostActionsDialogReason extends StatelessWidget {

@@ -16,23 +16,25 @@ class PostsWidget extends StatefulWidget {
         super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _PostsWidgetState();
+  State<StatefulWidget> createState() => PostsState();
 }
 
-class _PostsWidgetState extends State<PostsWidget> {
-  Thread thread;
+class PostsState extends State<PostsWidget> {
+  final _slsKey = GlobalKey<SuperListState<_PostListItem>>();
+
+  Thread _thread;
 
   @override
   void initState() {
     super.initState();
 
-    thread = widget.thread;
+    _thread = widget.thread;
   }
 
   @override
   Widget build(BuildContext context) => MultiProvider(
         providers: [
-          Provider<Thread>.value(value: thread),
+          Provider<Thread>.value(value: _thread),
           ThreadNavigationWidget.buildProvider(),
         ],
         child: SuperListView<_PostListItem>(
@@ -44,8 +46,17 @@ class _PostsWidgetState extends State<PostsWidget> {
               : null,
           initialJson: widget.initialJson,
           itemBuilder: _buildItem,
+          key: _slsKey,
         ),
       );
+
+  void insertNewPost(Post post) {
+    final sls = _slsKey.currentState;
+    if (sls == null) return;
+
+    final index = _PostListItem.indexOfNewPost(sls.items, post);
+    sls.itemsInsert(index, _PostListItem.post(post));
+  }
 
   Widget _buildItem(
     BuildContext context,
@@ -201,7 +212,7 @@ class _PostsWidgetState extends State<PostsWidget> {
 
     if (json.containsKey('thread')) {
       final thread = Thread.fromJson(json['thread']);
-      setState(() => this.thread = thread);
+      setState(() => _thread = thread);
     }
   }
 
@@ -231,4 +242,28 @@ class _PostListItem {
       : assert(pageCurrent != null);
 
   int get postId => post?.postId ?? postReply?.postId;
+
+  static int indexOfNewPost(Iterable<_PostListItem> items, Post post) {
+    final depth = post.postReplyDepth ?? 0;
+    final parentPostId = post.postReplyTo ?? 0;
+
+    int i = -1;
+    bool found = false;
+    for (final item in items) {
+      i++;
+      if (!found) {
+        if (item.postId == parentPostId) {
+          found = true;
+        }
+      } else {
+        final itemPost = item.post;
+        if (itemPost == null) continue;
+
+        final itemDepth = itemPost.postReplyDepth ?? 0;
+        if (itemDepth < depth) return i;
+      }
+    }
+
+    return items.length;
+  }
 }
