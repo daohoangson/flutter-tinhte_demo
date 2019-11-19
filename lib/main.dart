@@ -12,43 +12,46 @@ void main() {
   FlutterError.onError = Crashlytics.instance.recordFlutterError;
 
   runZoned<Future<void>>(() async {
-    runApp(MyApp());
+    final darkTheme = await DarkTheme.create();
+    runApp(MyApp(darkTheme: darkTheme));
   }, onError: Crashlytics.instance.recordError);
 }
 
 class MyApp extends StatelessWidget {
+  final DarkTheme darkTheme;
   final primaryNavKey = GlobalKey<NavigatorState>();
+
+  MyApp({this.darkTheme});
 
   @override
   Widget build(BuildContext context) => ChangeNotifierProvider<DarkTheme>.value(
-        child: Consumer<DarkTheme>(
-          builder: (_, darkTheme, __) => _buildApp(
-            darkTheme: darkTheme.value,
-          ),
-        ),
-        value: DarkTheme(),
+        child: Consumer<DarkTheme>(builder: (_, __, ___) => _buildApp()),
+        value: darkTheme,
       );
 
-  Widget _buildApp({
-    bool darkTheme,
-  }) =>
-      ApiApp(
+  Widget _buildApp() => ApiApp(
         child: PushNotificationApp(
           child: MaterialApp(
-            darkTheme: _theme(darkTheme, _themeDark),
+            darkTheme: _theme(_themeDark),
             home: HomeScreen(),
-            key: ValueKey("darkTheme=$darkTheme"),
+            key: ValueKey("darkTheme=${darkTheme.value}"),
             navigatorKey: primaryNavKey,
-            theme: _theme(darkTheme, _themeLight),
+            theme: _theme(_themeLight),
             title: 'Tinh tế Demo',
           ),
           primaryNavKey: primaryNavKey,
         ),
       );
 
-  ThemeData _theme(bool darkTheme, ThemeData fallback()) => darkTheme == false
-      ? _themeLight()
-      : darkTheme == true ? _themeDark() : fallback();
+  ThemeData _theme(ThemeData fallback()) {
+    switch (darkTheme.value) {
+      case false:
+        return _themeLight();
+      case true:
+        return _themeDark();
+    }
+    return fallback();
+  }
 
   ThemeData _themeDark() => ThemeData(brightness: Brightness.dark);
   ThemeData _themeLight() => ThemeData(brightness: Brightness.light);
