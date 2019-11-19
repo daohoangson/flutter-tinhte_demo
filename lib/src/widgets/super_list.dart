@@ -104,7 +104,6 @@ class SuperListState<T> extends State<SuperListView<T>> {
   int _fetchedPageMax;
   int _fetchedPageMin;
   Map _initialJson;
-  StreamSubscription _itemStreamSub;
   GlobalKey<RefreshIndicatorState> _refreshIndicatorKey;
   AutoScrollController _scrollController;
 

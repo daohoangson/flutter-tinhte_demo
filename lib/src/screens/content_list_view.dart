@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tinhte_api/content_list.dart';
 
-import '../widgets/app_bar.dart';
 import '../widgets/home/thread.dart';
 import '../widgets/super_list.dart';
 
@@ -21,7 +20,7 @@ class ContentListViewScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: buildAppBar(
+        appBar: AppBar(
           title: Text(title),
         ),
         body: SuperListView<ThreadListItem>(

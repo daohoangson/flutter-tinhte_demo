@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
 import 'package:tinhte_api/content_list.dart';
 
-import '../widgets/app_bar.dart';
 import '../widgets/home/bottom_bar.dart';
 import '../widgets/home/channels.dart';
 import '../widgets/home/feature_pages.dart';
@@ -33,9 +32,6 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
           title: Text(_title),
-          actions: <Widget>[
-            AppBarNotificationButton(visibleOnZero: true),
-          ],
         ),
         body: SuperListView<_HomeListItem>(
           complexItems: [

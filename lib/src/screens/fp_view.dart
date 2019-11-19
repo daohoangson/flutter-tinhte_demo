@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:tinhte_api/feature_page.dart';
 
 import '../widgets/tag/fp_header.dart';
-import '../widgets/app_bar.dart';
 import '../widgets/threads.dart';
 
 class FpViewScreen extends StatelessWidget {
@@ -12,7 +11,7 @@ class FpViewScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: buildAppBar(
+        appBar: AppBar(
           title: Text(fp.fullName),
         ),
         // TODO: use better layout for fp view
