@@ -155,17 +155,18 @@ class LinkExpander {
 
   Widget _buildOembedWebView(String html) {
     html = html.replaceAll('src="//', 'src="https://');
-
-    return WebView(
-      Uri.dataFromString(
-        """<!doctype html>
+    html = """<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width">
 </head>
-<body>$html</body>
-</html>""",
+<body style="margin:0">$html</body>
+</html>""";
+
+    return WebView(
+      Uri.dataFromString(
+        html,
         mimeType: 'text/html',
         encoding: Encoding.getByName('utf-8'),
       ).toString(),
