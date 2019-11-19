@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -15,8 +16,29 @@ import 'super_list.dart';
 
 int _subscribedUserId = 0;
 
-class NotificationsWidget extends StatelessWidget {
+class NotificationsWidget extends StatefulWidget {
   NotificationsWidget({Key key}) : super(key: key);
+
+  @override
+  _NotificationsState createState() => _NotificationsState();
+}
+
+class _NotificationsState extends State<NotificationsWidget> {
+  final _slsKey = GlobalKey<SuperListState<api.Notification>>();
+
+  StreamSubscription subscription;
+
+  @override
+  initState() {
+    super.initState();
+    subscription = listenToNotification(_onNotificationData);
+  }
+
+  @override
+  void dispose() {
+    subscription.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext _) => Consumer2<PushNotificationToken, User>(
@@ -30,8 +52,7 @@ class NotificationsWidget extends StatelessWidget {
             fetchPathInitial: 'notifications',
             fetchOnSuccess: _fetchOnSuccess,
             itemBuilder: (context, __, n) => _buildRow(context, n),
-            itemStreamRegister: (sls) => listenToNotification(
-                (i) => _onNotificationData(context, i, sls)),
+            key: _slsKey,
           );
         },
       );
@@ -91,11 +112,7 @@ class NotificationsWidget extends StatelessWidget {
     }
   }
 
-  void _onNotificationData(
-    BuildContext context,
-    int newId,
-    SuperListState<api.Notification> sls,
-  ) {
+  void _onNotificationData(int newId) {
     final apiAuth = ApiAuth.of(context, listen: false);
     if (!apiAuth.hasToken) return;
 
@@ -114,7 +131,7 @@ class NotificationsWidget extends StatelessWidget {
       if (j.length != 1) return;
 
       final notification = api.Notification.fromJson(j.first);
-      sls.itemsInsert(0, notification);
+      _slsKey.currentState?.itemsInsert(0, notification);
     });
   }
 

@@ -27,7 +27,6 @@ class PostsState extends State<PostsWidget> {
   @override
   void initState() {
     super.initState();
-
     _thread = widget.thread;
   }
 
