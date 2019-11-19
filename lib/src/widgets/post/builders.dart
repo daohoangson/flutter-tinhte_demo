@@ -88,7 +88,10 @@ Widget buildPostRow(
 
 Widget buildPosterCircleAvatar(String url, {bool isPostReply = false}) =>
     Padding(
-      padding: const EdgeInsets.only(left: kPaddingHorizontal),
+      padding: EdgeInsets.only(
+        left: kPaddingHorizontal,
+        top: isPostReply ? (kAvatarRootRadius - kAvatarReplyToRadius) : 0,
+      ),
       child: CircleAvatar(
         backgroundImage: url != null ? CachedNetworkImageProvider(url) : null,
         radius: isPostReply ? kAvatarReplyToRadius : kAvatarRootRadius,
