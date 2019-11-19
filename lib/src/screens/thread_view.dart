@@ -170,7 +170,7 @@ class _ThreadViewState extends State<ThreadViewScreen> {
                 kPaddingHorizontal,
                 kPaddingHorizontal / 2,
                 kPaddingHorizontal,
-                kPaddingHorizontal / 4,
+                kPaddingHorizontal / 2,
               ),
             ),
           ],
