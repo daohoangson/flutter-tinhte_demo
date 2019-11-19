@@ -30,7 +30,8 @@ class _PostBodyWidget extends StatelessWidget {
 
           return DefaultTextStyle(
             child: TinhteHtmlWidget(
-              ap.post.postBodyHtml,
+              post.postBodyHtml,
+              key: ValueKey(post.postId),
               needBottomMargin: needBottomMargin,
             ),
             style: getPostBodyTextStyle(context, post.postIsFirstPost),
