@@ -47,10 +47,15 @@ class TinhteHtmlWidget extends StatelessWidget {
   TinhteHtmlWidget(
     this.html, {
     this.hyperlinkColor,
-    Key key,
     this.needBottomMargin,
     this.textStyle,
-  }) : super(key: key);
+  });
+
+  bool get enableCaching {
+    var skipCaching = false;
+    assert(skipCaching = true);
+    return !skipCaching;
+  }
 
   @override
   Widget build(BuildContext _) => LayoutBuilder(
@@ -58,6 +63,7 @@ class TinhteHtmlWidget extends StatelessWidget {
           "<html><body>$html</body></html>",
           baseUrl: Uri.parse(configSiteRoot),
           bodyPadding: const EdgeInsets.all(0),
+          enableCaching: enableCaching,
           factoryBuilder: (config) => TinhteWidgetFactory(
             config,
             devicePixelRatio: MediaQuery.of(c).devicePixelRatio,
