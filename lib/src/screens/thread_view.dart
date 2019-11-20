@@ -6,7 +6,6 @@ import 'package:share/share.dart';
 import 'package:tinhte_api/thread.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../widgets/app_bar.dart';
 import '../widgets/post_editor.dart';
 import '../widgets/posts.dart';
 import '../intl.dart';
@@ -55,7 +54,6 @@ class _ThreadViewState extends State<ThreadViewScreen> {
         appBar: AppBar(
           title: _buildAppBarTitle(context),
           actions: <Widget>[
-            AppBarNotificationButton(),
             _buildAppBarPopupMenuButton(),
           ],
         ),
@@ -170,7 +168,7 @@ class _ThreadViewState extends State<ThreadViewScreen> {
                 kPaddingHorizontal,
                 kPaddingHorizontal / 2,
                 kPaddingHorizontal,
-                kPaddingHorizontal / 4,
+                kPaddingHorizontal / 2,
               ),
             ),
           ],

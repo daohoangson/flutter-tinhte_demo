@@ -5,20 +5,21 @@ import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:tinhte_api/user.dart';
 
+import 'screens/notification_list.dart';
 import 'config.dart';
 import 'link.dart';
+
+const _kUnreadIconSize = 30.0;
+const _kUnreadIconBoxSize = 50.0;
 
 final _firebaseMessaging = FirebaseMessaging();
 
 final StreamController<int> _notifController = StreamController.broadcast();
 
-final StreamController<PushNotificationUnread> _unreadController =
-    StreamController.broadcast();
-
 StreamSubscription<int> listenToNotification(void onData(int notificationId)) =>
     _notifController.stream.listen(onData);
 
-_notifControllerAddFromFcmMessage(Map data) {
+void _notifControllerAddFromFcmMessage(Map data) {
   if (!data.containsKey('notification_id')) return;
   final str = data['notification_id'] as String;
   final notificationId = int.parse(str);
@@ -26,15 +27,6 @@ _notifControllerAddFromFcmMessage(Map data) {
   debugPrint("_notifControllerAddFromFcmMessage: "
       "notificationId=$notificationId");
   _notifController.sink.add(notificationId);
-}
-
-_unreadControllerAddFromFcmMessage(Map data) {
-  if (!data.containsKey('user_unread_notification_count')) return;
-  final str = data['user_unread_notification_count'] as String;
-  final value = int.parse(str);
-
-  debugPrint("_unreadControllerAddFromFcmMessage: value=$value");
-  _unreadController.sink.add(PushNotificationUnread(value));
 }
 
 class PushNotificationApp extends StatefulWidget {
@@ -54,20 +46,13 @@ class PushNotificationApp extends StatefulWidget {
 }
 
 class _PushNotificationAppState extends State<PushNotificationApp> {
-  String _fcmToken;
+  final _pnt = PushNotificationToken();
+
   User _user;
 
-  String get fcmToken {
-    if (_fcmToken != null) return _fcmToken;
-
-    _firebaseMessaging.requestNotificationPermissions();
-
-    _firebaseMessaging
-        .getToken()
-        .then((token) => setState(() => _fcmToken = token));
-
-    return null;
-  }
+  var _unread = 0;
+  var _unreadIsVisible = false;
+  final _unreadDismissibleKey = UniqueKey();
 
   @override
   void initState() {
@@ -75,12 +60,7 @@ class _PushNotificationAppState extends State<PushNotificationApp> {
 
     _firebaseMessaging.configure(
       onLaunch: _onLaunchOrResume,
-      onMessage: (m) async {
-        debugPrint("FCM.onMessage: $m");
-        final data = m.containsKey('data') ? m['data'] as Map : m;
-        _notifControllerAddFromFcmMessage(data);
-        _unreadControllerAddFromFcmMessage(data);
-      },
+      onMessage: _onMessage,
       onResume: _onLaunchOrResume,
     );
   }
@@ -88,46 +68,99 @@ class _PushNotificationAppState extends State<PushNotificationApp> {
   @override
   Widget build(BuildContext _) => Consumer<User>(
         builder: (_, user, __) {
-          if (user.userUnreadNotificationCount != null)
-            _unreadController.sink
-                .add(PushNotificationUnread(user.userUnreadNotificationCount));
-
           final existingUserId = _user?.userId ?? 0;
-          if (existingUserId > 0 && user.userId == 0) {
-            _unregister();
+          final newUserId = user?.userId ?? 0;
+          if (newUserId != existingUserId) {
+            if (existingUserId > 0 && user.userId == 0) {
+              _unread = 0;
+              _unregister();
+            } else {
+              if (user.userUnreadNotificationCount != null) {
+                _unread = user.userUnreadNotificationCount;
+                _unreadIsVisible = _unread > 0;
+              }
+            }
           }
           _user = user;
 
-          return MultiProvider(
-            providers: [
-              Provider<PushNotificationToken>.value(
-                value: PushNotificationToken(this),
+          return ChangeNotifierProvider<PushNotificationToken>.value(
+            child: Directionality(
+              child: Stack(
+                children: <Widget>[
+                  widget.child,
+                  _unread > 0 && _unreadIsVisible
+                      ? Positioned(
+                          top: kToolbarHeight,
+                          right: kToolbarHeight / 2,
+                          child: _buildUnreadIcon(),
+                        )
+                      : const SizedBox.shrink(),
+                ],
               ),
-              StreamProvider<PushNotificationUnread>.value(
-                initialData: PushNotificationUnread(0),
-                value: _unreadController.stream,
-              ),
-            ],
-            child: widget.child,
+              textDirection: TextDirection.ltr,
+            ),
+            value: _pnt,
           );
         },
       );
 
-  Future<bool> _onLaunchOrResume(Map message) {
+  Widget _buildUnreadIcon() => Dismissible(
+        child: GestureDetector(
+          child: Container(
+            child: _UnreadIcon(),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(_kUnreadIconBoxSize),
+              color: Colors.redAccent,
+            ),
+            height: _kUnreadIconBoxSize,
+            width: _kUnreadIconBoxSize,
+          ),
+          onTap: () {
+            widget.primaryNavKey.currentState?.push(
+              MaterialPageRoute(builder: (_) => NotificationListScreen()),
+            );
+            setState(() => _unreadIsVisible = false);
+          },
+        ),
+        key: _unreadDismissibleKey,
+        onDismissed: (_) => setState(() => _unreadIsVisible = false),
+      );
+
+  Future<bool> _onLaunchOrResume(Map<String, dynamic> message) async {
     debugPrint("FCM._onLaunchOrResume: $message");
     final Map d = message.containsKey('data') ? message['data'] : message;
-    if (!d.containsKey('notification_id')) return Future.value(false);
+    if (!d.containsKey('notification_id')) return false;
 
     // TODO: use message.data.links.content when it is available
     final p = "notifications/content?notification_id=${d['notification_id']}";
 
     final navigator = widget.primaryNavKey.currentState;
-    if (navigator == null) return Future.value(false);
+    if (navigator == null) return false;
 
     return parseLink(path: p, rootNavigator: navigator);
   }
 
+  Future<bool> _onMessage(Map<String, dynamic> message) async {
+    debugPrint("FCM.onMessage: $message");
+    final Map data = message.containsKey('data') ? message['data'] : message;
+    _notifControllerAddFromFcmMessage(data);
+
+    if (!data.containsKey('user_unread_notification_count')) return false;
+    final str = data['user_unread_notification_count'] as String;
+    final value = int.parse(str);
+    if (value == _unread) return false;
+
+    _unreadIsVisible = value > 0;
+    if (mounted) {
+      setState(() => _unread = value);
+    } else {
+      _unread = value;
+    }
+    return true;
+  }
+
   void _unregister() async {
+    final _fcmToken = _pnt._value;
     if (_fcmToken?.isNotEmpty != true) return;
 
     final url = "$configPushServer/unregister";
@@ -150,16 +183,59 @@ class _PushNotificationAppState extends State<PushNotificationApp> {
   }
 }
 
-class PushNotificationToken {
-  final _PushNotificationAppState _pnas;
+class PushNotificationToken extends ChangeNotifier {
+  String _value;
 
-  PushNotificationToken(this._pnas);
+  PushNotificationToken();
 
-  String get value => _pnas.fcmToken;
+  String get value {
+    if (_value != null) return _value;
+
+    _firebaseMessaging.requestNotificationPermissions();
+
+    _firebaseMessaging.getToken().then((token) {
+      _value = token;
+      notifyListeners();
+    });
+
+    return null;
+  }
 }
 
-class PushNotificationUnread {
-  final int value;
+class _UnreadIcon extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => _UnreadIconState();
+}
 
-  PushNotificationUnread(this.value);
+class _UnreadIconState extends State<_UnreadIcon>
+    with TickerProviderStateMixin {
+  AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 100),
+      lowerBound: .0,
+      upperBound: .1,
+      vsync: this,
+    )..repeat(reverse: true);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => RotationTransition(
+        turns: _controller,
+        child: Icon(
+          Icons.notifications_none,
+          color: Colors.white70,
+          size: _kUnreadIconSize,
+        ),
+      );
 }

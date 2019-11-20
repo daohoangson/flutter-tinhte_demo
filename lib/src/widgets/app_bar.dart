@@ -4,17 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:tinhte_api/user.dart';
 
 import '../screens/login.dart';
-import '../screens/notification_list.dart';
 import '../api.dart';
 import '../link.dart';
-import '../push_notification.dart';
-
-AppBar buildAppBar({Widget title}) => AppBar(
-      title: title,
-      actions: <Widget>[
-        AppBarNotificationButton(),
-      ],
-    );
 
 class AppBarDrawerHeader extends StatelessWidget {
   AppBarDrawerHeader({Key key}) : super(key: key);
@@ -99,59 +90,4 @@ class AppBarDrawerFooter extends StatelessWidget {
               onTap: () => logout(context),
             )
           : SizedBox.shrink());
-}
-
-class AppBarNotificationButton extends StatelessWidget {
-  final bool visibleOnZero;
-
-  AppBarNotificationButton({
-    this.visibleOnZero = false,
-    Key key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext _) => Consumer2<PushNotificationUnread, User>(
-        builder: (context, unread, user, __) {
-          if (user.userId == 0) return SizedBox.shrink();
-
-          final value = unread.value;
-          final onPressed = () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => NotificationListScreen()),
-              );
-
-          if (value == 0) {
-            if (!visibleOnZero) return SizedBox.shrink();
-
-            return IconButton(
-              icon: Icon(Icons.notifications_none),
-              onPressed: onPressed,
-            );
-          }
-
-          return Stack(
-            alignment: Alignment.center,
-            children: <Widget>[
-              IconButton(
-                icon: Icon(Icons.notifications),
-                onPressed: onPressed,
-              ),
-              Positioned.fill(
-                child: Align(
-                  alignment: Alignment.topRight,
-                  child: Container(
-                    child: Text(value > 99 ? '99+' : "$value"),
-                    decoration: BoxDecoration(
-                      color: Colors.redAccent,
-                      shape: BoxShape.circle,
-                    ),
-                    margin: const EdgeInsets.all(3),
-                    padding: const EdgeInsets.all(7),
-                  ),
-                ),
-              )
-            ],
-          );
-        },
-      );
 }

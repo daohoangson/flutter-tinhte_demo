@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tinhte_api/node.dart';
 
-import '../widgets/app_bar.dart';
 import '../widgets/navigation.dart';
 import '../widgets/threads.dart';
 import 'search/thread.dart';
@@ -22,7 +21,7 @@ class _ForumViewScreenState extends State<ForumViewScreen> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: buildAppBar(
+        appBar: AppBar(
           title: Text(forum.forumTitle),
         ),
         body: NotificationListener<ScrollNotification>(

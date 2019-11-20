@@ -9,6 +9,8 @@ class DarkTheme extends ChangeNotifier {
 
   bool get value => _value;
 
+  DarkTheme._();
+
   set value(bool v) {
     _value = v;
     notifyListeners();
@@ -18,11 +20,11 @@ class DarkTheme extends ChangeNotifier {
         : prefs.setBool(kPrefKeyDarkTheme, _value));
   }
 
-  DarkTheme() {
-    SharedPreferences.getInstance().then((prefs) {
-      _value = prefs.getBool(kPrefKeyDarkTheme);
-      notifyListeners();
-    });
+  static Future<DarkTheme> create() async {
+    final darkTheme = DarkTheme._();
+    final prefs = await SharedPreferences.getInstance();
+    darkTheme._value = prefs.getBool(kPrefKeyDarkTheme);
+    return darkTheme;
   }
 }
 
