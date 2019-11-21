@@ -56,8 +56,8 @@ class ThreadWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
           ),
           onTap: () => Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => ThreadViewScreen(thread)),
-              ),
+            MaterialPageRoute(builder: (_) => ThreadViewScreen(thread)),
+          ),
         ),
       );
 
@@ -215,22 +215,25 @@ class _ThreadWidgetActionsState extends State<_ThreadWidgetActions> {
                 : postIsLiked ? _unlikePost : _likePost,
       );
 
-  _buildCounterLike() => postLikeCount > 0
-      ? Row(
-          children: <Widget>[
-            Icon(
-              FontAwesomeIcons.solidHeart,
-              color: Theme.of(context).accentColor,
-              size: 13,
-            ),
-            Text(" ${formatNumber(postLikeCount)}"),
-          ],
-        )
-      : SizedBox.shrink();
+  _buildCounterLike() {
+    if (postLikeCount == 0) return const SizedBox.shrink();
+    final textStyle = DefaultTextStyle.of(context).style;
+
+    return Row(
+      children: <Widget>[
+        Icon(
+          postIsLiked ? FontAwesomeIcons.solidHeart : FontAwesomeIcons.heart,
+          color: textStyle.color,
+          size: textStyle.fontSize,
+        ),
+        Text(" ${formatNumber(postLikeCount)}"),
+      ],
+    );
+  }
 
   _buildCounterReply() => threadReplyCount > 0
       ? Text("${formatNumber(threadReplyCount)} Replies")
-      : SizedBox.shrink();
+      : const SizedBox.shrink();
 
   _likePost() => prepareForApiAction(context, () {
         if (_isLiking) return;
@@ -240,9 +243,9 @@ class _ThreadWidgetActionsState extends State<_ThreadWidgetActions> {
           ApiCaller.stateful(this),
           linkLikes,
           onSuccess: (_) => setState(() {
-                postIsLiked = true;
-                postLikeCount++;
-              }),
+            postIsLiked = true;
+            postLikeCount++;
+          }),
           onComplete: () => setState(() => _isLiking = false),
         );
       });
@@ -255,9 +258,9 @@ class _ThreadWidgetActionsState extends State<_ThreadWidgetActions> {
           ApiCaller.stateful(this),
           linkLikes,
           onSuccess: (_) => setState(() {
-                postIsLiked = false;
-                if (postLikeCount > 0) postLikeCount--;
-              }),
+            postIsLiked = false;
+            if (postLikeCount > 0) postLikeCount--;
+          }),
           onComplete: () => setState(() => _isLiking = false),
         );
       });

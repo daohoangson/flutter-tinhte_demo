@@ -16,25 +16,20 @@ Widget buildPostButton(
 }) {
   final theme = Theme.of(context);
 
-  Widget button = Padding(
-    padding: const EdgeInsets.fromLTRB(kPaddingHorizontal, 5.0, 0.0, 5.0),
+  Widget button = FlatButton(
     child: Text(
       (count > 0 ? "$count • " : '') + text,
-      style: TextStyle(
-        color: onTap != null
-            ? color ?? theme.colorScheme.onSurface
-            : color ?? theme.disabledColor,
-        fontSize: theme.textTheme.button.fontSize - 2,
-      ),
+      style: TextStyle(fontSize: theme.textTheme.button.fontSize - 2),
     ),
+    onPressed: onTap,
+    padding: const EdgeInsets.all(kPaddingHorizontal / 2),
+    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
   );
 
-  if (onTap != null) {
-    button = InkWell(
-      onTap: onTap,
-      child: button,
-    );
-  }
+  button = ButtonTheme.fromButtonThemeData(
+    child: button,
+    data: ButtonTheme.of(context).copyWith(height: 0, minWidth: 0),
+  );
 
   return button;
 }

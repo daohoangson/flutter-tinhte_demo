@@ -60,15 +60,18 @@ class _PostActionsWidgetState extends State<_PostActionsWidget> {
           buttons.add(
             Expanded(
               child: Align(
-                alignment: Alignment.topRight,
+                alignment: Alignment.centerRight,
                 child: _buildPopupMenu(context, ap),
               ),
             ),
           );
 
-          final row = Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: buttons,
+          final row = Padding(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: buttons,
+            ),
+            padding: const EdgeInsets.only(left: kPaddingHorizontal / 2),
           );
 
           return row;
@@ -78,7 +81,7 @@ class _PostActionsWidgetState extends State<_PostActionsWidget> {
   Widget _buildPopupMenu(BuildContext context, ActionablePost ap) {
     return PopupMenuButton<String>(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: kPaddingHorizontal),
+        padding: const EdgeInsets.all(kPaddingHorizontal),
         child: Text(
           '•••',
           style: TextStyle(
