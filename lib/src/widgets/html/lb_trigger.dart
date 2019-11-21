@@ -17,7 +17,7 @@ class LbTrigger {
         child: child,
         onTap: () => Navigator.push(
           c,
-          _SlideUpRoute(
+          _ScaleRoute(
             page: _Screen(captions: captions, initialPage: i, sources: sources),
           ),
         ),
@@ -95,42 +95,31 @@ class LbTrigger {
   }
 }
 
-class _SlideUpRoute extends PageRouteBuilder {
+class _ScaleRoute extends PageRouteBuilder {
   final Widget page;
 
-  _SlideUpRoute({this.page})
+  _ScaleRoute({this.page})
       : super(
-          pageBuilder: (
-            BuildContext context,
-            Animation<double> animation,
-            Animation<double> secondaryAnimation,
-          ) =>
-              page,
-          transitionsBuilder: (
-            BuildContext context,
-            Animation<double> animation,
-            Animation<double> secondaryAnimation,
-            Widget child,
-          ) =>
-              SlideTransition(
-            position: Tween<Offset>(
-              begin: const Offset(0, 1),
-              end: Offset.zero,
-            ).animate(animation),
-            child: child,
+          pageBuilder: (_, __, ___) => page,
+          transitionsBuilder: (context, animation, _, __) => ScaleTransition(
+            child: page,
+            scale: Tween<double>(begin: 0.0, end: 1.0).animate(
+              CurvedAnimation(
+                parent: animation,
+                curve: Curves.fastOutSlowIn,
+              ),
+            ),
           ),
         );
 }
 
 class _Screen extends StatefulWidget {
-  final Decoration backgroundDecoration;
   final Map<int, Widget> captions;
   final int initialPage;
   final PageController pageController;
   final List<String> sources;
 
   _Screen({
-    this.backgroundDecoration = const BoxDecoration(color: Colors.black),
     this.captions,
     this.initialPage,
     this.sources,
@@ -141,8 +130,6 @@ class _Screen extends StatefulWidget {
 }
 
 class _ScreenState extends State<_Screen> {
-  final key = GlobalKey();
-
   int _currentPage;
 
   @override
@@ -154,55 +141,45 @@ class _ScreenState extends State<_Screen> {
   void onPageChanged(int page) => setState(() => _currentPage = page);
 
   @override
-  Widget build(BuildContext context) => Dismissible(
-        child: Scaffold(
-          body: Container(
-            decoration: widget.backgroundDecoration,
-            child: Stack(
-              alignment: Alignment.bottomCenter,
-              children: <Widget>[
-                PhotoViewGallery.builder(
-                  scrollPhysics: const BouncingScrollPhysics(),
-                  builder: _buildItem,
-                  itemCount: widget.sources.length,
-                  backgroundDecoration: widget.backgroundDecoration,
-                  pageController: widget.pageController,
-                  onPageChanged: onPageChanged,
-                ),
-                Padding(
-                  child: _buildCaption(context, _currentPage),
-                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 30),
-                ),
-                Align(
-                  alignment: Alignment.topRight,
-                  child: InkWell(
-                    child: SafeArea(
-                      child: Padding(
-                        child: Icon(
-                          Icons.close,
-                          color: Colors.white,
-                        ),
-                        padding: const EdgeInsets.all(10),
-                      ),
-                    ),
-                    onTap: () => Navigator.pop(context),
-                  ),
-                ),
-              ],
+  Widget build(BuildContext context) => Scaffold(
+        body: Stack(
+          children: <Widget>[
+            PhotoViewGallery.builder(
+              builder: _buildItem,
+              itemCount: widget.sources.length,
+              loadingChild: Container(
+                decoration: BoxDecoration(color: Colors.black),
+              ),
+              pageController: widget.pageController,
+              onPageChanged: onPageChanged,
+              scrollPhysics: const ClampingScrollPhysics(),
             ),
-          ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                child: _buildCaption(context, _currentPage),
+                padding: const EdgeInsets.all(44),
+              ),
+            ),
+          ],
         ),
-        direction: DismissDirection.down,
-        key: key,
-        onDismissed: (_) => Navigator.pop(context),
-        resizeDuration: null,
       );
 
-  Widget _buildCaption(BuildContext context, int index) => DefaultTextStyle(
-        style: TextStyle(color: Colors.white70),
-        child: widget.captions.containsKey(index)
-            ? widget.captions[index]
-            : Text("${index + 1} of ${widget.sources.length}"),
+  Widget _buildCaption(BuildContext context, int index) => Column(
+        children: <Widget>[
+          DefaultTextStyle(
+            style: TextStyle(color: Colors.white70),
+            child: widget.captions.containsKey(index)
+                ? widget.captions[index]
+                : Text("${index + 1} of ${widget.sources.length}"),
+          ),
+          FlatButton(
+            child: Text('OK'),
+            colorBrightness: Brightness.dark,
+            onPressed: () => Navigator.of(context).pop(),
+          )
+        ],
+        mainAxisSize: MainAxisSize.min,
       );
 
   PhotoViewGalleryPageOptions _buildItem(BuildContext context, int index) =>
