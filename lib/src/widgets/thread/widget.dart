@@ -61,13 +61,19 @@ class ThreadWidget extends StatelessWidget {
         ),
       );
 
-  Widget _buildImage() => thread?.threadImage != null
-      ? ThreadImageWidget(
-          image: thread?.threadImage,
-          threadId: thread?.threadId,
-          useImageRatio: true,
-        )
-      : null;
+  Widget _buildImage() {
+    final image = thread?.threadImage;
+    if (image?.displayMode != 'cover' ||
+        image.width == null ||
+        image.height == null ||
+        image.height > image.width) return null;
+
+    return ThreadImageWidget(
+      image: thread?.threadImage,
+      threadId: thread?.threadId,
+      useImageRatio: true,
+    );
+  }
 
   Widget _buildInfo(BuildContext context) {
     final theme = Theme.of(context);
