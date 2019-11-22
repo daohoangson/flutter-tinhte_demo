@@ -39,11 +39,23 @@ class ThreadWidget extends StatelessWidget {
 
     children.add(_ThreadWidgetActions(thread));
 
-    return _buildCard(context, children);
+    Widget built = _buildCard(context, children);
+
+    if (thread?.threadIsSticky == true) built = _buildBanner(built);
+
+    return built;
   }
 
+  Widget _buildBanner(Widget child) => ClipRect(
+        child: Banner(
+          child: child,
+          location: BannerLocation.topEnd,
+          message: 'Sticky',
+        ),
+      );
+
   Widget _buildBody(BuildContext context) => Text(
-        thread.firstPost.postBodyPlainText,
+        thread?.firstPost?.postBodyPlainText ?? '',
         maxLines: 3,
         overflow: TextOverflow.ellipsis,
       );
