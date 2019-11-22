@@ -14,11 +14,6 @@ class PostEditorWidget extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() => _PostEditorState();
-
-  static void enable(BuildContext context, {Post parentPost}) =>
-      Provider.of<PostEditorData>(context, listen: false)
-        .._parentPost = parentPost
-        .._enable(context);
 }
 
 class _PostEditorState extends State<PostEditorWidget> {
@@ -112,7 +107,7 @@ class _PostEditorState extends State<PostEditorWidget> {
   Widget _buildPlaceholder(PostEditorData data) => GestureDetector(
         behavior: HitTestBehavior.opaque,
         child: _buildTextInputMessage(),
-        onTap: () => data._enable(context),
+        onTap: () => data.enable(context),
       );
 
   Widget _buildTextInputMessage({FocusNode focusNode}) => TextFormField(
@@ -192,18 +187,9 @@ class PostEditorData extends ChangeNotifier {
     _focusNode.dispose();
   }
 
-  void _disable(BuildContext context) {
-    _counter++;
-    _parentPost = null;
-    _aesKey.currentState?.setPath();
+  void enable(BuildContext context, {Post parentPost}) {
+    _parentPost = parentPost;
 
-    _isEnabled = false;
-    notifyListeners();
-
-    FocusScope.of(context).requestFocus(new FocusNode());
-  }
-
-  void _enable(BuildContext context) {
     _counter++;
     _aesKey.currentState
         ?.setPath("posts/attachments?thread_id=${thread.threadId}");
@@ -213,5 +199,16 @@ class PostEditorData extends ChangeNotifier {
 
     WidgetsBinding.instance.addPostFrameCallback(
         (_) => FocusScope.of(context).requestFocus(_focusNode));
+  }
+
+  void _disable(BuildContext context) {
+    _counter++;
+    _parentPost = null;
+    _aesKey.currentState?.setPath();
+
+    _isEnabled = false;
+    notifyListeners();
+
+    FocusScope.of(context).requestFocus(new FocusNode());
   }
 }

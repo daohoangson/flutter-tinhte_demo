@@ -1,6 +1,7 @@
 part of '../threads.dart';
 
-const _kPaddingHorizontal = EdgeInsets.symmetric(horizontal: 10);
+const _kThreadWidgetPadding = 10.0;
+const _kThreadWidgetSpacing = const SizedBox(height: _kThreadWidgetPadding);
 
 class ThreadWidget extends StatelessWidget {
   final Thread thread;
@@ -12,28 +13,27 @@ class ThreadWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final children = <Widget>[
-      const SizedBox(height: 10),
+      _kThreadWidgetSpacing,
       _buildTextPadding(_buildInfo(context)),
-      const SizedBox(height: 10),
     ];
 
     if (!isThreadTitleRedundant(thread)) {
       children.addAll([
+        _kThreadWidgetSpacing,
         _buildTextPadding(_buildTitle(context)),
-        const SizedBox(height: 10),
       ]);
     }
 
     children.addAll([
+      _kThreadWidgetSpacing,
       _buildTextPadding(_buildBody(context)),
-      const SizedBox(height: 10),
     ]);
 
     final image = _buildImage();
     if (image != null) {
       children.addAll([
+        _kThreadWidgetSpacing,
         image,
-        const SizedBox(height: 10),
       ]);
     }
 
@@ -41,7 +41,7 @@ class ThreadWidget extends StatelessWidget {
 
     Widget built = _buildCard(context, children);
 
-    if (thread?.threadIsSticky == true) built = _buildBanner(built);
+    if (thread.threadIsSticky) built = _buildBanner(built);
 
     return built;
   }
@@ -55,13 +55,13 @@ class ThreadWidget extends StatelessWidget {
       );
 
   Widget _buildBody(BuildContext context) => Text(
-        thread?.firstPost?.postBodyPlainText ?? '',
+        thread.firstPost?.postBodyPlainText ?? '',
         maxLines: 3,
         overflow: TextOverflow.ellipsis,
       );
 
   Widget _buildCard(BuildContext context, List<Widget> children) => Card(
-        margin: const EdgeInsets.only(bottom: 10),
+        margin: const EdgeInsets.only(bottom: _kThreadWidgetPadding),
         child: GestureDetector(
           child: Column(
             children: children,
@@ -74,15 +74,15 @@ class ThreadWidget extends StatelessWidget {
       );
 
   Widget _buildImage() {
-    final image = thread?.threadImage;
+    final image = thread.threadImage;
     if (image?.displayMode != 'cover' ||
         image.width == null ||
         image.height == null ||
         image.height > image.width) return null;
 
     return ThreadImageWidget(
-      image: thread?.threadImage,
-      threadId: thread?.threadId,
+      image: image,
+      threadId: thread.threadId,
       useImageRatio: true,
     );
   }
@@ -94,18 +94,17 @@ class ThreadWidget extends StatelessWidget {
     return Row(
       children: <Widget>[
         _buildInfoAvatar(),
-        const SizedBox(width: 10),
+        const SizedBox(width: _kThreadWidgetPadding),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               _buildInfoUsername(theme, style),
-              const SizedBox(height: 3),
-              RichText(
-                text: TextSpan(
-                  text: formatTimestamp(thread.threadCreateDate),
-                  style: theme.textTheme.caption,
-                ),
+              const SizedBox(height: _kThreadWidgetPadding / 4),
+              Text(
+                formatTimestamp(thread.threadCreateDate),
+                style: theme.textTheme.caption,
+                textScaleFactor: 1,
               ),
             ],
           ),
@@ -115,43 +114,46 @@ class ThreadWidget extends StatelessWidget {
   }
 
   Widget _buildInfoAvatar() => CircleAvatar(
-        backgroundImage: thread?.links?.firstPosterAvatar != null
+        backgroundImage: thread.links?.firstPosterAvatar != null
             ? CachedNetworkImageProvider(thread.links.firstPosterAvatar)
             : null,
         radius: 20,
       );
 
   Widget _buildInfoUsername(ThemeData theme, TextStyle style) {
-    final children = <Widget>[
-      RichText(
-        text: TextSpan(
-          style: style.copyWith(fontWeight: FontWeight.bold),
-          text: thread?.creatorUsername ?? '■ ●● ▲▲▲',
-        ),
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-      ),
-    ];
+    final buffer = StringBuffer(thread.creatorUsername ?? '');
+    final inlineSpans = <InlineSpan>[];
 
-    if (thread?.creatorHasVerifiedBadge == true) {
-      children.add(Icon(
-        FontAwesomeIcons.solidCheckCircle,
-        color: theme.accentColor,
-        size: style.fontSize,
+    if (thread.creatorHasVerifiedBadge) {
+      buffer.write(' ');
+      inlineSpans.add(WidgetSpan(
+        alignment: PlaceholderAlignment.middle,
+        child: Icon(
+          FontAwesomeIcons.solidCheckCircle,
+          color: theme.accentColor,
+          size: style.fontSize,
+        ),
       ));
     }
 
-    return Wrap(
-      children: children,
-      spacing: 5,
+    return RichText(
+      text: TextSpan(
+        children: inlineSpans,
+        style: style.copyWith(fontWeight: FontWeight.bold),
+        text: buffer.toString(),
+      ),
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
     );
   }
 
-  Widget _buildTextPadding(Widget child) =>
-      Padding(padding: _kPaddingHorizontal, child: child);
+  Widget _buildTextPadding(Widget child) => Padding(
+        padding: EdgeInsets.symmetric(horizontal: _kThreadWidgetPadding),
+        child: child,
+      );
 
   Widget _buildTitle(BuildContext context) => Text(
-        thread?.threadTitle ?? '▲  □■   ○●○    ▼◁▲▷',
+        thread.threadTitle ?? '',
         style: TextStyle(fontWeight: FontWeight.bold),
       );
 }
@@ -159,7 +161,9 @@ class ThreadWidget extends StatelessWidget {
 class _ThreadWidgetActions extends StatefulWidget {
   final Thread thread;
 
-  _ThreadWidgetActions(this.thread, {Key key}) : super(key: key);
+  _ThreadWidgetActions(this.thread, {Key key})
+      : assert(thread != null),
+        super(key: key);
 
   @override
   State<StatefulWidget> createState() => _ThreadWidgetActionsState();
@@ -169,32 +173,32 @@ class _ThreadWidgetActionsState extends State<_ThreadWidgetActions> {
   var _isLiking = false;
 
   String get linkLikes => post?.links?.likes;
-  String get linkPermalink => thread?.links?.permalink;
-  Post get post => thread?.firstPost;
+  String get linkPermalink => thread.links?.permalink;
+  Post get post => thread.firstPost;
   bool get postIsLiked => post?.postIsLiked == true;
   int get postLikeCount => post?.postLikeCount ?? 0;
   Thread get thread => widget.thread;
-  int get threadReplyCount => (thread?.threadPostCount ?? 1) - 1;
+  int get threadReplyCount => (thread.threadPostCount ?? 1) - 1;
 
   set postIsLiked(bool value) => post?.postIsLiked = value;
   set postLikeCount(int value) => post?.postLikeCount = value;
 
   @override
   Widget build(BuildContext context) => Column(children: <Widget>[
-        DefaultTextStyle(
-          style: Theme.of(context).textTheme.caption,
+        InkWell(
           child: Padding(
-            padding: _kPaddingHorizontal,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                _buildCounterLike(),
-                _buildCounterReply(),
-              ],
-            ),
+            padding: const EdgeInsets.all(_kThreadWidgetPadding),
+            child: _buildCounters(context),
+          ),
+          onTap: () => Navigator.of(context).push(
+            MaterialPageRoute(builder: (_) => ThreadViewScreen(thread)),
           ),
         ),
-        Divider(indent: 10),
+        Divider(
+          height: 0,
+          indent: _kThreadWidgetPadding,
+          endIndent: _kThreadWidgetPadding,
+        ),
         IconTheme(
           data: Theme.of(context).iconTheme.copyWith(size: 20),
           child: Row(
@@ -204,7 +208,14 @@ class _ThreadWidgetActionsState extends State<_ThreadWidgetActions> {
                 child: FlatButton.icon(
                   icon: Icon(FontAwesomeIcons.commentAlt),
                   label: Text('Reply'),
-                  onPressed: null,
+                  onPressed: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => ThreadViewScreen(
+                        thread,
+                        enablePostEditor: true,
+                      ),
+                    ),
+                  ),
                 ),
               ),
               Expanded(
@@ -221,7 +232,7 @@ class _ThreadWidgetActionsState extends State<_ThreadWidgetActions> {
         ),
       ]);
 
-  _buildButtonLike() => FlatButton.icon(
+  Widget _buildButtonLike() => FlatButton.icon(
         icon: postIsLiked
             ? const Icon(FontAwesomeIcons.solidHeart)
             : const Icon(FontAwesomeIcons.heart),
@@ -233,27 +244,60 @@ class _ThreadWidgetActionsState extends State<_ThreadWidgetActions> {
                 : postIsLiked ? _unlikePost : _likePost,
       );
 
-  _buildCounterLike() {
-    if (postLikeCount == 0) return const SizedBox.shrink();
-    final textStyle = DefaultTextStyle.of(context).style;
+  Widget _buildCounterLike(TextStyle textStyle) {
+    if (postLikeCount == 0) return null;
 
-    return Row(
-      children: <Widget>[
-        Icon(
+    final inlineSpans = <InlineSpan>[
+      WidgetSpan(
+        alignment: PlaceholderAlignment.middle,
+        child: Icon(
           postIsLiked ? FontAwesomeIcons.solidHeart : FontAwesomeIcons.heart,
           color: textStyle.color,
           size: textStyle.fontSize,
         ),
-        Text(" ${formatNumber(postLikeCount)}"),
-      ],
+      ),
+      TextSpan(
+        text: " ${formatNumber(postLikeCount)}",
+        style: textStyle,
+      ),
+    ];
+
+    return RichText(
+      text: TextSpan(children: inlineSpans),
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
     );
   }
 
-  _buildCounterReply() => threadReplyCount > 0
-      ? Text("${formatNumber(threadReplyCount)} Replies")
-      : const SizedBox.shrink();
+  Widget _buildCounterReply(TextStyle textStyle) => threadReplyCount > 0
+      ? Text(
+          threadReplyCount > 1
+              ? "${formatNumber(threadReplyCount)} replies"
+              : '1 reply',
+          style: textStyle,
+          textScaleFactor: 1,
+        )
+      : null;
 
-  _likePost() => prepareForApiAction(context, () {
+  Widget _buildCounters(BuildContext context) {
+    final textStyle = Theme.of(context).textTheme.caption;
+    final like = _buildCounterLike(textStyle);
+    final reply = _buildCounterReply(textStyle);
+    if (like == null && reply == null) {
+      return const SizedBox.shrink();
+    }
+
+    final children = <Widget>[];
+    if (like != null) children.add(like);
+    if (reply != null) children.add(reply);
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: children,
+    );
+  }
+
+  void _likePost() => prepareForApiAction(context, () {
         if (_isLiking) return;
         setState(() => _isLiking = true);
 
@@ -268,7 +312,7 @@ class _ThreadWidgetActionsState extends State<_ThreadWidgetActions> {
         );
       });
 
-  _unlikePost() => prepareForApiAction(context, () {
+  void _unlikePost() => prepareForApiAction(context, () {
         if (_isLiking) return;
         setState(() => _isLiking = true);
 

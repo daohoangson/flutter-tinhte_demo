@@ -43,7 +43,7 @@ class _PostActionsWidgetState extends State<_PostActionsWidget> {
             buttons.add(buildPostButton(
               context,
               'Reply',
-              onTap: () => PostEditorWidget.enable(
+              onTap: () => Provider.of<PostEditorData>(context).enable(
                 context,
                 parentPost: Provider.of<Post>(context),
               ),

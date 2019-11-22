@@ -16,10 +16,12 @@ const _kPopupActionShare = 'share';
 
 class ThreadViewScreen extends StatefulWidget {
   final Thread thread;
+  final bool enablePostEditor;
   final Map initialJson;
 
   ThreadViewScreen(
     this.thread, {
+    this.enablePostEditor = false,
     this.initialJson,
     Key key,
   })  : assert(thread != null),
@@ -41,6 +43,9 @@ class _ThreadViewState extends State<ThreadViewScreen> {
   void initState() {
     super.initState();
     _ped = PostEditorData(thread);
+
+    if (widget.enablePostEditor)
+      WidgetsBinding.instance.addPostFrameCallback((_) => _ped.enable(context));
   }
 
   @override
@@ -125,8 +130,10 @@ class _ThreadViewState extends State<ThreadViewScreen> {
 
     if (thread.creatorHasVerifiedBadge == true) {
       buffer.write(' ');
-      final icon = Icon(FontAwesomeIcons.solidCheckCircle, size: fontSize);
-      inlineSpans.add(WidgetSpan(child: icon));
+      inlineSpans.add(WidgetSpan(
+        alignment: PlaceholderAlignment.middle,
+        child: Icon(FontAwesomeIcons.solidCheckCircle, size: fontSize),
+      ));
     }
 
     return Builder(
@@ -140,7 +147,6 @@ class _ThreadViewState extends State<ThreadViewScreen> {
               ),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              textScaleFactor: 1,
             ));
   }
 
