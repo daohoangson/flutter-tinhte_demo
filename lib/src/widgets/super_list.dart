@@ -65,12 +65,13 @@ class FetchContext<T> {
 
   Iterable<T> get items => _items;
 
-  FetchContext(
-    this.state, {
+  FetchContext({
     this.apiMethod,
-    @required this.id,
+    this.id = FetchContextId.FetchCustom,
     @required this.path,
-  }) : assert(id != null);
+    @required this.state,
+  })  : assert(path != null),
+        assert(state != null);
 
   void addItem(T item) {
     _items ??= [];
@@ -78,7 +79,7 @@ class FetchContext<T> {
   }
 }
 
-enum FetchContextId { FetchInitial, FetchNext, FetchPrev }
+enum FetchContextId { FetchCustom, FetchInitial, FetchNext, FetchPrev }
 
 class SuperListItemFullWidth extends StatelessWidget {
   final Widget child;
@@ -137,8 +138,7 @@ class SuperListState<T> extends State<SuperListView<T>> {
       if (registration != null) _complexItems.add(registration);
     });
 
-    WidgetsBinding.instance
-        .addPostFrameCallback((_) => fetchInitial(clearItems: false));
+    WidgetsBinding.instance.addPostFrameCallback((_) => fetch());
   }
 
   @override
@@ -211,13 +211,18 @@ class SuperListState<T> extends State<SuperListView<T>> {
     return built;
   }
 
-  Future<void> fetchInitial({bool clearItems = true}) => _fetch(
-        FetchContext(
-          this,
-          apiMethod: widget.apiMethodInitial,
-          id: FetchContextId.FetchInitial,
-          path: widget.fetchPathInitial,
-        ),
+  Future<void> fetch({
+    bool clearItems = false,
+    FetchContext fc,
+  }) =>
+      _fetch(
+        fc ??
+            FetchContext(
+              apiMethod: widget.apiMethodInitial,
+              id: FetchContextId.FetchInitial,
+              path: widget.fetchPathInitial,
+              state: this,
+            ),
         onPreFetch: () {
           if (clearItems) _items.clear();
           _fetchPathNext = null;
@@ -233,18 +238,18 @@ class SuperListState<T> extends State<SuperListView<T>> {
 
   Future<void> fetchNext({int scrollToRelativeIndex}) => _fetch(
         FetchContext(
-          this,
           id: FetchContextId.FetchNext,
           path: _fetchPathNext,
+          state: this,
         )..scrollToRelativeIndex = scrollToRelativeIndex,
         onPreFetch: () => _fetchPathNext = null,
       );
 
   Future<void> fetchPrev() => _fetch(
         FetchContext(
-          this,
           id: FetchContextId.FetchPrev,
           path: _fetchPathPrev,
+          state: this,
         ),
         onPreFetch: () => _fetchPathPrev = null,
       );
@@ -411,7 +416,7 @@ class SuperListState<T> extends State<SuperListView<T>> {
   Future<void> _onRefresh() {
     if (_isRefreshing) return Future.value();
     _isRefreshing = true;
-    return fetchInitial().whenComplete(() => _isRefreshing = false);
+    return fetch(clearItems: true).whenComplete(() => _isRefreshing = false);
   }
 }
 

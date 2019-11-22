@@ -32,6 +32,7 @@ class Thread {
   final int threadId;
   bool threadIsDeleted;
   bool threadIsFollowed;
+  bool threadIsNew;
   bool threadIsPublished;
   bool threadIsSticky;
   int threadPostCount;
@@ -83,17 +84,14 @@ class ThreadImage {
       _$ThreadImageFromJson(json);
 }
 
-@JsonSerializable(createToJson: false)
+@JsonSerializable(createToJson: false, fieldRename: FieldRename.snake)
 class ThreadLinks {
   String detail;
 
-  @JsonKey(name: "first_post")
   String firstPost;
 
-  @JsonKey(name: "first_poster")
   String firstPoster;
 
-  @JsonKey(name: "first_poster_avatar")
   String firstPosterAvatar;
 
   String followers;
@@ -102,15 +100,15 @@ class ThreadLinks {
 
   String image;
 
-  @JsonKey(name: "last_post")
   String lastPost;
 
-  @JsonKey(name: "last_poster")
   String lastPoster;
 
   String permalink;
 
   String posts;
+
+  String postsUnread;
 
   ThreadLinks();
   factory ThreadLinks.fromJson(Map<String, dynamic> json) =>

@@ -211,9 +211,32 @@ class PostsState extends State<PostsWidget> {
 
     if (json.containsKey('thread')) {
       final thread = Thread.fromJson(json['thread']);
-      setState(() => _thread = thread);
+      setState(() {
+        _thread = thread;
+
+        if (fc.id == FetchContextId.FetchInitial &&
+            thread.links?.postsUnread != null)
+          WidgetsBinding.instance
+              .addPostFrameCallback((_) => _showSnackBarUnread(fc.state));
+      });
     }
   }
+
+  void _showSnackBarUnread(SuperListState<_PostListItem> sls) =>
+      Scaffold.of(context).showSnackBar(SnackBar(
+        action: SnackBarAction(
+          label: 'YES',
+          onPressed: () => sls.fetch(
+            clearItems: true,
+            fc: FetchContext<_PostListItem>(
+              path: _thread.links.postsUnread,
+              state: sls,
+            ),
+          ),
+        ),
+        content: Text('Continue reading?'),
+        duration: const Duration(seconds: 10),
+      ));
 
   void _scrollToPage(SuperListState<_PostListItem> state, int page) {
     var i = -1;

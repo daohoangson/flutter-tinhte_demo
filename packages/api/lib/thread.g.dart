@@ -18,6 +18,7 @@ Thread _$ThreadFromJson(Map<String, dynamic> json) {
     ..threadCreateDate = json['thread_create_date'] as int
     ..threadIsDeleted = json['thread_is_deleted'] as bool
     ..threadIsFollowed = json['thread_is_followed'] as bool
+    ..threadIsNew = json['thread_is_new'] as bool
     ..threadIsPublished = json['thread_is_published'] as bool
     ..threadIsSticky = json['thread_is_sticky'] as bool
     ..threadPostCount = json['thread_post_count'] as int
@@ -61,6 +62,7 @@ Map<String, dynamic> _$ThreadToJson(Thread instance) => <String, dynamic>{
       'thread_id': instance.threadId,
       'thread_is_deleted': instance.threadIsDeleted,
       'thread_is_followed': instance.threadIsFollowed,
+      'thread_is_new': instance.threadIsNew,
       'thread_is_published': instance.threadIsPublished,
       'thread_is_sticky': instance.threadIsSticky,
       'thread_post_count': instance.threadPostCount,
@@ -104,7 +106,8 @@ ThreadLinks _$ThreadLinksFromJson(Map<String, dynamic> json) {
     ..lastPost = json['last_post'] as String
     ..lastPoster = json['last_poster'] as String
     ..permalink = json['permalink'] as String
-    ..posts = json['posts'] as String;
+    ..posts = json['posts'] as String
+    ..postsUnread = json['posts_unread'] as String;
 }
 
 ThreadPermissions _$ThreadPermissionsFromJson(Map<String, dynamic> json) {
