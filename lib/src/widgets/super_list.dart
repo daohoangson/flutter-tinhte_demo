@@ -287,8 +287,6 @@ class SuperListState<T> extends State<SuperListView<T>> {
     });
   }
 
-  void jumpTo(double value) => _scrollController?.jumpTo(value);
-
   void scrollToIndex(int index,
       {Duration duration: scrollAnimationDuration,
       AutoScrollPosition preferPosition}) {

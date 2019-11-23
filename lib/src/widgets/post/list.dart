@@ -117,13 +117,6 @@ class PostsState extends State<PostsWidget> {
           alignment: Alignment.centerLeft,
           onTap: () => _scrollToPage(state, page - 1),
         ));
-      } else {
-        children.add(_buildPageIndicatorText(
-          context,
-          "top",
-          alignment: Alignment.centerLeft,
-          onTap: () => state.jumpTo(0),
-        ));
       }
     } else if (state.canFetchPrev) {
       children.add(_buildPageIndicatorText(
