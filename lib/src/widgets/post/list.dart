@@ -186,27 +186,26 @@ class PostsState extends State<PostsWidget> {
     final firstItemPostId =
         fc.state.items.isEmpty ? null : fc.state.items.first.post?.postId;
     final linksPage = fc.linksPage ?? 1;
-    int pageOfPostId =
-        json.containsKey('page_of_post_id') ? json['page_of_post_id'] : null;
+    final pageOfPostId = json.containsKey('page_of_post_id')
+        ? json['page_of_post_id'] as int
+        : null;
 
     if (firstItemPostId != null || linksPage != 1) {
-      fc.addItem(_PostListItem.page(linksPage, fc.linksPages));
+      fc.items.add(_PostListItem.page(linksPage, fc.linksPages));
     }
 
     final items = decodePostsAndTheirReplies(json['posts']);
     for (final item in items) {
       if (firstItemPostId != null && item.postId == firstItemPostId) continue;
 
-      if (firstItemPostId == null && linksPage == 1) {
-        if (fc.items?.length == 1) {
-          fc.addItem(_PostListItem.page(linksPage, fc.linksPages));
-        }
+      if (firstItemPostId == null && linksPage == 1 && fc.items.length == 1) {
+        fc.items.add(_PostListItem.page(linksPage, fc.linksPages));
       }
 
       if (pageOfPostId != null && item.postId == pageOfPostId)
-        fc.scrollToRelativeIndex = fc.items?.length ?? 0;
+        fc.scrollToRelativeIndex = fc.items.length;
 
-      fc.addItem(item);
+      fc.items.add(item);
     }
 
     if (json.containsKey('thread')) {

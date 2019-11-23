@@ -52,6 +52,7 @@ class SuperListView<T> extends StatefulWidget {
 class FetchContext<T> {
   final ApiMethod apiMethod;
   final FetchContextId id;
+  final items = <T>[];
   final String path;
   final SuperListState<T> state;
 
@@ -61,10 +62,6 @@ class FetchContext<T> {
   String linksPrev;
   int scrollToRelativeIndex;
 
-  List<T> _items;
-
-  Iterable<T> get items => _items;
-
   FetchContext({
     this.apiMethod,
     this.id = FetchContextId.FetchCustom,
@@ -72,11 +69,6 @@ class FetchContext<T> {
     @required this.state,
   })  : assert(path != null),
         assert(state != null);
-
-  void addItem(T item) {
-    _items ??= [];
-    _items.add(item);
-  }
 }
 
 enum FetchContextId { FetchCustom, FetchInitial, FetchNext, FetchPrev }
@@ -396,11 +388,11 @@ class SuperListState<T> extends State<SuperListView<T>> {
         }
 
         final itemsLengthBefore = _items.length;
-        if (fc._items != null) {
+        if (fc.items.isNotEmpty) {
           if (fc.id == FetchContextId.FetchPrev) {
-            _items.insertAll(0, fc._items);
+            _items.insertAll(0, fc.items);
           } else {
-            _items.addAll(fc._items);
+            _items.addAll(fc.items);
           }
         }
 

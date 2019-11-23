@@ -71,16 +71,17 @@ class _HomeScreenState extends State<HomeScreen> {
   void _fetchOnSuccess(Map json, FetchContext<_HomeListItem> fc) {
     if (!json.containsKey('threads')) return;
 
+    final items = fc.items;
     List<ThreadListItem> top5;
     if (fc.id == FetchContextId.FetchInitial) {
       top5 = [];
-      fc.addItem(_HomeListItem(top5: top5));
-      fc.addItem(_HomeListItem(
+      items.add(_HomeListItem(top5: top5));
+      items.add(_HomeListItem(
         widget: SuperListItemFullWidth(
           child: ChannelsWidget(),
         ),
       ));
-      fc.addItem(_HomeListItem(
+      items.add(_HomeListItem(
         widget: SuperListItemFullWidth(
           child: FeaturePagesWidget(),
         ),
@@ -103,11 +104,11 @@ class _HomeScreenState extends State<HomeScreen> {
       if (top5 != null && top5.length < 5) {
         top5.add(tli);
       } else {
-        fc.addItem(_HomeListItem(thread: tli));
+        items.add(_HomeListItem(thread: tli));
       }
 
       if (fc.id == FetchContextId.FetchInitial && i == l - 4) {
-        fc.addItem(_HomeListItem(
+        items.add(_HomeListItem(
           widget: SuperListItemFullWidth(
             child: TrendingTagsWidget(),
           ),
@@ -116,7 +117,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     if (fc.id == FetchContextId.FetchInitial) {
-      fc.addItem(_HomeListItem(
+      items.add(_HomeListItem(
         widget: SuperListItemFullWidth(
           child: TopThreadsWidget(),
         ),

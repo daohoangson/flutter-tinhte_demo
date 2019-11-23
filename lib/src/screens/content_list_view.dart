@@ -29,19 +29,16 @@ class ContentListViewScreen extends StatelessWidget {
               '&_bdImageApiThreadThumbnailHeight=sh',
           fetchOnSuccess: _fetchOnSuccess,
           itemBuilder: (_, __, thread) => HomeThreadWidget(
-                thread,
-                imageWidth: kContentListViewThumbnailWidth,
-              ),
+            thread,
+            imageWidth: kContentListViewThumbnailWidth,
+          ),
         ),
       );
 
   void _fetchOnSuccess(Map json, FetchContext<ThreadListItem> fc) {
     if (!json.containsKey('threads')) return;
 
-    final threadsJson = json['threads'] as List;
-    for (final threadJson in threadsJson) {
-      final tli = ThreadListItem.fromJson(threadJson);
-      fc.addItem(tli);
-    }
+    final list = json['threads'] as List;
+    fc.items.addAll(list.map((j) => ThreadListItem.fromJson(j)));
   }
 }

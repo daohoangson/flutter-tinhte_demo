@@ -69,7 +69,7 @@ class NavigationWidget extends StatelessWidget {
     if (!json.containsKey('elements')) return;
 
     final list = json['elements'] as List;
-    list.forEach((j) => fc.addItem(navigation.Element.fromJson(j)));
+    fc.items.addAll(list.map((j) => navigation.Element.fromJson(j)));
   }
 }
 

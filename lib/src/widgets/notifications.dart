@@ -104,7 +104,7 @@ class _NotificationsState extends State<NotificationsWidget> {
   void _fetchOnSuccess(Map json, FetchContext<api.Notification> fc) {
     if (json.containsKey('notifications')) {
       final list = json['notifications'] as List;
-      list.forEach((j) => fc.addItem(api.Notification.fromJson(j)));
+      fc.items.addAll(list.map((j) => api.Notification.fromJson(j)));
     }
 
     if (fc.id == FetchContextId.FetchInitial) {

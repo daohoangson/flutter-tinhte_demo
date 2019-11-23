@@ -51,16 +51,15 @@ class ThreadsWidget extends StatelessWidget {
   void _fetchOnSuccess(Map json, FetchContext<Thread> fc) {
     if (!json.containsKey(threadsKey)) return;
 
-    final jsonThreads = json[threadsKey] as List;
-    jsonThreads.forEach((j) {
+    final list = json[threadsKey] as List;
+    for (final j in list) {
       final thread = Thread.fromJson(j);
-      if (thread.threadId == null || thread.firstPost == null) return;
+      if (thread.threadId == null || thread.firstPost == null) continue;
 
-      if (thread.forum == null && thread.forumId == forum?.forumId) {
+      if (thread.forum == null && thread.forumId == forum?.forumId)
         thread.forum = forum;
-      }
 
-      fc.addItem(thread);
-    });
+      fc.items.add(thread);
+    }
   }
 }
