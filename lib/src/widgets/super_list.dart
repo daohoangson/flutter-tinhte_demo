@@ -375,14 +375,14 @@ class SuperListState<T> extends State<SuperListView<T>> {
   void _fetchOnComplete(FetchContext<T> fc) => setState(() {
         _isFetching = false;
 
-        _fetchPathNext = fc.linksNext;
-        _fetchPathPrev = fc.linksPrev;
         final linksPage = fc.linksPage ?? 1;
         if (_fetchedPageMin == null || _fetchedPageMin > linksPage) {
           _fetchedPageMin = linksPage;
+          _fetchPathPrev = fc.linksPrev;
         }
         if (_fetchedPageMax == null || _fetchedPageMax < linksPage) {
           _fetchedPageMax = linksPage;
+          _fetchPathNext = fc.linksNext;
         }
 
         final itemsLengthBefore = _items.length;
