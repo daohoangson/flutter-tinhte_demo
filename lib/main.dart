@@ -12,6 +12,7 @@ void main() {
   FlutterError.onError = Crashlytics.instance.recordFlutterError;
 
   runZoned<Future<void>>(() async {
+    WidgetsFlutterBinding.ensureInitialized();
     final darkTheme = await DarkTheme.create();
     runApp(MyApp(darkTheme: darkTheme));
   }, onError: Crashlytics.instance.recordError);
