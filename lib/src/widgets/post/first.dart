@@ -5,9 +5,47 @@ class _FirstPostWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final post = Provider.of<Post>(context);
     final thread = Provider.of<Thread>(context);
-    var widget = _buildPost(context, post, thread);
 
-    if (thread.threadImage?.displayMode == 'cover') {
+    final _isTinhteFact = isTinhteFact(thread);
+    final _isThreadTitleRedundant =
+        _isTinhteFact || isThreadTitleRedundant(thread, post);
+
+    Widget widget = Padding(
+      padding: const EdgeInsets.only(bottom: 20.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          ThreadNavigationWidget(thread),
+          _isThreadTitleRedundant
+              ? widget0
+              : Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: kPaddingHorizontal,
+                  ),
+                  child: Text(
+                    thread.threadTitle,
+                    maxLines: null,
+                    style: Theme.of(context).textTheme.title,
+                  ),
+                ),
+          _isTinhteFact
+              ? Padding(
+                  child: TinhteFact(thread, post: post),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: kPaddingHorizontal,
+                  ),
+                )
+              : _PostBodyWidget(),
+          _buildTags(context, thread) ?? widget0,
+          _isTinhteFact || thread.threadImage?.displayMode == 'cover'
+              ? widget0
+              : _PostAttachmentsWidget.forPost(post) ?? widget0,
+          _PostActionsWidget(showPostCreateDate: false),
+        ],
+      ),
+    );
+
+    if (!_isTinhteFact && thread.threadImage?.displayMode == 'cover') {
       widget = Column(
         children: <Widget>[
           ThreadImageWidget(
@@ -21,34 +59,6 @@ class _FirstPostWidget extends StatelessWidget {
 
     return widget;
   }
-
-  Widget _buildPost(BuildContext context, Post post, Thread thread) => Padding(
-        padding: const EdgeInsets.only(bottom: 20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            ThreadNavigationWidget(thread),
-            isThreadTitleRedundant(thread, post)
-                ? widget0
-                : Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: kPaddingHorizontal,
-                    ),
-                    child: Text(
-                      thread.threadTitle,
-                      maxLines: null,
-                      style: Theme.of(context).textTheme.title,
-                    ),
-                  ),
-            _PostBodyWidget(),
-            _buildTags(context, thread) ?? widget0,
-            thread.threadImage?.displayMode == 'cover'
-                ? widget0
-                : _PostAttachmentsWidget.forPost(post) ?? widget0,
-            _PostActionsWidget(showPostCreateDate: false),
-          ],
-        ),
-      );
 
   Widget _buildTags(BuildContext context, Thread thread) {
     if (thread.threadTags?.isNotEmpty != true) return null;

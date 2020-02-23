@@ -12,12 +12,16 @@ class ThreadWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final _isTinhteFact = isTinhteFact(thread);
+    final _isThreadTitleRedundant =
+        _isTinhteFact || isThreadTitleRedundant(thread);
+
     final children = <Widget>[
       _kThreadWidgetSpacing,
       _buildTextPadding(_buildInfo(context)),
     ];
 
-    if (!isThreadTitleRedundant(thread)) {
+    if (!_isThreadTitleRedundant) {
       children.addAll([
         _kThreadWidgetSpacing,
         _buildTextPadding(_buildTitle(context)),
@@ -26,11 +30,13 @@ class ThreadWidget extends StatelessWidget {
 
     children.addAll([
       _kThreadWidgetSpacing,
-      _buildTextPadding(_buildBody(context)),
+      _buildTextPadding(
+        _isTinhteFact ? TinhteFact(thread) : _buildBody(context),
+      ),
     ]);
 
     final image = _buildImage();
-    if (image != null) {
+    if (!_isTinhteFact && image != null) {
       children.addAll([
         _kThreadWidgetSpacing,
         image,

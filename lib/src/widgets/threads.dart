@@ -16,6 +16,7 @@ import '../api.dart';
 import '../intl.dart';
 import 'super_list.dart';
 import 'image.dart';
+import 'tinhte_fact.dart';
 
 part 'thread/navigation.dart';
 part 'thread/widget.dart';
