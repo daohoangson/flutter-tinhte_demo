@@ -20,6 +20,7 @@ import 'html.dart';
 import 'image.dart';
 import 'super_list.dart';
 import 'threads.dart';
+import 'tinhte_fact.dart';
 
 part 'post/actions.dart';
 part 'post/attachments.dart';
