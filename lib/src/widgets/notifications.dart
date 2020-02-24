@@ -106,10 +106,6 @@ class _NotificationsState extends State<NotificationsWidget> {
       final list = json['notifications'] as List;
       fc.items.addAll(list.map((j) => api.Notification.fromJson(j)));
     }
-
-    if (fc.id == FetchContextId.FetchInitial) {
-      apiPost(ApiCaller.stateless(fc.state.context), 'notifications/read');
-    }
   }
 
   void _onNotificationData(int newId) {
