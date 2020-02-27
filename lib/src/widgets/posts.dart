@@ -15,12 +15,13 @@ import '../config.dart';
 import '../constants.dart';
 import '../intl.dart';
 import '../link.dart';
+import 'tinhte/background_post.dart';
+import 'tinhte/tinhte_fact.dart';
 import 'post_editor.dart';
 import 'html.dart';
 import 'image.dart';
 import 'super_list.dart';
 import 'threads.dart';
-import 'tinhte_fact.dart';
 
 part 'post/actions.dart';
 part 'post/attachments.dart';

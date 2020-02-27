@@ -14,9 +14,10 @@ import '../screens/node_view.dart';
 import '../screens/thread_view.dart';
 import '../api.dart';
 import '../intl.dart';
+import 'tinhte/background_post.dart';
+import 'tinhte/tinhte_fact.dart';
 import 'super_list.dart';
 import 'image.dart';
-import 'tinhte_fact.dart';
 
 part 'thread/navigation.dart';
 part 'thread/widget.dart';

@@ -6,9 +6,11 @@ class _FirstPostWidget extends StatelessWidget {
     final post = Provider.of<Post>(context);
     final thread = Provider.of<Thread>(context);
 
+    final _isBackgroundPost = isBackgroundPost(post);
     final _isTinhteFact = isTinhteFact(thread);
+    final _isCustomPost = _isBackgroundPost || _isTinhteFact;
     final _isThreadTitleRedundant =
-        _isTinhteFact || isThreadTitleRedundant(thread, post);
+        _isCustomPost || isThreadTitleRedundant(thread, post);
 
     Widget widget = Padding(
       padding: const EdgeInsets.only(bottom: 20.0),
@@ -28,16 +30,20 @@ class _FirstPostWidget extends StatelessWidget {
                     style: Theme.of(context).textTheme.title,
                   ),
                 ),
-          _isTinhteFact
+          _isCustomPost
               ? Padding(
-                  child: TinhteFact(thread, post: post),
+                  child: _isBackgroundPost
+                      ? BackgroundPost(post)
+                      : (_isTinhteFact
+                          ? TinhteFact(thread, post: post)
+                          : widget0),
                   padding: const EdgeInsets.symmetric(
                     horizontal: kPaddingHorizontal,
                   ),
                 )
               : _PostBodyWidget(),
           _buildTags(context, thread) ?? widget0,
-          _isTinhteFact || thread.threadImage?.displayMode == 'cover'
+          _isCustomPost || thread.threadImage?.displayMode == 'cover'
               ? widget0
               : _PostAttachmentsWidget.forPost(post) ?? widget0,
           _PostActionsWidget(showPostCreateDate: false),
@@ -45,7 +51,7 @@ class _FirstPostWidget extends StatelessWidget {
       ),
     );
 
-    if (!_isTinhteFact && thread.threadImage?.displayMode == 'cover') {
+    if (!_isCustomPost && thread.threadImage?.displayMode == 'cover') {
       widget = Column(
         children: <Widget>[
           ThreadImageWidget(

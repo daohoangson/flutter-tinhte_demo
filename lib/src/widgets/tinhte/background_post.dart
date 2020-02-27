@@ -1,33 +1,28 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:tinhte_api/post.dart';
-import 'package:tinhte_api/thread.dart';
 import 'package:tinhte_demo/src/widgets/posts.dart';
 
-import 'html.dart';
-import 'image.dart';
+import '../html.dart';
 
-bool isTinhteFact(Thread thread) =>
-    thread.threadTags?.values
-        ?.fold(false, (prev, tagText) => prev || tagText == 'tinhtefact') ??
+bool isBackgroundPost(Post post) =>
+    post.postBodyHtml
+        ?.contains('<span class="metaBbCode meta-thread_background_url">') ??
     false;
 
-class TinhteFact extends StatelessWidget {
-  final Thread thread;
+class BackgroundPost extends StatelessWidget {
   final Post post;
 
-  String get postBodyHtml => (post ?? thread.firstPost)?.postBodyHtml ?? '';
-
-  const TinhteFact(
-    this.thread, {
+  const BackgroundPost(
+    this.post, {
     Key key,
-    this.post,
-  })  : assert(thread != null),
+  })  : assert(post != null),
         super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final theme = ThemeData.localize(ThemeData.dark(), Theme.of(context).textTheme);
+    final theme =
+        ThemeData.localize(ThemeData.dark(), Theme.of(context).textTheme);
 
     return Theme(
       child: Column(
@@ -38,9 +33,7 @@ class TinhteFact extends StatelessWidget {
               borderRadius: BorderRadius.circular(kPaddingHorizontal),
               color: theme.primaryColorDark,
             ),
-            child: thread.threadImage != null
-                ? _buildUserImage(theme)
-                : _buildWithBackground(theme),
+            child: _buildWithBackground(theme),
           ),
         ],
       ),
@@ -48,37 +41,12 @@ class TinhteFact extends StatelessWidget {
     );
   }
 
-  Widget _buildUserImage(ThemeData theme) => Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(kPaddingHorizontal),
-            child: Text(
-              thread.threadTitle,
-              maxLines: null,
-              style: theme.textTheme.title.copyWith(
-                color: theme.accentColor,
-                fontWeight: FontWeight.bold,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ),
-          ThreadImageWidget(
-            image: thread.threadImage,
-            threadId: thread.threadId,
-          ),
-          TinhteHtmlWidget(
-            "<center>$postBodyHtml</center>",
-            textStyle: theme.textTheme.body1,
-          ),
-        ],
-      );
-
   Widget _buildWithBackground(ThemeData theme) {
     final regExp =
         RegExp(r'<span class="metaBbCode meta-thread_background_url">.+'
             r'<a href="([^"]+)"[^>]+>([^<]+)</a>'
             r'</span></span>');
+    final postBodyHtml = post.postBodyHtml;
     final m = regExp.firstMatch(postBodyHtml);
     final href = m?.group(1);
     final text = m?.group(2);
@@ -86,7 +54,6 @@ class TinhteFact extends StatelessWidget {
     final _postBodyHtml = threadBackgroundUrl != null
         ? postBodyHtml.replaceAll(m.group(0), '')
         : postBodyHtml;
-    print(postBodyHtml);
 
     return Stack(
       children: <Widget>[
