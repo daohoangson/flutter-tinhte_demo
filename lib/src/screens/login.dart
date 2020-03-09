@@ -1,3 +1,4 @@
+import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -35,12 +36,21 @@ class LoginForm extends StatefulWidget {
 class _LoginFormState extends State<LoginForm> {
   final formKey = GlobalKey<FormState>();
 
+  bool _canLoginApple = false;
   bool _isLoggingIn = false;
 
   String username;
   String password;
 
   _LoginFormState({this.username = '', this.password = ''});
+
+  @override
+  void initState() {
+    super.initState();
+
+    AppleSignIn.isAvailable()
+        .then((ok) => ok ? setState(() => _canLoginApple = true) : null);
+  }
 
   @override
   Widget build(BuildContext context) => LayoutBuilder(
@@ -54,6 +64,9 @@ class _LoginFormState extends State<LoginForm> {
               _buildButton('Submit', _login),
               _buildButton('Login with Facebook', _loginFacebook),
               _buildButton('Login with Google', _loginGoogle),
+              _canLoginApple
+                  ? AppleSignInButton(onPressed: _loginApple)
+                  : const SizedBox.shrink(),
             ],
           ),
         ),
@@ -122,6 +135,41 @@ class _LoginFormState extends State<LoginForm> {
         .login(username, password)
         .then((token) => _loginOnToken(apiAuth, token))
         .catchError((e) => _showErrorDialog)
+        .whenComplete(() => setState(() => _isLoggingIn = false));
+  }
+
+  void _loginApple() {
+    if (_isLoggingIn) return;
+    setState(() => _isLoggingIn = true);
+
+    final apiAuth = ApiAuth.of(context, listen: false);
+    final api = apiAuth.api;
+    final req = AppleIdRequest(requestedScopes: [Scope.email]);
+
+    AppleSignIn.performRequests([req])
+        .then<AppleIdCredential>((result) {
+          switch (result.status) {
+            case AuthorizationStatus.authorized:
+              return result.credential;
+            case AuthorizationStatus.cancelled:
+              return Future.error('Login with Apple has been cancelled.');
+            case AuthorizationStatus.error:
+              return Future.error(result.error.localizedDescription);
+          }
+
+          return Future.error(result.status.toString());
+        })
+        .then((appleIdCredential) =>
+            api.postJson('oauth/token/apple', bodyFields: {
+              'client_id': api.clientId,
+              'client_secret': api.clientSecret,
+              'apple_token':
+                  String.fromCharCodes(appleIdCredential.identityToken),
+            }))
+        .then<OauthToken>(
+            (json) => _loginOnExternalJson(api, ObtainMethod.Apple, json))
+        .then((token) => _loginOnToken(apiAuth, token))
+        .catchError(_showErrorDialog)
         .whenComplete(() => setState(() => _isLoggingIn = false));
   }
 
