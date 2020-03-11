@@ -1,4 +1,5 @@
-import 'package:apple_sign_in/apple_sign_in.dart';
+import 'package:apple_sign_in/apple_sign_in.dart' as apple;
+import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -48,7 +49,7 @@ class _LoginFormState extends State<LoginForm> {
   void initState() {
     super.initState();
 
-    AppleSignIn.isAvailable()
+    apple.AppleSignIn.isAvailable()
         .then((ok) => ok ? setState(() => _canLoginApple = true) : null);
   }
 
@@ -61,11 +62,23 @@ class _LoginFormState extends State<LoginForm> {
             <Widget>[
               _buildInputPadding(_buildUsername()),
               _buildInputPadding(_buildPassword()),
-              _buildButton('Submit', _login),
-              _buildButton('Login with Facebook', _loginFacebook),
-              _buildButton('Login with Google', _loginGoogle),
+              RaisedButton(
+                child: const Text('Submit'),
+                onPressed: _isLoggingIn ? null : _login,
+              ),
+              FacebookSignInButton(
+                onPressed: _isLoggingIn ? null : _loginFacebook,
+                text: 'Sign in with Facebook',
+              ),
+              GoogleSignInButton(
+                darkMode: true,
+                onPressed: _isLoggingIn ? null : _loginGoogle,
+              ),
               _canLoginApple
-                  ? AppleSignInButton(onPressed: _loginApple)
+                  ? AppleSignInButton(
+                      onPressed: _isLoggingIn ? null : _loginApple,
+                      style: AppleButtonStyle.black,
+                    )
                   : const SizedBox.shrink(),
             ],
           ),
@@ -75,11 +88,6 @@ class _LoginFormState extends State<LoginForm> {
   Widget _buildBox(BoxConstraints box, List<Widget> children) => ListView(
         padding: const EdgeInsets.all(20.0),
         children: children,
-      );
-
-  Widget _buildButton(String text, VoidCallback onPressed) => RaisedButton(
-        child: Text(text),
-        onPressed: _isLoggingIn ? null : onPressed,
       );
 
   Widget _buildInputPadding(Widget child) => Padding(
@@ -144,16 +152,16 @@ class _LoginFormState extends State<LoginForm> {
 
     final apiAuth = ApiAuth.of(context, listen: false);
     final api = apiAuth.api;
-    final req = AppleIdRequest(requestedScopes: [Scope.email]);
+    final req = apple.AppleIdRequest(requestedScopes: [apple.Scope.email]);
 
-    AppleSignIn.performRequests([req])
-        .then<AppleIdCredential>((result) {
+    apple.AppleSignIn.performRequests([req])
+        .then<apple.AppleIdCredential>((result) {
           switch (result.status) {
-            case AuthorizationStatus.authorized:
+            case apple.AuthorizationStatus.authorized:
               return result.credential;
-            case AuthorizationStatus.cancelled:
+            case apple.AuthorizationStatus.cancelled:
               return Future.error('Login with Apple has been cancelled.');
-            case AuthorizationStatus.error:
+            case apple.AuthorizationStatus.error:
               return Future.error(result.error.localizedDescription);
           }
 
