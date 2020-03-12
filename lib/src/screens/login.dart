@@ -142,7 +142,7 @@ class _LoginFormState extends State<LoginForm> {
     apiAuth.api
         .login(username, password)
         .then((token) => _onResult(apiAuth, _LoginResult.success(token)))
-        .catchError((e) => _showErrorDialog)
+        .catchError((e) => _showError(context, e))
         .whenComplete(() => setState(() => _isLoggingIn = false));
   }
 
@@ -176,7 +176,7 @@ class _LoginFormState extends State<LoginForm> {
             }))
         .then((json) => _onExternalJson(api, ObtainMethod.Apple, json))
         .then((result) => _onResult(apiAuth, result))
-        .catchError(_showErrorDialog)
+        .catchError((e) => _showError(context, e))
         .whenComplete(() => setState(() => _isLoggingIn = false));
   }
 
@@ -209,7 +209,7 @@ class _LoginFormState extends State<LoginForm> {
             }))
         .then((json) => _onExternalJson(api, ObtainMethod.Facebook, json))
         .then((result) => _onResult(apiAuth, result))
-        .catchError(_showErrorDialog)
+        .catchError((e) => _showError(context, e))
         .whenComplete(() => setState(() => _isLoggingIn = false));
   }
 
@@ -245,7 +245,7 @@ class _LoginFormState extends State<LoginForm> {
             }))
         .then((json) => _onExternalJson(api, ObtainMethod.Google, json))
         .then((result) => _onResult(apiAuth, result))
-        .catchError(_showErrorDialog)
+        .catchError((e) => _showError(context, e))
         .whenComplete(() => setState(() => _isLoggingIn = false));
   }
 
@@ -340,13 +340,10 @@ class _LoginFormState extends State<LoginForm> {
     });
   }
 
-  void _showErrorDialog(error) => showDialog(
-        context: context,
-        builder: (_) => AlertDialog(
-          title: Text('Login error'),
-          content: Text(error is ApiError ? error.message : "$error"),
-        ),
-      );
+  void _showError(BuildContext context, error) =>
+      Scaffold.of(context).showSnackBar(SnackBar(
+          backgroundColor: Colors.redAccent,
+          content: Text(error is ApiError ? error.message : "$error")));
 }
 
 class LoginScreenRoute extends MaterialPageRoute {
