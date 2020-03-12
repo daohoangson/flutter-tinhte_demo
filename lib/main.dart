@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 
 import 'src/screens/home.dart';
 import 'src/widgets/menu/dark_theme.dart';
+import 'src/widgets/dismiss_keyboard.dart';
 import 'src/api.dart';
 import 'src/push_notification.dart';
 
@@ -32,13 +33,15 @@ class MyApp extends StatelessWidget {
 
   Widget _buildApp() => ApiApp(
         child: PushNotificationApp(
-          child: MaterialApp(
-            darkTheme: _theme(_themeDark),
-            home: HomeScreen(),
-            key: ValueKey("darkTheme=${darkTheme.value}"),
-            navigatorKey: primaryNavKey,
-            theme: _theme(_themeLight),
-            title: 'Tinh tế Demo',
+          child: DismissKeyboard(
+            MaterialApp(
+              darkTheme: _theme(_themeDark),
+              home: HomeScreen(),
+              key: ValueKey("darkTheme=${darkTheme.value}"),
+              navigatorKey: primaryNavKey,
+              theme: _theme(_themeLight),
+              title: 'Tinh tế Demo',
+            ),
           ),
           primaryNavKey: primaryNavKey,
         ),

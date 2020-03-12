@@ -209,6 +209,9 @@ class PostEditorData extends ChangeNotifier {
     _isEnabled = false;
     notifyListeners();
 
-    FocusScope.of(context).requestFocus(new FocusNode());
+    final focus = FocusScope.of(context);
+    if (!focus.hasPrimaryFocus) {
+      focus.unfocus();
+    }
   }
 }
