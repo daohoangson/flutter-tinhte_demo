@@ -141,7 +141,7 @@ class _LoginFormState extends State<LoginForm> {
     final apiAuth = ApiAuth.of(context, listen: false);
     apiAuth.api
         .login(username, password)
-        .then((token) => _loginOnToken(apiAuth, token))
+        .then((token) => _onResult(apiAuth, _LoginResult.success(token)))
         .catchError((e) => _showErrorDialog)
         .whenComplete(() => setState(() => _isLoggingIn = false));
   }
@@ -174,9 +174,8 @@ class _LoginFormState extends State<LoginForm> {
               'apple_token':
                   String.fromCharCodes(appleIdCredential.identityToken),
             }))
-        .then<OauthToken>(
-            (json) => _loginOnExternalJson(api, ObtainMethod.Apple, json))
-        .then((token) => _loginOnToken(apiAuth, token))
+        .then((json) => _onExternalJson(api, ObtainMethod.Apple, json))
+        .then((result) => _onResult(apiAuth, result))
         .catchError(_showErrorDialog)
         .whenComplete(() => setState(() => _isLoggingIn = false));
   }
@@ -208,9 +207,8 @@ class _LoginFormState extends State<LoginForm> {
               'client_secret': api.clientSecret,
               'facebook_token': facebookToken,
             }))
-        .then<OauthToken>(
-            (json) => _loginOnExternalJson(api, ObtainMethod.Facebook, json))
-        .then((token) => _loginOnToken(apiAuth, token))
+        .then((json) => _onExternalJson(api, ObtainMethod.Facebook, json))
+        .then((result) => _onResult(apiAuth, result))
         .catchError(_showErrorDialog)
         .whenComplete(() => setState(() => _isLoggingIn = false));
   }
@@ -245,15 +243,13 @@ class _LoginFormState extends State<LoginForm> {
               'client_secret': api.clientSecret,
               'google_token': googleToken,
             }))
-        .then<OauthToken>(
-            (json) => _loginOnExternalJson(api, ObtainMethod.Google, json))
-        .then((token) => _loginOnToken(apiAuth, token))
+        .then((json) => _onExternalJson(api, ObtainMethod.Google, json))
+        .then((result) => _onResult(apiAuth, result))
         .catchError(_showErrorDialog)
         .whenComplete(() => setState(() => _isLoggingIn = false));
   }
 
-  Future<OauthToken> _loginOnExternalJson(
-      Api api, ObtainMethod obtainMethod, json) async {
+  Future<_LoginResult> _onExternalJson(Api api, ObtainMethod om, json) async {
     if (!mounted) return null;
 
     if (json is! Map) {
@@ -266,7 +262,7 @@ class _LoginFormState extends State<LoginForm> {
         return _tryAutoRegister(
           api,
           message: jsonMap['message'],
-          obtainMethod: obtainMethod,
+          obtainMethod: om,
           userData: jsonMap['user_data'],
         );
       }
@@ -279,20 +275,22 @@ class _LoginFormState extends State<LoginForm> {
     }
 
     if (!jsonMap.containsKey('access_token')) {
-      return Future.error('Cannot login with ${obtainMethod.toString()}.');
+      return Future.error('Cannot login with ${om.toString()}.');
     }
 
-    return OauthToken.fromJson(ObtainMethod.Google, jsonMap);
+    return _LoginResult.success(OauthToken.fromJson(om, jsonMap));
   }
 
-  _loginOnToken(ApiAuth apiAuth, OauthToken token) {
-    if (!mounted || token == null) return;
+  _onResult(ApiAuth apiAuth, _LoginResult result) {
+    if (!mounted || result == null) return;
 
-    apiAuth.setToken(token);
-    Navigator.pop(context, true);
+    if (result.token != null) {
+      apiAuth.setToken(result.token);
+      Navigator.pop(context, true);
+    }
   }
 
-  Future<OauthToken> _tryAutoRegister(
+  Future<_LoginResult> _tryAutoRegister(
     Api api, {
     @required String message,
     @required ObtainMethod obtainMethod,
@@ -303,8 +301,7 @@ class _LoginFormState extends State<LoginForm> {
     assert(userData != null);
 
     if (!userData.containsKey('extra_data') ||
-        !userData.containsKey('extra_timestamp') ||
-        !userData.containsKey('user_email')) {
+        !userData.containsKey('extra_timestamp')) {
       return Future.error(message);
     }
 
@@ -312,24 +309,22 @@ class _LoginFormState extends State<LoginForm> {
       'client_id': api.clientId,
       'client_secret': api.clientSecret,
     };
-    for (final e in userData.entries) {
-      try {
-        bodyFields[e.key] = e.value.toString();
-      } catch (e) {
-        print(e);
-      }
-    }
+    userData.entries
+        .where((e) => e.value is String)
+        .forEach((e) => bodyFields[e.key] = e.value);
 
-    if (!bodyFields.containsKey('username')) {
+    if (!bodyFields.containsKey('username') &&
+        userData.containsKey('user_email')) {
       final email = userData['user_email'] as String;
       final emailName = email.replaceAll(RegExp(r'@.+$'), '');
       final timestamp = (DateTime.now().millisecondsSinceEpoch / 1000).floor();
       bodyFields['username'] = "${emailName}_$timestamp";
     }
 
-    return api
-        .postJson('users', bodyFields: bodyFields)
-        .then<OauthToken>((json) {
+    // only perform auto register if an `username` is available
+    if (!bodyFields.containsKey('username')) return Future.error(message);
+
+    return api.postJson('users', bodyFields: bodyFields).then((json) {
       if (json is! Map) {
         return Future.error('Unexpected response from server.');
       }
@@ -340,13 +335,14 @@ class _LoginFormState extends State<LoginForm> {
         return Future.error('Cannot register new user account.');
       }
 
-      return OauthToken.fromJson(obtainMethod, jsonMap['token']);
+      final token = OauthToken.fromJson(obtainMethod, jsonMap['token']);
+      return _LoginResult.success(token);
     });
   }
 
   void _showErrorDialog(error) => showDialog(
         context: context,
-        builder: (c) => AlertDialog(
+        builder: (_) => AlertDialog(
           title: Text('Login error'),
           content: Text(error is ApiError ? error.message : "$error"),
         ),
@@ -361,4 +357,10 @@ class LoginScreenRoute extends MaterialPageRoute {
             body: LoginForm(),
           ),
         );
+}
+
+class _LoginResult {
+  final OauthToken token;
+
+  _LoginResult.success(this.token);
 }
