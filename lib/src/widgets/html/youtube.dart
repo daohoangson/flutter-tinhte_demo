@@ -41,7 +41,10 @@ class _YouTubeState extends State<YouTubeWidget> {
           children: <Widget>[
             AspectRatio(
               aspectRatio: _aspectRatio,
-              child: buildCachedNetworkImage(_thumbnailUrl),
+              child: Image(
+                image: CachedNetworkImageProvider(_thumbnailUrl),
+                fit: BoxFit.cover,
+              ),
             ),
             Positioned.fill(
               child: Center(
