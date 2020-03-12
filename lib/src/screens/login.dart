@@ -37,6 +37,7 @@ class LoginForm extends StatefulWidget {
 class _LoginFormState extends State<LoginForm> {
   final formKey = GlobalKey<FormState>();
 
+  _LoginAssociatable _associatable;
   bool _canLoginApple = false;
   bool _isLoggingIn = false;
 
@@ -59,28 +60,9 @@ class _LoginFormState extends State<LoginForm> {
           key: formKey,
           child: _buildBox(
             box,
-            <Widget>[
-              _buildInputPadding(_buildUsername()),
-              _buildInputPadding(_buildPassword()),
-              RaisedButton(
-                child: const Text('Submit'),
-                onPressed: _isLoggingIn ? null : _login,
-              ),
-              FacebookSignInButton(
-                onPressed: _isLoggingIn ? null : _loginFacebook,
-                text: 'Sign in with Facebook',
-              ),
-              GoogleSignInButton(
-                darkMode: true,
-                onPressed: _isLoggingIn ? null : _loginGoogle,
-              ),
-              _canLoginApple
-                  ? AppleSignInButton(
-                      onPressed: _isLoggingIn ? null : _loginApple,
-                      style: AppleButtonStyle.black,
-                    )
-                  : const SizedBox.shrink(),
-            ],
+            _associatable != null
+                ? _buildFieldsAssociate()
+                : _buildFieldsLogin(),
           ),
         ),
       );
@@ -90,12 +72,66 @@ class _LoginFormState extends State<LoginForm> {
         children: children,
       );
 
+  List<Widget> _buildFieldsAssociate() => [
+        Text('An existing account has been found, '
+            'please enter your password to associate it for future logins.'),
+        _buildInputPadding(TextFormField(
+          decoration: InputDecoration(labelText: 'Username'),
+          enabled: false,
+          initialValue: _associatable.username,
+          key: ObjectKey(_associatable),
+        )),
+        _buildInputPadding(_buildPassword(autofocus: true)),
+        Row(
+          children: <Widget>[
+            Expanded(
+              child: FlatButton(
+                child: const Text('Cancel'),
+                onPressed: _isLoggingIn
+                    ? null
+                    : () => setState(() => this._associatable = null),
+              ),
+            ),
+            Expanded(
+              child: RaisedButton(
+                child: const Text('Associate'),
+                onPressed: _isLoggingIn ? null : _associate,
+              ),
+            ),
+          ],
+        ),
+      ];
+
+  List<Widget> _buildFieldsLogin() => [
+        _buildInputPadding(_buildUsername()),
+        _buildInputPadding(_buildPassword()),
+        RaisedButton(
+          child: const Text('Submit'),
+          onPressed: _isLoggingIn ? null : _login,
+        ),
+        FacebookSignInButton(
+          onPressed: _isLoggingIn ? null : _loginFacebook,
+          text: 'Sign in with Facebook',
+        ),
+        GoogleSignInButton(
+          darkMode: true,
+          onPressed: _isLoggingIn ? null : _loginGoogle,
+        ),
+        _canLoginApple
+            ? AppleSignInButton(
+                onPressed: _isLoggingIn ? null : _loginApple,
+                style: AppleButtonStyle.black,
+              )
+            : const SizedBox.shrink(),
+      ];
+
   Widget _buildInputPadding(Widget child) => Padding(
         padding: const EdgeInsets.symmetric(vertical: 5.0),
         child: child,
       );
 
-  Widget _buildPassword() => TextFormField(
+  Widget _buildPassword({bool autofocus = false}) => TextFormField(
+        autofocus: autofocus,
         decoration: InputDecoration(
           hintText: 'hunter2',
           labelText: 'Password',
@@ -129,6 +165,32 @@ class _LoginFormState extends State<LoginForm> {
         return null;
       });
 
+  void _associate() {
+    if (_isLoggingIn) return;
+
+    final form = formKey.currentState;
+    if (form?.validate() != true) return;
+    form.save();
+
+    setState(() => _isLoggingIn = true);
+
+    final apiAuth = ApiAuth.of(context, listen: false);
+    final api = apiAuth.api;
+
+    api
+        .postJson('oauth/token/associate',
+            bodyFields: Map.from(_associatable.bodyFields)
+              ..addAll({
+                'client_id': api.clientId,
+                'client_secret': api.clientSecret,
+                'password': password,
+              }))
+        .then((json) => _onExternalJson(api, _associatable.obtainMethod, json))
+        .then((result) => _onResult(apiAuth, result))
+        .catchError((e) => _showError(context, e))
+        .whenComplete(() => setState(() => _isLoggingIn = false));
+  }
+
   void _login() {
     if (_isLoggingIn) return;
 
@@ -141,7 +203,7 @@ class _LoginFormState extends State<LoginForm> {
     final apiAuth = ApiAuth.of(context, listen: false);
     apiAuth.api
         .login(username, password)
-        .then((token) => _onResult(apiAuth, _LoginResult.success(token)))
+        .then((token) => _onResult(apiAuth, _LoginResult(token: token)))
         .catchError((e) => _showError(context, e))
         .whenComplete(() => setState(() => _isLoggingIn = false));
   }
@@ -259,12 +321,15 @@ class _LoginFormState extends State<LoginForm> {
 
     if (jsonMap.containsKey('message')) {
       if (jsonMap.containsKey('user_data')) {
-        return _tryAutoRegister(
-          api,
-          message: jsonMap['message'],
-          obtainMethod: om,
-          userData: jsonMap['user_data'],
-        );
+        final Map<String, dynamic> userData = jsonMap['user_data'];
+        if (userData.containsKey('associatable')) {
+          final associatable = _LoginAssociatable.fromJson(om, userData);
+          if (associatable != null)
+            return _LoginResult(associatable: associatable);
+        }
+
+        final token = await _tryAutoRegister(api, om, userData);
+        if (token != null) return _LoginResult(token: token);
       }
 
       return Future.error(jsonMap['message']);
@@ -278,7 +343,7 @@ class _LoginFormState extends State<LoginForm> {
       return Future.error('Cannot login with ${om.toString()}.');
     }
 
-    return _LoginResult.success(OauthToken.fromJson(om, jsonMap));
+    return _LoginResult(token: OauthToken.fromJson(om, jsonMap));
   }
 
   _onResult(ApiAuth apiAuth, _LoginResult result) {
@@ -288,56 +353,53 @@ class _LoginFormState extends State<LoginForm> {
       apiAuth.setToken(result.token);
       Navigator.pop(context, true);
     }
+
+    if (result.associatable != null)
+      setState(() => _associatable = result.associatable);
   }
 
-  Future<_LoginResult> _tryAutoRegister(
-    Api api, {
-    @required String message,
-    @required ObtainMethod obtainMethod,
-    @required Map<String, dynamic> userData,
-  }) {
-    assert(message != null);
+  Future<OauthToken> _tryAutoRegister(
+    Api api,
+    ObtainMethod obtainMethod,
+    Map<String, dynamic> userData,
+  ) async {
     assert(obtainMethod != null);
     assert(userData != null);
 
     if (!userData.containsKey('extra_data') ||
-        !userData.containsKey('extra_timestamp')) {
-      return Future.error(message);
+        !userData.containsKey('extra_timestamp') ||
+        !userData.containsKey('user_email')) {
+      return null;
     }
 
     final bodyFields = {
       'client_id': api.clientId,
       'client_secret': api.clientSecret,
     };
-    userData.entries
-        .where((e) => e.value is String)
-        .forEach((e) => bodyFields[e.key] = e.value);
+    for (final e in userData.entries) {
+      try {
+        bodyFields[e.key] = e.value.toString();
+      } catch (e) {
+        print(e);
+      }
+    }
 
-    if (!bodyFields.containsKey('username') &&
-        userData.containsKey('user_email')) {
+    if (!bodyFields.containsKey('username')) {
       final email = userData['user_email'] as String;
       final emailName = email.replaceAll(RegExp(r'@.+$'), '');
       final timestamp = (DateTime.now().millisecondsSinceEpoch / 1000).floor();
       bodyFields['username'] = "${emailName}_$timestamp";
     }
 
-    // only perform auto register if an `username` is available
-    if (!bodyFields.containsKey('username')) return Future.error(message);
+    final json = await api.postJson('users', bodyFields: bodyFields);
 
-    return api.postJson('users', bodyFields: bodyFields).then((json) {
-      if (json is! Map) {
-        return Future.error('Unexpected response from server.');
-      }
+    if (json is! Map) return Future.error('Unexpected response from server.');
 
-      final jsonMap = json as Map;
-      if (!jsonMap.containsKey('token')) {
-        print(jsonMap);
-        return Future.error('Cannot register new user account.');
-      }
+    final jsonMap = json as Map;
+    if (!jsonMap.containsKey('token'))
+      return Future.error('Cannot register new user account.');
 
-      final token = OauthToken.fromJson(obtainMethod, jsonMap['token']);
-      return _LoginResult.success(token);
-    });
+    return OauthToken.fromJson(obtainMethod, jsonMap['token']);
   }
 
   void _showError(BuildContext context, error) =>
@@ -359,5 +421,52 @@ class LoginScreenRoute extends MaterialPageRoute {
 class _LoginResult {
   final OauthToken token;
 
-  _LoginResult.success(this.token);
+  final _LoginAssociatable associatable;
+
+  _LoginResult({
+    this.associatable,
+    this.token,
+  }) : assert((associatable == null) != (token == null));
+}
+
+class _LoginAssociatable {
+  final Map<String, String> bodyFields;
+  final ObtainMethod obtainMethod;
+  final String username;
+
+  _LoginAssociatable({
+    @required this.bodyFields,
+    @required this.obtainMethod,
+    @required this.username,
+  })  : assert(bodyFields != null),
+        assert(obtainMethod != null),
+        assert(username != null);
+
+  factory _LoginAssociatable.fromJson(
+    ObtainMethod obtainMethod,
+    Map<String, dynamic> userData,
+  ) {
+    if (!userData.containsKey('associatable') ||
+        !userData.containsKey('extra_data') ||
+        !userData.containsKey('extra_timestamp')) return null;
+
+    _LoginAssociatable result;
+    final entries = (userData['associatable'] as Map<String, dynamic>).entries;
+    for (final entry in entries) {
+      final Map<String, dynamic> value = entry.value;
+      if (!value.containsKey('username')) continue;
+
+      result = _LoginAssociatable(
+        bodyFields: Map.unmodifiable({
+          'user_id': entry.key,
+          'extra_data': userData['extra_data'],
+          'extra_timestamp': userData['extra_timestamp'].toString(),
+        }),
+        obtainMethod: obtainMethod,
+        username: value['username'],
+      );
+    }
+
+    return result;
+  }
 }
