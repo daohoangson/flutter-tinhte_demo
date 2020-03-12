@@ -2,11 +2,13 @@ import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart'
     as core;
 import 'package:html/dom.dart' as dom;
 import 'package:photo_view/photo_view_gallery.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../config.dart';
 import '../constants.dart';
@@ -17,6 +19,7 @@ part 'html/galleria.dart';
 part 'html/link_expander.dart';
 part 'html/lb_trigger.dart';
 part 'html/photo_compare.dart';
+part 'html/youtube.dart';
 
 const _kSmilies = {
   'Smile': '🙂',
@@ -131,9 +134,22 @@ class TinhteWidgetFactory extends WidgetFactory {
       final url = constructFullUrl(a['href']);
       if (url?.isEmpty != false) return null;
 
+      final youtubeId = a.containsKey('data-chr-thumbnail')
+          ? RegExp(r'^https://img.youtube.com/vi/([^/]+)/0.jpg$')
+              .firstMatch(a['data-chr-thumbnail'])
+              ?.group(1)
+          : null;
+
+      final contents = youtubeId != null
+          ? YouTubeWidget(
+              youtubeId,
+              lowresThumbnailUrl: a['data-chr-thumbnail'],
+            )
+          : buildWebView(url);
+
       return [
         _buildSpacing(meta),
-        buildWebView(url),
+        contents,
         _buildSpacing(meta),
       ];
     });
