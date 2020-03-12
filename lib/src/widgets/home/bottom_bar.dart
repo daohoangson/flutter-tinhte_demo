@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../screens/search/thread.dart';
 import '../../screens/forum_list.dart';
 import '../../screens/menu.dart';
+import '../../screens/my_feed.dart';
 
 class HomeBottomBar extends StatelessWidget {
   @override
@@ -14,11 +15,15 @@ class HomeBottomBar extends StatelessWidget {
             title: Text('Home'),
           ),
           BottomNavigationBarItem(
+            icon: Icon(FontAwesomeIcons.newspaper),
+            title: Text('My Feed'),
+          ),
+          BottomNavigationBarItem(
             icon: Icon(FontAwesomeIcons.search),
             title: Text('Search'),
           ),
           BottomNavigationBarItem(
-            icon: Icon(FontAwesomeIcons.newspaper),
+            icon: Icon(FontAwesomeIcons.listAlt),
             title: Text('Forums'),
           ),
           BottomNavigationBarItem(
@@ -29,17 +34,22 @@ class HomeBottomBar extends StatelessWidget {
         onTap: (index) {
           switch (index) {
             case 1:
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (_) => MyFeedScreen(),
+              ));
+              break;
+            case 2:
               showSearch(
                 context: context,
                 delegate: ThreadSearchDelegate(),
               );
               break;
-            case 2:
+            case 3:
               Navigator.of(context).push(MaterialPageRoute(
                 builder: (_) => ForumListScreen(),
               ));
               break;
-            case 3:
+            case 4:
               Navigator.of(context).push(MaterialPageRoute(
                 builder: (_) => MenuScreen(),
               ));
