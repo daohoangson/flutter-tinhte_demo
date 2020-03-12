@@ -65,10 +65,9 @@ class FetchContext<T> {
   FetchContext({
     this.apiMethod,
     this.id = FetchContextId.FetchCustom,
-    @required this.path,
+    this.path,
     @required this.state,
-  })  : assert(path != null),
-        assert(state != null);
+  })  : assert(state != null);
 }
 
 enum FetchContextId { FetchCustom, FetchInitial, FetchNext, FetchPrev }
