@@ -55,29 +55,27 @@ class BackgroundPost extends StatelessWidget {
         ? postBodyHtml.replaceAll(m.group(0), '')
         : postBodyHtml;
 
-    return Stack(
-      children: <Widget>[
-        AspectRatio(
-          aspectRatio: 4 / 3,
-          child: threadBackgroundUrl != null
-              ? ClipRRect(
-                  borderRadius: BorderRadius.circular(kPaddingHorizontal),
-                  child: CachedNetworkImage(
-                    imageUrl: threadBackgroundUrl,
-                    fit: BoxFit.cover,
-                  ),
-                )
-              : const SizedBox.shrink(),
-        ),
-        Positioned.fill(
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(kPaddingHorizontal),
+      child: Container(
+        child: ConstrainedBox(
           child: Center(
             child: TinhteHtmlWidget(
               "<center>$_postBodyHtml</center>",
               textStyle: theme.textTheme.title,
             ),
           ),
-        )
-      ],
+          constraints: BoxConstraints(minHeight: 300),
+        ),
+        decoration: threadBackgroundUrl != null
+            ? BoxDecoration(
+                image: DecorationImage(
+                  image: CachedNetworkImageProvider(threadBackgroundUrl),
+                  fit: BoxFit.cover,
+                ),
+              )
+            : null,
+      ),
     );
   }
 }
