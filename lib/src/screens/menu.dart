@@ -4,6 +4,7 @@ import 'package:package_info/package_info.dart';
 import '../screens/notification_list.dart';
 import '../widgets/menu/dark_theme.dart';
 import '../widgets/app_bar.dart';
+import '../link.dart';
 
 class MenuScreen extends StatelessWidget {
   @override
@@ -17,6 +18,7 @@ class MenuScreen extends StatelessWidget {
             MenuDarkTheme(),
             _buildNotifications(context),
             AppBarDrawerFooter(),
+            _buildPrivacyPolicy(context),
             _PackageInfoWidget(),
           ],
         ),
@@ -26,6 +28,11 @@ class MenuScreen extends StatelessWidget {
         title: Text('Notifications'),
         onTap: () => Navigator.of(context)
             .push(MaterialPageRoute(builder: (_) => NotificationListScreen())),
+      );
+
+  Widget _buildPrivacyPolicy(BuildContext context) => ListTile(
+        title: Text('Privacy Policy'),
+        onTap: () => launchLink(context, 'https://tinhte.vn/threads/2864415/'),
       );
 }
 
