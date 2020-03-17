@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:package_info/package_info.dart';
 import 'package:tinhte_api/content_list.dart';
 
 import '../widgets/home/bottom_bar.dart';
@@ -12,61 +11,42 @@ import '../widgets/home/trending_tags.dart';
 import '../widgets/super_list.dart';
 import 'content_list_view.dart';
 
-class HomeScreen extends StatefulWidget {
-  HomeScreen({Key key}) : super(key: key);
-
-  @override
-  _HomeScreenState createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  String _title = '';
-
-  @override
-  void initState() {
-    super.initState();
-    _detectTitle();
-  }
-
+class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          title: Text(_title),
-        ),
-        body: SuperListView<_HomeListItem>(
-          complexItems: [
-            FeaturePagesWidget.registerSuperListComplexItem,
-            TopThreadsWidget.registerSuperListComplexItem,
-            TrendingTagsWidget.registerSuperListComplexItem,
-          ],
-          fetchPathInitial: 'lists/1/threads?limit=20'
-              '&_bdImageApiThreadThumbnailWidth=${(kContentListViewThumbnailWidth * 3).toInt()}'
-              '&_bdImageApiThreadThumbnailHeight=sh',
-          fetchOnSuccess: _fetchOnSuccess,
-          itemBuilder: (context, state, item) {
-            if (item.widget != null) return item.widget;
+        body: SafeArea(
+          child: SuperListView<_HomeListItem>(
+            complexItems: [
+              FeaturePagesWidget.registerSuperListComplexItem,
+              TopThreadsWidget.registerSuperListComplexItem,
+              TrendingTagsWidget.registerSuperListComplexItem,
+            ],
+            fetchPathInitial: 'lists/1/threads?limit=20'
+                '&_bdImageApiThreadThumbnailWidth=${(kContentListViewThumbnailWidth * 3).toInt()}'
+                '&_bdImageApiThreadThumbnailHeight=sh',
+            fetchOnSuccess: _fetchOnSuccess,
+            itemBuilder: (context, state, item) {
+              if (item.widget != null) return item.widget;
 
-            if (item.top5?.length == 5) {
-              return SuperListItemFullWidth(
-                child: HomeTop5Widget(item.top5),
-              );
-            }
+              if (item.top5?.length == 5) {
+                return SuperListItemFullWidth(
+                  child: HomeTop5Widget(item.top5),
+                );
+              }
 
-            if (item.thread != null)
-              return HomeThreadWidget(
-                item.thread,
-                imageWidth: kContentListViewThumbnailWidth,
-              );
+              if (item.thread != null)
+                return HomeThreadWidget(
+                  item.thread,
+                  imageWidth: kContentListViewThumbnailWidth,
+                );
 
-            return null;
-          },
-          itemMaxWidth: 800,
+              return null;
+            },
+            itemMaxWidth: 800,
+          ),
         ),
         bottomNavigationBar: HomeBottomBar(),
       );
-
-  void _detectTitle() => PackageInfo.fromPlatform().then(
-      (info) => setState(() => _title = "${info.version}+${info.buildNumber}"));
 
   void _fetchOnSuccess(Map json, FetchContext<_HomeListItem> fc) {
     if (!json.containsKey('threads')) return;

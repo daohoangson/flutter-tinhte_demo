@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:package_info/package_info.dart';
 
 import '../screens/notification_list.dart';
 import '../widgets/menu/dark_theme.dart';
@@ -16,6 +17,7 @@ class MenuScreen extends StatelessWidget {
             MenuDarkTheme(),
             _buildNotifications(context),
             AppBarDrawerFooter(),
+            _PackageInfoWidget(),
           ],
         ),
       );
@@ -25,4 +27,26 @@ class MenuScreen extends StatelessWidget {
         onTap: () => Navigator.of(context)
             .push(MaterialPageRoute(builder: (_) => NotificationListScreen())),
       );
+}
+
+class _PackageInfoWidget extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => _PackageInfoState();
+}
+
+class _PackageInfoState extends State<_PackageInfoWidget> {
+  PackageInfo _info;
+
+  @override
+  void initState() {
+    super.initState();
+    PackageInfo.fromPlatform().then((info) => setState(() => _info = info));
+  }
+
+  @override
+  Widget build(BuildContext context) => ListTile(
+      title: Text('Version'),
+      subtitle: Text(_info != null
+          ? "${_info.version} (build number: ${_info.buildNumber})"
+          : 'N/A'));
 }
