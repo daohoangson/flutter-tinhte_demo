@@ -1,0 +1,6 @@
+d8d0b28: Add new screen My Feed
+22ffe16, 01e4d3d, 1940501: Add support for Tinhte Fact and Background Post
+5ec32ff: Add support for tag follow options (alert, email)
+c3f1af9: Add emoji suggestion
+2b3ca54: Skip embedding YouTube to improve performance
+60db563: Fix bug cannot search
