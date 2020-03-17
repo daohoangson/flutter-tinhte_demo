@@ -164,17 +164,13 @@ class _ThreadViewState extends State<ThreadViewScreen> {
             Container(
               child: PostEditorWidget(
                 callback: (p) => _postsKey.currentState?.insertNewPost(p),
+                paddingHorizontal: kPaddingHorizontal,
+                paddingVertical: kPaddingHorizontal / 2,
               ),
               decoration: BoxDecoration(
                 border: Border(
                   top: BorderSide(color: Theme.of(context).dividerColor),
                 ),
-              ),
-              padding: const EdgeInsets.fromLTRB(
-                kPaddingHorizontal,
-                kPaddingHorizontal / 2,
-                kPaddingHorizontal,
-                kPaddingHorizontal / 2,
               ),
             ),
           ],
