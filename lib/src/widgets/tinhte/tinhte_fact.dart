@@ -64,6 +64,7 @@ class TinhteFact extends StatelessWidget {
           ThreadImageWidget(
             image: thread.threadImage,
             threadId: thread.threadId,
+            useImageRatio: true,
           ),
           TinhteHtmlWidget(
             "<center>$postBodyHtml</center>",
