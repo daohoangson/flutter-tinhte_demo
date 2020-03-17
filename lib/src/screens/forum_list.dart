@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../widgets/navigation.dart';
+import 'package:tinhte_demo/src/widgets/navigation.dart';
 
 class ForumListScreen extends StatelessWidget {
   @override

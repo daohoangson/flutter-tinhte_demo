@@ -2,9 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tinhte_api/user.dart';
-
-import '../../api.dart';
-import '../../intl.dart';
+import 'package:tinhte_demo/src/api.dart';
+import 'package:tinhte_demo/src/intl.dart';
 
 class MemberViewHeader extends StatelessWidget {
   final User user;

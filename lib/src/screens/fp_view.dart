@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tinhte_api/feature_page.dart';
-
-import '../widgets/tag/fp_header.dart';
-import '../widgets/threads.dart';
+import 'package:tinhte_demo/src/widgets/tag/fp_header.dart';
+import 'package:tinhte_demo/src/widgets/threads.dart';
 
 class FpViewScreen extends StatelessWidget {
   final FeaturePage fp;

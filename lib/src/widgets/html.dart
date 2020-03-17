@@ -8,12 +8,11 @@ import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart
     as core;
 import 'package:html/dom.dart' as dom;
 import 'package:photo_view/photo_view_gallery.dart';
+import 'package:tinhte_demo/src/config.dart';
+import 'package:tinhte_demo/src/constants.dart';
+import 'package:tinhte_demo/src/link.dart';
+import 'package:tinhte_demo/src/widgets/image.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import '../config.dart';
-import '../constants.dart';
-import '../link.dart';
-import 'image.dart';
 
 part 'html/galleria.dart';
 part 'html/link_expander.dart';

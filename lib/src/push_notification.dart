@@ -4,10 +4,9 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:tinhte_api/user.dart';
-
-import 'screens/notification_list.dart';
-import 'config.dart';
-import 'link.dart';
+import 'package:tinhte_demo/src/screens/notification_list.dart';
+import 'package:tinhte_demo/src/config.dart';
+import 'package:tinhte_demo/src/link.dart';
 
 const _kUnreadIconSize = 30.0;
 const _kUnreadIconBoxSize = 50.0;

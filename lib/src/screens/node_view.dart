@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tinhte_api/navigation.dart' as navigation;
-
-import '../widgets/navigation.dart';
+import 'package:tinhte_demo/src/widgets/navigation.dart';
 
 class NodeViewScreen extends StatelessWidget {
   final navigation.Element element;

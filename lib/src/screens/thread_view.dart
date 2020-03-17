@@ -4,12 +4,11 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
 import 'package:tinhte_api/thread.dart';
+import 'package:tinhte_demo/src/widgets/post_editor.dart';
+import 'package:tinhte_demo/src/widgets/posts.dart';
+import 'package:tinhte_demo/src/intl.dart';
+import 'package:tinhte_demo/src/link.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import '../widgets/post_editor.dart';
-import '../widgets/posts.dart';
-import '../intl.dart';
-import '../link.dart';
 
 const _kPopupActionOpenInBrowser = 'openInBrowser';
 const _kPopupActionShare = 'share';

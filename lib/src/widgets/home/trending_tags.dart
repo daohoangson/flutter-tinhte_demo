@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import '../../api.dart';
-import '../../config.dart';
-import '../../link.dart';
-import '../tag/widget.dart';
-import '../super_list.dart';
-import 'header.dart';
+import 'package:tinhte_demo/src/widgets/home/header.dart';
+import 'package:tinhte_demo/src/widgets/tag/widget.dart';
+import 'package:tinhte_demo/src/widgets/super_list.dart';
+import 'package:tinhte_demo/src/api.dart';
+import 'package:tinhte_demo/src/config.dart';
+import 'package:tinhte_demo/src/link.dart';
 
 const _kTrendingTagsMax = 6;
 

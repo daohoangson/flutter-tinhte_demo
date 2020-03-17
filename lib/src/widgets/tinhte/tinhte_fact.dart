@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:tinhte_api/post.dart';
 import 'package:tinhte_api/thread.dart';
+import 'package:tinhte_demo/src/widgets/html.dart';
+import 'package:tinhte_demo/src/widgets/image.dart';
 import 'package:tinhte_demo/src/widgets/posts.dart';
-
-import '../html.dart';
-import '../image.dart';
 
 bool isTinhteFact(Thread thread) =>
     thread.threadImage != null &&

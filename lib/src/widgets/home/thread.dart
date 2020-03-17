@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:tinhte_api/content_list.dart';
 import 'package:tinhte_api/thread.dart';
-
-import '../../screens/thread_view.dart';
-import '../../intl.dart';
-import '../image.dart';
+import 'package:tinhte_demo/src/screens/thread_view.dart';
+import 'package:tinhte_demo/src/intl.dart';
+import 'package:tinhte_demo/src/widgets/image.dart';
 
 class HomeThreadWidget extends StatelessWidget {
   final double imageWidth;

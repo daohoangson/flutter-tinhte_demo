@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
-
-import '../screens/notification_list.dart';
-import '../widgets/menu/dark_theme.dart';
-import '../widgets/app_bar.dart';
-import '../link.dart';
+import 'package:tinhte_demo/src/screens/notification_list.dart';
+import 'package:tinhte_demo/src/widgets/menu/dark_theme.dart';
+import 'package:tinhte_demo/src/widgets/app_bar.dart';
+import 'package:tinhte_demo/src/link.dart';
 
 class MenuScreen extends StatelessWidget {
   @override

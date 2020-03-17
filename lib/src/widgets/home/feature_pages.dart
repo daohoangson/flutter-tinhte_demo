@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tinhte_api/feature_page.dart';
-
-import '../../screens/search/feature_page.dart';
-import '../../widgets/tag/widget.dart';
-import '../../widgets/super_list.dart';
-import '../../api.dart';
-import 'header.dart';
+import 'package:tinhte_demo/src/screens/search/feature_page.dart';
+import 'package:tinhte_demo/src/widgets/home/header.dart';
+import 'package:tinhte_demo/src/widgets/tag/widget.dart';
+import 'package:tinhte_demo/src/widgets/super_list.dart';
+import 'package:tinhte_demo/src/api.dart';
 
 class FeaturePagesWidget extends StatelessWidget {
   @override

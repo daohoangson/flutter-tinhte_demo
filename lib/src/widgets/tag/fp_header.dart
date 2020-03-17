@@ -1,9 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:tinhte_api/feature_page.dart';
-
-import '../../intl.dart';
-import 'follow_button.dart';
+import 'package:tinhte_demo/src/widgets/tag/follow_button.dart';
+import 'package:tinhte_demo/src/intl.dart';
 
 class FpHeader extends StatelessWidget {
   final FeaturePage fp;

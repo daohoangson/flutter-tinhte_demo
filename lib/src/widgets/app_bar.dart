@@ -2,10 +2,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tinhte_api/user.dart';
-
-import '../screens/login.dart';
-import '../api.dart';
-import '../link.dart';
+import 'package:tinhte_demo/src/screens/login.dart';
+import 'package:tinhte_demo/src/api.dart';
+import 'package:tinhte_demo/src/link.dart';
 
 class AppBarDrawerHeader extends StatelessWidget {
   AppBarDrawerHeader({Key key}) : super(key: key);

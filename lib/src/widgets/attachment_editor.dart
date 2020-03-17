@@ -4,9 +4,8 @@ import 'package:flutter/animation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tinhte_api/attachment.dart';
-
-import '../api.dart';
-import 'image.dart';
+import 'package:tinhte_demo/src/widgets/image.dart';
+import 'package:tinhte_demo/src/api.dart';
 
 class AttachmentEditorWidget extends StatefulWidget {
   AttachmentEditorWidget({Key key}) : super(key: key);

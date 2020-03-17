@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:tinhte_api/user.dart';
-
-import '../../api.dart';
+import 'package:tinhte_demo/src/api.dart';
 
 class FollowButton extends StatefulWidget {
   final Followable followable;

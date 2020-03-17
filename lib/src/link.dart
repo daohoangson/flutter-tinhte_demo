@@ -4,14 +4,13 @@ import 'package:tinhte_api/feature_page.dart';
 import 'package:tinhte_api/tag.dart';
 import 'package:tinhte_api/thread.dart';
 import 'package:tinhte_api/user.dart';
+import 'package:tinhte_demo/src/api.dart';
+import 'package:tinhte_demo/src/config.dart';
+import 'package:tinhte_demo/src/screens/fp_view.dart';
+import 'package:tinhte_demo/src/screens/member_view.dart';
+import 'package:tinhte_demo/src/screens/tag_view.dart';
+import 'package:tinhte_demo/src/screens/thread_view.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import 'api.dart';
-import 'config.dart';
-import 'screens/fp_view.dart';
-import 'screens/member_view.dart';
-import 'screens/tag_view.dart';
-import 'screens/thread_view.dart';
 
 void launchLink(BuildContext context, String link) async {
   // automatically cancel launching for CHR links

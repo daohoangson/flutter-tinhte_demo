@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../../constants.dart';
+import 'package:tinhte_demo/src/constants.dart';
 
 class DarkTheme extends ChangeNotifier {
   bool _value;

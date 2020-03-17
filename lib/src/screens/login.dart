@@ -5,8 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:tinhte_api/api.dart';
 import 'package:tinhte_api/oauth_token.dart';
-
-import '../api.dart';
+import 'package:tinhte_demo/src/api.dart';
 
 final _facebookLogin = FacebookLogin();
 

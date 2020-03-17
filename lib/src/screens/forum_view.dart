@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tinhte_api/node.dart';
-
-import '../widgets/navigation.dart';
-import '../widgets/threads.dart';
-import 'search/thread.dart';
+import 'package:tinhte_demo/src/screens/search/thread.dart';
+import 'package:tinhte_demo/src/widgets/navigation.dart';
+import 'package:tinhte_demo/src/widgets/threads.dart';
 
 class ForumViewScreen extends StatefulWidget {
   final Forum forum;

@@ -7,17 +7,16 @@ import 'package:tinhte_api/navigation.dart' as navigation;
 import 'package:tinhte_api/node.dart';
 import 'package:tinhte_api/post.dart';
 import 'package:tinhte_api/thread.dart';
+import 'package:tinhte_demo/src/screens/forum_view.dart';
+import 'package:tinhte_demo/src/screens/node_view.dart';
+import 'package:tinhte_demo/src/screens/thread_view.dart';
+import 'package:tinhte_demo/src/widgets/tinhte/background_post.dart';
+import 'package:tinhte_demo/src/widgets/tinhte/tinhte_fact.dart';
+import 'package:tinhte_demo/src/widgets/super_list.dart';
+import 'package:tinhte_demo/src/widgets/image.dart';
+import 'package:tinhte_demo/src/api.dart';
+import 'package:tinhte_demo/src/intl.dart';
 import 'package:tinhte_demo/src/link.dart';
-
-import '../screens/forum_view.dart';
-import '../screens/node_view.dart';
-import '../screens/thread_view.dart';
-import '../api.dart';
-import '../intl.dart';
-import 'tinhte/background_post.dart';
-import 'tinhte/tinhte_fact.dart';
-import 'super_list.dart';
-import 'image.dart';
 
 part 'thread/navigation.dart';
 part 'thread/widget.dart';

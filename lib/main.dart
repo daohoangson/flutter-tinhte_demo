@@ -2,12 +2,11 @@ import 'dart:async';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import 'src/screens/home.dart';
-import 'src/widgets/menu/dark_theme.dart';
-import 'src/widgets/dismiss_keyboard.dart';
-import 'src/api.dart';
-import 'src/push_notification.dart';
+import 'package:tinhte_demo/src/screens/home.dart';
+import 'package:tinhte_demo/src/widgets/menu/dark_theme.dart';
+import 'package:tinhte_demo/src/widgets/dismiss_keyboard.dart';
+import 'package:tinhte_demo/src/api.dart';
+import 'package:tinhte_demo/src/push_notification.dart';
 
 void main() {
   FlutterError.onError = Crashlytics.instance.recordFlutterError;

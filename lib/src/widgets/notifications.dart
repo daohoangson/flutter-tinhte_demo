@@ -6,13 +6,12 @@ import 'package:provider/provider.dart';
 import 'package:tinhte_api/notification.dart' as api;
 import 'package:tinhte_api/oauth_token.dart';
 import 'package:tinhte_api/user.dart';
-
-import '../api.dart';
-import '../config.dart';
-import '../intl.dart';
-import '../push_notification.dart';
-import 'html.dart';
-import 'super_list.dart';
+import 'package:tinhte_demo/src/widgets/html.dart';
+import 'package:tinhte_demo/src/widgets/super_list.dart';
+import 'package:tinhte_demo/src/api.dart';
+import 'package:tinhte_demo/src/config.dart';
+import 'package:tinhte_demo/src/intl.dart';
+import 'package:tinhte_demo/src/push_notification.dart';
 
 int _subscribedUserId = 0;
 

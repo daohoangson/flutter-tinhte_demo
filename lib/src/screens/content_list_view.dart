@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tinhte_api/content_list.dart';
-
-import '../widgets/home/thread.dart';
-import '../widgets/super_list.dart';
+import 'package:tinhte_demo/src/widgets/home/thread.dart';
+import 'package:tinhte_demo/src/widgets/super_list.dart';
 
 const kContentListViewThumbnailWidth = 200.0;
 

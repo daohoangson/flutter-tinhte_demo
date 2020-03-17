@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../widgets/threads.dart';
+import 'package:tinhte_demo/src/widgets/threads.dart';
 
 class MyFeedScreen extends StatefulWidget {
   @override

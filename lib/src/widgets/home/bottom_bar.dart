@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
-import '../../screens/search/thread.dart';
-import '../../screens/forum_list.dart';
-import '../../screens/menu.dart';
-import '../../screens/my_feed.dart';
+import 'package:tinhte_demo/src/screens/search/thread.dart';
+import 'package:tinhte_demo/src/screens/forum_list.dart';
+import 'package:tinhte_demo/src/screens/menu.dart';
+import 'package:tinhte_demo/src/screens/my_feed.dart';
 
 class HomeBottomBar extends StatelessWidget {
   @override
