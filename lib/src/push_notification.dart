@@ -5,40 +5,92 @@ import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:tinhte_api/user.dart';
 import 'package:tinhte_demo/src/screens/notification_list.dart';
+import 'package:tinhte_demo/src/api.dart';
 import 'package:tinhte_demo/src/config.dart';
 import 'package:tinhte_demo/src/link.dart';
 
 const _kUnreadIconSize = 30.0;
 const _kUnreadIconBoxSize = 50.0;
 
-final _firebaseMessaging = FirebaseMessaging();
+final primaryNavKey = GlobalKey<NavigatorState>();
 
+final _firebaseMessaging = FirebaseMessaging();
+final _key = GlobalKey<_PushNotificationAppState>();
 final StreamController<int> _notifController = StreamController.broadcast();
+
+Map<String, dynamic> _onLaunchMessage;
+
+void configureFcm() => _firebaseMessaging.configure(
+      onLaunch: _onLaunch,
+      onMessage: _onMessage,
+      onResume: _onResume,
+    );
 
 StreamSubscription<int> listenToNotification(void onData(int notificationId)) =>
     _notifController.stream.listen(onData);
 
+Widget onLaunchMessageWidgetOr(Widget fallback) {
+  if (_onLaunchMessage == null) return fallback;
+
+  final path = _getContentLink(_onLaunchMessage);
+  if (path == null) return fallback;
+
+  return _OnLaunchMessageWidget(path, fallback: fallback);
+}
+
+String _getContentLink(Map<String, dynamic> message) {
+  final Map d = message.containsKey('data') ? message['data'] : message;
+  if (!d.containsKey('notification_id')) return null;
+
+  // TODO: use message.data.links.content when it is available
+  return "notifications/content?notification_id=${d['notification_id']}";
+}
+
 void _notifControllerAddFromFcmMessage(Map data) {
   if (!data.containsKey('notification_id')) return;
-  final str = data['notification_id'] as String;
-  final notificationId = int.parse(str);
+  final notificationId = int.tryParse(data['notification_id']);
 
   debugPrint("_notifControllerAddFromFcmMessage: "
       "notificationId=$notificationId");
-  _notifController.sink.add(notificationId);
+  if (notificationId != null) _notifController.sink.add(notificationId);
+}
+
+Future<bool> _onLaunch(Map<String, dynamic> message) async {
+  debugPrint("FCM._onLaunch: $message");
+  _onLaunchMessage = message;
+  return true;
+}
+
+Future<bool> _onMessage(Map<String, dynamic> message) async {
+  debugPrint("FCM.onMessage: $message");
+  final Map data = message.containsKey('data') ? message['data'] : message;
+  _notifControllerAddFromFcmMessage(data);
+
+  final pnas = _key.currentState;
+  if (pnas == null || !data.containsKey('user_unread_notification_count'))
+    return false;
+
+  final value = int.tryParse(data['user_unread_notification_count']);
+  if (value == null) return false;
+
+  return pnas._setUnread(value);
+}
+
+Future<bool> _onResume(Map<String, dynamic> message) async {
+  debugPrint("FCM._onResume: $message");
+  final path = _getContentLink(message);
+  final navigator = primaryNavKey.currentState;
+  if (navigator == null || path == null) return false;
+
+  return parseLink(path: path, rootNavigator: navigator);
 }
 
 class PushNotificationApp extends StatefulWidget {
   final Widget child;
-  final GlobalKey<NavigatorState> primaryNavKey;
 
-  PushNotificationApp({
-    @required this.child,
-    Key key,
-    @required this.primaryNavKey,
-  })  : assert(child != null),
-        assert(primaryNavKey != null),
-        super(key: key);
+  PushNotificationApp({@required this.child})
+      : assert(child != null),
+        super(key: _key);
 
   @override
   State<StatefulWidget> createState() => _PushNotificationAppState();
@@ -52,17 +104,6 @@ class _PushNotificationAppState extends State<PushNotificationApp> {
   var _unread = 0;
   var _unreadIsVisible = false;
   final _unreadDismissibleKey = UniqueKey();
-
-  @override
-  void initState() {
-    super.initState();
-
-    _firebaseMessaging.configure(
-      onLaunch: _onLaunchOrResume,
-      onMessage: _onMessage,
-      onResume: _onLaunchOrResume,
-    );
-  }
 
   @override
   Widget build(BuildContext _) => Consumer<User>(
@@ -115,7 +156,7 @@ class _PushNotificationAppState extends State<PushNotificationApp> {
             width: _kUnreadIconBoxSize,
           ),
           onTap: () {
-            widget.primaryNavKey.currentState?.push(
+            primaryNavKey.currentState?.push(
               MaterialPageRoute(builder: (_) => NotificationListScreen()),
             );
             setState(() => _unreadIsVisible = false);
@@ -125,28 +166,7 @@ class _PushNotificationAppState extends State<PushNotificationApp> {
         onDismissed: (_) => setState(() => _unreadIsVisible = false),
       );
 
-  Future<bool> _onLaunchOrResume(Map<String, dynamic> message) async {
-    debugPrint("FCM._onLaunchOrResume: $message");
-    final Map d = message.containsKey('data') ? message['data'] : message;
-    if (!d.containsKey('notification_id')) return false;
-
-    // TODO: use message.data.links.content when it is available
-    final p = "notifications/content?notification_id=${d['notification_id']}";
-
-    final navigator = widget.primaryNavKey.currentState;
-    if (navigator == null) return false;
-
-    return parseLink(path: p, rootNavigator: navigator);
-  }
-
-  Future<bool> _onMessage(Map<String, dynamic> message) async {
-    debugPrint("FCM.onMessage: $message");
-    final Map data = message.containsKey('data') ? message['data'] : message;
-    _notifControllerAddFromFcmMessage(data);
-
-    if (!data.containsKey('user_unread_notification_count')) return false;
-    final str = data['user_unread_notification_count'] as String;
-    final value = int.parse(str);
+  bool _setUnread(int value) {
     if (value == _unread) return false;
 
     _unreadIsVisible = value > 0;
@@ -155,6 +175,7 @@ class _PushNotificationAppState extends State<PushNotificationApp> {
     } else {
       _unread = value;
     }
+
     return true;
   }
 
@@ -199,6 +220,47 @@ class PushNotificationToken extends ChangeNotifier {
 
     return null;
   }
+}
+
+class _OnLaunchMessageWidget extends StatefulWidget {
+  final Widget fallback;
+  final String path;
+
+  _OnLaunchMessageWidget(this.path, {this.fallback, Key key})
+      : assert(path != null),
+        assert(fallback != null),
+        super(key: key);
+
+  @override
+  State<StatefulWidget> createState() => _OnLaunchMessageState();
+}
+
+class _OnLaunchMessageState extends State<_OnLaunchMessageWidget> {
+  var _fallback = false;
+  Future<Widget> _future;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _future = buildWidget(
+      ApiCaller.stateful(this),
+      widget.path,
+    ).catchError((error) async {
+      await showApiErrorDialog(context, error);
+      setState(() => _fallback = true);
+    });
+  }
+
+  @override
+  Widget build(BuildContext _) => _fallback
+      ? widget.fallback
+      : FutureBuilder<Widget>(
+          builder: (__, snapshot) => snapshot.hasData
+              ? snapshot.data
+              : const Center(child: CircularProgressIndicator()),
+          future: _future,
+        );
 }
 
 class _UnreadIcon extends StatefulWidget {

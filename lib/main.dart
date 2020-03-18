@@ -13,6 +13,9 @@ void main() {
 
   runZoned<Future<void>>(() async {
     WidgetsFlutterBinding.ensureInitialized();
+
+    configureFcm();
+
     final darkTheme = await DarkTheme.create();
     runApp(MyApp(darkTheme: darkTheme));
   }, onError: Crashlytics.instance.recordError);
@@ -20,7 +23,6 @@ void main() {
 
 class MyApp extends StatelessWidget {
   final DarkTheme darkTheme;
-  final primaryNavKey = GlobalKey<NavigatorState>();
 
   MyApp({this.darkTheme});
 
@@ -35,14 +37,13 @@ class MyApp extends StatelessWidget {
           child: DismissKeyboard(
             MaterialApp(
               darkTheme: _theme(_themeDark),
-              home: HomeScreen(),
+              home: onLaunchMessageWidgetOr(HomeScreen()),
               key: ValueKey("darkTheme=${darkTheme.value}"),
               navigatorKey: primaryNavKey,
               theme: _theme(_themeLight),
               title: 'Tinh tế Demo',
             ),
           ),
-          primaryNavKey: primaryNavKey,
         ),
       );
 

@@ -47,9 +47,6 @@ Future<bool> parseLink({
   assert((link == null) != (path == null));
   final navigator = rootNavigator ?? Navigator.of(context);
   var cancelled = false;
-  final completer = Completer<bool>();
-  var parsed = false;
-  var userCancelled = false;
 
   navigator.push(_DialogRoute((_) => AlertDialog(
         content: Text('Just a moment...'),
@@ -58,7 +55,6 @@ Future<bool> parseLink({
             child: Text('Cancel'),
             onPressed: () {
               cancelled = true;
-              userCancelled = true;
               navigator.pop();
             },
           )
@@ -72,73 +68,72 @@ Future<bool> parseLink({
     cancelled = true;
   };
 
-  apiGet(
+  return buildWidget(
     ApiCaller.stateless(context ?? rootNavigator.context),
     path ?? 'tools/parse-link?link=${Uri.encodeQueryComponent(link)}',
-    onSuccess: (json) {
-      if (cancelled) return;
+  ).then<bool>(
+    (widget) {
+      if (cancelled || widget == null) return false;
 
-      Route route;
-      if (json.containsKey('tag') && json.containsKey('tagged')) {
-        route = _parseTag(json);
-      } else if (json.containsKey('thread') && json.containsKey('posts')) {
-        route = _parseThread(json);
-      } else if (json.containsKey('user')) {
-        route = _parseUser(json);
-      }
-      if (cancelled) return;
-
-      if (route != null) {
-        parsed = true;
-        cancelDialog();
-        navigator.push(route);
-      }
-    },
-    onError: (error) => debugPrint("$error"),
-    onComplete: () {
       cancelDialog();
-      completer.complete(parsed || userCancelled);
+      navigator.push(MaterialPageRoute(builder: (_) => widget));
+      return true;
     },
+    onError: (error) => print(error),
+  ).whenComplete(() => cancelDialog());
+}
+
+Future<Widget> buildWidget(ApiCaller caller, String path) {
+  final completer = Completer<Widget>();
+
+  apiGet(
+    caller,
+    path,
+    onSuccess: (json) {
+      Widget widget;
+      if (json.containsKey('tag') && json.containsKey('tagged')) {
+        widget = _parseTag(json);
+      } else if (json.containsKey('thread') && json.containsKey('posts')) {
+        widget = _parseThread(json);
+      } else if (json.containsKey('user')) {
+        widget = _parseUser(json);
+      }
+
+      completer.complete(widget);
+    },
+    onError: (error) => completer.completeError(error),
   );
 
   return completer.future;
 }
 
-Route _parseTag(Map json) {
+Widget _parseTag(Map json) {
   final Map jsonTag = json['tag'];
   final tag = Tag.fromJson(jsonTag);
   if (tag.tagId == null) return null;
 
   if (json.containsKey('feature_page')) {
     final fp = FeaturePage.fromJson(json['feature_page']);
-    if (fp.id != null) {
-      return MaterialPageRoute(builder: (_) => FpViewScreen(fp));
-    }
+    if (fp.id != null) return FpViewScreen(fp);
   }
 
-  return MaterialPageRoute(
-    builder: (_) => TagViewScreen(tag, initialJson: json),
-  );
+  return TagViewScreen(tag, initialJson: json);
 }
 
-Route _parseThread(Map json) {
+Widget _parseThread(Map json) {
   final Map jsonThread = json['thread'];
   final thread = Thread.fromJson(jsonThread);
   if (thread.threadId == null) return null;
 
-  return MaterialPageRoute(
-    builder: (_) => ThreadViewScreen(thread, initialJson: json),
-  );
+  return ThreadViewScreen(thread, initialJson: json);
 }
 
-Route _parseUser(Map json) {
+Widget _parseUser(Map json) {
   final Map jsonUser = json['user'];
   final user = User.fromJson(jsonUser);
   if (user.userId == null) return null;
 
-  return MaterialPageRoute(
-    builder: (_) => MemberViewScreen(user),
-  );
+  return MemberViewScreen(user);
 }
 
 class _DialogRoute extends PopupRoute {
