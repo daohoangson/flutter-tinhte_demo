@@ -232,8 +232,8 @@ class _ApiAppState extends State<ApiApp> {
     return "${path.replaceAll(_oauthTokenRegEx, '')}${connector}oauth_token=$accessToken";
   }
 
-  void _enqueue(VoidCallback callback) {
-    Timer.run(_dequeue);
+  void _enqueue(VoidCallback callback, {bool scheduleDequeue = true}) {
+    if (scheduleDequeue) Timer.run(_dequeue);
 
     _queue ??= List();
     _queue.add(callback);
@@ -260,7 +260,7 @@ class _ApiAppState extends State<ApiApp> {
     batch.fetch();
   }
 
-  void _fetchUser() => _enqueue(() async {
+  void _fetchUser(bool scheduleDequeue) => _enqueue(() async {
         if (_token == null) return;
 
         try {
@@ -274,7 +274,7 @@ class _ApiAppState extends State<ApiApp> {
         } catch (e) {
           print(e);
         }
-      });
+      }, scheduleDequeue: scheduleDequeue);
 
   void _refreshToken() {
     if (_isRefreshingToken) return;
@@ -307,8 +307,11 @@ class _ApiAppState extends State<ApiApp> {
     _tokenHasBeenSet = true;
 
     if (value != null) {
-      _fetchUser();
-    } else if (_user.userId != 0) {
+      _fetchUser(savePref);
+      return;
+    }
+
+    if (_user.userId != 0) {
       setState(() => _user = User(0));
     }
 
