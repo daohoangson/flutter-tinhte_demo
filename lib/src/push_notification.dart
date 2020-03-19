@@ -246,10 +246,13 @@ class _OnLaunchMessageState extends State<_OnLaunchMessageWidget> {
     _future = buildWidget(
       ApiCaller.stateful(this),
       widget.path,
-    ).catchError((error) async {
-      await showApiErrorDialog(context, error);
-      setState(() => _fallback = true);
-    });
+    ).then(
+      (widget) => widget ?? NotificationListScreen(),
+      onError: (error) async {
+        await showApiErrorDialog(context, error);
+        setState(() => _fallback = true);
+      },
+    );
   }
 
   @override
