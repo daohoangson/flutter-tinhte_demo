@@ -89,6 +89,7 @@ class TinhteWidgetFactory extends WidgetFactory {
 
   BuildOp _blockquoteOp;
   BuildOp _chrOp;
+  BuildOp _metaBbCodeOp;
   BuildOp _smilieOp;
   BuildOp _webViewDataUriOp;
 
@@ -154,6 +155,16 @@ class TinhteWidgetFactory extends WidgetFactory {
       ];
     });
     return _chrOp;
+  }
+
+  BuildOp get metaBbCodeOp {
+    _metaBbCodeOp ??= BuildOp(
+      onChild: (meta, e) =>
+          (e.localName == 'span' && !e.classes.contains('value'))
+              ? lazySet(null, isNotRenderable: true)
+              : meta,
+    );
+    return _metaBbCodeOp;
   }
 
   BuildOp get smilieOp {
@@ -260,6 +271,11 @@ class TinhteWidgetFactory extends WidgetFactory {
         if (e.attributes.containsKey('src') &&
             e.attributes['src'] == 'https://e.infogr.am/js/embed.js') {
           return lazySet(null, buildOp: webViewDataUriOp);
+        }
+        break;
+      case 'span':
+        if (e.classes.contains('metaBbCode')) {
+          return lazySet(null, buildOp: metaBbCodeOp);
         }
         break;
     }
