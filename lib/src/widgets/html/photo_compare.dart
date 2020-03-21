@@ -3,51 +3,59 @@ part of '../html.dart';
 class PhotoCompare {
   final TinhteWidgetFactory wf;
 
-  BuildOp _buildOp;
-
   PhotoCompare(this.wf);
 
   BuildOp get buildOp {
-    _buildOp ??= BuildOp(
-      onChild: (meta, e) =>
-          e.localName == 'img' ? lazySet(meta, isBlockElement: true) : meta,
-      onWidgets: (meta, widgets) {
-        final images = widgets.where((w) => w is core.ImageLayout);
-        if (images.length != 2) return null;
+    final images = <String>[];
+    return BuildOp(
+      onChild: (meta, e) {
+        if (e.localName != 'img') return meta;
+        if (!e.attributes.containsKey('src')) return meta;
+        final src = wf.constructFullUrl(e.attributes['src']);
+        if (src != null) images.add(src);
 
-        final widget0 = images.first as core.ImageLayout;
-        final widget1 = images.last as core.ImageLayout;
+        return meta;
+      },
+      onWidgets: (meta, widgets) {
+        if (images.length != 2) return widgets;
+
+        final a = meta.domElement.attributes;
+        if (!a.containsKey('data-config')) return widgets;
+
+        final Map config = json.decode(a['data-config']);
+        if (!config.containsKey('width') ||
+            !(config['width'] is num) ||
+            !config.containsKey('height') ||
+            !(config['height'] is num)) return widgets;
+
+        final width = (config['width'] as num).toDouble();
+        final height = (config['height'] as num).toDouble();
+
         return [
           _buildSpacing(meta),
           _PhotoCompareWidget(
-            aspectRatio: widget0.height != null &&
-                    widget0.height > 0 &&
-                    widget0.width != null &&
-                    widget0.width > 0
-                ? widget0.width / widget0.height
-                : null,
-            image0: widget0.image,
-            image1: widget1.image,
+            aspectRatio: width / height,
+            image0: wf.buildImage(images.first, height: height, width: width),
+            image1: wf.buildImage(images.last, height: height, width: width),
           ),
           _buildSpacing(meta),
         ];
       },
     );
-
-    return _buildOp;
   }
 }
 
 class _PhotoCompareWidget extends StatefulWidget {
   final double aspectRatio;
-  final ImageProvider image0;
-  final ImageProvider image1;
+  final Widget image0;
+  final Widget image1;
 
   _PhotoCompareWidget({
     this.aspectRatio,
     this.image0,
     this.image1,
-  })  : assert(image0 != null),
+  })  : assert(aspectRatio != null),
+        assert(image0 != null),
         assert(image1 != null);
 
   @override
@@ -59,14 +67,14 @@ class _PhotoCompareState extends State<_PhotoCompareWidget> {
 
   Widget build(BuildContext context) {
     final widgets = <Widget>[
-      _buildAspectRatio(Image(image: widget.image1)),
+      _buildAspectRatio(widget.image0),
       Align(
         alignment: Alignment.topRight,
         child: ClipRect(
           child: Align(
             alignment: Alignment.topRight,
             widthFactor: 1 - position,
-            child: _buildAspectRatio(Image(image: widget.image0)),
+            child: _buildAspectRatio(widget.image1),
           ),
         ),
       ),
