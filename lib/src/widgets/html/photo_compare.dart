@@ -78,11 +78,33 @@ class _PhotoCompareState extends State<_PhotoCompareWidget> {
           ),
         ),
       ),
+      Positioned.fill(
+        child: FractionallySizedBox(
+          alignment: Alignment.topLeft,
+          child: Stack(
+            children: <Widget>[
+              Positioned(
+                bottom: 0,
+                child: Container(
+                  color: _PhotoCompareHandler.color,
+                  width: _PhotoCompareHandler.dividerSize,
+                ),
+                right: _PhotoCompareHandler.dividerSize / -2,
+                top: 0,
+              ),
+              Positioned(
+                bottom: 0,
+                child: _PhotoCompareHandler(),
+                right: _PhotoCompareHandler.boxSize / -2,
+                top: 0,
+              ),
+            ],
+            overflow: Overflow.visible,
+          ),
+          widthFactor: position,
+        ),
+      ),
     ];
-
-    if (position == _PhotoCompareHandler.positionZero) {
-      widgets.add(Positioned.fill(child: _PhotoCompareHandler()));
-    }
 
     return GestureDetector(
       onHorizontalDragDown: (details) =>
@@ -103,6 +125,7 @@ class _PhotoCompareState extends State<_PhotoCompareWidget> {
 
 class _PhotoCompareHandler extends StatefulWidget {
   static const boxSize = 1.4 * iconSize;
+  static const dividerSize = 2.0;
   static const iconSize = 30.0;
   static const color = Colors.white70;
   static const positionZero = .5;
@@ -132,32 +155,26 @@ class _PhotoCompareHandlerState extends State<_PhotoCompareHandler>
   }
 
   @override
-  Widget build(BuildContext context) => Stack(
-        children: <Widget>[
-          Center(child: _PhotoCompareAnimation(_controller.view)),
-          Center(
-            child: Container(
-              height: _PhotoCompareHandler.boxSize,
-              width: _PhotoCompareHandler.boxSize,
-              decoration: BoxDecoration(
-                border: Border.all(color: _PhotoCompareHandler.color, width: 2),
-                shape: BoxShape.circle,
-              ),
-            ),
-          ),
-        ],
+  Widget build(BuildContext context) => Container(
+        child: _PhotoCompareAnimation(_controller.view),
+        decoration: BoxDecoration(
+          border: Border.all(color: _PhotoCompareHandler.color, width: 2),
+          shape: BoxShape.circle,
+        ),
+        height: _PhotoCompareHandler.boxSize,
+        width: _PhotoCompareHandler.boxSize,
       );
 }
 
 class _PhotoCompareAnimation extends StatelessWidget {
   final Animation<double> controller;
-  final Animation<double> width;
+  final Animation<double> offset;
 
   _PhotoCompareAnimation(this.controller)
-      : width = Tween<double>(begin: 1.4, end: 1.7).animate(
+      : offset = Tween<double>(begin: -.4, end: -.7).animate(
           CurvedAnimation(
             parent: controller,
-            curve: Interval(0.0, 0.5, curve: Curves.ease),
+            curve: Interval(0, .5, curve: Curves.ease),
           ),
         );
 
@@ -165,17 +182,17 @@ class _PhotoCompareAnimation extends StatelessWidget {
   Widget build(BuildContext _) =>
       AnimatedBuilder(builder: _buildAnimation, animation: controller);
 
-  Widget _buildAnimation(BuildContext _, Widget __) => SizedBox(
-        child: Stack(
-          children: <Widget>[
-            _buildIcon(Icons.chevron_left),
-            Positioned(
-              right: 0,
-              child: _buildIcon(Icons.chevron_right),
-            )
-          ],
-        ),
-        width: width.value * _PhotoCompareHandler.iconSize,
+  Widget _buildAnimation(BuildContext _, Widget __) => Stack(
+        children: <Widget>[
+          Positioned.fill(
+            left: offset.value * _PhotoCompareHandler.iconSize,
+            child: _buildIcon(Icons.chevron_left),
+          ),
+          Positioned.fill(
+            right: offset.value * _PhotoCompareHandler.iconSize,
+            child: _buildIcon(Icons.chevron_right),
+          )
+        ],
       );
 
   Widget _buildIcon(IconData icon) => Icon(
