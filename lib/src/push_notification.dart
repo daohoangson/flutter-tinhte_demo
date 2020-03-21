@@ -82,7 +82,11 @@ Future<bool> _onResume(Map<String, dynamic> message) async {
   final navigator = primaryNavKey.currentState;
   if (navigator == null || path == null) return false;
 
-  return parseLink(path: path, rootNavigator: navigator);
+  return parsePath(
+    path,
+    rootNavigator: navigator,
+    defaultWidget: const NotificationListScreen(),
+  );
 }
 
 class PushNotificationApp extends StatefulWidget {
@@ -246,13 +250,11 @@ class _OnLaunchMessageState extends State<_OnLaunchMessageWidget> {
     _future = buildWidget(
       ApiCaller.stateful(this),
       widget.path,
-    ).then(
-      (widget) => widget ?? NotificationListScreen(),
-      onError: (error) async {
-        await showApiErrorDialog(context, error);
-        setState(() => _fallback = true);
-      },
-    );
+      defaultWidget: const NotificationListScreen(),
+    ).catchError((error) async {
+      await showApiErrorDialog(context, error);
+      setState(() => _fallback = true);
+    });
   }
 
   @override

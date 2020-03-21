@@ -18,7 +18,8 @@ void launchLink(BuildContext context, String link) async {
   if (link.contains('misc/api-chr')) return;
 
   if (link.startsWith(configSiteRoot)) {
-    final parsed = await parseLink(context: context, link: link);
+    final path = "tools/parse-link?link=${Uri.encodeQueryComponent(link)}";
+    final parsed = await parsePath(path, context: context);
     if (parsed) return;
 
     final apiAuth = ApiAuth.of(context, listen: false);
@@ -37,14 +38,14 @@ void launchLink(BuildContext context, String link) async {
 void launchMemberView(BuildContext context, int userId) =>
     launchLink(context, "$configSiteRoot/members/$userId/");
 
-Future<bool> parseLink({
+Future<bool> parsePath(
+  String path, {
   BuildContext context,
-  String link,
+  Widget defaultWidget,
   NavigatorState rootNavigator,
-  String path,
 }) {
+  assert(path != null);
   assert((context == null) != (rootNavigator == null));
-  assert((link == null) != (path == null));
   final navigator = rootNavigator ?? Navigator.of(context);
   var cancelled = false;
 
@@ -70,7 +71,8 @@ Future<bool> parseLink({
 
   return buildWidget(
     ApiCaller.stateless(context ?? rootNavigator.context),
-    path ?? 'tools/parse-link?link=${Uri.encodeQueryComponent(link)}',
+    path,
+    defaultWidget: defaultWidget,
   ).then<bool>(
     (widget) {
       if (cancelled || widget == null) return false;
@@ -83,14 +85,18 @@ Future<bool> parseLink({
   ).whenComplete(() => cancelDialog());
 }
 
-Future<Widget> buildWidget(ApiCaller caller, String path) {
+Future<Widget> buildWidget(
+  ApiCaller caller,
+  String path, {
+  Widget defaultWidget,
+}) {
   final completer = Completer<Widget>();
 
   apiGet(
     caller,
     path,
     onSuccess: (json) {
-      Widget widget;
+      Widget widget = defaultWidget;
       if (json.containsKey('tag') && json.containsKey('tagged')) {
         widget = _parseTag(json);
       } else if (json.containsKey('thread') && json.containsKey('posts')) {
