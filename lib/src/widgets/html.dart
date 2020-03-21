@@ -250,8 +250,7 @@ class TinhteWidgetFactory extends WidgetFactory {
             e.attributes.containsKey('data-height') &&
             e.attributes.containsKey('data-permalink') &&
             e.attributes.containsKey('data-width')) {
-          return lazySet(null,
-              buildOp: lbTrigger.prepareBuildOpForATag(meta, e));
+          return lazySet(null, buildOp: lbTrigger.prepareThumbnailOp(e));
         }
 
         if (e.classes.contains('LinkExpander') &&
@@ -286,7 +285,7 @@ class TinhteWidgetFactory extends WidgetFactory {
       case 'Tinhte_PhotoCompare':
         return lazySet(null, buildOp: photoCompare.buildOp);
       case 'bdImage_attachImage':
-        return lazySet(null, buildOp: lbTrigger.buildOp);
+        return lazySet(null, buildOp: lbTrigger.fullOp);
       case 'smilie':
         return lazySet(null, buildOp: smilieOp);
     }

@@ -5,7 +5,7 @@ class LbTrigger {
   final sources = <String>[];
   final WidgetFactory wf;
 
-  BuildOp _buildOp;
+  BuildOp _fullOp;
 
   LbTrigger({this.wf});
 
@@ -23,7 +23,7 @@ class LbTrigger {
         ),
       );
 
-  BuildOp prepareBuildOpForATag(NodeMetadata meta, dom.Element e) {
+  BuildOp prepareThumbnailOp(dom.Element e) {
     final a = e.attributes;
     if (!a.containsKey('data-height') ||
         !a.containsKey('data-width') ||
@@ -78,20 +78,31 @@ class LbTrigger {
     );
   }
 
-  BuildOp get buildOp {
-    _buildOp ??= BuildOp(
+  BuildOp get fullOp {
+    _fullOp = BuildOp(
       onChild: (meta, e) {
         if (e.localName != 'img') return meta;
 
+        final a = e.attributes;
+        final href = a['src'];
+        final url = wf.constructFullUrl(href);
+        if (url == null) return meta;
+
+        final index = sources.length;
+        sources.add(url);
+
         return lazySet(
           meta,
-          isBlockElement: true,
+          buildOp: BuildOp(
+            onWidgets: (_, widgets) =>
+                widgets.map((widget) => buildGestureDetector(index, widget)),
+          ),
           styles: ['margin', '0.5em 0'],
         );
       },
     );
 
-    return _buildOp;
+    return _fullOp;
   }
 }
 
