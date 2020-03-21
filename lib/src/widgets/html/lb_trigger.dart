@@ -158,7 +158,15 @@ class _ScreenState extends State<_Screen> {
             PhotoViewGallery.builder(
               builder: _buildItem,
               itemCount: widget.sources.length,
-              loadingChild: Container(
+              loadingBuilder: (context, event) => Container(
+                child: Center(
+                  child: CircularProgressIndicator(
+                    value: event == null
+                        ? null
+                        : event.cumulativeBytesLoaded /
+                            event.expectedTotalBytes,
+                  ),
+                ),
                 decoration: BoxDecoration(color: Colors.black),
               ),
               pageController: widget.pageController,
@@ -195,6 +203,6 @@ class _ScreenState extends State<_Screen> {
 
   PhotoViewGalleryPageOptions _buildItem(BuildContext context, int index) =>
       PhotoViewGalleryPageOptions(
-        imageProvider: CachedNetworkImageProvider(widget.sources[index]),
+        imageProvider: NetworkImage(widget.sources[index]),
       );
 }
