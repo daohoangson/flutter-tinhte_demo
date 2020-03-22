@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'links.g.dart';
 
-@JsonSerializable(createToJson: false)
+@JsonSerializable()
 class Links {
   final String next;
   final int page;

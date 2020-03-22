@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'package:async/async.dart';
 import 'package:http/http.dart';
 import 'package:path/path.dart';
 
@@ -81,7 +80,8 @@ class Api {
       "password": password,
     });
 
-    return OauthToken.fromJson(ObtainMethod.UsernamePassword, json);
+    return OauthToken.fromJson(json)
+      ..obtainMethod = ObtainMethod.UsernamePassword;
   }
 
   Future<OauthToken> refreshToken(OauthToken token) async {
@@ -95,7 +95,7 @@ class Api {
       "refresh_token": refreshToken,
     });
 
-    return OauthToken.fromJson(token.obtainMethod, json);
+    return OauthToken.fromJson(json)..obtainMethod = token.obtainMethod;
   }
 
   Future<dynamic> deleteJson(String path, {Map<String, String> bodyFields}) {

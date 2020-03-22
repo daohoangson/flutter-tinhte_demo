@@ -27,7 +27,7 @@ Future _sendRequest(Client client, String method, String url,
 
     fileFields.forEach((field, file) => mr.files.add(MultipartFile(
           field,
-          ByteStream(DelegatingStream.typed(file.openRead())),
+          ByteStream(file.openRead().cast()),
           file.lengthSync(),
           filename: basename(file.path),
         )));

@@ -8,11 +8,12 @@ part of 'feature_page.dart';
 
 FeaturePage _$FeaturePageFromJson(Map<String, dynamic> json) {
   return FeaturePage(
-      json['forumId'] as int,
-      json['fullName'] as String,
-      json['is_followed'] as bool,
-      json['tagId'] as int,
-      json['tagText'] as String)
+    json['forumId'] as int,
+    json['fullName'] as String,
+    json['is_followed'] as bool,
+    json['tagId'] as int,
+    json['tagText'] as String,
+  )
     ..links = json['links'] == null
         ? null
         : FeaturePageLinks.fromJson(json['links'] as Map<String, dynamic>)

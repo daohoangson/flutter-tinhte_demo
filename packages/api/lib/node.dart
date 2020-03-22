@@ -1,6 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import 'src/_.dart';
 import 'thread_prefix.dart';
 
 part 'node.g.dart';
@@ -10,16 +9,14 @@ abstract class Node {
   String get title;
 }
 
-@JsonSerializable(createToJson: false, fieldRename: FieldRename.snake)
+@JsonSerializable()
 class Category extends Node {
   String categoryDescription;
   final int categoryId;
   String categoryTitle;
 
-  @JsonKey(toJson: none)
   CategoryLinks links;
 
-  @JsonKey(toJson: none)
   CategoryPermissions permissions;
 
   @override
@@ -33,7 +30,7 @@ class Category extends Node {
       _$CategoryFromJson(json);
 }
 
-@JsonSerializable(createToJson: false)
+@JsonSerializable()
 class CategoryLinks {
   String detail;
   String permalink;
@@ -43,7 +40,7 @@ class CategoryLinks {
       _$CategoryLinksFromJson(json);
 }
 
-@JsonSerializable(createToJson: false)
+@JsonSerializable()
 class CategoryPermissions {
   bool delete;
   bool edit;
@@ -54,7 +51,7 @@ class CategoryPermissions {
       _$CategoryPermissionsFromJson(json);
 }
 
-@JsonSerializable(createToJson: false, fieldRename: FieldRename.snake)
+@JsonSerializable()
 class Forum extends Node {
   String forumDescription;
   final int forumId;
@@ -64,10 +61,7 @@ class Forum extends Node {
   int forumThreadCount;
   String forumTitle;
 
-  @JsonKey(toJson: none)
   ForumLinks links;
-
-  @JsonKey(toJson: none)
   ForumPermissions permissions;
 
   int threadDefaultPrefixId;
@@ -83,7 +77,7 @@ class Forum extends Node {
   factory Forum.fromJson(Map<String, dynamic> json) => _$ForumFromJson(json);
 }
 
-@JsonSerializable(createToJson: false)
+@JsonSerializable()
 class ForumLinks {
   String detail;
   String followers;
@@ -95,7 +89,7 @@ class ForumLinks {
       _$ForumLinksFromJson(json);
 }
 
-@JsonSerializable(createToJson: false, fieldRename: FieldRename.snake)
+@JsonSerializable()
 class ForumPermissions {
   bool createThread;
   bool delete;

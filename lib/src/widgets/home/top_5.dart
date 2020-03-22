@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:tinhte_api/content_list.dart';
+import 'package:tinhte_api/search.dart';
 import 'package:tinhte_api/thread.dart';
+import 'package:tinhte_api/x_content_list.dart';
 import 'package:tinhte_demo/src/screens/thread_view.dart';
 import 'package:tinhte_demo/src/intl.dart';
 import 'package:tinhte_demo/src/widgets/image.dart';
 
 class HomeTop5Widget extends StatelessWidget {
-  final List<ThreadListItem> items;
+  final List<SearchResult<Thread>> items;
 
   HomeTop5Widget(this.items, {Key key})
       : assert(items?.length == 5),
@@ -88,14 +89,14 @@ class HomeTop5Widget extends StatelessWidget {
 }
 
 class _HomeTop5WidgetThread extends StatelessWidget {
-  final ListItem item;
+  final ContentListItem item;
   final Thread thread;
 
-  _HomeTop5WidgetThread(ThreadListItem tli, {Key key})
-      : assert(tli?.item != null),
-        assert(tli?.thread != null),
-        item = tli.item,
-        thread = tli.thread,
+  _HomeTop5WidgetThread(SearchResult<Thread> srt, {Key key})
+      : assert(srt?.content != null),
+        assert(srt?.listItem != null),
+        item = srt.listItem,
+        thread = srt.content,
         super(key: key);
 
   @override

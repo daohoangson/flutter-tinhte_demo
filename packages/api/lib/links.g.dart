@@ -7,6 +7,10 @@ part of 'links.dart';
 // **************************************************************************
 
 Links _$LinksFromJson(Map<String, dynamic> json) {
-  return Links(json['next'] as String, json['page'] as int,
-      json['pages'] as int, json['prev'] as String);
+  return Links(
+    json['next'] as String,
+    json['page'] as int,
+    json['pages'] as int,
+    json['prev'] as String,
+  );
 }

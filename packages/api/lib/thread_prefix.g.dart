@@ -7,5 +7,8 @@ part of 'thread_prefix.dart';
 // **************************************************************************
 
 ThreadPrefix _$ThreadPrefixFromJson(Map<String, dynamic> json) {
-  return ThreadPrefix(json['prefix_id'] as int, json['prefix_title'] as String);
+  return ThreadPrefix(
+    json['prefix_id'] as int,
+    json['prefix_title'] as String,
+  );
 }

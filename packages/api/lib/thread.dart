@@ -1,6 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import 'src/_.dart';
 import 'node.dart';
 import 'post.dart';
 import 'thread_prefix.dart';
@@ -21,7 +20,7 @@ bool isThreadTitleRedundant(Thread thread, [Post firstPost]) {
   return firstPost.postBody?.startsWith(thread.threadTitle) == true;
 }
 
-@JsonSerializable(fieldRename: FieldRename.snake)
+@JsonSerializable()
 class Thread {
   bool creatorHasVerifiedBadge;
   int creatorUserId;
@@ -45,32 +44,19 @@ class Thread {
   int threadViewCount;
   bool userIsIgnored;
 
-  @JsonKey(toJson: none)
   Forum forum;
-
-  @JsonKey(toJson: none)
   ThreadLinks links;
-
-  @JsonKey(toJson: none)
   ThreadPermissions permissions;
-
-  @JsonKey(toJson: none)
   ThreadImage threadImage;
-
-  @JsonKey(toJson: none)
   List<ThreadPrefix> threadPrefixes;
-
-  @JsonKey(toJson: none)
   ThreadImage threadThumbnail;
 
   Thread(this.threadId);
   factory Thread.fromJson(Map<String, dynamic> json) => _$ThreadFromJson(json);
-  Map<String, dynamic> toJson() => _$ThreadToJson(this);
 }
 
-@JsonSerializable(createToJson: false)
+@JsonSerializable()
 class ThreadImage {
-  @JsonKey(name: "display_mode")
   String displayMode;
 
   int height;
@@ -84,7 +70,7 @@ class ThreadImage {
       _$ThreadImageFromJson(json);
 }
 
-@JsonSerializable(createToJson: false, fieldRename: FieldRename.snake)
+@JsonSerializable()
 class ThreadLinks {
   String detail;
 
@@ -115,7 +101,7 @@ class ThreadLinks {
       _$ThreadLinksFromJson(json);
 }
 
-@JsonSerializable(createToJson: false)
+@JsonSerializable()
 class ThreadPermissions {
   bool delete;
 
@@ -125,7 +111,6 @@ class ThreadPermissions {
 
   bool post;
 
-  @JsonKey(name: "upload_attachment")
   bool uploadAttachment;
 
   bool view;
@@ -136,10 +121,10 @@ class ThreadPermissions {
 }
 
 Map<String, String> _threadTagsFromJson(json) {
-  if (json is List) {
-    // php returns empty json array if thread has no tags...
-    return null;
-  }
+  if (json == null) return null;
+
+  // php returns empty json array if thread has no tags...
+  if (json is List) return null;
 
   return Map<String, String>.from(json);
 }

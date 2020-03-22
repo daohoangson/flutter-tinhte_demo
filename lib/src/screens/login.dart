@@ -342,7 +342,7 @@ class _LoginFormState extends State<LoginForm> {
       return Future.error('Cannot login with ${om.toString()}.');
     }
 
-    return _LoginResult(token: OauthToken.fromJson(om, jsonMap));
+    return _LoginResult(token: OauthToken.fromJson(jsonMap)..obtainMethod = om);
   }
 
   _onResult(ApiAuth apiAuth, _LoginResult result) {
@@ -398,7 +398,7 @@ class _LoginFormState extends State<LoginForm> {
     if (!jsonMap.containsKey('token'))
       return Future.error('Cannot register new user account.');
 
-    return OauthToken.fromJson(obtainMethod, jsonMap['token']);
+    return OauthToken.fromJson(jsonMap['token'])..obtainMethod = obtainMethod;
   }
 
   void _showError(BuildContext context, error) =>

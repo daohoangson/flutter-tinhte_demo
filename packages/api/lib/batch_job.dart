@@ -3,7 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'batch_job.g.dart';
 
-@JsonSerializable(createFactory: false)
+@JsonSerializable(createFactory: false, createToJson: true)
 class BatchJob {
   final String id;
   final String method;

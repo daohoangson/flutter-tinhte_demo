@@ -10,5 +10,5 @@ Map<String, dynamic> _$BatchJobToJson(BatchJob instance) => <String, dynamic>{
       'id': instance.id,
       'method': instance.method,
       'uri': instance.uri,
-      'params': instance.params
+      'params': instance.params,
     };

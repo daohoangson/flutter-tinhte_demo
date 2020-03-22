@@ -7,7 +7,9 @@ part of 'thread.dart';
 // **************************************************************************
 
 Thread _$ThreadFromJson(Map<String, dynamic> json) {
-  return Thread(json['thread_id'] as int)
+  return Thread(
+    json['thread_id'] as int,
+  )
     ..creatorHasVerifiedBadge = json['creator_has_verified_badge'] as bool
     ..creatorUserId = json['creator_user_id'] as int
     ..creatorUsername = json['creator_username'] as String
@@ -22,9 +24,7 @@ Thread _$ThreadFromJson(Map<String, dynamic> json) {
     ..threadIsPublished = json['thread_is_published'] as bool
     ..threadIsSticky = json['thread_is_sticky'] as bool
     ..threadPostCount = json['thread_post_count'] as int
-    ..threadTags = json['thread_tags'] == null
-        ? null
-        : _threadTagsFromJson(json['thread_tags'])
+    ..threadTags = _threadTagsFromJson(json['thread_tags'])
     ..threadTitle = json['thread_title'] as String
     ..threadUpdateDate = json['thread_update_date'] as int
     ..threadViewCount = json['thread_view_count'] as int
@@ -52,41 +52,10 @@ Thread _$ThreadFromJson(Map<String, dynamic> json) {
             json['thread_thumbnail'] as Map<String, dynamic>);
 }
 
-Map<String, dynamic> _$ThreadToJson(Thread instance) => <String, dynamic>{
-      'creator_has_verified_badge': instance.creatorHasVerifiedBadge,
-      'creator_user_id': instance.creatorUserId,
-      'creator_username': instance.creatorUsername,
-      'forum_id': instance.forumId,
-      'first_post': instance.firstPost,
-      'thread_create_date': instance.threadCreateDate,
-      'thread_id': instance.threadId,
-      'thread_is_deleted': instance.threadIsDeleted,
-      'thread_is_followed': instance.threadIsFollowed,
-      'thread_is_new': instance.threadIsNew,
-      'thread_is_published': instance.threadIsPublished,
-      'thread_is_sticky': instance.threadIsSticky,
-      'thread_post_count': instance.threadPostCount,
-      'thread_tags': instance.threadTags,
-      'thread_title': instance.threadTitle,
-      'thread_update_date': instance.threadUpdateDate,
-      'thread_view_count': instance.threadViewCount,
-      'user_is_ignored': instance.userIsIgnored,
-      'forum': instance.forum == null ? null : none(instance.forum),
-      'links': instance.links == null ? null : none(instance.links),
-      'permissions':
-          instance.permissions == null ? null : none(instance.permissions),
-      'thread_image':
-          instance.threadImage == null ? null : none(instance.threadImage),
-      'thread_prefixes': instance.threadPrefixes == null
-          ? null
-          : none(instance.threadPrefixes),
-      'thread_thumbnail': instance.threadThumbnail == null
-          ? null
-          : none(instance.threadThumbnail)
-    };
-
 ThreadImage _$ThreadImageFromJson(Map<String, dynamic> json) {
-  return ThreadImage(json['link'] as String)
+  return ThreadImage(
+    json['link'] as String,
+  )
     ..displayMode = json['display_mode'] as String
     ..height = json['height'] as int
     ..mode = json['mode'] as String

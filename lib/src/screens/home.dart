@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tinhte_api/content_list.dart';
+import 'package:tinhte_api/search.dart';
+import 'package:tinhte_api/thread.dart';
 import 'package:tinhte_demo/src/screens/content_list_view.dart';
 import 'package:tinhte_demo/src/widgets/home/bottom_bar.dart';
 import 'package:tinhte_demo/src/widgets/home/channels.dart';
@@ -51,7 +52,7 @@ class HomeScreen extends StatelessWidget {
     if (!json.containsKey('threads')) return;
 
     final items = fc.items;
-    List<ThreadListItem> top5;
+    List<SearchResult<Thread>> top5;
     if (fc.id == FetchContextId.FetchInitial) {
       top5 = [];
       items.add(_HomeListItem(top5: top5));
@@ -71,19 +72,19 @@ class HomeScreen extends StatelessWidget {
     final l = threadsJson.length;
     for (int i = 0; i < l; i++) {
       final Map threadJson = threadsJson[i];
-      final tli = ThreadListItem.fromJson(threadJson);
+      final srt = SearchResult<Thread>.fromJson(threadJson);
 
-      if (tli?.thread?.threadImage != null) {
+      if (srt?.content?.threadImage != null) {
         // force display mode for edge case: when thread has custom home image
         // thread view will have an annoying jump effect (no cover -> has cover)
         // we know home thread always has cover image so it's safe to do this
-        tli.thread.threadImage.displayMode = 'cover';
+        srt.content.threadImage.displayMode = 'cover';
       }
 
       if (top5 != null && top5.length < 5) {
-        top5.add(tli);
+        top5.add(srt);
       } else {
-        items.add(_HomeListItem(thread: tli));
+        items.add(_HomeListItem(thread: srt));
       }
 
       if (fc.id == FetchContextId.FetchInitial && i == l - 4) {
@@ -110,8 +111,8 @@ class HomeScreenRoute extends MaterialPageRoute {
 }
 
 class _HomeListItem {
-  final ThreadListItem thread;
-  final List<ThreadListItem> top5;
+  final SearchResult<Thread> thread;
+  final List<SearchResult<Thread>> top5;
   final Widget widget;
 
   _HomeListItem({
