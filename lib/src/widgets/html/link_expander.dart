@@ -21,11 +21,11 @@ class LinkExpander {
             if (c.contains('thumbnail')) {
               lazySet(meta, buildOp: thumbnailOp);
             } else if (c.contains('info')) {
-              lazySet(meta, buildOp: infoOp);
+              lazySet(meta, buildOp: infoOp, styles: ['text-align', 'left']);
             }
             break;
           case 'h4':
-            lazySet(meta, styles: ['margin', '0px']);
+            lazySet(meta, styles: ['margin', '0px', 'text-align', 'left']);
             break;
           case 'span':
             if (c.contains('host')) {
