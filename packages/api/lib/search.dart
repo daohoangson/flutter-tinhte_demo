@@ -2,6 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 import 'thread.dart';
 import 'x_content_list.dart';
+import 'x_user_feed.dart';
 
 part 'search.g.dart';
 
@@ -10,6 +11,7 @@ class SearchResult<T> {
   final String contentType;
   final int contentId;
 
+  UserFeedData feedData;
   ContentListItem listItem;
 
   @JsonKey(ignore: true)

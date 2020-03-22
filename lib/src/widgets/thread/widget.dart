@@ -5,9 +5,13 @@ const _kThreadWidgetSpacing = const SizedBox(height: _kThreadWidgetPadding);
 
 class ThreadWidget extends StatelessWidget {
   final Thread thread;
+  final UserFeedData feedData;
 
-  ThreadWidget(this.thread, {Key key})
-      : assert(thread != null),
+  ThreadWidget(
+    this.thread, {
+    Key key,
+    this.feedData,
+  })  : assert(thread != null),
         super(key: key);
 
   @override
@@ -51,7 +55,12 @@ class ThreadWidget extends StatelessWidget {
 
     Widget built = _buildCard(context, children);
 
-    if (thread.threadIsSticky) built = _buildBanner(built);
+    final popupMenu = buildPopupMenuForThread(context, thread, feedData);
+    if (popupMenu != null) {
+      built = _buildPopupMenu(built, popupMenu);
+    } else {
+      if (thread.threadIsSticky) built = _buildBanner(built);
+    }
 
     return built;
   }
@@ -157,8 +166,15 @@ class ThreadWidget extends StatelessWidget {
     );
   }
 
+  Widget _buildPopupMenu(Widget child, Widget popupMenu) => Stack(
+        children: <Widget>[
+          child,
+          Align(alignment: Alignment.topRight, child: popupMenu)
+        ],
+      );
+
   Widget _buildTextPadding(Widget child) => Padding(
-        padding: EdgeInsets.symmetric(horizontal: _kThreadWidgetPadding),
+        padding: const EdgeInsets.symmetric(horizontal: _kThreadWidgetPadding),
         child: child,
       );
 

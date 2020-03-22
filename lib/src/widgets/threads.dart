@@ -7,6 +7,7 @@ import 'package:tinhte_api/navigation.dart' as navigation;
 import 'package:tinhte_api/node.dart';
 import 'package:tinhte_api/post.dart';
 import 'package:tinhte_api/thread.dart';
+import 'package:tinhte_api/x_user_feed.dart';
 import 'package:tinhte_demo/src/screens/forum_view.dart';
 import 'package:tinhte_demo/src/screens/node_view.dart';
 import 'package:tinhte_demo/src/screens/thread_view.dart';
@@ -17,6 +18,7 @@ import 'package:tinhte_demo/src/widgets/image.dart';
 import 'package:tinhte_demo/src/api.dart';
 import 'package:tinhte_demo/src/intl.dart';
 import 'package:tinhte_demo/src/link.dart';
+import 'package:tinhte_demo/src/widgets/x_user_feed/thread.dart';
 
 part 'thread/navigation.dart';
 part 'thread/widget.dart';
