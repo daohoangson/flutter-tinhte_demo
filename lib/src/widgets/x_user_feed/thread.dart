@@ -5,7 +5,7 @@ import 'package:tinhte_demo/src/link.dart';
 
 final _sourceRegExp = RegExp(r'^(.+) (.+)$');
 
-Widget buildPopupMenuForThread(
+PopupMenuButton buildPopupMenuButtonForThread(
   BuildContext context,
   Thread thread,
   UserFeedData data,
@@ -44,12 +44,13 @@ Widget buildPopupMenuForThread(
   return PopupMenuButton<String>(
     child: Padding(
       padding: const EdgeInsets.all(10),
-      child: Text(
-        '⋮',
-        style: Theme.of(context).textTheme.button,
+      child: Icon(
+        Icons.info,
+        color: Theme.of(context).disabledColor,
       ),
     ),
     itemBuilder: (_) => entries,
     onSelected: (path) => parsePath(path, context: context),
+    tooltip: 'Why is it in my feed?',
   );
 }

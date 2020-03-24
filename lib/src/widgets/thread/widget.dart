@@ -55,9 +55,9 @@ class ThreadWidget extends StatelessWidget {
 
     Widget built = _buildCard(context, children);
 
-    final popupMenu = buildPopupMenuForThread(context, thread, feedData);
-    if (popupMenu != null) {
-      built = _buildPopupMenu(built, popupMenu);
+    final popupMenuButton = buildPopupMenuButtonForThread(context, thread, feedData);
+    if (popupMenuButton != null) {
+      built = _buildPopupMenu(built, popupMenuButton);
     } else {
       if (thread.threadIsSticky) built = _buildBanner(built);
     }
@@ -166,10 +166,10 @@ class ThreadWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildPopupMenu(Widget child, Widget popupMenu) => Stack(
+  Widget _buildPopupMenu(Widget child, PopupMenuButton popupMenuButton) => Stack(
         children: <Widget>[
           child,
-          Align(alignment: Alignment.topRight, child: popupMenu)
+          Align(alignment: Alignment.topRight, child: popupMenuButton)
         ],
       );
 
