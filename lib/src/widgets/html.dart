@@ -36,9 +36,6 @@ const _kSmilies = {
 
 const _kTextPadding = const EdgeInsets.symmetric(horizontal: kPostBodyPadding);
 
-Widget _buildSpacing(NodeMetadata meta) => core.SpacingPlaceholder(
-    height: CssLength(0.5, unit: CssLengthUnit.em), tsb: meta.tsb);
-
 class TinhteHtmlWidget extends StatelessWidget {
   final String html;
   final Color hyperlinkColor;
@@ -271,11 +268,6 @@ class TinhteWidgetFactory extends WidgetFactory {
             e.attributes.containsKey('data-width')) {
           return lazySet(null, buildOp: lbTrigger.prepareThumbnailOp(e));
         }
-
-        if (e.classes.contains('LinkExpander') &&
-            e.classes.contains('expanded')) {
-          return lazySet(null, buildOp: linkExpander.buildOp);
-        }
         break;
       case 'blockquote':
         return lazySet(null, buildOp: blockquoteOp);
@@ -317,7 +309,14 @@ class TinhteWidgetFactory extends WidgetFactory {
     Map<dynamic, String> attributes,
   ) {
     if (attributes?.containsKey('class') == true) {
-      switch (attributes['class']) {
+      final clazz = attributes['class'];
+      if (tag == 'a' &&
+          clazz.contains('LinkExpander') &&
+          clazz.contains('expanded')) {
+        return lazySet(null, buildOp: linkExpander.buildOp);
+      }
+
+      switch (clazz) {
         case 'Tinhte_PhotoCompare':
           return lazySet(null, buildOp: photoCompare.buildOp);
       }

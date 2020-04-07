@@ -14,6 +14,7 @@ class LinkExpander {
 
   BuildOp get buildOp {
     _buildOp ??= BuildOp(
+      defaultStyles: (_, __) => ['margin', '0.5em 0'],
       onChild: (meta, e) {
         final c = e.classes;
         switch (e.localName) {
@@ -50,11 +51,8 @@ class LinkExpander {
 
   BuildOp get oembedOp {
     _oembedOp ??= BuildOp(
-      onWidgets: (meta, _) => [
-        _buildSpacing(meta),
-        _buildOembedWebView(meta.domElement.outerHtml),
-        _buildSpacing(meta),
-      ],
+      defaultStyles: (_, __) => ['margin', '0.5em 0'],
+      onWidgets: (meta, _) => [_buildOembedWebView(meta.domElement.outerHtml)],
     );
     return _oembedOp;
   }
@@ -83,7 +81,6 @@ class LinkExpander {
     if (info == null) return null;
 
     return [
-      _buildSpacing(meta),
       Wrap(
         children: <Widget>[
           thumbnail?.isCover != false
@@ -91,7 +88,6 @@ class LinkExpander {
               : _buildSquare(meta, thumbnail, info),
         ],
       ),
-      _buildSpacing(meta),
     ];
   }
 
