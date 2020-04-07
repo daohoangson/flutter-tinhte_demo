@@ -190,9 +190,13 @@ class TinhteWidgetFactory extends WidgetFactory {
         final title = a['data-title'];
         if (!_kSmilies.containsKey(title)) return pieces;
 
-        return pieces
-          ..first.block.rebuildBits(
-              (b) => b is DataBit ? b.rebuild(data: _kSmilies[title]) : b);
+        final text = pieces.first.text;
+        for (final bit in List.unmodifiable(text.bits)) {
+          bit.detach();
+        }
+        text.addText(_kSmilies[title]);
+
+        return pieces;
       },
     );
     return _smilieOp;
