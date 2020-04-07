@@ -4,8 +4,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
-import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart'
-    as core;
 import 'package:html/dom.dart' as dom;
 import 'package:html_unescape/html_unescape.dart';
 import 'package:photo_view/photo_view_gallery.dart';
@@ -99,7 +97,7 @@ class TinhteWidgetFactory extends WidgetFactory {
   PhotoCompare _photoCompare;
 
   TinhteWidgetFactory(
-    HtmlWidgetConfig config, {
+    HtmlConfig config, {
     this.devicePixelRatio,
     this.deviceWidth,
     this.needBottomMargin,
@@ -293,14 +291,13 @@ class TinhteWidgetFactory extends WidgetFactory {
     return super.parseElement(meta, e);
   }
 
-  Iterable<Widget> _buildTextPadding(
-      BuilderContext bc, Iterable<Widget> ws, _) {
+  Iterable<Widget> _buildTextPadding(BuildContext _, Iterable<Widget> ws, __) {
     final output = <Widget>[SizedBox(height: kPostBodyPadding)];
 
     final last = ws.last;
     for (final widget in ws) {
       final isText = widget is RichText ||
-          (widget is core.ImageLayout &&
+          (widget is ImageLayout &&
               widget.width != null &&
               widget.width < deviceWidth);
       output.add(isText ? buildPadding(widget, _kTextPadding) : widget);
