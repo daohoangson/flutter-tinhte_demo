@@ -146,30 +146,29 @@ class TinhteWidgetFactory extends WidgetFactory {
   }
 
   BuildOp get chrOp {
-    _chrOp ??= BuildOp(onWidgets: (meta, __) {
-      final a = meta.domElement.attributes;
-      final url = constructFullUrl(a['href']);
-      if (url?.isEmpty != false) return null;
+    _chrOp ??= BuildOp(
+      defaultStyles: (_, __) => ['margin', '0.5em 0'],
+      onWidgets: (meta, __) {
+        final a = meta.domElement.attributes;
+        final url = constructFullUrl(a['href']);
+        if (url?.isEmpty != false) return null;
 
-      final youtubeId = a.containsKey('data-chr-thumbnail')
-          ? RegExp(r'^https://img.youtube.com/vi/([^/]+)/0.jpg$')
-              .firstMatch(a['data-chr-thumbnail'])
-              ?.group(1)
-          : null;
+        final youtubeId = a.containsKey('data-chr-thumbnail')
+            ? RegExp(r'^https://img.youtube.com/vi/([^/]+)/0.jpg$')
+                .firstMatch(a['data-chr-thumbnail'])
+                ?.group(1)
+            : null;
 
-      final contents = youtubeId != null
-          ? YouTubeWidget(
-              youtubeId,
-              lowresThumbnailUrl: a['data-chr-thumbnail'],
-            )
-          : buildWebView(url);
+        final contents = youtubeId != null
+            ? YouTubeWidget(
+                youtubeId,
+                lowresThumbnailUrl: a['data-chr-thumbnail'],
+              )
+            : buildWebView(url);
 
-      return [
-        _buildSpacing(meta),
-        contents,
-        _buildSpacing(meta),
-      ];
-    });
+        return [contents];
+      },
+    );
     return _chrOp;
   }
 
