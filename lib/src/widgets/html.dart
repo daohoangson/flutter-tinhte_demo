@@ -256,12 +256,6 @@ class TinhteWidgetFactory extends WidgetFactory {
   NodeMetadata parseElement(NodeMetadata meta, dom.Element e) {
     switch (e.localName) {
       case 'a':
-        if (e.attributes.containsKey('data-chr') &&
-            e.attributes['data-chr'] == 'true' &&
-            e.attributes.containsKey('href')) {
-          return lazySet(null, buildOp: chrOp);
-        }
-
         if (e.classes.contains('LbTrigger') &&
             e.attributes.containsKey('data-height') &&
             e.attributes.containsKey('data-permalink') &&
@@ -308,6 +302,12 @@ class TinhteWidgetFactory extends WidgetFactory {
     String tag,
     Map<dynamic, String> attributes,
   ) {
+    if (tag == 'a' &&
+        attributes.containsKey('data-chr') &&
+        attributes.containsKey('href')) {
+      return lazySet(null, buildOp: chrOp);
+    }
+
     if (attributes?.containsKey('class') == true) {
       final clazz = attributes['class'];
       if (tag == 'a' &&
