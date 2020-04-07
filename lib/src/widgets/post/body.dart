@@ -32,6 +32,7 @@ class _PostBodyWidget extends StatelessWidget {
             child: TinhteHtmlWidget(
               post.postBodyHtml,
               needBottomMargin: needBottomMargin,
+              plainText: post.postBodyPlainText,
             ),
             style: getPostBodyTextStyle(context, post.postIsFirstPost),
           );
