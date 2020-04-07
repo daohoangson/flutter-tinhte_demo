@@ -4,8 +4,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
-import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart'
-    as core;
 import 'package:html/dom.dart' as dom;
 import 'package:html_unescape/html_unescape.dart';
 import 'package:photo_view/photo_view_gallery.dart';
@@ -38,19 +36,18 @@ const _kSmilies = {
 
 const _kTextPadding = const EdgeInsets.symmetric(horizontal: kPostBodyPadding);
 
-Widget _buildSpacing(NodeMetadata meta) => core.SpacingPlaceholder(
-    height: CssLength(0.5, unit: CssLengthUnit.em), tsb: meta.tsb);
-
 class TinhteHtmlWidget extends StatelessWidget {
   final String html;
   final Color hyperlinkColor;
   final bool needBottomMargin;
+  final String plainText;
   final TextStyle textStyle;
 
   TinhteHtmlWidget(
     this.html, {
     this.hyperlinkColor,
     this.needBottomMargin,
+    this.plainText,
     this.textStyle,
   });
 
@@ -66,6 +63,22 @@ class TinhteHtmlWidget extends StatelessWidget {
           "<html><body>$html</body></html>",
           baseUrl: Uri.parse(configSiteRoot),
           bodyPadding: const EdgeInsets.all(0),
+          buildAsyncBuilder: (_, snapshot) {
+            if (snapshot.hasData) return snapshot.data;
+
+            if (plainText != null)
+              return Padding(
+                padding: const EdgeInsets.all(kPostBodyPadding),
+                child: Text(plainText),
+              );
+
+            return const Center(
+              child: Padding(
+                padding: EdgeInsets.all(10),
+                child: CircularProgressIndicator(),
+              ),
+            );
+          },
           enableCaching: enableCaching,
           factoryBuilder: (config) => TinhteWidgetFactory(
             config,
@@ -99,7 +112,7 @@ class TinhteWidgetFactory extends WidgetFactory {
   PhotoCompare _photoCompare;
 
   TinhteWidgetFactory(
-    HtmlWidgetConfig config, {
+    HtmlConfig config, {
     this.devicePixelRatio,
     this.deviceWidth,
     this.needBottomMargin,
@@ -130,30 +143,29 @@ class TinhteWidgetFactory extends WidgetFactory {
   }
 
   BuildOp get chrOp {
-    _chrOp ??= BuildOp(onWidgets: (meta, __) {
-      final a = meta.domElement.attributes;
-      final url = constructFullUrl(a['href']);
-      if (url?.isEmpty != false) return null;
+    _chrOp ??= BuildOp(
+      defaultStyles: (_, __) => ['margin', '0.5em 0'],
+      onWidgets: (meta, __) {
+        final a = meta.domElement.attributes;
+        final url = constructFullUrl(a['href']);
+        if (url?.isEmpty != false) return null;
 
-      final youtubeId = a.containsKey('data-chr-thumbnail')
-          ? RegExp(r'^https://img.youtube.com/vi/([^/]+)/0.jpg$')
-              .firstMatch(a['data-chr-thumbnail'])
-              ?.group(1)
-          : null;
+        final youtubeId = a.containsKey('data-chr-thumbnail')
+            ? RegExp(r'^https://img.youtube.com/vi/([^/]+)/0.jpg$')
+                .firstMatch(a['data-chr-thumbnail'])
+                ?.group(1)
+            : null;
 
-      final contents = youtubeId != null
-          ? YouTubeWidget(
-              youtubeId,
-              lowresThumbnailUrl: a['data-chr-thumbnail'],
-            )
-          : buildWebView(url);
+        final contents = youtubeId != null
+            ? YouTubeWidget(
+                youtubeId,
+                lowresThumbnailUrl: a['data-chr-thumbnail'],
+              )
+            : buildWebView(url);
 
-      return [
-        _buildSpacing(meta),
-        contents,
-        _buildSpacing(meta),
-      ];
-    });
+        return [contents];
+      },
+    );
     return _chrOp;
   }
 
@@ -175,9 +187,13 @@ class TinhteWidgetFactory extends WidgetFactory {
         final title = a['data-title'];
         if (!_kSmilies.containsKey(title)) return pieces;
 
-        return pieces
-          ..first.block.rebuildBits(
-              (b) => b is DataBit ? b.rebuild(data: _kSmilies[title]) : b);
+        final text = pieces.first.text;
+        for (final bit in List.unmodifiable(text.bits)) {
+          bit.detach();
+        }
+        text.addText(_kSmilies[title]);
+
+        return pieces;
       },
     );
     return _smilieOp;
@@ -240,22 +256,11 @@ class TinhteWidgetFactory extends WidgetFactory {
   NodeMetadata parseElement(NodeMetadata meta, dom.Element e) {
     switch (e.localName) {
       case 'a':
-        if (e.attributes.containsKey('data-chr') &&
-            e.attributes['data-chr'] == 'true' &&
-            e.attributes.containsKey('href')) {
-          return lazySet(null, buildOp: chrOp);
-        }
-
         if (e.classes.contains('LbTrigger') &&
             e.attributes.containsKey('data-height') &&
             e.attributes.containsKey('data-permalink') &&
             e.attributes.containsKey('data-width')) {
           return lazySet(null, buildOp: lbTrigger.prepareThumbnailOp(e));
-        }
-
-        if (e.classes.contains('LinkExpander') &&
-            e.classes.contains('expanded')) {
-          return lazySet(null, buildOp: linkExpander.buildOp);
         }
         break;
       case 'blockquote':
@@ -282,8 +287,6 @@ class TinhteWidgetFactory extends WidgetFactory {
     switch (e.className) {
       case 'Tinhte_Galleria':
         return lazySet(null, buildOp: galleria.buildOp);
-      case 'Tinhte_PhotoCompare':
-        return lazySet(null, buildOp: photoCompare.buildOp);
       case 'bdImage_attachImage':
         return lazySet(null, buildOp: lbTrigger.fullOp);
       case 'smilie':
@@ -293,14 +296,42 @@ class TinhteWidgetFactory extends WidgetFactory {
     return super.parseElement(meta, e);
   }
 
-  Iterable<Widget> _buildTextPadding(
-      BuilderContext bc, Iterable<Widget> ws, _) {
+  @override
+  NodeMetadata parseTag(
+    NodeMetadata meta,
+    String tag,
+    Map<dynamic, String> attributes,
+  ) {
+    if (tag == 'a' &&
+        attributes.containsKey('data-chr') &&
+        attributes.containsKey('href')) {
+      return lazySet(null, buildOp: chrOp);
+    }
+
+    if (attributes?.containsKey('class') == true) {
+      final clazz = attributes['class'];
+      if (tag == 'a' &&
+          clazz.contains('LinkExpander') &&
+          clazz.contains('expanded')) {
+        return lazySet(null, buildOp: linkExpander.buildOp);
+      }
+
+      switch (clazz) {
+        case 'Tinhte_PhotoCompare':
+          return lazySet(null, buildOp: photoCompare.buildOp);
+      }
+    }
+
+    return super.parseTag(meta, tag, attributes);
+  }
+
+  Iterable<Widget> _buildTextPadding(BuildContext _, Iterable<Widget> ws, __) {
     final output = <Widget>[SizedBox(height: kPostBodyPadding)];
 
     final last = ws.last;
     for (final widget in ws) {
       final isText = widget is RichText ||
-          (widget is core.ImageLayout &&
+          (widget is ImageLayout &&
               widget.width != null &&
               widget.width < deviceWidth);
       output.add(isText ? buildPadding(widget, _kTextPadding) : widget);

@@ -4,7 +4,7 @@ environment:
   sdk: ">=2.0.0-dev.68.0 <3.0.0"
 
 dependencies:
-  async: ^2.4.1
+  async: any
   http: any
   json_annotation: ^3.0.1
   path: ^1.6.4

@@ -74,9 +74,9 @@ class Galleria {
       Widget caption, image;
       String source;
       for (final widget in widgets) {
-        if (widget is WidgetPlaceholder<TextBlock>) {
+        if (widget is WidgetPlaceholder<TextBits>) {
           caption = widget;
-        } else if (widget is core.ImageLayout) {
+        } else if (widget is ImageLayout) {
           image = Image(image: widget.image, fit: BoxFit.cover);
         } else if (widget is Text) {
           source = widget.data;
