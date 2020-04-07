@@ -10,7 +10,7 @@ description: A new Flutter project.
 version: 1.6.5+24
 
 environment:
-  flutter: 1.12.13+hotfix.8
+  flutter: 1.12.13+hotfix.9
   sdk: ">=2.1.0 <3.0.0"
 
 dependencies:
