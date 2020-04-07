@@ -10,9 +10,9 @@ class LbTrigger {
   LbTrigger({this.wf});
 
   Widget buildGestureDetector(int index, Widget child) =>
-      Builder(builder: (c) => buildGestureDetectorWithContext(c, index, child));
+      Builder(builder: (c) => buildGestureDetectorWithContext(c, child, index));
 
-  Widget buildGestureDetectorWithContext(BuildContext c, int i, Widget child) =>
+  Widget buildGestureDetectorWithContext(BuildContext c, Widget child, int i) =>
       GestureDetector(
         child: child,
         onTap: () => Navigator.push(
@@ -63,18 +63,20 @@ class LbTrigger {
           ],
         );
       },
-      onPieces: (meta, pieces) =>
-          pieces.map((piece) => piece.hasWidgets ? piece : piece
-            ..block.rebuildBits(
-              (b) => b is WidgetBit
-                  ? b.rebuild(
-                      child: buildGestureDetector(
-                        index,
-                        b.widgetSpan.child,
-                      ),
-                    )
-                  : b,
-            )),
+      onPieces: (_, pieces) {
+        for (final piece in pieces) {
+          if (piece.hasWidgets) continue;
+          for (final bit in piece.text.bits) {
+            if (bit is TextWidget) {
+              bit.widget.wrapWith(
+                  (context, widgets, index) => widgets.map((widget) =>
+                      buildGestureDetectorWithContext(context, widget, index)),
+                  index);
+            }
+          }
+        }
+        return pieces;
+      },
     );
   }
 
