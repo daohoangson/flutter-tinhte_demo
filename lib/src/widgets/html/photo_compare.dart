@@ -8,6 +8,7 @@ class PhotoCompare {
   BuildOp get buildOp {
     final images = <String>[];
     return BuildOp(
+      defaultStyles: (_, __) => ['margin', '0.5em 0'],
       onChild: (meta, e) {
         if (e.localName != 'img') return meta;
         if (!e.attributes.containsKey('src')) return meta;
@@ -32,13 +33,11 @@ class PhotoCompare {
         final height = (config['height'] as num).toDouble();
 
         return [
-          _buildSpacing(meta),
           _PhotoCompareWidget(
             aspectRatio: width / height,
             image0: wf.buildImage(images.first, height: height, width: width),
             image1: wf.buildImage(images.last, height: height, width: width),
           ),
-          _buildSpacing(meta),
         ];
       },
     );

@@ -301,8 +301,6 @@ class TinhteWidgetFactory extends WidgetFactory {
     switch (e.className) {
       case 'Tinhte_Galleria':
         return lazySet(null, buildOp: galleria.buildOp);
-      case 'Tinhte_PhotoCompare':
-        return lazySet(null, buildOp: photoCompare.buildOp);
       case 'bdImage_attachImage':
         return lazySet(null, buildOp: lbTrigger.fullOp);
       case 'smilie':
@@ -310,6 +308,22 @@ class TinhteWidgetFactory extends WidgetFactory {
     }
 
     return super.parseElement(meta, e);
+  }
+
+  @override
+  NodeMetadata parseTag(
+    NodeMetadata meta,
+    String tag,
+    Map<dynamic, String> attributes,
+  ) {
+    if (attributes?.containsKey('class') == true) {
+      switch (attributes['class']) {
+        case 'Tinhte_PhotoCompare':
+          return lazySet(null, buildOp: photoCompare.buildOp);
+      }
+    }
+
+    return super.parseTag(meta, tag, attributes);
   }
 
   Iterable<Widget> _buildTextPadding(BuildContext _, Iterable<Widget> ws, __) {
