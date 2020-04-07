@@ -2,6 +2,7 @@ part of '../html.dart';
 
 class LbTrigger {
   final captions = Map<int, Widget>();
+  final hashCodes = <int>[0];
   final sources = <String>[];
   final WidgetFactory wf;
 
@@ -46,9 +47,7 @@ class LbTrigger {
       childWidth = childHeight * ratio;
     }
 
-    final index = sources.length;
-    sources.add(url);
-
+    final index = _addSource(e, url);
     return BuildOp(
       onChild: (meta, e) {
         if (e.localName != 'img') return meta;
@@ -90,9 +89,7 @@ class LbTrigger {
         final url = wf.constructFullUrl(href);
         if (url == null) return meta;
 
-        final index = sources.length;
-        sources.add(url);
-
+        final index = _addSource(e, url);
         return lazySet(
           meta,
           buildOp: BuildOp(
@@ -105,6 +102,18 @@ class LbTrigger {
     );
 
     return _fullOp;
+  }
+
+  int _addSource(dom.Element e, String source) {
+    final rootElement = _rootElement(e);
+    if (hashCodes.last != rootElement.hashCode) {
+      hashCodes.add(rootElement.hashCode);
+      sources.clear();
+    }
+    final index = sources.length;
+    sources.add(source);
+
+    return index;
   }
 }
 
@@ -207,4 +216,10 @@ class _ScreenState extends State<_Screen> {
       PhotoViewGalleryPageOptions(
         imageProvider: NetworkImage(widget.sources[index]),
       );
+}
+
+dom.Element _rootElement(dom.Element e) {
+  var x = e;
+  while (x.parent != null) x = x.parent;
+  return x;
 }
