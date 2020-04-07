@@ -301,8 +301,8 @@ class _EmojiSuggestion {
   final int start;
   final int end;
 
-  static final _regExpBefore = RegExp(r':[a-z]+(:?)$');
-  static final _regExpAfter = RegExp(r'^[a-z]*:?');
+  static final _regExpBefore = RegExp(r':[a-z]+(:?)$', caseSensitive: false);
+  static final _regExpAfter = RegExp(r'^[a-z]*:?', caseSensitive: false);
 
   _EmojiSuggestion({this.query, this.emojis, this.start})
       : assert(query != null),
@@ -322,7 +322,7 @@ class _EmojiSuggestion {
         : null;
 
     // skip suggestion if query is not long enough (avoid rendering too many results)
-    final query = before.group(0) + (after != null ? after.group(0) : '');
+    final query = (before.group(0) + (after != null ? after.group(0) : '')).toLowerCase();
     if (query.length < 3) return null;
 
     final emojis = searchEmojis(query);
