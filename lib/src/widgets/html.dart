@@ -173,8 +173,8 @@ class TinhteWidgetFactory extends WidgetFactory {
     _metaBbCodeOp ??= BuildOp(
       onChild: (meta, e) =>
           (e.localName == 'span' && !e.classes.contains('value'))
-              ? lazySet(null, isNotRenderable: true)
-              : meta,
+              ? meta.isNotRenderable = true
+              : null,
     );
     return _metaBbCodeOp;
   }
@@ -253,76 +253,73 @@ class TinhteWidgetFactory extends WidgetFactory {
   }
 
   @override
-  NodeMetadata parseElement(NodeMetadata meta, dom.Element e) {
-    switch (e.localName) {
+  void parseTag(NodeMetadata meta, String tag, Map<dynamic, String> attrs) {
+    final clazz = attrs.containsKey('class') ? attrs['class'] : '';
+    switch (tag) {
       case 'a':
-        if (e.classes.contains('LbTrigger') &&
-            e.attributes.containsKey('data-height') &&
-            e.attributes.containsKey('data-permalink') &&
-            e.attributes.containsKey('data-width')) {
-          return lazySet(null, buildOp: lbTrigger.prepareThumbnailOp(e));
+        if (attrs.containsKey('data-chr') && attrs.containsKey('href')) {
+          meta.op = chrOp;
+          return;
+        }
+
+        if (clazz.contains('LinkExpander') && clazz.contains('expanded')) {
+          meta.op = linkExpander.buildOp;
+          return;
+        }
+
+        if (clazz.contains('LbTrigger') &&
+            attrs.containsKey('data-height') &&
+            attrs.containsKey('data-permalink') &&
+            attrs.containsKey('data-width')) {
+          meta.op = lbTrigger.prepareThumbnailOp(attrs);
+          return;
         }
         break;
       case 'blockquote':
-        return lazySet(null, buildOp: blockquoteOp);
+        meta.op = blockquoteOp;
+        return;
       case 'div':
-        if (e.classes.contains('LinkExpander') &&
-            e.classes.contains('is-oembed')) {
-          return lazySet(null, buildOp: linkExpander.oembedOp);
+        if (clazz.contains('LinkExpander') && clazz.contains('is-oembed')) {
+          meta.op = linkExpander.oembedOp;
+          return;
+        }
+        break;
+      case 'ul':
+        if (clazz.contains('Tinhte_Galleria')) {
+          meta.op = galleria.buildOp;
+          return;
         }
         break;
       case 'script':
-        if (e.attributes.containsKey('src') &&
-            e.attributes['src'] == 'https://e.infogr.am/js/embed.js') {
-          return lazySet(null, buildOp: webViewDataUriOp);
+        if (attrs.containsKey('src') &&
+            attrs['src'] == 'https://e.infogr.am/js/embed.js') {
+          meta.op = webViewDataUriOp;
+          return;
         }
         break;
       case 'span':
-        if (e.classes.contains('metaBbCode')) {
-          return lazySet(null, buildOp: metaBbCodeOp);
+        if (clazz.contains('bdImage_attachImage')) {
+          meta.op = lbTrigger.fullOp;
+          return;
+        }
+        if (clazz.contains('metaBbCode')) {
+          meta.op = metaBbCodeOp;
+          return;
+        }
+
+        if (clazz.contains('Tinhte_PhotoCompare')) {
+          meta.op = photoCompare.buildOp;
+          return;
+        }
+
+        if (clazz.contains('smilie')) {
+          meta.op = smilieOp;
+          return;
         }
         break;
     }
 
-    switch (e.className) {
-      case 'Tinhte_Galleria':
-        return lazySet(null, buildOp: galleria.buildOp);
-      case 'bdImage_attachImage':
-        return lazySet(null, buildOp: lbTrigger.fullOp);
-      case 'smilie':
-        return lazySet(null, buildOp: smilieOp);
-    }
-
-    return super.parseElement(meta, e);
-  }
-
-  @override
-  NodeMetadata parseTag(
-    NodeMetadata meta,
-    String tag,
-    Map<dynamic, String> attributes,
-  ) {
-    if (tag == 'a' &&
-        attributes.containsKey('data-chr') &&
-        attributes.containsKey('href')) {
-      return lazySet(null, buildOp: chrOp);
-    }
-
-    if (attributes?.containsKey('class') == true) {
-      final clazz = attributes['class'];
-      if (tag == 'a' &&
-          clazz.contains('LinkExpander') &&
-          clazz.contains('expanded')) {
-        return lazySet(null, buildOp: linkExpander.buildOp);
-      }
-
-      switch (clazz) {
-        case 'Tinhte_PhotoCompare':
-          return lazySet(null, buildOp: photoCompare.buildOp);
-      }
-    }
-
-    return super.parseTag(meta, tag, attributes);
+    return super.parseTag(meta, tag, attrs);
   }
 
   Iterable<Widget> _buildTextPadding(BuildContext _, Iterable<Widget> ws, __) {

@@ -20,17 +20,19 @@ class LinkExpander {
         switch (e.localName) {
           case 'div':
             if (c.contains('thumbnail')) {
-              lazySet(meta, buildOp: thumbnailOp);
+              meta.op = thumbnailOp;
             } else if (c.contains('info')) {
-              lazySet(meta, buildOp: infoOp, styles: ['text-align', 'left']);
+              meta
+                ..op = infoOp
+                ..styles = ['text-align', 'left'];
             }
             break;
           case 'h4':
-            lazySet(meta, styles: ['margin', '0px', 'text-align', 'left']);
+            meta.styles = ['margin', '0px', 'text-align', 'left'];
             break;
           case 'span':
             if (c.contains('host')) {
-              lazySet(meta, color: Colors.grey);
+              meta.color = Colors.grey;
             }
             break;
         }

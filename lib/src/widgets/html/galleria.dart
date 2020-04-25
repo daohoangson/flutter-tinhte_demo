@@ -17,13 +17,13 @@ class Galleria {
       onChild: (meta, e) {
         switch (e.localName) {
           case 'a':
-            meta = lazySet(null, buildOp: childOpA);
+            meta.op = childOpA;
             break;
           case 'img':
-            meta = lazySet(meta, isBlockElement: true);
+            meta.isBlockElement = true;
             break;
           case 'li':
-            meta = lazySet(meta, buildOp: childOpLi);
+            meta.op = childOpLi;
             break;
         }
 

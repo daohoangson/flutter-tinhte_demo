@@ -24,8 +24,7 @@ class LbTrigger {
         ),
       );
 
-  BuildOp prepareThumbnailOp(dom.Element e) {
-    final a = e.attributes;
+  BuildOp prepareThumbnailOp(Map<dynamic, String> a) {
     if (!a.containsKey('data-height') ||
         !a.containsKey('data-width') ||
         !a.containsKey('href')) return null;
@@ -47,22 +46,20 @@ class LbTrigger {
       childWidth = childHeight * ratio;
     }
 
-    final index = _addSource(e, url);
     return BuildOp(
       onChild: (meta, e) {
-        if (e.localName != 'img') return meta;
+        if (e.localName != 'img') return;
 
-        return lazySet(
-          meta,
-          styles: [
-            'height',
-            "${childHeight.toString()}px",
-            'width',
-            "${childWidth.toString()}px",
-          ],
-        );
+        meta.styles = [
+          'height',
+          "${childHeight.toString()}px",
+          'width',
+          "${childWidth.toString()}px",
+        ];
       },
-      onPieces: (_, pieces) {
+      onPieces: (meta, pieces) {
+        final index = _addSource(meta.domElement, url);
+
         for (final piece in pieces) {
           if (piece.hasWidgets) continue;
           for (final bit in piece.text.bits) {
@@ -82,22 +79,20 @@ class LbTrigger {
   BuildOp get fullOp {
     _fullOp = BuildOp(
       onChild: (meta, e) {
-        if (e.localName != 'img') return meta;
+        if (e.localName != 'img') return;
 
         final a = e.attributes;
         final href = a['src'];
         final url = wf.constructFullUrl(href);
-        if (url == null) return meta;
+        if (url == null) return;
 
         final index = _addSource(e, url);
-        return lazySet(
-          meta,
-          buildOp: BuildOp(
+        meta
+          ..op = BuildOp(
             onWidgets: (_, widgets) =>
                 widgets.map((widget) => buildGestureDetector(index, widget)),
-          ),
-          styles: ['margin', '0.5em 0'],
-        );
+          )
+          ..styles = ['margin', '0.5em 0'];
       },
     );
 
