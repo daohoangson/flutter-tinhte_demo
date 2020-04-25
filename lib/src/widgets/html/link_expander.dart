@@ -127,7 +127,7 @@ class LinkExpander {
                 Expanded(
                   child: SizedBox(
                     height: kLinkExpanderSquareThumbnailSize,
-                    child: info,
+                    child: SingleChildScrollView(child: info),
                   ),
                 ),
               ],
