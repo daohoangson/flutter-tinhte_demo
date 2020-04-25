@@ -40,14 +40,12 @@ class TinhteHtmlWidget extends StatelessWidget {
   final String html;
   final Color hyperlinkColor;
   final bool needBottomMargin;
-  final String plainText;
   final TextStyle textStyle;
 
   TinhteHtmlWidget(
     this.html, {
     this.hyperlinkColor,
     this.needBottomMargin,
-    this.plainText,
     this.textStyle,
   });
 
@@ -63,22 +61,7 @@ class TinhteHtmlWidget extends StatelessWidget {
           "<html><body>$html</body></html>",
           baseUrl: Uri.parse(configSiteRoot),
           bodyPadding: const EdgeInsets.all(0),
-          buildAsyncBuilder: (_, snapshot) {
-            if (snapshot.hasData) return snapshot.data;
-
-            if (plainText != null)
-              return Padding(
-                padding: const EdgeInsets.all(kPostBodyPadding),
-                child: Text(plainText),
-              );
-
-            return const Center(
-              child: Padding(
-                padding: EdgeInsets.all(10),
-                child: CircularProgressIndicator(),
-              ),
-            );
-          },
+          buildAsync: false,
           enableCaching: enableCaching,
           factoryBuilder: (config) => TinhteWidgetFactory(
             config,
