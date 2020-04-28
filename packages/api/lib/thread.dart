@@ -28,6 +28,7 @@ class Thread {
   int forumId;
   Post firstPost;
   int threadCreateDate;
+  bool threadHasPoll;
   final int threadId;
   bool threadIsDeleted;
   bool threadIsFollowed;
@@ -91,6 +92,8 @@ class ThreadLinks {
   String lastPoster;
 
   String permalink;
+
+  String poll;
 
   String posts;
 
