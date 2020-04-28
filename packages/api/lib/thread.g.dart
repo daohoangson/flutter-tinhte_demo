@@ -18,6 +18,7 @@ Thread _$ThreadFromJson(Map<String, dynamic> json) {
         ? null
         : Post.fromJson(json['first_post'] as Map<String, dynamic>)
     ..threadCreateDate = json['thread_create_date'] as int
+    ..threadHasPoll = json['thread_has_poll'] as bool
     ..threadIsDeleted = json['thread_is_deleted'] as bool
     ..threadIsFollowed = json['thread_is_followed'] as bool
     ..threadIsNew = json['thread_is_new'] as bool
@@ -75,6 +76,7 @@ ThreadLinks _$ThreadLinksFromJson(Map<String, dynamic> json) {
     ..lastPost = json['last_post'] as String
     ..lastPoster = json['last_poster'] as String
     ..permalink = json['permalink'] as String
+    ..poll = json['poll'] as String
     ..posts = json['posts'] as String
     ..postsUnread = json['posts_unread'] as String;
 }

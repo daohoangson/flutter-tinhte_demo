@@ -14,9 +14,9 @@ const _kPopupActionOpenInBrowser = 'openInBrowser';
 const _kPopupActionShare = 'share';
 
 class ThreadViewScreen extends StatefulWidget {
-  final Thread thread;
   final bool enablePostEditor;
   final Map initialJson;
+  final Thread thread;
 
   ThreadViewScreen(
     this.thread, {

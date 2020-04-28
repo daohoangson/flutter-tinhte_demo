@@ -35,6 +35,7 @@ class PostsState extends State<PostsWidget> {
         providers: [
           Provider<Thread>.value(value: _thread),
           ThreadNavigationWidget.buildProvider(),
+          PollWidget.buildProvider(),
         ],
         child: SuperListView<_PostListItem>(
           enableScrollToIndex: true,

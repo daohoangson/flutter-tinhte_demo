@@ -10,6 +10,7 @@ import 'package:tinhte_api/post.dart';
 import 'package:tinhte_api/thread.dart';
 import 'package:tinhte_demo/src/widgets/tinhte/background_post.dart';
 import 'package:tinhte_demo/src/widgets/tinhte/tinhte_fact.dart';
+import 'package:tinhte_demo/src/widgets/poll.dart';
 import 'package:tinhte_demo/src/widgets/post_editor.dart';
 import 'package:tinhte_demo/src/widgets/html.dart';
 import 'package:tinhte_demo/src/widgets/image.dart';
