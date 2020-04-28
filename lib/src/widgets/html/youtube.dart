@@ -117,9 +117,11 @@ class _YouTubeState extends State<YouTubeWidget> {
 
     setState(() {
       _aspectRatio = aspectRatio;
-      _thumbnailUrl = metaTags[_kOgImage];
-
       if (metaTags.containsKey(_kOgTitle)) _title = metaTags[_kOgTitle];
     });
+
+    final thumbnailUrl = metaTags[_kOgImage];
+    await precacheImage(CachedNetworkImageProvider(thumbnailUrl), context);
+    setState(() => _thumbnailUrl = thumbnailUrl);
   }
 }
