@@ -1,13 +1,6 @@
 name: tinhte_demo
-description: A new Flutter project.
-
-# The following defines the version and build number for your application.
-# A version number is three numbers separated by dots, like 1.2.43
-# followed by an optional build number separated by a +.
-# Both the version and the builder number may be overridden in flutter
-# build by specifying --build-name and --build-number, respectively.
-# Read more about versioning at semver.org.
-version: 1.6.5+24
+description: Tinh tế mobile apps built with Flutter for evaluation purposes.
+version: 1.6.6+25
 
 environment:
   flutter: 1.12.13+hotfix.9
