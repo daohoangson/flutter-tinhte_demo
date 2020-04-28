@@ -1,6 +1,6 @@
 name: tinhte_demo
 description: Tinh tế mobile apps built with Flutter for evaluation purposes.
-version: 1.6.6+25
+version: 1.6.7+26
 
 environment:
   flutter: 1.12.13+hotfix.9

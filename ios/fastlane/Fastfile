@@ -10,6 +10,9 @@ platform :ios do
       scheme: "Runner",
       export_method: 'app-store',
     )
-    upload_to_testflight
+    upload_to_testflight(
+      distribute_external: true,
+      groups: "Public group",
+    )
   end
 end
