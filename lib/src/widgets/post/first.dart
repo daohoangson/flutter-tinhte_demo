@@ -27,7 +27,7 @@ class _FirstPostWidget extends StatelessWidget {
                   child: Text(
                     thread.threadTitle,
                     maxLines: null,
-                    style: Theme.of(context).textTheme.title,
+                    style: Theme.of(context).textTheme.headline6,
                   ),
                 ),
           _isCustomPost

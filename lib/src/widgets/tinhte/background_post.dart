@@ -61,7 +61,7 @@ class BackgroundPost extends StatelessWidget {
           child: Center(
             child: TinhteHtmlWidget(
               "<center>$_postBodyHtml</center>",
-              textStyle: theme.textTheme.title,
+              textStyle: theme.textTheme.headline6,
             ),
           ),
           constraints: BoxConstraints(minHeight: 300),

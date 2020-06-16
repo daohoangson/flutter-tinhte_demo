@@ -153,11 +153,11 @@ class _PostEditorState extends State<PostEditorWidget> {
       child: RichText(
         text: TextSpan(
           text: 'Replying to @',
-          style: textTheme.body1,
+          style: textTheme.bodyText2,
           children: [
             TextSpan(
               text: parentPost.posterUsername + ' ',
-              style: textTheme.body1.copyWith(
+              style: textTheme.bodyText2.copyWith(
                 color: theme.accentColor,
                 fontWeight: FontWeight.bold,
               ),
@@ -322,7 +322,8 @@ class _EmojiSuggestion {
         : null;
 
     // skip suggestion if query is not long enough (avoid rendering too many results)
-    final query = (before.group(0) + (after != null ? after.group(0) : '')).toLowerCase();
+    final query =
+        (before.group(0) + (after != null ? after.group(0) : '')).toLowerCase();
     if (query.length < 3) return null;
 
     final emojis = searchEmojis(query);

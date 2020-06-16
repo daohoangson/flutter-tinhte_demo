@@ -38,7 +38,7 @@ class _PollState extends State<PollWidget> {
     return Container(
       child: Column(
         children: <Widget>[
-          Text("Poll: ${poll.pollQuestion}", style: theme.textTheme.title),
+          Text("Poll: ${poll.pollQuestion}", style: theme.textTheme.headline6),
           _PollResponsesWidget(
             canVote: canVote,
             hasResults: poll.permissions?.result == true,

@@ -3,8 +3,8 @@ description: Tinh tế mobile apps built with Flutter for evaluation purposes.
 version: 1.6.7+26
 
 environment:
-  flutter: 1.12.13+hotfix.9
-  sdk: ">=2.1.0 <3.0.0"
+  flutter: 1.17.3
+  sdk: ">=2.3.0 <3.0.0"
 
 dependencies:
   apple_sign_in: ^0.1.0

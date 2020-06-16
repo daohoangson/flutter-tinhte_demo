@@ -54,7 +54,7 @@ class TinhteFact extends StatelessWidget {
             child: Text(
               thread.threadTitle,
               maxLines: null,
-              style: theme.textTheme.title.copyWith(
+              style: theme.textTheme.headline6.copyWith(
                 color: theme.accentColor,
                 fontWeight: FontWeight.bold,
               ),
@@ -68,7 +68,7 @@ class TinhteFact extends StatelessWidget {
           ),
           TinhteHtmlWidget(
             "<center>$postBodyHtml</center>",
-            textStyle: theme.textTheme.body1,
+            textStyle: theme.textTheme.bodyText2,
           ),
         ],
       );

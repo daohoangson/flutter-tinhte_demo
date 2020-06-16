@@ -11,14 +11,14 @@ import 'package:tinhte_demo/src/push_notification.dart';
 void main() {
   FlutterError.onError = Crashlytics.instance.recordFlutterError;
 
-  runZoned<Future<void>>(() async {
+  runZonedGuarded<Future<void>>(() async {
     WidgetsFlutterBinding.ensureInitialized();
 
     configureFcm();
 
     final darkTheme = await DarkTheme.create();
     runApp(MyApp(darkTheme: darkTheme));
-  }, onError: Crashlytics.instance.recordError);
+  }, Crashlytics.instance.recordError);
 }
 
 class MyApp extends StatelessWidget {
