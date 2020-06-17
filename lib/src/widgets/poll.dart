@@ -12,8 +12,8 @@ class PollWidget extends StatefulWidget {
   @override
   State<PollWidget> createState() => _PollState();
 
-  static SingleChildCloneableWidget buildProvider() =>
-      ChangeNotifierProvider<_PollData>(builder: (_) => _PollData());
+  static InheritedProvider buildProvider() =>
+      ChangeNotifierProvider<_PollData>(create: (_) => _PollData());
 }
 
 class _PollState extends State<PollWidget> {
@@ -38,7 +38,7 @@ class _PollState extends State<PollWidget> {
     return Container(
       child: Column(
         children: <Widget>[
-          Text("Poll: ${poll.pollQuestion}", style: theme.textTheme.title),
+          Text("Poll: ${poll.pollQuestion}", style: theme.textTheme.headline6),
           _PollResponsesWidget(
             canVote: canVote,
             hasResults: poll.permissions?.result == true,

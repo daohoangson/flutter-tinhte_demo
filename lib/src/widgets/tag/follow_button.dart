@@ -37,7 +37,7 @@ class _FollowState extends State<FollowButton> {
 
         if (!user.containsKey('user_id')) return;
         final int userId = user['user_id'];
-        final visitor = Provider.of<User>(context, listen: false);
+        final visitor = context.read<User>();
         if (visitor.userId != userId) return;
 
         if (!user.containsKey('follow')) return;

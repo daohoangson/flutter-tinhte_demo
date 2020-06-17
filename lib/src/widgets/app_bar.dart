@@ -65,7 +65,7 @@ class AppBarDrawerHeader extends StatelessWidget {
 
   TextSpan _compileUserRank(BuildContext context, User user) => TextSpan(
         text: " ${user.rank?.rankName ?? ''}",
-        style: Theme.of(context).textTheme.subhead.copyWith(
+        style: Theme.of(context).textTheme.subtitle1.copyWith(
               color: Theme.of(context).hintColor,
               fontWeight: FontWeight.bold,
             ),
@@ -73,7 +73,7 @@ class AppBarDrawerHeader extends StatelessWidget {
 
   TextSpan _compileUsername(BuildContext context, User user) => TextSpan(
         text: user.username ?? '',
-        style: Theme.of(context).textTheme.title.copyWith(
+        style: Theme.of(context).textTheme.headline6.copyWith(
               color: Theme.of(context).accentColor,
             ),
       );

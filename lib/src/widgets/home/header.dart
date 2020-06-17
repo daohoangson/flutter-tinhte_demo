@@ -10,7 +10,7 @@ class HeaderWidget extends StatelessWidget {
         padding: const EdgeInsets.all(10.0),
         child: Text(
           text,
-          style: Theme.of(context).textTheme.title,
+          style: Theme.of(context).textTheme.headline6,
         ),
       );
 }

@@ -50,7 +50,7 @@ class MemberViewHeader extends StatelessWidget {
               children: <Widget>[
                 Text(
                   user.username,
-                  style: theme.textTheme.subhead
+                  style: theme.textTheme.subtitle1
                       .copyWith(fontWeight: FontWeight.bold),
                 ),
                 Text(

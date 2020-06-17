@@ -49,7 +49,7 @@ class MenuDarkTheme extends StatelessWidget {
       );
 
   void _updateValue(BuildContext context) {
-    final darkTheme = Provider.of<DarkTheme>(context, listen: false);
+    final darkTheme = context.read<DarkTheme>();
     final value = darkTheme.value;
     darkTheme.value = value == false ? true : value == true ? null : false;
   }

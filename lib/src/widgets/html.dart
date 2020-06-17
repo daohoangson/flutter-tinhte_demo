@@ -60,11 +60,9 @@ class TinhteHtmlWidget extends StatelessWidget {
         builder: (c, bc) => HtmlWidget(
           "<html><body>$html</body></html>",
           baseUrl: Uri.parse(configSiteRoot),
-          bodyPadding: const EdgeInsets.all(0),
           buildAsync: false,
           enableCaching: enableCaching,
-          factoryBuilder: (config) => TinhteWidgetFactory(
-            config,
+          factoryBuilder: () => TinhteWidgetFactory(
             devicePixelRatio: MediaQuery.of(c).devicePixelRatio,
             deviceWidth: bc.biggest.width,
             needBottomMargin: needBottomMargin,
@@ -94,12 +92,11 @@ class TinhteWidgetFactory extends WidgetFactory {
   LinkExpander _linkExpander;
   PhotoCompare _photoCompare;
 
-  TinhteWidgetFactory(
-    HtmlConfig config, {
+  TinhteWidgetFactory({
     this.devicePixelRatio,
     this.deviceWidth,
     this.needBottomMargin,
-  }) : super(config);
+  });
 
   BuildOp get blockquoteOp {
     _blockquoteOp ??= BuildOp(

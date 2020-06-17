@@ -108,7 +108,7 @@ class ThreadWidget extends StatelessWidget {
 
   Widget _buildInfo(BuildContext context) {
     final theme = Theme.of(context);
-    final style = theme.textTheme.subhead;
+    final style = theme.textTheme.subtitle1;
 
     return Row(
       children: <Widget>[

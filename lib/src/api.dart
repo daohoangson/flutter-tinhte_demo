@@ -20,9 +20,9 @@ void apiDelete(ApiCaller caller, String path,
     _setupApiJsonHandlers(
       caller,
       (d) => d.api.deleteJson(
-            d._appendOauthToken(path),
-            bodyFields: bodyFields,
-          ),
+        d._appendOauthToken(path),
+        bodyFields: bodyFields,
+      ),
       onSuccess,
       onError,
       onComplete,
@@ -49,10 +49,10 @@ void apiPost(ApiCaller caller, String path,
     _setupApiJsonHandlers(
       caller,
       (d) => d.api.postJson(
-            d._appendOauthToken(path),
-            bodyFields: bodyFields,
-            fileFields: fileFields,
-          ),
+        d._appendOauthToken(path),
+        bodyFields: bodyFields,
+        fileFields: fileFields,
+      ),
       onSuccess,
       onError,
       onComplete,
@@ -84,13 +84,13 @@ Future showApiErrorDialog(
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-            title: Text(title),
-            content: Text(
-              error is ApiError
-                  ? error.message
-                  : "${error.runtimeType.toString()}: ${error.toString()}",
-            ),
-          ),
+        title: Text(title),
+        content: Text(
+          error is ApiError
+              ? error.message
+              : "${error.runtimeType.toString()}: ${error.toString()}",
+        ),
+      ),
     );
 
 void _setupApiCompleter<T>(
