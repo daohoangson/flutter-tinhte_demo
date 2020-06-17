@@ -36,16 +36,21 @@ jobs:
         flutter-version: ${{ steps.yq.outputs.FLUTTER_VERSION }}
 
     - run: flutter pub get
-    - run: flutter build apk --split-per-abi
 
+    - name: Build splitted APKs
+      if: startsWith(github.ref, 'refs/tags/')
+      run: flutter build apk --split-per-abi
     - name: Create a GitHub Release
       if: startsWith(github.ref, 'refs/tags/')
       uses: ncipollo/release-action@v1
       with:
         artifacts: "build/app/outputs/apk/release/*.apk"
         token: ${{ secrets.TOKEN }}
-    - name: Upload artifacts
+
+    - name: Build fat APK
       if: startsWith(github.ref, 'refs/tags/') != true
-      uses: actions/upload-artifact@v2
+      run: flutter build apk
+    - uses: actions/upload-artifact@v2
+      if: startsWith(github.ref, 'refs/tags/') != true
       with:
-        path: "build/app/outputs/apk/release/*.apk"
+        path: build/app/outputs/apk/release/app-release.apk
