@@ -20,10 +20,21 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: '12.x'
+
+    - name: Extract Flutter version from pubspec.yaml
+      id: yq
+      run: |
+        set -e
+
+        # https://github.com/mikefarah/yq/issues/418
+        wget -O /tmp/yq https://github.com/mikefarah/yq/releases/download/3.3.2/yq_linux_amd64
+        chmod +x /tmp/yq
+        _flutterVersion=$( yq read pubspec.yaml environment.flutter )
+        echo "::set-output name=FLUTTER_VERSION::$_flutterVersion"
     - name: Setup Flutter
       uses: subosito/flutter-action@v1
       with:
-        flutter-version: '1.12.13+hotfix.9'
+        flutter-version: ${{ steps.yq.outputs.FLUTTER_VERSION }}
 
     - run: flutter pub get
     - run: flutter build apk --split-per-abi
