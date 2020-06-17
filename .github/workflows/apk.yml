@@ -11,6 +11,16 @@ jobs:
       uses: sliteteam/github-action-git-crypt-unlock@1.0.2
       env:
         GIT_CRYPT_KEY: ${{ secrets.GIT_CRYPT_KEY }}
+    - name: Extract Flutter version from pubspec.yaml
+      id: yq
+      run: |
+        set -e
+
+        # https://github.com/mikefarah/yq/issues/418
+        wget -O /tmp/yq https://github.com/mikefarah/yq/releases/download/3.3.2/yq_linux_amd64
+        chmod +x /tmp/yq
+        _flutterVersion=$( /tmp/yq read pubspec.yaml environment.flutter )
+        echo "::set-output name=FLUTTER_VERSION::$_flutterVersion"
     - name: Prepare android/key.properties
       run: 'echo "$SECRET" > android/key.properties'
       env:
@@ -20,17 +30,6 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: '12.x'
-
-    - name: Extract Flutter version from pubspec.yaml
-      id: yq
-      run: |
-        set -e
-
-        # https://github.com/mikefarah/yq/issues/418
-        wget -O /tmp/yq https://github.com/mikefarah/yq/releases/download/3.3.2/yq_linux_amd64
-        chmod +x /tmp/yq
-        _flutterVersion=$( yq read pubspec.yaml environment.flutter )
-        echo "::set-output name=FLUTTER_VERSION::$_flutterVersion"
     - name: Setup Flutter
       uses: subosito/flutter-action@v1
       with:
