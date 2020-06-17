@@ -419,11 +419,11 @@ typedef SuperListComplexItemRegistration SuperListComplexItemRegister();
 typedef void SuperListComplexItemClearer();
 
 class SuperListComplexItemRegistration {
-  SingleChildCloneableWidget _provider;
+  InheritedProvider _provider;
   SuperListComplexItemClearer _clear;
 
   SuperListComplexItemRegistration(
-    SingleChildCloneableWidget provider, {
+    InheritedProvider provider, {
     SuperListComplexItemClearer clear,
   })  : assert(provider != null),
         _provider = provider,

@@ -105,9 +105,9 @@ class ThreadNavigationWidget extends StatelessWidget {
         },
       );
 
-  static SingleChildCloneableWidget buildProvider() =>
+  static InheritedProvider buildProvider() =>
       ChangeNotifierProvider<_ThreadNavigationData>(
-          builder: (_) => _ThreadNavigationData());
+          create: (_) => _ThreadNavigationData());
 }
 
 class _ThreadNavigationData extends ChangeNotifier {

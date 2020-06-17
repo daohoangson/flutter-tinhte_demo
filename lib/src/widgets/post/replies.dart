@@ -18,7 +18,7 @@ Widget _buildReplyToPadding(Widget child, int depth) =>
 class _PostWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final post = Provider.of<Post>(context);
+    final post = context.watch<Post>();
     final isPostReply = post.postReplyTo != null;
     final attachments = _PostAttachmentsWidget.forPost(post);
 
@@ -108,7 +108,7 @@ class _PostReplyHiddenWidgetState extends State<_PostReplyHiddenWidget> {
       ApiCaller.stateful(this),
       widget.postReply.link,
       onSuccess: (jsonMap) {
-        final sls = Provider.of<SuperListState<_PostListItem>>(context);
+        final sls = context.read<SuperListState<_PostListItem>>();
         final items = jsonMap.containsKey('replies')
             ? decodePostsAndTheirReplies(
                 jsonMap['replies'],

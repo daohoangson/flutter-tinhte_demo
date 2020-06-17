@@ -3,8 +3,8 @@ part of '../posts.dart';
 class _FirstPostWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final post = Provider.of<Post>(context);
-    final thread = Provider.of<Thread>(context);
+    final post = context.watch<Post>();
+    final thread = context.watch<Thread>();
 
     final _isBackgroundPost = isBackgroundPost(post);
     final _isTinhteFact = isTinhteFact(thread);

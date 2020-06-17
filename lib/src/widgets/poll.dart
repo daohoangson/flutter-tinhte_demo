@@ -12,8 +12,8 @@ class PollWidget extends StatefulWidget {
   @override
   State<PollWidget> createState() => _PollState();
 
-  static SingleChildCloneableWidget buildProvider() =>
-      ChangeNotifierProvider<_PollData>(builder: (_) => _PollData());
+  static InheritedProvider buildProvider() =>
+      ChangeNotifierProvider<_PollData>(create: (_) => _PollData());
 }
 
 class _PollState extends State<PollWidget> {
