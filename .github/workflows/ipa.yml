@@ -7,8 +7,15 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - run: git submodule update --init --recursive
-    - name: Unlock git-crypt
-      uses: sliteteam/github-action-git-crypt-unlock@1.0.2
+    - run: |
+        set -e
+        
+        brew install git-crypt
+        
+        # https://github.com/sliteteam/github-action-git-crypt-unlock/blob/master/entrypoint.sh
+        echo $GIT_CRYPT_KEY | base64 --decode > ./git-crypt-key
+        git-crypt unlock ./git-crypt-key
+        rm ./git-crypt-key
       env:
         GIT_CRYPT_KEY: ${{ secrets.GIT_CRYPT_KEY }}
     - name: Extract Flutter version from pubspec.yaml
