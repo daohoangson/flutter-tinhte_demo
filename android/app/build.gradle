@@ -43,7 +43,7 @@ android {
         release {
             keyAlias "key"
             keyPassword "tinhte_demo"
-            storeFile file(../release.jks)
+            storeFile file("../release.jks")
             storePassword "release"
         }
     }
