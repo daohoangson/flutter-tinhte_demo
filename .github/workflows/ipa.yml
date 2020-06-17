@@ -39,15 +39,3 @@ jobs:
 
     - run: flutter pub get
     - run: flutter build ios --no-codesign
-
-    - name: Create a GitHub Release
-      if: startsWith(github.ref, 'refs/tags/')
-      uses: ncipollo/release-action@v1
-      with:
-        artifacts: build/ios/iphoneos/Runner.app
-        token: ${{ secrets.TOKEN }}
-    - uses: actions/upload-artifact@v2
-      if: startsWith(github.ref, 'refs/tags/') != true
-      with:
-        name: Runner.app
-        path: build/ios/iphoneos/Runner.app
