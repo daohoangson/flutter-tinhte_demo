@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:tinhte_demo/src/intl.dart';
 import 'package:tinhte_demo/src/screens/home.dart';
 import 'package:tinhte_demo/src/widgets/menu/dark_theme.dart';
 import 'package:tinhte_demo/src/widgets/dismiss_keyboard.dart';
@@ -39,9 +41,18 @@ class MyApp extends StatelessWidget {
               darkTheme: _theme(_themeDark),
               home: onLaunchMessageWidgetOr(HomeScreen()),
               key: ValueKey("darkTheme=${darkTheme.value}"),
+              localizationsDelegates: [
+                const L10nDelegate(),
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+              ],
               navigatorKey: primaryNavKey,
+              onGenerateTitle: (BuildContext context) => L10n.of(context).title,
+              supportedLocales: [
+                const Locale('en', ''),
+                const Locale('vi', ''),
+              ],
               theme: _theme(_themeLight),
-              title: 'Tinh tế Demo',
             ),
           ),
         ),
