@@ -7,7 +7,8 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - run: git submodule update --init --recursive
-    - run: |
+    - name: Unlock git-crypt
+      run: |
         set -e
         
         brew install git-crypt
@@ -37,5 +38,4 @@ jobs:
         flutter-version: ${{ steps.yq.outputs.FLUTTER_VERSION }}
 
     - run: flutter pub get
-
-    - run: flutter build ios
+    - run: flutter build ios --no-codesign
