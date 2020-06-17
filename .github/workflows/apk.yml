@@ -7,17 +7,28 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - uses: textbook/git-checkout-submodule-action@master
+    - name: Unlock git-crypt
+      uses: sliteteam/github-action-git-crypt-unlock@1.0.2
+      env:
+        GIT_CRYPT_KEY: ${{ secrets.GIT_CRYPT_KEY }}
+    - name: Prepare android/key.properties
+      run: 'echo "$SECRET" > android/key.properties'
+      env:
+        SECRET: ${{ secrets.ANDROID_KEY_PROPERTIES }}
 
-    - uses: actions/setup-java@v1
+    - name: Setup Java
+      uses: actions/setup-java@v1
       with:
         java-version: '12.x'
-    - uses: subosito/flutter-action@v1
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v1
       with:
         flutter-version: '1.12.13+hotfix.9'
 
     - run: flutter pub get
     - run: flutter build apk --split-per-abi
-    - uses: ncipollo/release-action@v1
+    - name: Create a GitHub Release
+      uses: ncipollo/release-action@v1
       with:
         artifacts: "build/app/outputs/apk/release/*.apk"
         token: ${{ secrets.TOKEN }}
