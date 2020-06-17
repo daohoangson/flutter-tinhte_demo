@@ -21,10 +21,6 @@ jobs:
         chmod +x /tmp/yq
         _flutterVersion=$( /tmp/yq read pubspec.yaml environment.flutter )
         echo "::set-output name=FLUTTER_VERSION::$_flutterVersion"
-    - name: Prepare android/key.properties
-      run: 'echo "$SECRET" > android/key.properties'
-      env:
-        SECRET: ${{ secrets.ANDROID_KEY_PROPERTIES }}
 
     - name: Setup Java
       uses: actions/setup-java@v1
