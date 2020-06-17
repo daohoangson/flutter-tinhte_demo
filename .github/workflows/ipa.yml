@@ -40,31 +40,14 @@ jobs:
     - run: flutter pub get
     - run: flutter build ios --no-codesign
 
-    - name: Build IPA
-      run: |
-        set -e
-
-        cd ios
-        xcodebuild -workspace Runner.xcworkspace \
-          -scheme Runner \
-          -sdk iphoneos \
-          -configuration Release \
-          archive -archivePath $PWD/build/Runner.xcarchive
-
-        wget -OExportOptions.plist https://gist.github.com/lukaselmer/2a2ac2e9be77a0fd66168610242c5ed0/raw/8a7a7dd579aaefb2e633a3799be761f0c7e88313/ExportOptions.plist
-        xcodebuild -exportArchive \
-          -archivePath $PWD/build/Runner.xcarchive \
-          -exportOptionsPlist ExportOptions.plist \
-          -exportPath $PWD/build/Runner.ipa
-
     - name: Create a GitHub Release
       if: startsWith(github.ref, 'refs/tags/')
       uses: ncipollo/release-action@v1
       with:
-        artifacts: ios/build/Runner.ipa
+        artifacts: build/ios/iphoneos/Runner.app
         token: ${{ secrets.TOKEN }}
     - uses: actions/upload-artifact@v2
       if: startsWith(github.ref, 'refs/tags/') != true
       with:
-        name: Runner.ipa
-        path: ios/build/Runner.ipa
+        name: Runner.app
+        path: build/ios/iphoneos/Runner.app
