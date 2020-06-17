@@ -53,4 +53,5 @@ jobs:
     - uses: actions/upload-artifact@v2
       if: startsWith(github.ref, 'refs/tags/') != true
       with:
+        name: app-release.apk
         path: build/app/outputs/apk/release/app-release.apk
