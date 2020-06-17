@@ -6,7 +6,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
-    - uses: textbook/git-checkout-submodule-action@master
+    - run: git submodule update --init --recursive
     - name: Unlock git-crypt
       uses: sliteteam/github-action-git-crypt-unlock@1.0.2
       env:
