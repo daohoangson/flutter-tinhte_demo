@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:tinhte_api/poll.dart';
 import 'package:tinhte_demo/src/api.dart';
 import 'package:tinhte_demo/src/constants.dart';
+import 'package:tinhte_demo/src/intl.dart';
 
 class PollWidget extends StatefulWidget {
   final String link;
@@ -38,7 +39,7 @@ class _PollState extends State<PollWidget> {
     return Container(
       child: Column(
         children: <Widget>[
-          Text("Poll: ${poll.pollQuestion}", style: theme.textTheme.headline6),
+          Text(poll.pollQuestion, style: theme.textTheme.headline6),
           _PollResponsesWidget(
             canVote: canVote,
             hasResults: poll.permissions?.result == true,
@@ -50,7 +51,7 @@ class _PollState extends State<PollWidget> {
               ? Align(
                   alignment: Alignment.centerRight,
                   child: RaisedButton(
-                    child: Text('Vote'),
+                    child: Text(l(context).pollVote),
                     onPressed: _isVoting ? null : () => _vote(data),
                   ),
                 )
@@ -212,7 +213,7 @@ class _PollResponsesState extends State<_PollResponsesWidget> {
 
     if (widget.maxVotes > 0 && tmp.length > widget.maxVotes) {
       Scaffold.of(context).showSnackBar(SnackBar(
-        content: Text('You can only select up to ${widget.maxVotes} choices.'),
+        content: Text(l(context).pollErrorTooManyVotes(widget.maxVotes)),
       ));
       return;
     }

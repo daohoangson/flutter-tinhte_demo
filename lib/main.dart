@@ -47,7 +47,7 @@ class MyApp extends StatelessWidget {
                 GlobalWidgetsLocalizations.delegate,
               ],
               navigatorKey: primaryNavKey,
-              onGenerateTitle: (BuildContext context) => L10n.of(context).title,
+              onGenerateTitle: (context) => l(context).appTitle,
               supportedLocales: [
                 const Locale('en', ''),
                 const Locale('vi', ''),

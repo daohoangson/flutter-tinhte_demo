@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:tinhte_api/user.dart';
 import 'package:tinhte_demo/src/api.dart';
+import 'package:tinhte_demo/src/intl.dart';
 
 class FollowButton extends StatefulWidget {
   final Followable followable;
@@ -62,7 +63,7 @@ class _FollowState extends State<FollowButton> {
       : !f.isFollowed ? _buildButtonFollow() : _buildButtonFollowing();
 
   Widget _buildButtonFollow() => FlatButton(
-        child: Text('Follow'),
+        child: Text(l(context).tagFollow),
         onPressed: _isRequesting ? null : _follow,
       );
 
@@ -70,7 +71,7 @@ class _FollowState extends State<FollowButton> {
         children: <Widget>[
           Expanded(
             child: RaisedButton(
-              child: Text('Following'),
+              child: Text(l(context).tagFollowing),
               onPressed: _isRequesting ? null : _unfollow,
             ),
           ),
@@ -113,14 +114,14 @@ class _FollowState extends State<FollowButton> {
     final confirmed = await showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        content: Text('Unfollow ${f.name}?'),
+        content: Text(l(context).tagUnfollowXQuestion(f.name)),
         actions: <Widget>[
           FlatButton(
-            child: Text('No'),
+            child: Text(lm(context).cancelButtonLabel),
             onPressed: () => Navigator.of(context).pop(),
           ),
           RaisedButton(
-            child: Text('Yes'),
+            child: Text(lm(context).okButtonLabel),
             onPressed: () => Navigator.of(context).pop(true),
           ),
         ],
@@ -186,19 +187,18 @@ class _FollowOptionsState extends State<_FollowOptionsDialog> {
 
   @override
   Widget build(BuildContext context) => AlertDialog(
-        title: Text('Notification channels'),
+        title: Text(l(context).tagNotificationChannels),
         content: Column(
           children: <Widget>[
-            Text('Choose how you want to be notified when new contents '
-                'are available in ${widget.name}:'),
+            Text(l(context).tagNotificationChannelExplainForX(widget.name)),
             CheckboxListTile(
               onChanged: (v) => setState(() => _alert = v),
-              title: Text('Alert'),
+              title: Text(l(context).tagNotificationChannelAlert),
               value: _alert,
             ),
             CheckboxListTile(
               onChanged: (v) => setState(() => _email = v),
-              title: Text('Email'),
+              title: Text(l(context).tagNotificationChannelEmail),
               value: _email,
             ),
           ],
@@ -206,11 +206,11 @@ class _FollowOptionsState extends State<_FollowOptionsDialog> {
         ),
         actions: <Widget>[
           FlatButton(
-            child: Text('Cancel'),
+            child: Text(lm(context).cancelButtonLabel),
             onPressed: () => Navigator.of(context).pop(),
           ),
           RaisedButton(
-            child: Text('Save'),
+            child: Text(lm(context).continueButtonLabel),
             onPressed: () => Navigator.of(context).pop(_FollowOptions(
               alert: _alert,
               email: _email,

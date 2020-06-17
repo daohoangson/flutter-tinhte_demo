@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tinhte_demo/src/constants.dart';
+import 'package:tinhte_demo/src/intl.dart';
 
 class DarkTheme extends ChangeNotifier {
   bool _value;
@@ -36,13 +37,13 @@ class MenuDarkTheme extends StatelessWidget {
             tristate: true,
             value: darkTheme.value,
           ),
-          title: Text('Dark theme'),
+          title: Text(l(context).menuDarkTheme),
           subtitle: Text(
             darkTheme.value == false
-                ? 'No, use light theme'
+                ? l(context).menuDarkTheme0
                 : darkTheme.value == true
-                    ? 'Yes, use dark theme'
-                    : "Use system's color scheme",
+                    ? l(context).menuDarkTheme1
+                    : l(context).menuDarkThemeAuto,
           ),
           onTap: () => _updateValue(context),
         ),

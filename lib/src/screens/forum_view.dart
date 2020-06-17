@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tinhte_api/node.dart';
+import 'package:tinhte_demo/src/intl.dart';
 import 'package:tinhte_demo/src/screens/search/thread.dart';
 import 'package:tinhte_demo/src/widgets/navigation.dart';
 import 'package:tinhte_demo/src/widgets/threads.dart';
@@ -45,9 +46,10 @@ class _ForumViewScreenState extends State<ForumViewScreen> {
             ? FloatingActionButton(
                 child: Icon(Icons.search),
                 onPressed: () => showSearch(
-                      context: context,
-                      delegate: ThreadSearchDelegate(forum: forum),
-                    ),
+                  context: context,
+                  delegate: ThreadSearchDelegate(forum: forum),
+                ),
+                tooltip: l(context).searchThisForum,
               )
             : null,
       );

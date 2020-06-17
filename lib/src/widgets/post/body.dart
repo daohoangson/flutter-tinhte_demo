@@ -20,7 +20,7 @@ class _PostBodyWidget extends StatelessWidget {
           if (post.postIsDeleted)
             return Padding(
               child: Text(
-                'Deleted post.',
+                l(context).postDeleted,
                 style: Theme.of(context).textTheme.caption.copyWith(
                       decoration: TextDecoration.lineThrough,
                     ),

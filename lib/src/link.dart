@@ -6,6 +6,7 @@ import 'package:tinhte_api/thread.dart';
 import 'package:tinhte_api/user.dart';
 import 'package:tinhte_demo/src/api.dart';
 import 'package:tinhte_demo/src/config.dart';
+import 'package:tinhte_demo/src/intl.dart';
 import 'package:tinhte_demo/src/screens/fp_view.dart';
 import 'package:tinhte_demo/src/screens/member_view.dart';
 import 'package:tinhte_demo/src/screens/tag_view.dart';
@@ -50,10 +51,10 @@ Future<bool> parsePath(
   var cancelled = false;
 
   navigator.push(_DialogRoute((_) => AlertDialog(
-        content: Text('Just a moment...'),
+        content: Text(l(context).justAMomentEllipsis),
         actions: <Widget>[
           FlatButton(
-            child: Text('Cancel'),
+            child: Text(lm(context).cancelButtonLabel),
             onPressed: () {
               cancelled = true;
               navigator.pop();

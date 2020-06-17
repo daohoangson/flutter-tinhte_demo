@@ -55,21 +55,22 @@ class ThreadWidget extends StatelessWidget {
 
     Widget built = _buildCard(context, children);
 
-    final popupMenuButton = buildPopupMenuButtonForThread(context, thread, feedData);
+    final popupMenuButton =
+        buildPopupMenuButtonForThread(context, thread, feedData);
     if (popupMenuButton != null) {
       built = _buildPopupMenu(built, popupMenuButton);
     } else {
-      if (thread.threadIsSticky) built = _buildBanner(built);
+      if (thread.threadIsSticky) built = _buildBanner(context, built);
     }
 
     return built;
   }
 
-  Widget _buildBanner(Widget child) => ClipRect(
+  Widget _buildBanner(BuildContext context, Widget child) => ClipRect(
         child: Banner(
           child: child,
           location: BannerLocation.topEnd,
-          message: 'Sticky',
+          message: l(context).threadStickyBanner,
         ),
       );
 
@@ -166,7 +167,8 @@ class ThreadWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildPopupMenu(Widget child, PopupMenuButton popupMenuButton) => Stack(
+  Widget _buildPopupMenu(Widget child, PopupMenuButton popupMenuButton) =>
+      Stack(
         children: <Widget>[
           child,
           Align(alignment: Alignment.topRight, child: popupMenuButton)
@@ -233,7 +235,7 @@ class _ThreadWidgetActionsState extends State<_ThreadWidgetActions> {
               Expanded(
                 child: FlatButton.icon(
                   icon: Icon(FontAwesomeIcons.commentAlt),
-                  label: Text('Reply'),
+                  label: Text(l(context).postReply),
                   onPressed: () => Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (_) => ThreadViewScreen(
@@ -247,7 +249,7 @@ class _ThreadWidgetActionsState extends State<_ThreadWidgetActions> {
               Expanded(
                 child: FlatButton.icon(
                   icon: Icon(FontAwesomeIcons.shareAlt),
-                  label: Text('Share'),
+                  label: Text(l(context).share),
                   onPressed: linkPermalink?.isNotEmpty == true
                       ? () => Share.share(linkPermalink)
                       : null,
@@ -262,7 +264,9 @@ class _ThreadWidgetActionsState extends State<_ThreadWidgetActions> {
         icon: postIsLiked
             ? const Icon(FontAwesomeIcons.solidHeart)
             : const Icon(FontAwesomeIcons.heart),
-        label: postIsLiked ? const Text('Unlike') : const Text('Like'),
+        label: postIsLiked
+            ? Text(l(context).postUnlike)
+            : Text(l(context).postLike),
         onPressed: _isLiking
             ? null
             : linkLikes?.isNotEmpty != true
@@ -298,8 +302,8 @@ class _ThreadWidgetActionsState extends State<_ThreadWidgetActions> {
   Widget _buildCounterReply(TextStyle textStyle) => threadReplyCount > 0
       ? Text(
           threadReplyCount > 1
-              ? "${formatNumber(threadReplyCount)} replies"
-              : '1 reply',
+              ? l(context).statsXReplies(formatNumber(threadReplyCount))
+              : l(context).statsXReply("$threadReplyCount"),
           style: textStyle,
           textScaleFactor: 1,
         )

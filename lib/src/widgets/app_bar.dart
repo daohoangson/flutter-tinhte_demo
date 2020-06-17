@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tinhte_api/user.dart';
+import 'package:tinhte_demo/src/intl.dart';
 import 'package:tinhte_demo/src/screens/login.dart';
 import 'package:tinhte_demo/src/api.dart';
 import 'package:tinhte_demo/src/link.dart';
@@ -18,7 +19,7 @@ class AppBarDrawerHeader extends StatelessWidget {
                 ),
                 child: _buildVisitorPanel(context, user))
             : ListTile(
-                title: const Text('Login'),
+                title: Text(l(context).login),
                 onTap: () => Navigator.push(context, LoginScreenRoute()),
               ),
       );
@@ -85,7 +86,7 @@ class AppBarDrawerFooter extends StatelessWidget {
   Widget build(BuildContext _) => Consumer<ApiAuth>(
       builder: (context, apiAuth, __) => apiAuth.hasToken
           ? ListTile(
-              title: const Text('Logout'),
+              title: Text(l(context).menuLogout),
               onTap: () => logout(context),
             )
           : SizedBox.shrink());

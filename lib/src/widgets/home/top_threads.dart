@@ -33,7 +33,7 @@ class TopThreadsWidget extends StatelessWidget {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              HeaderWidget('Top Threads'),
+              HeaderWidget(l(context).topThreads),
               Padding(
                 child: SizedBox(
                   child: ListView.builder(
@@ -118,7 +118,9 @@ class _ThreadWidget extends StatelessWidget {
                 style: TextStyle(color: theme.accentColor),
                 text: thread.creatorUsername,
               ),
-              TextSpan(text: " ${formatNumber(thread.threadViewCount)} views")
+              TextSpan(
+                  text:
+                      " ${l(context).statsXViews(formatNumber(thread.threadViewCount))}")
             ],
             style: theme.textTheme.caption,
           ),

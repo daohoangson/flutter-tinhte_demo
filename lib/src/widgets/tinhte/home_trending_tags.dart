@@ -24,7 +24,7 @@ class TrendingTagsWidget extends StatelessWidget {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                HeaderWidget('#trending tags'),
+                HeaderWidget('#tag đang hot'),
                 Padding(
                   child: _buildGrid(context, data.tags, cols),
                   padding: const EdgeInsets.all(kTagWidgetPadding),

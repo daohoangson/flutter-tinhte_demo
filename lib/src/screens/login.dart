@@ -6,6 +6,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:tinhte_api/api.dart';
 import 'package:tinhte_api/oauth_token.dart';
 import 'package:tinhte_demo/src/api.dart';
+import 'package:tinhte_demo/src/intl.dart';
 
 final _facebookLogin = FacebookLogin();
 
@@ -72,10 +73,9 @@ class _LoginFormState extends State<LoginForm> {
       );
 
   List<Widget> _buildFieldsAssociate() => [
-        Text('An existing account has been found, '
-            'please enter your password to associate it for future logins.'),
+        Text(l(context).loginAssociateEnterPassword),
         _buildInputPadding(TextFormField(
-          decoration: InputDecoration(labelText: 'Username'),
+          decoration: InputDecoration(labelText: l(context).loginUsername),
           enabled: false,
           initialValue: _associatable.username,
           key: ObjectKey(_associatable),
@@ -85,7 +85,7 @@ class _LoginFormState extends State<LoginForm> {
           children: <Widget>[
             Expanded(
               child: FlatButton(
-                child: const Text('Cancel'),
+                child: Text(lm(context).cancelButtonLabel),
                 onPressed: _isLoggingIn
                     ? null
                     : () => setState(() => this._associatable = null),
@@ -93,7 +93,7 @@ class _LoginFormState extends State<LoginForm> {
             ),
             Expanded(
               child: RaisedButton(
-                child: const Text('Associate'),
+                child: Text(l(context).loginAssociate),
                 onPressed: _isLoggingIn ? null : _associate,
               ),
             ),
@@ -105,21 +105,23 @@ class _LoginFormState extends State<LoginForm> {
         _buildInputPadding(_buildUsername()),
         _buildInputPadding(_buildPassword()),
         RaisedButton(
-          child: const Text('Submit'),
+          child: Text(lm(context).continueButtonLabel),
           onPressed: _isLoggingIn ? null : _login,
         ),
         FacebookSignInButton(
           onPressed: _isLoggingIn ? null : _loginFacebook,
-          text: 'Sign in with Facebook',
+          text: l(context).loginWithFacebook,
         ),
         GoogleSignInButton(
           darkMode: true,
           onPressed: _isLoggingIn ? null : _loginGoogle,
+          text: l(context).loginWithGoogle,
         ),
         _canLoginApple
             ? AppleSignInButton(
                 onPressed: _isLoggingIn ? null : _loginApple,
                 style: AppleButtonStyle.black,
+                text: l(context).loginWithApple,
               )
             : const SizedBox.shrink(),
       ];
@@ -132,15 +134,15 @@ class _LoginFormState extends State<LoginForm> {
   Widget _buildPassword({bool autofocus = false}) => TextFormField(
         autofocus: autofocus,
         decoration: InputDecoration(
-          hintText: 'hunter2',
-          labelText: 'Password',
+          hintText: l(context).loginPasswordHint,
+          labelText: l(context).loginPassword,
         ),
         initialValue: password,
         obscureText: true,
         onSaved: (value) => password = value,
         validator: (password) {
           if (password.isEmpty) {
-            return 'Please enter your password to login';
+            return l(context).loginErrorPasswordIsEmpty;
           }
 
           return null;
@@ -150,15 +152,15 @@ class _LoginFormState extends State<LoginForm> {
   Widget _buildUsername() => TextFormField(
       autofocus: true,
       decoration: InputDecoration(
-        hintText: 'keyboard_warrior',
-        labelText: 'Username / email',
+        hintText: l(context).loginUsernameHint,
+        labelText: l(context).loginUsernameOrEmail,
       ),
       initialValue: username,
       keyboardType: TextInputType.emailAddress,
       onSaved: (value) => username = value,
       validator: (username) {
         if (username.isEmpty) {
-          return 'Please enter your username or email';
+          return l(context).loginErrorUsernameIsEmpty;
         }
 
         return null;
@@ -221,7 +223,8 @@ class _LoginFormState extends State<LoginForm> {
             case apple.AuthorizationStatus.authorized:
               return result.credential;
             case apple.AuthorizationStatus.cancelled:
-              return Future.error('Login with Apple has been cancelled.');
+              final _l = l(context);
+              return Future.error(_l.loginErrorCancelled(_l.loginWithApple));
             case apple.AuthorizationStatus.error:
               return Future.error(result.error.localizedDescription);
           }
@@ -255,7 +258,8 @@ class _LoginFormState extends State<LoginForm> {
             case FacebookLoginStatus.loggedIn:
               return result.accessToken.token;
             case FacebookLoginStatus.cancelledByUser:
-              return Future.error('Login with Facebook has been cancelled.');
+              final _l = l(context);
+              return Future.error(_l.loginErrorCancelled(_l.loginWithFacebook));
             case FacebookLoginStatus.error:
               return Future.error(result.errorMessage);
           }
@@ -285,7 +289,7 @@ class _LoginFormState extends State<LoginForm> {
         .signIn()
         .then<GoogleSignInAuthentication>((account) {
           if (account == null) {
-            return Future.error('Cannot get Google account information.');
+            return Future.error(l(context).loginGoogleErrorAccountIsNull);
           }
 
           return account.authentication;
@@ -294,7 +298,7 @@ class _LoginFormState extends State<LoginForm> {
           // the server supports both kind of tokens
           final googleToken = auth?.idToken ?? auth?.accessToken;
           if (googleToken.isNotEmpty != true) {
-            return Future.error('Cannot get Google authentication info.');
+            return Future.error(l(context).loginGoogleErrorTokenIsEmpty);
           }
 
           return googleToken;
@@ -314,7 +318,7 @@ class _LoginFormState extends State<LoginForm> {
     if (!mounted) return null;
 
     if (json is! Map) {
-      return Future.error('Unexpected response from server.');
+      return Future.error(l(context).apiUnexpectedResponse);
     }
     final jsonMap = json as Map;
 
@@ -339,7 +343,7 @@ class _LoginFormState extends State<LoginForm> {
     }
 
     if (!jsonMap.containsKey('access_token')) {
-      return Future.error('Cannot login with ${om.toString()}.');
+      return Future.error(l(context).loginErrorNoAccessToken('$om'));
     }
 
     return _LoginResult(token: OauthToken.fromJson(jsonMap)..obtainMethod = om);
@@ -392,11 +396,11 @@ class _LoginFormState extends State<LoginForm> {
 
     final json = await api.postJson('users', bodyFields: bodyFields);
 
-    if (json is! Map) return Future.error('Unexpected response from server.');
+    if (json is! Map) return Future.error(l(context).apiUnexpectedResponse);
 
     final jsonMap = json as Map;
     if (!jsonMap.containsKey('token'))
-      return Future.error('Cannot register new user account.');
+      return Future.error(l(context).loginErrorNoAccessTokenAutoRegister);
 
     return OauthToken.fromJson(jsonMap['token'])..obtainMethod = obtainMethod;
   }
@@ -410,8 +414,8 @@ class _LoginFormState extends State<LoginForm> {
 class LoginScreenRoute extends MaterialPageRoute {
   LoginScreenRoute()
       : super(
-          builder: (_) => Scaffold(
-            appBar: AppBar(title: Text('Login')),
+          builder: (context) => Scaffold(
+            appBar: AppBar(title: Text(l(context).login)),
             body: LoginForm(),
           ),
         );

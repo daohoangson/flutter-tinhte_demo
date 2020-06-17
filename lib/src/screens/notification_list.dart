@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tinhte_demo/src/intl.dart';
 import 'package:tinhte_demo/src/widgets/notifications.dart';
 
 class NotificationListScreen extends StatelessWidget {
@@ -7,7 +8,7 @@ class NotificationListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
-          title: Text('Notifications'),
+          title: Text(l(context).notifications),
         ),
         body: NotificationsWidget(),
       );
