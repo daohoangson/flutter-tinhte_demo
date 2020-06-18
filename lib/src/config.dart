@@ -5,6 +5,9 @@ abstract class Config {
   String get clientId;
   String get clientSecret;
   String get fcmProjectId;
+  bool get loginWithApple;
+  bool get loginWithFacebook;
+  bool get loginWithGoogle;
   String get pushServer;
   String get siteRoot;
 
