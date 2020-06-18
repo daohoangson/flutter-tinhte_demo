@@ -5,6 +5,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:tinhte_demo/src/intl.dart';
 import 'package:tinhte_demo/src/screens/home.dart';
+import 'package:tinhte_demo/src/widgets/font_control.dart';
 import 'package:tinhte_demo/src/widgets/menu/dark_theme.dart';
 import 'package:tinhte_demo/src/widgets/dismiss_keyboard.dart';
 import 'package:tinhte_demo/src/api.dart';
@@ -19,19 +20,30 @@ void main() {
     configureFcm();
 
     final darkTheme = await DarkTheme.create();
-    runApp(MyApp(darkTheme: darkTheme));
+    final fontScale = await FontScale.create();
+    runApp(MyApp(
+      darkTheme: darkTheme,
+      fontScale: fontScale,
+    ));
   }, Crashlytics.instance.recordError);
 }
 
 class MyApp extends StatelessWidget {
   final DarkTheme darkTheme;
+  final FontScale fontScale;
 
-  MyApp({this.darkTheme});
+  MyApp({
+    this.darkTheme,
+    this.fontScale,
+  });
 
   @override
-  Widget build(BuildContext context) => ChangeNotifierProvider<DarkTheme>.value(
+  Widget build(BuildContext context) => MultiProvider(
         child: Consumer<DarkTheme>(builder: (_, __, ___) => _buildApp()),
-        value: darkTheme,
+        providers: [
+          ChangeNotifierProvider<DarkTheme>.value(value: darkTheme),
+          ChangeNotifierProvider<FontScale>.value(value: fontScale),
+        ],
       );
 
   Widget _buildApp() => ApiApp(
@@ -47,6 +59,7 @@ class MyApp extends StatelessWidget {
                 GlobalWidgetsLocalizations.delegate,
               ],
               navigatorKey: primaryNavKey,
+              navigatorObservers: [FontControlWidget.routeObserver],
               onGenerateTitle: (context) => l(context).appTitle,
               supportedLocales: [
                 const Locale('en', ''),

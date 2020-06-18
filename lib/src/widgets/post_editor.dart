@@ -194,7 +194,6 @@ class _PostEditorState extends State<PostEditorWidget> {
         keyboardType: TextInputType.multiline,
         maxLines: 3,
         minLines: 1,
-        style: getPostBodyTextStyle(context, false),
         textCapitalization: TextCapitalization.sentences,
       );
 

@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
 import 'package:tinhte_api/thread.dart';
+import 'package:tinhte_demo/src/widgets/font_control.dart';
 import 'package:tinhte_demo/src/widgets/post_editor.dart';
 import 'package:tinhte_demo/src/widgets/posts.dart';
 import 'package:tinhte_demo/src/intl.dart';
@@ -58,6 +59,7 @@ class _ThreadViewState extends State<ThreadViewScreen> {
         appBar: AppBar(
           title: _buildAppBarTitle(context),
           actions: <Widget>[
+            FontControlWidget(),
             _buildAppBarPopupMenuButton(),
           ],
         ),

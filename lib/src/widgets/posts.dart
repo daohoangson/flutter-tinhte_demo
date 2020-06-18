@@ -8,6 +8,7 @@ import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:tinhte_api/attachment.dart';
 import 'package:tinhte_api/post.dart';
 import 'package:tinhte_api/thread.dart';
+import 'package:tinhte_demo/src/widgets/font_control.dart';
 import 'package:tinhte_demo/src/widgets/tinhte/background_post.dart';
 import 'package:tinhte_demo/src/widgets/tinhte/tinhte_fact.dart';
 import 'package:tinhte_demo/src/widgets/poll.dart';
