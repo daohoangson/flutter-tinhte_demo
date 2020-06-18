@@ -5,7 +5,7 @@ import 'package:tinhte_demo/src/config.dart';
 
 const kThreadImageAspectRatio = 594 / 368;
 
-const _apiUrlAttachments = "$configApiRoot?attachments";
+final String _apiUrlAttachments = "${config.apiRoot}?attachments";
 
 Widget buildCachedNetworkImage(String imageUrl) => CachedNetworkImage(
       imageUrl: imageUrl,

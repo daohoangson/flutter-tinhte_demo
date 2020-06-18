@@ -96,7 +96,7 @@ class _TagChip extends StatelessWidget {
         labelPadding: const EdgeInsets.symmetric(horizontal: 3),
         onPressed: () => launchLink(
           context,
-          "$configSiteRoot/tags?t=${Uri.encodeQueryComponent(tagText)}",
+          "${config.siteRoot}/tags?t=${Uri.encodeQueryComponent(tagText)}",
         ),
       );
 }
