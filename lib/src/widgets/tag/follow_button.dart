@@ -26,7 +26,7 @@ class _FollowState extends State<FollowButton> {
   void initState() {
     super.initState();
 
-    if (!f.isFollowed || !f.hasFollowersLink()) return;
+    if (f.isFollowed != true || !f.hasFollowersLink()) return;
     apiGet(
       ApiCaller.stateful(this),
       f.followersLink,
@@ -60,7 +60,7 @@ class _FollowState extends State<FollowButton> {
   @override
   Widget build(BuildContext context) => !f.hasFollowersLink()
       ? const SizedBox.shrink()
-      : !f.isFollowed ? _buildButtonFollow() : _buildButtonFollowing();
+      : f.isFollowed != true ? _buildButtonFollow() : _buildButtonFollowing();
 
   Widget _buildButtonFollow() => FlatButton(
         child: Text(l(context).tagFollow),
