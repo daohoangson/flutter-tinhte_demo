@@ -60,7 +60,7 @@ class TinhteHtmlWidget extends StatelessWidget {
   Widget build(BuildContext _) => LayoutBuilder(
         builder: (c, bc) => HtmlWidget(
           "<html><body>$html</body></html>",
-          baseUrl: Uri.parse(configSiteRoot),
+          baseUrl: Uri.parse(config.siteRoot),
           buildAsync: false,
           enableCaching: enableCaching,
           factoryBuilder: () => TinhteWidgetFactory(

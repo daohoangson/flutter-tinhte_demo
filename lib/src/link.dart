@@ -18,14 +18,14 @@ void launchLink(BuildContext context, String link) async {
   // TODO: reconsider when https://github.com/daohoangson/flutter_widget_from_html/pull/116 is merged
   if (link.contains('misc/api-chr')) return;
 
-  if (link.startsWith(configSiteRoot)) {
+  if (link.startsWith(config.siteRoot)) {
     final path = "tools/parse-link?link=${Uri.encodeQueryComponent(link)}";
     final parsed = await parsePath(path, context: context);
     if (parsed) return;
 
     final apiAuth = ApiAuth.of(context, listen: false);
     if (apiAuth.hasToken) {
-      link = "$configApiRoot?tools/login"
+      link = "${config.apiRoot}?tools/login"
           "&oauth_token=${apiAuth.token.accessToken}"
           "&redirect_uri=${Uri.encodeQueryComponent(link)}";
     }
@@ -37,7 +37,7 @@ void launchLink(BuildContext context, String link) async {
 }
 
 void launchMemberView(BuildContext context, int userId) =>
-    launchLink(context, "$configSiteRoot/members/$userId/");
+    launchLink(context, "${config.siteRoot}/members/$userId/");
 
 Future<bool> parsePath(
   String path, {

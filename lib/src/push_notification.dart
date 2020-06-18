@@ -187,14 +187,14 @@ class _PushNotificationAppState extends State<PushNotificationApp> {
     final _fcmToken = _pnt._value;
     if (_fcmToken?.isNotEmpty != true) return;
 
-    final url = "$configPushServer/unregister";
+    final url = "${config.pushServer}/unregister";
 
     final response = await http.post(
       url,
       body: {
         'device_type': 'firebase',
         'device_id': _fcmToken,
-        'oauth_client_id': configClientId,
+        'oauth_client_id': config.clientId,
       },
     );
 

@@ -66,7 +66,7 @@ class TrendingTagsWidget extends StatelessWidget {
         onTap: tag?.tagName != null
             ? () => launchLink(
                   context,
-                  "$configSiteRoot/tags?t=${Uri.encodeQueryComponent(tag.tagName)}",
+                  "${config.siteRoot}/tags?t=${Uri.encodeQueryComponent(tag.tagName)}",
                 )
             : null,
       );

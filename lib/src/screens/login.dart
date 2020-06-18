@@ -6,6 +6,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:tinhte_api/api.dart';
 import 'package:tinhte_api/oauth_token.dart';
 import 'package:tinhte_demo/src/api.dart';
+import 'package:tinhte_demo/src/config.dart';
 import 'package:tinhte_demo/src/intl.dart';
 
 final _facebookLogin = FacebookLogin();
@@ -50,8 +51,9 @@ class _LoginFormState extends State<LoginForm> {
   void initState() {
     super.initState();
 
-    apple.AppleSignIn.isAvailable()
-        .then((ok) => ok ? setState(() => _canLoginApple = true) : null);
+    if (config.loginWithApple)
+      apple.AppleSignIn.isAvailable()
+          .then((ok) => ok ? setState(() => _canLoginApple = true) : null);
   }
 
   @override
@@ -108,15 +110,19 @@ class _LoginFormState extends State<LoginForm> {
           child: Text(lm(context).continueButtonLabel),
           onPressed: _isLoggingIn ? null : _login,
         ),
-        FacebookSignInButton(
-          onPressed: _isLoggingIn ? null : _loginFacebook,
-          text: l(context).loginWithFacebook,
-        ),
-        GoogleSignInButton(
-          darkMode: true,
-          onPressed: _isLoggingIn ? null : _loginGoogle,
-          text: l(context).loginWithGoogle,
-        ),
+        config.loginWithFacebook
+            ? FacebookSignInButton(
+                onPressed: _isLoggingIn ? null : _loginFacebook,
+                text: l(context).loginWithFacebook,
+              )
+            : const SizedBox.shrink(),
+        config.loginWithGoogle
+            ? GoogleSignInButton(
+                darkMode: true,
+                onPressed: _isLoggingIn ? null : _loginGoogle,
+                text: l(context).loginWithGoogle,
+              )
+            : const SizedBox.shrink(),
         _canLoginApple
             ? AppleSignInButton(
                 onPressed: _isLoggingIn ? null : _loginApple,

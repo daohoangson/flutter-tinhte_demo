@@ -173,7 +173,7 @@ class ApiApp extends StatefulWidget {
     @required this.child,
     Key key,
   })  : assert(child != null),
-        api = Api(configApiRoot, configClientId, configClientSecret)
+        api = Api(config.apiRoot, config.clientId, config.clientSecret)
           ..httpHeaders['Api-Bb-Code-Chr'] = '1'
           ..httpHeaders['Api-Post-Tree'] = '1',
         super(key: key);
