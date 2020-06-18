@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tinhte_api/search.dart';
 import 'package:tinhte_api/thread.dart';
+import 'package:tinhte_demo/src/intl.dart';
 import 'package:tinhte_demo/src/screens/content_list_view.dart';
 import 'package:tinhte_demo/src/widgets/home/bottom_bar.dart';
 import 'package:tinhte_demo/src/widgets/home/thread.dart';
@@ -46,6 +47,13 @@ class HomeScreen extends StatelessWidget {
           ),
         ),
         bottomNavigationBar: HomeBottomBar(),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {},
+          tooltip: l(context).threadCreateNew,
+          child: Icon(Icons.add),
+          elevation: 2.0,
+        ),
       );
 
   void _fetchOnSuccess(Map json, FetchContext<_HomeListItem> fc) {

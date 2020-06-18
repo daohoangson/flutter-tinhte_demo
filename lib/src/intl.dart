@@ -304,6 +304,9 @@ class L10n {
   String tagUnfollowXQuestion(String tag) => Intl.message('Unfollow $tag?',
       args: [tag], locale: localeName, name: 'tagUnfollowXQuestion');
 
+  String get threadCreateNew => Intl.message('Create new thread',
+      locale: localeName, name: 'threadCreateNew');
+
   String get threadStickyBanner =>
       Intl.message('Sticky', locale: localeName, name: 'threadStickyBanner');
 
