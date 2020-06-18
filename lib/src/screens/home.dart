@@ -3,12 +3,12 @@ import 'package:tinhte_api/search.dart';
 import 'package:tinhte_api/thread.dart';
 import 'package:tinhte_demo/src/screens/content_list_view.dart';
 import 'package:tinhte_demo/src/widgets/home/bottom_bar.dart';
-import 'package:tinhte_demo/src/widgets/home/channels.dart';
-import 'package:tinhte_demo/src/widgets/home/feature_pages.dart';
 import 'package:tinhte_demo/src/widgets/home/thread.dart';
 import 'package:tinhte_demo/src/widgets/home/top_5.dart';
 import 'package:tinhte_demo/src/widgets/home/top_threads.dart';
-import 'package:tinhte_demo/src/widgets/home/trending_tags.dart';
+import 'package:tinhte_demo/src/widgets/tinhte/home_channels.dart';
+import 'package:tinhte_demo/src/widgets/tinhte/home_feature_pages.dart';
+import 'package:tinhte_demo/src/widgets/tinhte/home_trending_tags.dart';
 import 'package:tinhte_demo/src/widgets/super_list.dart';
 
 class HomeScreen extends StatelessWidget {

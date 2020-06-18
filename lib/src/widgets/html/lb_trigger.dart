@@ -196,10 +196,10 @@ class _ScreenState extends State<_Screen> {
             style: TextStyle(color: Colors.white70),
             child: widget.captions.containsKey(index)
                 ? widget.captions[index]
-                : Text("${index + 1} of ${widget.sources.length}"),
+                : Text(l(context).navXOfY(index + 1, widget.sources.length)),
           ),
           FlatButton(
-            child: Text('OK'),
+            child: Text(lm(context).okButtonLabel),
             colorBrightness: Brightness.dark,
             onPressed: () => Navigator.of(context).pop(),
           )

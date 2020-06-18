@@ -19,7 +19,7 @@ class FpHeader extends StatelessWidget {
               child: _buildStats(
                     context,
                     fp.values?.tagUseCount,
-                    'discussions',
+                    l(context).tagLowercaseDiscussions,
                   ) ??
                   const SizedBox.shrink(),
             ),
@@ -27,7 +27,7 @@ class FpHeader extends StatelessWidget {
               child: _buildStats(
                     context,
                     fp.values?.newsCount,
-                    'news',
+                    l(context).tagLowercaseNews,
                   ) ??
                   const SizedBox.shrink(),
             ),

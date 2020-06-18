@@ -67,11 +67,11 @@ class _ThreadViewState extends State<ThreadViewScreen> {
   Widget _buildAppBarPopupMenuButton() => PopupMenuButton<String>(
         itemBuilder: (context) => <PopupMenuEntry<String>>[
           PopupMenuItem(
-            child: Text('Open in browser'),
+            child: Text(l(context).openInBrowser),
             value: _kPopupActionOpenInBrowser,
           ),
           PopupMenuItem(
-            child: Text('Share'),
+            child: Text(l(context).share),
             value: _kPopupActionShare,
           ),
         ],

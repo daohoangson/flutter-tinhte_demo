@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tinhte_api/api.dart';
 import 'package:tinhte_api/oauth_token.dart';
 import 'package:tinhte_api/user.dart';
+import 'package:tinhte_demo/src/intl.dart';
 import 'package:tinhte_demo/src/screens/login.dart';
 import 'package:tinhte_demo/src/config.dart';
 import 'package:tinhte_demo/src/constants.dart';
@@ -79,12 +80,12 @@ void prepareForApiAction(
 Future showApiErrorDialog(
   BuildContext context,
   dynamic error, {
-  String title = 'Api Error',
+  String title,
 }) =>
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        title: Text(title),
+        title: Text(title ?? l(context).apiError),
         content: Text(
           error is ApiError
               ? error.message
@@ -141,10 +142,9 @@ void _setupApiJsonHandlers(
     completer,
     onSuccess != null
         ? (json) {
-            if (json is! Map) {
-              print(json);
-              throw new ApiError(message: 'Unexpected api response');
-            }
+            if (json is! Map)
+              throw new ApiError(
+                  message: l(caller.context).apiUnexpectedResponse);
             return onSuccess(json);
           }
         : null,

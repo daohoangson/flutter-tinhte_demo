@@ -51,6 +51,5 @@ PopupMenuButton buildPopupMenuButtonForThread(
     ),
     itemBuilder: (_) => entries,
     onSelected: (path) => parsePath(path, context: context),
-    tooltip: 'Why is it in my feed?',
   );
 }

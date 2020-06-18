@@ -54,7 +54,7 @@ class MemberViewHeader extends StatelessWidget {
                       .copyWith(fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  "Joined: ${formatTimestamp(user.userRegisterDate)}",
+                  "${l(context).userRegisterDate}: ${formatTimestamp(user.userRegisterDate)}",
                   style: theme.textTheme.caption,
                 ),
               ],
@@ -122,7 +122,8 @@ class _FollowButtonState extends State<_FollowButton> {
   Widget build(BuildContext context) =>
       widget.user.links?.followers?.isNotEmpty == true
           ? FlatButton(
-              child: Text(isFollowed ? 'Unfollow' : 'Follow'),
+              child: Text(
+                  isFollowed ? l(context).userUnfollow : l(context).userFollow),
               onPressed: widget.user.permissions?.follow == true
                   ? (_isRequesting ? null : isFollowed ? _unfollow : _follow)
                   : null,
@@ -169,15 +170,16 @@ class _IgnoreButtonState extends State<_IgnoreButton> {
   bool get isIgnored => widget.user.userIsIgnored == true;
 
   @override
-  Widget build(BuildContext context) =>
-      widget.user.links?.ignore?.isNotEmpty == true
-          ? FlatButton(
-              child: Text(isIgnored ? 'Unignore' : 'Ignore'),
-              onPressed: widget.user.permissions?.ignore == true
-                  ? (_isRequesting ? null : isIgnored ? _unignore : _ignore)
-                  : null,
-            )
-          : Container();
+  Widget build(BuildContext context) => widget.user.links?.ignore?.isNotEmpty ==
+          true
+      ? FlatButton(
+          child:
+              Text(isIgnored ? l(context).userUnignore : l(context).userIgnore),
+          onPressed: widget.user.permissions?.ignore == true
+              ? (_isRequesting ? null : isIgnored ? _unignore : _ignore)
+              : null,
+        )
+      : Container();
 
   void _ignore() => prepareForApiAction(context, () {
         if (_isRequesting) return;

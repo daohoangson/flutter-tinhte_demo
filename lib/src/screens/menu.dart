@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
+import 'package:tinhte_demo/src/intl.dart';
 import 'package:tinhte_demo/src/screens/notification_list.dart';
 import 'package:tinhte_demo/src/widgets/menu/dark_theme.dart';
 import 'package:tinhte_demo/src/widgets/app_bar.dart';
@@ -9,7 +10,7 @@ class MenuScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
-          title: Text('Menu'),
+          title: Text(l(context).menu),
         ),
         body: ListView(
           children: <Widget>[
@@ -24,13 +25,13 @@ class MenuScreen extends StatelessWidget {
       );
 
   Widget _buildNotifications(BuildContext context) => ListTile(
-        title: Text('Notifications'),
+        title: Text(l(context).notifications),
         onTap: () => Navigator.of(context)
             .push(MaterialPageRoute(builder: (_) => NotificationListScreen())),
       );
 
   Widget _buildPrivacyPolicy(BuildContext context) => ListTile(
-        title: Text('Privacy Policy'),
+        title: Text(l(context).privacyPolicy),
         onTap: () => launchLink(context, 'https://tinhte.vn/threads/2864415/'),
       );
 }
@@ -51,8 +52,8 @@ class _PackageInfoState extends State<_PackageInfoWidget> {
 
   @override
   Widget build(BuildContext context) => ListTile(
-      title: Text('Version'),
+      title: Text(l(context).appVersion),
       subtitle: Text(_info != null
-          ? "${_info.version} (build number: ${_info.buildNumber})"
-          : 'N/A'));
+          ? l(context).appVersionInfo(_info.version, _info.buildNumber)
+          : l(context).appVersionNotAvailable));
 }

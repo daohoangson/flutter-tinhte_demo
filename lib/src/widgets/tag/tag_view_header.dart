@@ -12,7 +12,8 @@ class TagViewHeader extends StatelessWidget {
   Widget build(BuildContext context) => Row(
         children: <Widget>[
           Expanded(
-            child: _buildStats(context, tag.tagUseCount, 'discussions') ??
+            child: _buildStats(context, tag.tagUseCount,
+                    l(context).tagLowercaseDiscussions) ??
                 const SizedBox.shrink(),
           ),
           Expanded(child: FollowButton(_FollowableTag(tag))),

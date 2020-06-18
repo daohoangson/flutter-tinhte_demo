@@ -32,7 +32,7 @@ class _PostActionsWidgetState extends State<_PostActionsWidget> {
             if (post.links?.likes?.isNotEmpty == true) {
               buttons.add(buildPostButton(
                 context,
-                postIsLiked ? 'Unlike' : 'Like',
+                postIsLiked ? l(context).postUnlike : l(context).postLike,
                 count: post.postLikeCount,
                 onTap: _isLiking
                     ? null
@@ -42,7 +42,7 @@ class _PostActionsWidgetState extends State<_PostActionsWidget> {
 
             buttons.add(buildPostButton(
               context,
-              'Reply',
+              l(context).postReply,
               onTap: () => context.read<PostEditorData>().enable(
                     context,
                     parentPost: context.read<Post>(),
@@ -98,8 +98,8 @@ class _PostActionsWidgetState extends State<_PostActionsWidget> {
             final reason = await showDialog(
               context: context,
               builder: (context) => _PostActionsDialogReason(
-                button: 'Delete',
-                hint: 'Reason to delete post.',
+                button: l(context).postDelete,
+                hint: l(context).postDeleteReasonHint,
               ),
             );
             if (reason != null) _deletePost(ap, reason);
@@ -111,8 +111,8 @@ class _PostActionsWidgetState extends State<_PostActionsWidget> {
             final message = await showDialog(
               context: context,
               builder: (context) => _PostActionsDialogReason(
-                button: 'Report',
-                hint: 'Problem to be reported.',
+                button: l(context).postReport,
+                hint: l(context).postReportReasonHint,
               ),
             );
             if (message != null) _reportPost(ap, message);
@@ -127,14 +127,14 @@ class _PostActionsWidgetState extends State<_PostActionsWidget> {
 
     final entries = <PopupMenuEntry<String>>[
       PopupMenuItem(
-        child: Text('Open in browser'),
+        child: Text(l(context).openInBrowser),
         value: _kPopupActionOpenInBrowser,
       ),
     ];
 
     if (post.links?.report?.isNotEmpty == true) {
       entries.add(PopupMenuItem(
-        child: Text('Report'),
+        child: Text(l(context).postReport),
         enabled: post.permissions?.report == true,
         value: _kPopupActionReport,
       ));
@@ -142,7 +142,7 @@ class _PostActionsWidgetState extends State<_PostActionsWidget> {
 
     if (post.permissions?.delete == true) {
       entries.add(PopupMenuItem(
-        child: Text('Delete'),
+        child: Text(l(context).postDelete),
         value: _kPopupActionDelete,
       ));
     }
@@ -176,7 +176,7 @@ class _PostActionsWidgetState extends State<_PostActionsWidget> {
           ap.post.links.report,
           bodyFields: {'message': message},
           onSuccess: (_) => Scaffold.of(context).showSnackBar(
-            SnackBar(content: Text('Thank you for your report!')),
+            SnackBar(content: Text(l(context).postReportedThanks)),
           ),
         ),
       );
@@ -208,7 +208,7 @@ class _PostActionsDialogReason extends StatelessWidget {
   Widget build(BuildContext context) => AlertDialog(
         actions: <Widget>[
           FlatButton(
-            child: Text('Cancel'),
+            child: Text(lm(context).cancelButtonLabel),
             onPressed: () => Navigator.of(context).pop(),
           ),
           FlatButton(

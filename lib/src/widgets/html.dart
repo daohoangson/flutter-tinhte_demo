@@ -9,6 +9,7 @@ import 'package:html_unescape/html_unescape.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 import 'package:tinhte_demo/src/config.dart';
 import 'package:tinhte_demo/src/constants.dart';
+import 'package:tinhte_demo/src/intl.dart';
 import 'package:tinhte_demo/src/link.dart';
 import 'package:tinhte_demo/src/widgets/image.dart';
 import 'package:url_launcher/url_launcher.dart';

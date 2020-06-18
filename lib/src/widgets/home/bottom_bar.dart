@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:tinhte_demo/src/intl.dart';
 import 'package:tinhte_demo/src/screens/search/thread.dart';
 import 'package:tinhte_demo/src/screens/forum_list.dart';
 import 'package:tinhte_demo/src/screens/menu.dart';
@@ -11,23 +12,23 @@ class HomeBottomBar extends StatelessWidget {
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(FontAwesomeIcons.home),
-            title: Text('Home'),
+            title: Text(l(context).home),
           ),
           BottomNavigationBarItem(
             icon: Icon(FontAwesomeIcons.newspaper),
-            title: Text('My Feed'),
+            title: Text(l(context).myFeed),
           ),
           BottomNavigationBarItem(
             icon: Icon(FontAwesomeIcons.search),
-            title: Text('Search'),
+            title: Text(l(context).search),
           ),
           BottomNavigationBarItem(
             icon: Icon(FontAwesomeIcons.listAlt),
-            title: Text('Forums'),
+            title: Text(l(context).forums),
           ),
           BottomNavigationBarItem(
             icon: Icon(FontAwesomeIcons.bars),
-            title: Text('Menu'),
+            title: Text(l(context).menu),
           ),
         ],
         onTap: (index) {

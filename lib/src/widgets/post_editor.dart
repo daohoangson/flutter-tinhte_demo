@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tinhte_api/post.dart';
 import 'package:tinhte_api/thread.dart';
+import 'package:tinhte_demo/src/intl.dart';
 import 'package:tinhte_demo/src/widgets/attachment_editor.dart';
 import 'package:tinhte_demo/src/widgets/posts.dart';
 import 'package:tinhte_demo/src/data/emojis.dart';
@@ -152,7 +153,7 @@ class _PostEditorState extends State<PostEditorWidget> {
     return Padding(
       child: RichText(
         text: TextSpan(
-          text: 'Replying to @',
+          text: l(context).postReplyingToAt,
           style: textTheme.bodyText2,
           children: [
             TextSpan(
@@ -185,7 +186,7 @@ class _PostEditorState extends State<PostEditorWidget> {
         controller: focusNode != null ? _controller : null,
         decoration: InputDecoration(
           border: InputBorder.none,
-          hintText: 'Enter your message to post',
+          hintText: l(context).postReplyMessageHint,
         ),
         enabled: focusNode != null,
         focusNode: focusNode,
@@ -234,7 +235,8 @@ class _PostEditorState extends State<PostEditorWidget> {
           widget.callback(Post.fromJson(jsonMap['post']));
           data._disable(context);
         },
-        onError: (e) => showApiErrorDialog(context, e, title: 'Post error'),
+        onError: (e) =>
+            showApiErrorDialog(context, e, title: l(context).postError),
         onComplete: () => setState(() => _isPosting = false),
       );
     });

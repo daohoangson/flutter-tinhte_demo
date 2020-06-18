@@ -75,11 +75,12 @@ class _PostReplyHiddenWidgetState extends State<_PostReplyHiddenWidget> {
   @override
   Widget build(BuildContext context) {
     Widget built = _isFetching
-        ? _buildText(context, 'Loading...')
+        ? _buildText(context, l(context).loadingEllipsis)
         : GestureDetector(
             child: _buildText(
               context,
-              "Tap to load ${widget.postReply.postReplyCount} hidden replies...",
+              l(context).postLoadXHidden(
+                  formatNumber(widget.postReply.postReplyCount)),
             ),
             onTap: fetch,
           );

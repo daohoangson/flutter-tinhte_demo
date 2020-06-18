@@ -37,7 +37,7 @@ class FeaturePagesWidget extends StatelessWidget {
             ),
             Center(
               child: FlatButton(
-                child: Text('View all communities'),
+                child: Text('Xem tất cả'),
                 textColor: Theme.of(context).accentColor,
                 onPressed: () => showSearch(
                   context: context,
