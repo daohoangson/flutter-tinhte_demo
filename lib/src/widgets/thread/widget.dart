@@ -301,9 +301,7 @@ class _ThreadWidgetActionsState extends State<_ThreadWidgetActions> {
 
   Widget _buildCounterReply(TextStyle textStyle) => threadReplyCount > 0
       ? Text(
-          threadReplyCount > 1
-              ? l(context).statsXReplies(formatNumber(threadReplyCount))
-              : l(context).statsXReply("$threadReplyCount"),
+          l(context).statsXReplies(threadReplyCount),
           style: textStyle,
           textScaleFactor: 1,
         )

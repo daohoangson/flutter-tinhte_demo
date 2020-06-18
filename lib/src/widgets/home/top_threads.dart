@@ -119,8 +119,7 @@ class _ThreadWidget extends StatelessWidget {
                 text: thread.creatorUsername,
               ),
               TextSpan(
-                  text:
-                      " ${l(context).statsXViews(formatNumber(thread.threadViewCount))}")
+                  text: " ${l(context).statsXViews(thread.threadViewCount)}")
             ],
             style: theme.textTheme.caption,
           ),
