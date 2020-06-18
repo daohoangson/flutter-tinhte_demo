@@ -110,7 +110,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "postReportedThanks" : MessageLookupByLibrary.simpleMessage("Thank you for your report!"),
     "postUnlike" : MessageLookupByLibrary.simpleMessage("Unlike"),
     "privacyPolicy" : MessageLookupByLibrary.simpleMessage("Privacy Policy"),
-    "search" : MessageLookupByLibrary.simpleMessage("Search"),
     "searchEnterSomething" : MessageLookupByLibrary.simpleMessage("Enter something to search"),
     "searchSubmitToContinue" : m9,
     "searchThisForum" : MessageLookupByLibrary.simpleMessage("Search this forum"),

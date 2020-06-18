@@ -31,7 +31,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m5(page) => "Trang ${page}";
 
-  static m6(x, y) => "${x} trên ${y}";
+  static m6(x, y) => "${x} / ${y}";
 
   static m7(howMany) => "${Intl.plural(howMany, one: 'Bạn chỉ có thể chọn một.', other: 'Bạn chỉ có thể chọn tối đa ${howMany} lựa chọn.')}";
 
@@ -68,7 +68,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "loginErrorNoAccessToken" : m4,
     "loginErrorNoAccessTokenAutoRegister" : MessageLookupByLibrary.simpleMessage("Không thể đăng ký mới."),
     "loginErrorPasswordIsEmpty" : MessageLookupByLibrary.simpleMessage("Xin vui lòng nhập mật khẩu để đăng nhập"),
-    "loginErrorUsernameIsEmpty" : MessageLookupByLibrary.simpleMessage("Xin vui lòng nhập tên hoặc  để đăng nhập"),
+    "loginErrorUsernameIsEmpty" : MessageLookupByLibrary.simpleMessage("Xin vui lòng nhập tên hoặc email để đăng nhập"),
     "loginGoogleErrorAccountIsNull" : MessageLookupByLibrary.simpleMessage("Không thể lấy thông tin tài khoản Google."),
     "loginGoogleErrorTokenIsEmpty" : MessageLookupByLibrary.simpleMessage("Không thể lấy thông tin xác thực từ Google."),
     "loginPassword" : MessageLookupByLibrary.simpleMessage("Mật khẩu"),
@@ -110,7 +110,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "postReportedThanks" : MessageLookupByLibrary.simpleMessage("Cảm ơn bạn đã báo cáo nội dung xấu!"),
     "postUnlike" : MessageLookupByLibrary.simpleMessage("Bỏ thích"),
     "privacyPolicy" : MessageLookupByLibrary.simpleMessage("Chính sách quyền riêng tư"),
-    "search" : MessageLookupByLibrary.simpleMessage("Tìm kiếm"),
     "searchEnterSomething" : MessageLookupByLibrary.simpleMessage("Nhập nội dung cần tìm kiếm"),
     "searchSubmitToContinue" : m9,
     "searchThisForum" : MessageLookupByLibrary.simpleMessage("Tìm trong khu vực này"),

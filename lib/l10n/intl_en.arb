@@ -1,0 +1,469 @@
+{
+  "@@last_modified": "2020-06-18T22:22:39.371047",
+  "appTitle": "tinhte.vn Demo",
+  "@appTitle": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "appVersion": "Version",
+  "@appVersion": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "appVersionInfo": "{version} (build number: {buildNumber})",
+  "@appVersionInfo": {
+    "type": "text",
+    "placeholders": {
+      "version": {},
+      "buildNumber": {}
+    }
+  },
+  "appVersionNotAvailable": "N/A",
+  "@appVersionNotAvailable": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "apiError": "API Error",
+  "@apiError": {
+    "description": "Default dialog title for API error",
+    "type": "text",
+    "placeholders": {}
+  },
+  "apiUnexpectedResponse": "Unexpected API response",
+  "@apiUnexpectedResponse": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "forums": "Forums",
+  "@forums": {
+    "description": "Forum list appbar title",
+    "type": "text",
+    "placeholders": {}
+  },
+  "home": "Home",
+  "@home": {
+    "description": "Home bottom navigation item title",
+    "type": "text",
+    "placeholders": {}
+  },
+  "justAMomentEllipsis": "Just a moment...",
+  "@justAMomentEllipsis": {
+    "description": "Placeholder text for link parsing",
+    "type": "text",
+    "placeholders": {}
+  },
+  "loadingEllipsis": "Loading...",
+  "@loadingEllipsis": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "login": "Login",
+  "@login": {
+    "description": "Login screen appbar title",
+    "type": "text",
+    "placeholders": {}
+  },
+  "loginAssociate": "Associate",
+  "@loginAssociate": {
+    "description": "Label for \"Associate\" button",
+    "type": "text",
+    "placeholders": {}
+  },
+  "loginAssociateEnterPassword": "An existing account has been found, please enter your password to associate it for future logins.",
+  "@loginAssociateEnterPassword": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "loginErrorCancelled": "{method} has been cancelled.",
+  "@loginErrorCancelled": {
+    "type": "text",
+    "placeholders": {
+      "method": {}
+    }
+  },
+  "loginGoogleErrorAccountIsNull": "Cannot get Google account information.",
+  "@loginGoogleErrorAccountIsNull": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "loginGoogleErrorTokenIsEmpty": "Cannot get Google authentication info.",
+  "@loginGoogleErrorTokenIsEmpty": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "loginErrorNoAccessToken": "Cannot login with {method}.",
+  "@loginErrorNoAccessToken": {
+    "type": "text",
+    "placeholders": {
+      "method": {}
+    }
+  },
+  "loginErrorNoAccessTokenAutoRegister": "Cannot register new user account.",
+  "@loginErrorNoAccessTokenAutoRegister": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "loginErrorPasswordIsEmpty": "Please enter your password to login",
+  "@loginErrorPasswordIsEmpty": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "loginErrorUsernameIsEmpty": "Please enter your username or email",
+  "@loginErrorUsernameIsEmpty": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "loginPassword": "Password",
+  "@loginPassword": {
+    "description": "Label text for password field",
+    "type": "text",
+    "placeholders": {}
+  },
+  "loginPasswordHint": "hunter2",
+  "@loginPasswordHint": {
+    "description": "Hint text for password field",
+    "type": "text",
+    "placeholders": {}
+  },
+  "loginUsername": "Username",
+  "@loginUsername": {
+    "description": "Label text for username field",
+    "type": "text",
+    "placeholders": {}
+  },
+  "loginUsernameHint": "keyboard_warrior",
+  "@loginUsernameHint": {
+    "description": "Hint text for username field",
+    "type": "text",
+    "placeholders": {}
+  },
+  "loginUsernameOrEmail": "Username / email",
+  "@loginUsernameOrEmail": {
+    "description": "Label text for username / email field",
+    "type": "text",
+    "placeholders": {}
+  },
+  "loginWithApple": "Sign in with Apple",
+  "@loginWithApple": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "loginWithFacebook": "Sign in with Facebook",
+  "@loginWithFacebook": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "loginWithGoogle": "Sign in with Google",
+  "@loginWithGoogle": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "menu": "Menu",
+  "@menu": {
+    "description": "Menu screen appbar title",
+    "type": "text",
+    "placeholders": {}
+  },
+  "menuDarkTheme": "Dark theme",
+  "@menuDarkTheme": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "menuDarkTheme0": "No, use light theme",
+  "@menuDarkTheme0": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "menuDarkTheme1": "Yes, use dark theme",
+  "@menuDarkTheme1": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "menuDarkThemeAuto": "Use system's color scheme",
+  "@menuDarkThemeAuto": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "menuLogout": "Logout",
+  "@menuLogout": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "myFeed": "My Feed",
+  "@myFeed": {
+    "description": "My feed appbar title",
+    "type": "text",
+    "placeholders": {}
+  },
+  "navLowercaseNext": "next",
+  "@navLowercaseNext": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "navLowercasePrevious": "previous",
+  "@navLowercasePrevious": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "navPageX": "Page {page}",
+  "@navPageX": {
+    "type": "text",
+    "placeholders": {
+      "page": {}
+    }
+  },
+  "navXOfY": "{x} of {y}",
+  "@navXOfY": {
+    "type": "text",
+    "placeholders": {
+      "x": {},
+      "y": {}
+    }
+  },
+  "notifications": "Notifications",
+  "@notifications": {
+    "description": "Notification list appbar title",
+    "type": "text",
+    "placeholders": {}
+  },
+  "openInBrowser": "Open in browser",
+  "@openInBrowser": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "pollErrorTooManyVotes": "{howMany,plural, =1{You can only choose one.}other{You can only select up to {howMany} choices.}}",
+  "@pollErrorTooManyVotes": {
+    "type": "text",
+    "placeholders": {
+      "howMany": {}
+    }
+  },
+  "pollVote": "Vote",
+  "@pollVote": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "postDelete": "Delete",
+  "@postDelete": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "postDeleteReasonHint": "Reason to delete post.",
+  "@postDeleteReasonHint": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "postDeleted": "Deleted post.",
+  "@postDeleted": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "postError": "Post error",
+  "@postError": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "postGoUnreadQuestion": "Continue reading?",
+  "@postGoUnreadQuestion": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "postGoUnreadYes": "YES",
+  "@postGoUnreadYes": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "postLike": "Like",
+  "@postLike": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "postLoadXHidden": "Tap to load {number} hidden replies...",
+  "@postLoadXHidden": {
+    "type": "text",
+    "placeholders": {
+      "number": {}
+    }
+  },
+  "postReport": "Report",
+  "@postReport": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "postReportReasonHint": "Problem to be reported.",
+  "@postReportReasonHint": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "postReportedThanks": "Thank you for your report!",
+  "@postReportedThanks": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "postUnlike": "Unlike",
+  "@postUnlike": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "postReply": "Reply",
+  "@postReply": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "postReplyMessageHint": "Enter your message to post",
+  "@postReplyMessageHint": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "postReplyingToAt": "Replying to @",
+  "@postReplyingToAt": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "privacyPolicy": "Privacy Policy",
+  "@privacyPolicy": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "searchEnterSomething": "Enter something to search",
+  "@searchEnterSomething": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "searchThisUser": "Search for this user",
+  "@searchThisUser": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "searchThisForum": "Search this forum",
+  "@searchThisForum": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "searchSubmitToContinue": "Submit to search for '{query}'",
+  "@searchSubmitToContinue": {
+    "type": "text",
+    "placeholders": {
+      "query": {}
+    }
+  },
+  "searchThreadByUser": " by user '{username}'",
+  "@searchThreadByUser": {
+    "type": "text",
+    "placeholders": {
+      "username": {}
+    }
+  },
+  "searchThreadInForum": " in forum '{forumTitle}'",
+  "@searchThreadInForum": {
+    "type": "text",
+    "placeholders": {
+      "forumTitle": {}
+    }
+  },
+  "share": "Share",
+  "@share": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "_statsXReplies": "{howMany,plural, =1{{howMany} reply}other{{formatted} replies}}",
+  "@_statsXReplies": {
+    "type": "text",
+    "placeholders": {
+      "howMany": {},
+      "formatted": {}
+    }
+  },
+  "_statsXViews": "{howMany,plural, =1{{howMany} view}other{{formatted} views}}",
+  "@_statsXViews": {
+    "type": "text",
+    "placeholders": {
+      "howMany": {},
+      "formatted": {}
+    }
+  },
+  "tagFollow": "Follow",
+  "@tagFollow": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "tagFollowing": "Following",
+  "@tagFollowing": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "tagLowercaseDiscussions": "discussions",
+  "@tagLowercaseDiscussions": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "tagLowercaseNews": "news",
+  "@tagLowercaseNews": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "tagNotificationChannelAlert": "Alert",
+  "@tagNotificationChannelAlert": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "tagNotificationChannelEmail": "Email",
+  "@tagNotificationChannelEmail": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "tagNotificationChannelExplainForX": "Choose how you want to be notified when new contents are available in {tag}:",
+  "@tagNotificationChannelExplainForX": {
+    "type": "text",
+    "placeholders": {
+      "tag": {}
+    }
+  },
+  "tagNotificationChannels": "Notification channels",
+  "@tagNotificationChannels": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "tagUnfollowXQuestion": "Unfollow {tag}?",
+  "@tagUnfollowXQuestion": {
+    "type": "text",
+    "placeholders": {
+      "tag": {}
+    }
+  },
+  "threadStickyBanner": "Sticky",
+  "@threadStickyBanner": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "topThreads": "Top Threads",
+  "@topThreads": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "userIgnore": "Ignore",
+  "@userIgnore": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "userFollow": "Follow",
+  "@userFollow": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "userRegisterDate": "Joined",
+  "@userRegisterDate": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "userUnfollow": "Unfollow",
+  "@userUnfollow": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "userUnignore": "Unignore",
+  "@userUnignore": {
+    "type": "text",
+    "placeholders": {}
+  }
+}
