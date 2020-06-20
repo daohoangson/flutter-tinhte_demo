@@ -2,13 +2,26 @@ import 'dart:io';
 import 'dart:math';
 import 'package:flutter/animation.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 import 'package:tinhte_api/attachment.dart';
+import 'package:tinhte_api/user.dart';
+import 'package:tinhte_demo/src/intl.dart';
 import 'package:tinhte_demo/src/widgets/image.dart';
 import 'package:tinhte_demo/src/api.dart';
 
 class AttachmentEditorWidget extends StatefulWidget {
-  AttachmentEditorWidget({Key key}) : super(key: key);
+  final String apiPostPath;
+  final double height;
+  final bool showPickIcon;
+
+  AttachmentEditorWidget({
+    this.apiPostPath,
+    this.height = 50,
+    Key key,
+    this.showPickIcon = false,
+  }) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => AttachmentEditorState();
@@ -22,15 +35,35 @@ class AttachmentEditorState extends State<AttachmentEditorWidget> {
 
   String get attachmentHash => _attachmentHash;
 
+  int get itemCount =>
+      _attachments.length +
+      (widget.showPickIcon &&
+              attachmentHash?.isNotEmpty == true &&
+              Provider.of<User>(context)?.userIsVisitor == true
+          ? 1
+          : 0);
+
   @override
-  Widget build(BuildContext _) => _attachments.isNotEmpty
+  void initState() {
+    super.initState();
+
+    if (widget.apiPostPath != null) {
+      _apiPostPath = widget.apiPostPath;
+      _attachmentHash = _generateHash();
+    }
+  }
+
+  @override
+  Widget build(BuildContext _) => itemCount > 0
       ? Padding(
           padding: const EdgeInsets.all(10.0),
           child: SizedBox(
-            height: 50,
+            height: widget.height,
             child: ListView.builder(
-              itemBuilder: (_, i) => _buildAttachment(_attachments[i]),
-              itemCount: _attachments.length,
+              itemBuilder: (_, i) => i < _attachments.length
+                  ? _buildAttachment(_attachments[i])
+                  : _buildPickIcon(),
+              itemCount: itemCount,
               scrollDirection: Axis.horizontal,
             ),
           ),
@@ -68,6 +101,21 @@ class AttachmentEditorState extends State<AttachmentEditorWidget> {
         ],
       );
 
+  Widget _buildPickIcon() => Tooltip(
+        child: InkWell(
+          child: Container(
+            color: Theme.of(context).backgroundColor,
+            padding: const EdgeInsets.symmetric(horizontal: 5.0),
+            child: AspectRatio(
+              aspectRatio: 1.0,
+              child: Icon(FontAwesomeIcons.image, size: widget.height / 2),
+            ),
+          ),
+          onTap: () => pickGallery(),
+        ),
+        message: l(context).pickGallery,
+      );
+
   void pickGallery() async {
     var image = await ImagePicker.pickImage(
       maxHeight: 2048.0,
@@ -95,10 +143,12 @@ class AttachmentEditorState extends State<AttachmentEditorWidget> {
 
   void setPath([String path]) => setState(() {
         _apiPostPath = path;
-        _attachmentHash = "${Random.secure().nextDouble()}";
+        _attachmentHash = _generateHash();
 
         _attachments.clear();
       });
+
+  static String _generateHash() => Random.secure().nextDouble().toString();
 }
 
 class _Attachment {

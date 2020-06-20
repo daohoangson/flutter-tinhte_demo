@@ -15,6 +15,7 @@ Element _$ElementFromJson(Map<String, dynamic> json) {
     ..links = json['links'] == null
         ? null
         : ElementLinks.fromJson(json['links'] as Map<String, dynamic>)
+    ..navigationDepth = json['navigation_depth'] as int
     ..navigationParentId = json['navigation_parent_id'] as int;
 }
 
