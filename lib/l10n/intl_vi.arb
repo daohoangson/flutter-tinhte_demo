@@ -371,7 +371,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "_statsXReplies": "{howMany,plural, =other{{formatted} trả lời}}",
+  "_statsXReplies": "{howMany,plural, other{{formatted} trả lời}}",
   "@_statsXReplies": {
     "type": "text",
     "placeholders": {
@@ -379,7 +379,7 @@
       "formatted": {}
     }
   },
-  "_statsXViews": "{howMany,plural, =other{{formatted} xem}}",
+  "_statsXViews": "{howMany,plural, other{{formatted} xem}}",
   "@_statsXViews": {
     "type": "text",
     "placeholders": {

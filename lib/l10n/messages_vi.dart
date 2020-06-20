@@ -19,9 +19,9 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'vi';
 
-  static m0(howMany, formatted) => "{howMany,plural, =other{${formatted} trả lời}}";
+  static m0(howMany, formatted) => "${Intl.plural(howMany, other: '${formatted} trả lời')}";
 
-  static m1(howMany, formatted) => "{howMany,plural, =other{${formatted} xem}}";
+  static m1(howMany, formatted) => "${Intl.plural(howMany, other: '${formatted} xem')}";
 
   static m2(version, buildNumber) => "${version} (số thứ tự: ${buildNumber})";
 
