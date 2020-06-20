@@ -29,6 +29,7 @@ class AttachmentEditorWidget extends StatefulWidget {
 
 class AttachmentEditorState extends State<AttachmentEditorWidget> {
   final List<_Attachment> _attachments = List();
+  final _imagePicker = ImagePicker();
 
   String _apiPostPath;
   String _attachmentHash;
@@ -117,14 +118,14 @@ class AttachmentEditorState extends State<AttachmentEditorWidget> {
       );
 
   void pickGallery() async {
-    var image = await ImagePicker.pickImage(
+    var pickedFile = await _imagePicker.getImage(
       maxHeight: 2048.0,
       maxWidth: 2048.0,
       source: ImageSource.gallery,
     );
-    if (image == null) return;
+    if (pickedFile == null) return;
 
-    final attachment = _Attachment(image);
+    final attachment = _Attachment(File(pickedFile.path));
     setState(() => _attachments.add(attachment));
 
     apiPost(
