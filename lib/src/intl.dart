@@ -171,6 +171,8 @@ class L10n {
   String get openInBrowser => Intl.message('Open in browser',
       locale: localeName, name: 'openInBrowser');
 
+  String get pickGallery => 'Select image to upload';
+
   String pollErrorTooManyVotes(num howMany) => Intl.plural(howMany,
       one: 'You can only choose one.',
       other: 'You can only select up to $howMany choices.',
@@ -304,8 +306,28 @@ class L10n {
   String tagUnfollowXQuestion(String tag) => Intl.message('Unfollow $tag?',
       args: [tag], locale: localeName, name: 'tagUnfollowXQuestion');
 
+  String get threadCreateBody => 'Post body';
+
+  String get threadCreateBodyHint => '';
+
+  String get threadCreateChooseAForum => 'Choose a forum';
+
+  String get threadCreateError => 'Creating thread error';
+
+  String get threadCreateErrorBodyIsEmpty =>
+      'Please enter a post body to create thread';
+
+  String get threadCreateErrorTitleIsEmpty =>
+      'Please enter a title to create thread';
+
   String get threadCreateNew => Intl.message('Create new thread',
       locale: localeName, name: 'threadCreateNew');
+
+  String get threadCreateSubmit => 'Submit';
+
+  String get threadCreateTitle => 'Thread title';
+
+  String get threadCreateTitleHint => 'Something interesting';
 
   String get threadStickyBanner =>
       Intl.message('Sticky', locale: localeName, name: 'threadStickyBanner');

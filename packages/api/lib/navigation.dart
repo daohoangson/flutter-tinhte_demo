@@ -14,6 +14,7 @@ class Element {
 
   ElementLinks links;
 
+  int navigationDepth;
   final int navigationId;
   int navigationParentId;
   final String navigationType;

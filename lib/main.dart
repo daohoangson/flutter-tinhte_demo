@@ -55,6 +55,7 @@ class MyApp extends StatelessWidget {
               key: ValueKey("darkTheme=${darkTheme.value}"),
               localizationsDelegates: [
                 const L10nDelegate(),
+                GlobalCupertinoLocalizations.delegate,
                 GlobalMaterialLocalizations.delegate,
                 GlobalWidgetsLocalizations.delegate,
               ],

@@ -128,9 +128,12 @@ class _PostEditorState extends State<PostEditorWidget> {
   Widget _buildInputs(PostEditorData data) => Row(
         children: <Widget>[
           Expanded(child: _buildTextInputMessage(focusNode: data._focusNode)),
-          InkWell(
-            child: Icon(Icons.image),
-            onTap: () => data._aesKey.currentState?.pickGallery(),
+          Tooltip(
+            child: InkWell(
+              child: Icon(Icons.image),
+              onTap: () => data._aesKey.currentState?.pickGallery(),
+            ),
+            message: l(context).pickGallery,
           ),
           InkWell(
             child: Padding(

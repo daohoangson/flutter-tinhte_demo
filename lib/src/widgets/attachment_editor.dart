@@ -2,13 +2,24 @@ import 'dart:io';
 import 'dart:math';
 import 'package:flutter/animation.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 import 'package:tinhte_api/attachment.dart';
+import 'package:tinhte_api/user.dart';
+import 'package:tinhte_demo/src/intl.dart';
 import 'package:tinhte_demo/src/widgets/image.dart';
 import 'package:tinhte_demo/src/api.dart';
 
 class AttachmentEditorWidget extends StatefulWidget {
-  AttachmentEditorWidget({Key key}) : super(key: key);
+  final double height;
+  final bool showPickIcon;
+
+  AttachmentEditorWidget({
+    Key key,
+    this.height = 50,
+    this.showPickIcon = false,
+  }) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => AttachmentEditorState();
@@ -22,15 +33,25 @@ class AttachmentEditorState extends State<AttachmentEditorWidget> {
 
   String get attachmentHash => _attachmentHash;
 
+  int get itemCount =>
+      _attachments.length +
+      (widget.showPickIcon &&
+              attachmentHash?.isNotEmpty == true &&
+              Provider.of<User>(context)?.userIsVisitor == true
+          ? 1
+          : 0);
+
   @override
-  Widget build(BuildContext _) => _attachments.isNotEmpty
+  Widget build(BuildContext _) => itemCount > 0
       ? Padding(
           padding: const EdgeInsets.all(10.0),
           child: SizedBox(
-            height: 50,
+            height: widget.height,
             child: ListView.builder(
-              itemBuilder: (_, i) => _buildAttachment(_attachments[i]),
-              itemCount: _attachments.length,
+              itemBuilder: (_, i) => i < _attachments.length
+                  ? _buildAttachment(_attachments[i])
+                  : _buildPickIcon(),
+              itemCount: itemCount,
               scrollDirection: Axis.horizontal,
             ),
           ),
@@ -66,6 +87,20 @@ class AttachmentEditorState extends State<AttachmentEditorWidget> {
                 : _UploadingIcon(),
           ),
         ],
+      );
+
+  Widget _buildPickIcon() => Tooltip(
+        child: InkWell(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 5.0),
+            child: AspectRatio(
+              aspectRatio: 1.0,
+              child: Icon(FontAwesomeIcons.plus),
+            ),
+          ),
+          onTap: () => pickGallery(),
+        ),
+        message: l(context).pickGallery,
       );
 
   void pickGallery() async {
