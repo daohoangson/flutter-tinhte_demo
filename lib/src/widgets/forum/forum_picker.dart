@@ -80,6 +80,8 @@ class _ForumPickerBody extends StatelessWidget {
 class ForumPickerData extends ChangeNotifier {
   node.Forum _forum;
 
+  ForumPickerData(this._forum);
+
   node.Forum get forum => _forum;
 
   set forum(node.Forum v) {

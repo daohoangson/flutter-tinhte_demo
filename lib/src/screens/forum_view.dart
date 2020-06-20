@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tinhte_api/node.dart';
 import 'package:tinhte_demo/src/intl.dart';
 import 'package:tinhte_demo/src/screens/search/thread.dart';
+import 'package:tinhte_demo/src/screens/thread_create.dart';
 import 'package:tinhte_demo/src/widgets/navigation.dart';
 import 'package:tinhte_demo/src/widgets/threads.dart';
 
@@ -15,8 +18,6 @@ class ForumViewScreen extends StatefulWidget {
 }
 
 class _ForumViewScreenState extends State<ForumViewScreen> {
-  var _fabIsVisible = true;
-
   Forum get forum => widget.forum;
 
   @override
@@ -24,33 +25,33 @@ class _ForumViewScreenState extends State<ForumViewScreen> {
         appBar: AppBar(
           title: Text(forum.forumTitle),
         ),
-        body: NotificationListener<ScrollNotification>(
-          child: ThreadsWidget(
-            forum: forum,
-            header: NavigationWidget(
-              path: "navigation?parent=${forum.forumId}",
-              progressIndicator: false,
-              shrinkWrap: true,
-            ),
-            path: "threads?forum_id=${forum.forumId}",
+        body: ThreadsWidget(
+          forum: forum,
+          header: NavigationWidget(
+            path: "navigation?parent=${forum.forumId}",
+            progressIndicator: false,
+            shrinkWrap: true,
           ),
-          onNotification: (scrollInfo) {
-            if (scrollInfo is ScrollUpdateNotification) {
-              setState(() => _fabIsVisible = scrollInfo.scrollDelta < 0.0);
-            }
-            return false;
-          },
+          path: "threads?forum_id=${forum.forumId}",
         ),
-        floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
-        floatingActionButton: _fabIsVisible
-            ? FloatingActionButton(
-                child: Icon(Icons.search),
-                onPressed: () => showSearch(
-                  context: context,
-                  delegate: ThreadSearchDelegate(forum: forum),
-                ),
-                tooltip: l(context).searchThisForum,
-              )
-            : null,
+        floatingActionButton: SpeedDial(
+          animatedIcon: AnimatedIcons.menu_close,
+          children: [
+            SpeedDialChild(
+              child: Icon(Icons.search),
+              label: l(context).searchThisForum,
+              onTap: () => showSearch(
+                context: context,
+                delegate: ThreadSearchDelegate(forum: forum),
+              ),
+            ),
+            SpeedDialChild(
+              child: Icon(FontAwesomeIcons.edit),
+              label: l(context).threadCreateNew,
+              onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => ThreadCreateScreen(forum: forum))),
+            ),
+          ],
+        ),
       );
 }

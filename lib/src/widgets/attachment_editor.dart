@@ -12,12 +12,14 @@ import 'package:tinhte_demo/src/widgets/image.dart';
 import 'package:tinhte_demo/src/api.dart';
 
 class AttachmentEditorWidget extends StatefulWidget {
+  final String apiPostPath;
   final double height;
   final bool showPickIcon;
 
   AttachmentEditorWidget({
-    Key key,
+    this.apiPostPath,
     this.height = 50,
+    Key key,
     this.showPickIcon = false,
   }) : super(key: key);
 
@@ -40,6 +42,16 @@ class AttachmentEditorState extends State<AttachmentEditorWidget> {
               Provider.of<User>(context)?.userIsVisitor == true
           ? 1
           : 0);
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.apiPostPath != null) {
+      _apiPostPath = widget.apiPostPath;
+      _attachmentHash = _generateHash();
+    }
+  }
 
   @override
   Widget build(BuildContext _) => itemCount > 0
@@ -130,10 +142,12 @@ class AttachmentEditorState extends State<AttachmentEditorWidget> {
 
   void setPath([String path]) => setState(() {
         _apiPostPath = path;
-        _attachmentHash = "${Random.secure().nextDouble()}";
+        _attachmentHash = _generateHash();
 
         _attachments.clear();
       });
+
+  static String _generateHash() => Random.secure().nextDouble().toString();
 }
 
 class _Attachment {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:tinhte_api/node.dart';
 import 'package:tinhte_api/thread.dart';
 import 'package:tinhte_demo/src/api.dart';
 import 'package:tinhte_demo/src/intl.dart';
@@ -9,6 +10,10 @@ import 'package:tinhte_demo/src/widgets/attachment_editor.dart';
 import 'package:tinhte_demo/src/widgets/forum/forum_picker.dart';
 
 class ThreadCreateScreen extends StatefulWidget {
+  final Forum forum;
+
+  const ThreadCreateScreen({Key key, this.forum}) : super(key: key);
+
   @override
   _ThreadCreateScreenState createState() => _ThreadCreateScreenState();
 }
@@ -23,7 +28,8 @@ class _ThreadCreateScreenState extends State<ThreadCreateScreen> {
   @override
   void initState() {
     super.initState();
-    fpd = ForumPickerData();
+
+    fpd = ForumPickerData(widget.forum);
     tcd = _ThreadCreateData();
 
     fpd.addListener(_onForumPickerData);
@@ -66,6 +72,9 @@ class _ThreadCreateScreenState extends State<ThreadCreateScreen> {
                   ),
                 ),
                 AttachmentEditorWidget(
+                  apiPostPath: widget.forum != null
+                      ? _generateAttachmentPath(widget.forum)
+                      : null,
                   height: 150,
                   key: aesKey,
                   showPickIcon: true,
@@ -90,8 +99,7 @@ class _ThreadCreateScreenState extends State<ThreadCreateScreen> {
     final forum = fpd.forum;
     if (forum == null) return;
 
-    aesKey.currentState
-        ?.setPath('threads/attachments?forum_id=${forum.forumId}');
+    aesKey.currentState?.setPath(_generateAttachmentPath(forum));
   }
 
   void _post() {
@@ -127,6 +135,9 @@ class _ThreadCreateScreenState extends State<ThreadCreateScreen> {
       );
     });
   }
+
+  static String _generateAttachmentPath(Forum forum) =>
+      'threads/attachments?forum_id=${forum.forumId}';
 }
 
 class _ThreadCreateData extends ChangeNotifier {
