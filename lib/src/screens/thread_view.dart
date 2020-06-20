@@ -9,6 +9,7 @@ import 'package:tinhte_demo/src/widgets/post_editor.dart';
 import 'package:tinhte_demo/src/widgets/posts.dart';
 import 'package:tinhte_demo/src/intl.dart';
 import 'package:tinhte_demo/src/link.dart';
+import 'package:tinhte_demo/src/widgets/thread/thread_bookmark.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 const _kPopupActionOpenInBrowser = 'openInBrowser';
@@ -60,6 +61,7 @@ class _ThreadViewState extends State<ThreadViewScreen> {
           title: _buildAppBarTitle(context),
           actions: <Widget>[
             FontControlWidget(),
+            ThreadBookmarkWidget(widget.thread),
             _buildAppBarPopupMenuButton(),
           ],
         ),

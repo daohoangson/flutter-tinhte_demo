@@ -307,6 +307,10 @@ class L10n {
   String tagUnfollowXQuestion(String tag) => Intl.message('Unfollow $tag?',
       args: [tag], locale: localeName, name: 'tagUnfollowXQuestion');
 
+  String get threadBookmark => 'Bookmark';    
+
+  String get threadBookmarkUndo => 'Unbookmark';
+
   String get threadCreateBody =>
       Intl.message('Post body', locale: localeName, name: 'threadCreateBody');
 

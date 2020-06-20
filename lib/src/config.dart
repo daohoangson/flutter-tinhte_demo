@@ -2,6 +2,7 @@ part '../config.encrypted.dart';
 
 abstract class Config {
   String get apiRoot;
+  String get apiBookmarkPath;
   String get clientId;
   String get clientSecret;
   String get fcmProjectId;
