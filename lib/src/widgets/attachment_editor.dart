@@ -103,11 +103,12 @@ class AttachmentEditorState extends State<AttachmentEditorWidget> {
 
   Widget _buildPickIcon() => Tooltip(
         child: InkWell(
-          child: Padding(
+          child: Container(
+            color: Theme.of(context).backgroundColor,
             padding: const EdgeInsets.symmetric(horizontal: 5.0),
             child: AspectRatio(
               aspectRatio: 1.0,
-              child: Icon(FontAwesomeIcons.plus),
+              child: Icon(FontAwesomeIcons.image, size: widget.height / 2),
             ),
           ),
           onTap: () => pickGallery(),
