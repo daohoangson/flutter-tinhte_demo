@@ -118,9 +118,8 @@ class _ThreadCreateScreenState extends State<ThreadCreateScreen> {
           if (!jsonMap.containsKey('thread')) return;
           final thread = Thread.fromJson(jsonMap['thread']);
           if (thread.threadId == null) return;
-          Navigator.of(context)
-            ..pop()
-            ..push(MaterialPageRoute(builder: (_) => ThreadViewScreen(thread)));
+          Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (_) => ThreadViewScreen(thread)));
         },
         onError: (e) =>
             showApiErrorDialog(context, e, title: l(context).threadCreateError),
