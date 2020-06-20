@@ -171,7 +171,8 @@ class L10n {
   String get openInBrowser => Intl.message('Open in browser',
       locale: localeName, name: 'openInBrowser');
 
-  String get pickGallery => 'Select image to upload';
+  String get pickGallery => Intl.message('Select image to upload',
+      locale: localeName, name: 'pickGallery');
 
   String pollErrorTooManyVotes(num howMany) => Intl.plural(howMany,
       one: 'You can only choose one.',
@@ -306,28 +307,37 @@ class L10n {
   String tagUnfollowXQuestion(String tag) => Intl.message('Unfollow $tag?',
       args: [tag], locale: localeName, name: 'tagUnfollowXQuestion');
 
-  String get threadCreateBody => 'Post body';
+  String get threadCreateBody =>
+      Intl.message('Post body', locale: localeName, name: 'threadCreateBody');
 
-  String get threadCreateBodyHint => '';
+  String get threadCreateBodyHint =>
+      Intl.message('', locale: localeName, name: 'threadCreateBodyHint');
 
-  String get threadCreateChooseAForum => 'Choose a forum';
+  String get threadCreateChooseAForum => Intl.message('Choose a forum',
+      locale: localeName, name: 'threadCreateChooseAForum');
 
-  String get threadCreateError => 'Creating thread error';
+  String get threadCreateError => Intl.message('Creating thread error',
+      locale: localeName, name: 'threadCreateError');
 
   String get threadCreateErrorBodyIsEmpty =>
-      'Please enter a post body to create thread';
+      Intl.message('Please enter a post body to create thread',
+          locale: localeName, name: 'threadCreateErrorBodyIsEmpty');
 
   String get threadCreateErrorTitleIsEmpty =>
-      'Please enter a title to create thread';
+      Intl.message('Please enter a title to create thread',
+          locale: localeName, name: 'threadCreateErrorTitleIsEmpty');
 
   String get threadCreateNew => Intl.message('Create new thread',
       locale: localeName, name: 'threadCreateNew');
 
-  String get threadCreateSubmit => 'Submit';
+  String get threadCreateSubmit =>
+      Intl.message('Submit', locale: localeName, name: 'threadCreateSubmit');
 
-  String get threadCreateTitle => 'Thread title';
+  String get threadCreateTitle => Intl.message('Thread title',
+      locale: localeName, name: 'threadCreateTitle');
 
-  String get threadCreateTitleHint => 'Something interesting';
+  String get threadCreateTitleHint => Intl.message('Something interesting',
+      locale: localeName, name: 'threadCreateTitleHint');
 
   String get threadStickyBanner =>
       Intl.message('Sticky', locale: localeName, name: 'threadStickyBanner');

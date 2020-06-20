@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-06-18T22:22:39.371047",
+  "@@last_modified": "2020-06-20T21:57:21.499077",
   "appTitle": "tinhte.vn Demo",
   "@appTitle": {
     "type": "text",
@@ -231,6 +231,11 @@
     "type": "text",
     "placeholders": {}
   },
+  "pickGallery": "Select image to upload",
+  "@pickGallery": {
+    "type": "text",
+    "placeholders": {}
+  },
   "pollErrorTooManyVotes": "{howMany,plural, =1{You can only choose one.}other{You can only select up to {howMany} choices.}}",
   "@pollErrorTooManyVotes": {
     "type": "text",
@@ -430,6 +435,56 @@
     "placeholders": {
       "tag": {}
     }
+  },
+  "threadCreateBody": "Post body",
+  "@threadCreateBody": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "threadCreateBodyHint": "",
+  "@threadCreateBodyHint": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "threadCreateChooseAForum": "Choose a forum",
+  "@threadCreateChooseAForum": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "threadCreateError": "Creating thread error",
+  "@threadCreateError": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "threadCreateErrorBodyIsEmpty": "Please enter a post body to create thread",
+  "@threadCreateErrorBodyIsEmpty": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "threadCreateErrorTitleIsEmpty": "Please enter a title to create thread",
+  "@threadCreateErrorTitleIsEmpty": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "threadCreateNew": "Create new thread",
+  "@threadCreateNew": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "threadCreateSubmit": "Submit",
+  "@threadCreateSubmit": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "threadCreateTitle": "Thread title",
+  "@threadCreateTitle": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "threadCreateTitleHint": "Something interesting",
+  "@threadCreateTitleHint": {
+    "type": "text",
+    "placeholders": {}
   },
   "threadStickyBanner": "Sticky",
   "@threadStickyBanner": {

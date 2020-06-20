@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-06-18T22:22:39.371047",
+  "@@last_modified": "2020-06-20T21:57:21.499077",
   "appTitle": "Tinh tế Demo",
   "@appTitle": {
     "type": "text",
@@ -231,6 +231,11 @@
     "type": "text",
     "placeholders": {}
   },
+  "pickGallery": "Chọn ảnh để tải lên",
+  "@pickGallery": {
+    "type": "text",
+    "placeholders": {}
+  },
   "pollErrorTooManyVotes": "{howMany,plural, =1{Bạn chỉ có thể chọn một.}other{Bạn chỉ có thể chọn tối đa {howMany} lựa chọn.}}",
   "@pollErrorTooManyVotes": {
     "type": "text",
@@ -430,6 +435,56 @@
     "placeholders": {
       "tag": {}
     }
+  },
+  "threadCreateBody": "Nội dung",
+  "@threadCreateBody": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "threadCreateBodyHint": "",
+  "@threadCreateBodyHint": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "threadCreateChooseAForum": "Chọn một khu vực",
+  "@threadCreateChooseAForum": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "threadCreateError": "Lỗi tạo chủ đề",
+  "@threadCreateError": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "threadCreateErrorBodyIsEmpty": "Xin vui lòng nhập nội dung để tạo chủ đề",
+  "@threadCreateErrorBodyIsEmpty": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "threadCreateErrorTitleIsEmpty": "Xin vui lòng nhập tiêu đề để tạo chủ đề",
+  "@threadCreateErrorTitleIsEmpty": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "threadCreateNew": "Tạo chủ đề mới",
+  "@threadCreateNew": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "threadCreateSubmit": "Tạo chủ đề",
+  "@threadCreateSubmit": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "threadCreateTitle": "Tiêu đề",
+  "@threadCreateTitle": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "threadCreateTitleHint": "Cái gì đó hay hay",
+  "@threadCreateTitleHint": {
+    "type": "text",
+    "placeholders": {}
   },
   "threadStickyBanner": "Bài dính",
   "@threadStickyBanner": {
