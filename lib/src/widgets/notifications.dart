@@ -96,7 +96,7 @@ class _NotificationsState extends State<NotificationsWidget> {
   }
 
   Widget _buildTimestamp(BuildContext context, api.Notification n) => Text(
-        formatTimestamp(n.notificationCreateDate),
+        formatTimestamp(context, n.notificationCreateDate),
         style: Theme.of(context).textTheme.caption,
       );
 

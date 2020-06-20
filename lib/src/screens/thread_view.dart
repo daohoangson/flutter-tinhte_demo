@@ -109,7 +109,7 @@ class _ThreadViewState extends State<ThreadViewScreen> {
                   children: <Widget>[
                     _buildAppBarUsername(),
                     Text(
-                      formatTimestamp(thread.threadCreateDate),
+                      formatTimestamp(context, thread.threadCreateDate),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(fontSize: (kToolbarHeight - 10) / 4),

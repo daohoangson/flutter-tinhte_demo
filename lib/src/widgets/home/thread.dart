@@ -38,7 +38,7 @@ class HomeThreadWidget extends StatelessWidget {
                 Expanded(
                   child: Column(
                     children: <Widget>[
-                      _buildInfo(theme),
+                      _buildInfo(context, theme),
                       const SizedBox(height: 5),
                       _buildTitle(),
                       const SizedBox(height: 5),
@@ -77,7 +77,7 @@ class HomeThreadWidget extends StatelessWidget {
         ),
       );
 
-  Widget _buildInfo(ThemeData theme) {
+  Widget _buildInfo(BuildContext context, ThemeData theme) {
     final List<TextSpan> spans = List();
 
     spans.add(TextSpan(
@@ -86,7 +86,7 @@ class HomeThreadWidget extends StatelessWidget {
     ));
 
     if (item?.itemDate != null) {
-      spans.add(TextSpan(text: " ${formatTimestamp(item.itemDate)}"));
+      spans.add(TextSpan(text: " ${formatTimestamp(context, item.itemDate)}"));
     }
 
     return RichText(
