@@ -55,7 +55,6 @@ class MyApp extends StatelessWidget {
             MaterialApp(
               darkTheme: _theme(_themeDark),
               home: onLaunchMessageWidgetOr(HomeScreen()),
-              key: ValueKey("darkTheme=${darkTheme.value}"),
               localizationsDelegates: [
                 const L10nDelegate(),
                 GlobalCupertinoLocalizations.delegate,
