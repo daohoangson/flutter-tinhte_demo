@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -131,7 +132,7 @@ class TinhteWidgetFactory extends WidgetFactory {
         final url = constructFullUrl(a['href']);
         if (url?.isEmpty != false) return null;
 
-        final youtubeId = a.containsKey('data-chr-thumbnail')
+        final youtubeId = !Platform.isIOS && a.containsKey('data-chr-thumbnail')
             ? RegExp(r'^https://img.youtube.com/vi/([^/]+)/0.jpg$')
                 .firstMatch(a['data-chr-thumbnail'])
                 ?.group(1)
