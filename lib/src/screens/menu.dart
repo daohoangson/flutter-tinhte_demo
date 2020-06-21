@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
 import 'package:tinhte_demo/src/intl.dart';
+import 'package:tinhte_demo/src/screens/bookmark_list.dart';
 import 'package:tinhte_demo/src/screens/notification_list.dart';
 import 'package:tinhte_demo/src/widgets/menu/dark_theme.dart';
 import 'package:tinhte_demo/src/widgets/app_bar.dart';
+import 'package:tinhte_demo/src/config.dart';
 import 'package:tinhte_demo/src/link.dart';
 
 class MenuScreen extends StatelessWidget {
@@ -16,6 +18,7 @@ class MenuScreen extends StatelessWidget {
           children: <Widget>[
             AppBarDrawerHeader(),
             MenuDarkTheme(),
+            _buildBookmarkList(context),
             _buildNotifications(context),
             AppBarDrawerFooter(),
             _buildPrivacyPolicy(context),
@@ -23,6 +26,15 @@ class MenuScreen extends StatelessWidget {
           ],
         ),
       );
+
+  Widget _buildBookmarkList(BuildContext context) =>
+      config.apiBookmarkPath?.isNotEmpty == true
+          ? ListTile(
+              title: Text(l(context).threadBookmarkList),
+              onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => BookmarkListScreen())),
+            )
+          : const SizedBox.shrink();
 
   Widget _buildNotifications(BuildContext context) => ListTile(
         title: Text(l(context).notifications),
