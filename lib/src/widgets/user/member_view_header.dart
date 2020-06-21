@@ -54,7 +54,7 @@ class MemberViewHeader extends StatelessWidget {
                       .copyWith(fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  "${l(context).userRegisterDate}: ${formatTimestamp(user.userRegisterDate)}",
+                  "${l(context).userRegisterDate}: ${formatTimestamp(context, user.userRegisterDate)}",
                   style: theme.textTheme.caption,
                 ),
               ],

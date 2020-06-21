@@ -122,7 +122,7 @@ class ThreadWidget extends StatelessWidget {
               _buildInfoUsername(theme, style),
               const SizedBox(height: _kThreadWidgetPadding / 4),
               Text(
-                formatTimestamp(thread.threadCreateDate),
+                formatTimestamp(context, thread.threadCreateDate),
                 style: theme.textTheme.caption,
                 textScaleFactor: 1,
               ),

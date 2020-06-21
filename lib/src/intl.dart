@@ -388,12 +388,13 @@ DateTime secondsToDateTime(int secondsSinceEpoch) =>
 
 String formatNumber(dynamic value) => _numberFormatCompact.format(value);
 
-String formatTimestamp(int timestamp) {
+String formatTimestamp(BuildContext context, int timestamp) {
   if (timestamp == null) return '';
 
   final d = secondsToDateTime(timestamp);
   if (DateTime.now().subtract(Duration(days: 30)).isBefore(d)) {
-    return timeago.format(d);
+    final locale = Localizations.localeOf(context).languageCode;
+    return timeago.format(d, locale: locale);
   }
 
   // TODO: use date format from device locale

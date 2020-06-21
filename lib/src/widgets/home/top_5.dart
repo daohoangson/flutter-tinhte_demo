@@ -105,7 +105,7 @@ class _HomeTop5WidgetThread extends StatelessWidget {
         <Widget>[
           _buildImage(),
           const SizedBox(height: 5),
-          _buildInfo(Theme.of(context)),
+          _buildInfo(context),
           const SizedBox(height: 5),
           _buildTitle(),
         ],
@@ -131,7 +131,8 @@ class _HomeTop5WidgetThread extends StatelessWidget {
         ),
       );
 
-  Widget _buildInfo(ThemeData theme) {
+  Widget _buildInfo(BuildContext context) {
+    final theme = Theme.of(context);
     final List<TextSpan> spans = List();
 
     spans.add(TextSpan(
@@ -140,7 +141,7 @@ class _HomeTop5WidgetThread extends StatelessWidget {
     ));
 
     if (item?.itemDate != null) {
-      spans.add(TextSpan(text: " ${formatTimestamp(item.itemDate)}"));
+      spans.add(TextSpan(text: " ${formatTimestamp(context, item.itemDate)}"));
     }
 
     return RichText(

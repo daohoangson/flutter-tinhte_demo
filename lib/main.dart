@@ -3,6 +3,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:timeago/timeago.dart' as timeago;
 import 'package:tinhte_demo/src/intl.dart';
 import 'package:tinhte_demo/src/screens/home.dart';
 import 'package:tinhte_demo/src/widgets/font_control.dart';
@@ -12,6 +13,8 @@ import 'package:tinhte_demo/src/api.dart';
 import 'package:tinhte_demo/src/push_notification.dart';
 
 void main() {
+  timeago.setLocaleMessages('vi', timeago.ViMessages());
+
   FlutterError.onError = Crashlytics.instance.recordFlutterError;
 
   runZonedGuarded<Future<void>>(() async {

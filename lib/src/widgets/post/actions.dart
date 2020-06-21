@@ -53,7 +53,7 @@ class _PostActionsWidgetState extends State<_PostActionsWidget> {
           if (widget.showPostCreateDate) {
             buttons.add(buildPostButton(
               context,
-              formatTimestamp(post.postCreateDate),
+              formatTimestamp(context, post.postCreateDate),
             ));
           }
 
