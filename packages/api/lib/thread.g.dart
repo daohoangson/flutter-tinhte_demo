@@ -19,6 +19,7 @@ Thread _$ThreadFromJson(Map<String, dynamic> json) {
         : Post.fromJson(json['first_post'] as Map<String, dynamic>)
     ..threadCreateDate = json['thread_create_date'] as int
     ..threadHasPoll = json['thread_has_poll'] as bool
+    ..threadIsBookmark = json['thread_is_bookmark'] as bool
     ..threadIsDeleted = json['thread_is_deleted'] as bool
     ..threadIsFollowed = json['thread_is_followed'] as bool
     ..threadIsNew = json['thread_is_new'] as bool

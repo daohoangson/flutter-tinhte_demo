@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_custom_tabs/flutter_custom_tabs.dart'
+    as flutter_custom_tabs;
 import 'package:tinhte_api/feature_page.dart';
 import 'package:tinhte_api/tag.dart';
 import 'package:tinhte_api/thread.dart';
@@ -32,6 +34,16 @@ void launchLink(BuildContext context, String link) async {
   }
 
   if (!await canLaunch(link)) return;
+
+  if (link.startsWith('http')) {
+    flutter_custom_tabs.launch(link,
+        option: flutter_custom_tabs.CustomTabsOption(
+          toolbarColor: Theme.of(context).primaryColor,
+          enableUrlBarHiding: true,
+          showPageTitle: true,
+        ));
+    return;
+  }
 
   launch(link);
 }

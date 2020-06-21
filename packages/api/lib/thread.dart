@@ -30,6 +30,7 @@ class Thread {
   int threadCreateDate;
   bool threadHasPoll;
   final int threadId;
+  bool threadIsBookmark;
   bool threadIsDeleted;
   bool threadIsFollowed;
   bool threadIsNew;
