@@ -307,11 +307,16 @@ class L10n {
   String tagUnfollowXQuestion(String tag) => Intl.message('Unfollow $tag?',
       args: [tag], locale: localeName, name: 'tagUnfollowXQuestion');
 
-  String get threadBookmark => 'Bookmark';
+  String get threadBookmark =>
+      Intl.message('Bookmark', locale: localeName, name: 'threadBookmark');
 
-  String get threadBookmarkList => 'Bookmarks';
+  String get threadBookmarkList => Intl.message('Bookmarks',
+      desc: 'Bookmark list appbar title',
+      locale: localeName,
+      name: 'threadBookmarkList');
 
-  String get threadBookmarkUndo => 'Unbookmark';
+  String get threadBookmarkUndo =>
+      Intl.message('Unbookmark', locale: localeName, name: 'threadBookmarkUndo');
 
   String get threadCreateBody =>
       Intl.message('Post body', locale: localeName, name: 'threadCreateBody');

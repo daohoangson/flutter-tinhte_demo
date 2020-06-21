@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-06-20T21:57:21.499077",
+  "@@last_modified": "2020-06-21T22:19:37.058839",
   "appTitle": "Tinh tế Demo",
   "@appTitle": {
     "type": "text",
@@ -435,6 +435,22 @@
     "placeholders": {
       "tag": {}
     }
+  },
+  "threadBookmark": "Đánh dấu",
+  "@threadBookmark": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "threadBookmarkList": "Các bài đã đánh dấu",
+  "@threadBookmarkList": {
+    "description": "Bookmark list appbar title",
+    "type": "text",
+    "placeholders": {}
+  },
+  "threadBookmarkUndo": "Bỏ đánh dấu",
+  "@threadBookmarkUndo": {
+    "type": "text",
+    "placeholders": {}
   },
   "threadCreateBody": "Nội dung",
   "@threadCreateBody": {
