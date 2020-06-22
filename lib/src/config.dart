@@ -11,6 +11,7 @@ abstract class Config {
   bool get loginWithGoogle;
   String get pushServer;
   String get siteRoot;
+  bool get threadWidgetShowCoverImageOnly;
 
   const Config();
 }
