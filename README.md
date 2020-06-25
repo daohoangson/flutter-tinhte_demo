@@ -93,3 +93,30 @@ Apple App Store: [TestFlight](https://testflight.apple.com/join/4lGGYeSU)
   - Open in browser
   - Share
   - Quick reply
+
+## FAQ
+
+### How to build the app?
+
+All credentials are encrypted so you won't be able to compile the app immediately after a git pull.
+You have to replace the files mentioned in [.gitattributes](https://github.com/daohoangson/flutter-tinhte_demo/blob/master/.gitattributes) to build.
+
+For example, `lib/config.encrypted.dart` should look like below:
+
+```dart
+import 'package:tinhte_demo/src/config.dart';
+
+class Config extends ConfigBase {
+  @override
+  final apiRoot = 'https://domain.com/community/api/index.php';
+
+  @override
+  final clientId = 'abc';
+
+  @override
+  final clientSecret = 'xyz';
+
+  @override
+  final siteRoot = 'https://domain.com/community';
+}
+```
