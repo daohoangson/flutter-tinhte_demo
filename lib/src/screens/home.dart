@@ -46,7 +46,7 @@ class HomeScreen extends StatelessWidget {
       );
 
   void _fetchOnSuccess(Map json, FetchContext<_HomeListItem> fc) {
-    if (!json.containsKey('threads')) return;
+    if (!json.containsKey(config.homeThreadsKey)) return;
 
     final items = fc.items;
     List<SearchResult<Thread>> top5;
