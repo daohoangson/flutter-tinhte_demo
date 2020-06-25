@@ -125,7 +125,7 @@ class Config extends ConfigBase {
 
 Pick a unique package name across Play Store and App Store then update these files:
 
-- `android/app/build.gradle` applicationId
+- `android/app/build.gradle` applicationId, signingConfigs.release
 - `android/app/src/main/AndroidManifest.xml` package, android:label
 - `android/app/src/main/res/values/strings.xml` app_name, facebook_app_id, fb_login_protocol_scheme
 - `android/fastlane/metadata/android/en-US/` title.txt, full_description.txt, short_description.txt
@@ -136,3 +136,5 @@ Pick a unique package name across Play Store and App Store then update these fil
 
 You will also need to move the files within `android/app/src/main/java/com/daohoangson/flutter_ttdemo` to another directory to match the new Android package.
 The `google-services.json` and `GoogleService-Info.plist` must be replaced too.
+
+For Play Store releases, the `android/release.jks` needs to be regenerated and the keys / alias updated into build.gradle as mentioned earlier.
