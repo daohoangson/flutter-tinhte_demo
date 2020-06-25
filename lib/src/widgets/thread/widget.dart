@@ -144,7 +144,7 @@ class ThreadWidget extends StatelessWidget {
     final buffer = StringBuffer(thread.creatorUsername ?? '');
     final inlineSpans = <InlineSpan>[];
 
-    if (thread.creatorHasVerifiedBadge) {
+    if (thread.creatorHasVerifiedBadge == true) {
       buffer.write(' ');
       inlineSpans.add(WidgetSpan(
         alignment: PlaceholderAlignment.middle,

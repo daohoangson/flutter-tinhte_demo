@@ -94,7 +94,10 @@ Future<bool> parsePath(
       navigator.push(MaterialPageRoute(builder: (_) => widget));
       return true;
     },
-    onError: (error) => print(error),
+    onError: (error) {
+      print(error);
+      return false;
+    },
   ).whenComplete(() => cancelDialog());
 }
 

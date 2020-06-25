@@ -66,11 +66,12 @@ class Batch {
       }
 
       if (jsonJob.containsKey('_job_error')) {
-        job.completer.completeError(ApiError(message: jsonJob['_job_error']));
+        job.completer
+            .completeError(ApiErrorSingle(jsonJob['_job_error'], isHtml: true));
         return;
       }
 
-      job.completer.completeError(ApiError(message: jobResult));
+      job.completer.completeError(ApiErrorSingle(jobResult, isHtml: true));
       return;
     });
 
