@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tinhte_api/api.dart';
@@ -86,11 +87,15 @@ Future showApiErrorDialog(
       context: context,
       builder: (_) => AlertDialog(
         title: Text(title ?? l(context).apiError),
-        content: Text(
-          error is ApiError
-              ? error.message
-              : "${error.runtimeType.toString()}: ${error.toString()}",
-        ),
+        content: error is ApiError
+            ? error.isHtml
+                ? HtmlWidget(error.message)
+                : Text(
+                    error is ApiErrorUnexpectedStatusCode
+                        ? l(context).apiUnexpectedResponse
+                        : error.message,
+                  )
+            : Text("${error.runtimeType.toString()}: ${error.toString()}"),
       ),
     );
 
@@ -143,8 +148,7 @@ void _setupApiJsonHandlers(
     onSuccess != null
         ? (json) {
             if (json is! Map)
-              throw new ApiError(
-                  message: l(caller.context).apiUnexpectedResponse);
+              throw new ApiErrorSingle(l(caller.context).apiUnexpectedResponse);
             return onSuccess(json);
           }
         : null,

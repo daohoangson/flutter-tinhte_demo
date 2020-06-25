@@ -1,31 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:tinhte_api/search.dart';
 import 'package:tinhte_api/thread.dart';
-import 'package:tinhte_demo/src/intl.dart';
-import 'package:tinhte_demo/src/screens/content_list_view.dart';
+import 'package:tinhte_demo/src/constants.dart';
 import 'package:tinhte_demo/src/screens/thread_create.dart';
 import 'package:tinhte_demo/src/widgets/home/bottom_bar.dart';
 import 'package:tinhte_demo/src/widgets/home/thread.dart';
 import 'package:tinhte_demo/src/widgets/home/top_5.dart';
-import 'package:tinhte_demo/src/widgets/home/top_threads.dart';
-import 'package:tinhte_demo/src/widgets/tinhte/home_channels.dart';
-import 'package:tinhte_demo/src/widgets/tinhte/home_feature_pages.dart';
-import 'package:tinhte_demo/src/widgets/tinhte/home_trending_tags.dart';
 import 'package:tinhte_demo/src/widgets/super_list.dart';
+import 'package:tinhte_demo/src/config.dart';
+import 'package:tinhte_demo/src/intl.dart';
 
 class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Scaffold(
         body: SafeArea(
           child: SuperListView<_HomeListItem>(
-            complexItems: [
-              FeaturePagesWidget.registerSuperListComplexItem,
-              TopThreadsWidget.registerSuperListComplexItem,
-              TrendingTagsWidget.registerSuperListComplexItem,
-            ],
-            fetchPathInitial: 'lists/1/threads?limit=20'
-                '&_bdImageApiThreadThumbnailWidth=${(kContentListViewThumbnailWidth * 3).toInt()}'
-                '&_bdImageApiThreadThumbnailHeight=sh',
+            complexItems: config.homeComplexItems,
+            fetchPathInitial: config.homePath,
             fetchOnSuccess: _fetchOnSuccess,
             itemBuilder: (context, state, item) {
               if (item.widget != null) return item.widget;
@@ -36,11 +27,7 @@ class HomeScreen extends StatelessWidget {
                 );
               }
 
-              if (item.thread != null)
-                return HomeThreadWidget(
-                  item.thread,
-                  imageWidth: kContentListViewThumbnailWidth,
-                );
+              if (item.thread != null) return HomeThreadWidget(item.thread);
 
               return null;
             },
@@ -66,25 +53,21 @@ class HomeScreen extends StatelessWidget {
     if (fc.id == FetchContextId.FetchInitial) {
       top5 = [];
       items.add(_HomeListItem(top5: top5));
-      items.add(_HomeListItem(
-        widget: SuperListItemFullWidth(
-          child: ChannelsWidget(),
-        ),
-      ));
-      items.add(_HomeListItem(
-        widget: SuperListItemFullWidth(
-          child: FeaturePagesWidget(),
-        ),
-      ));
+
+      final slot1 = config.homeSlot1BelowTop5;
+      if (slot1 != null) items.add(_HomeListItem(widget: slot1));
+
+      final slot2 = config.homeSlot2BelowSlot1;
+      if (slot2 != null) items.add(_HomeListItem(widget: slot2));
     }
 
-    final threadsJson = json['threads'] as List;
+    final threadsJson = json[config.homeThreadsKey] as List;
     final l = threadsJson.length;
     for (int i = 0; i < l; i++) {
-      final Map threadJson = threadsJson[i];
-      final srt = SearchResult<Thread>.fromJson(threadJson);
+      var srt = config.homeParser(threadsJson[i]);
+      if (srt == null || srt.content == null) continue;
 
-      if (srt?.content?.threadImage != null) {
+      if (srt.content?.threadImage != null) {
         // force display mode for edge case: when thread has custom home image
         // thread view will have an annoying jump effect (no cover -> has cover)
         // we know home thread always has cover image so it's safe to do this
@@ -98,20 +81,14 @@ class HomeScreen extends StatelessWidget {
       }
 
       if (fc.id == FetchContextId.FetchInitial && i == l - 4) {
-        items.add(_HomeListItem(
-          widget: SuperListItemFullWidth(
-            child: TrendingTagsWidget(),
-          ),
-        ));
+        final slot3 = config.homeSlot3NearEndOfPage1;
+        if (slot3 != null) items.add(_HomeListItem(widget: slot3));
       }
     }
 
     if (fc.id == FetchContextId.FetchInitial) {
-      items.add(_HomeListItem(
-        widget: SuperListItemFullWidth(
-          child: TopThreadsWidget(),
-        ),
-      ));
+      final slot4 = config.homeSlot4EndOfPage1;
+      if (slot4 != null) items.add(_HomeListItem(widget: slot4));
     }
   }
 }

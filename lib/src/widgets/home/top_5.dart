@@ -94,7 +94,6 @@ class _HomeTop5WidgetThread extends StatelessWidget {
 
   _HomeTop5WidgetThread(SearchResult<Thread> srt, {Key key})
       : assert(srt?.content != null),
-        assert(srt?.listItem != null),
         item = srt.listItem,
         thread = srt.content,
         super(key: key);

@@ -54,23 +54,21 @@ Future _sendRequest(Client client, String method, String url,
 Future _verifyResponseAndJsonForError(Response response, j) {
   if (j is Map) {
     if (j.containsKey('error_description')) {
-      return Future.error(ApiError(message: j['error_description']));
+      return Future.error(ApiErrorSingle(j['error_description']));
     }
     if (j.containsKey('errors')) {
       if (j['errors'] is List) {
         final errors = List<String>.from(j['errors']);
-        return Future.error(ApiError(messages: errors));
+        return Future.error(ApiErrors(errors));
       }
 
       if (j['errors'] is Map) {
-        final errors = List<String>.from(j['errors'].values);
-        return Future.error(ApiError(messages: errors));
+        final errors = Map<String, String>.from(j['errors'].values);
+        return Future.error(ApiErrorMapped(errors));
       }
     }
   }
 
   if (response.statusCode < 400) return null;
-  return Future.error(
-    ApiError(message: "Unexpected http response ${response.statusCode}"),
-  );
+  return Future.error(ApiErrorUnexpectedStatusCode(response.statusCode));
 }
