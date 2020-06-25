@@ -3,22 +3,19 @@ import 'package:flutter/rendering.dart';
 import 'package:tinhte_api/search.dart';
 import 'package:tinhte_api/thread.dart';
 import 'package:tinhte_api/x_content_list.dart';
+import 'package:tinhte_demo/src/constants.dart';
 import 'package:tinhte_demo/src/screens/thread_view.dart';
 import 'package:tinhte_demo/src/intl.dart';
 import 'package:tinhte_demo/src/widgets/image.dart';
 
 class HomeThreadWidget extends StatelessWidget {
-  final double imageWidth;
   final ContentListItem item;
   final Thread thread;
 
   HomeThreadWidget(
     SearchResult<Thread> srt, {
-    this.imageWidth,
     Key key,
   })  : assert(srt?.content != null),
-        assert(srt?.listItem != null),
-        assert(imageWidth != null),
         item = srt.listItem,
         thread = srt.content,
         super(key: key);
@@ -73,7 +70,7 @@ class HomeThreadWidget extends StatelessWidget {
             image: thread.threadThumbnail,
             threadId: thread.threadId,
           ),
-          width: imageWidth * imageScale,
+          width: kThreadThumbnailWidth * imageScale,
         ),
       );
 
