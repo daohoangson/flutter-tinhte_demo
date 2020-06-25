@@ -126,11 +126,11 @@ class Config extends ConfigBase {
 Pick a unique package name across Play Store and App Store then update these files:
 
 - `android/app/build.gradle` applicationId
-- `android/app/src/main/AndroidManifest.xml` package
+- `android/app/src/main/AndroidManifest.xml` package, android:label
 - `android/app/src/main/res/values/strings.xml` app_name, facebook_app_id, fb_login_protocol_scheme
-- `android/fastlane/metadata/android/en-US/title.txt`
+- `android/fastlane/metadata/android/en-US/` title.txt, full_description.txt, short_description.txt
 - `android/fastlane/Appfile` package_name
-- `ios/Runner/Info.plist` CFBundleURLSchemes, FacebookAppID, FacebookDisplayName
+- `ios/Runner/Info.plist` CFBundleName, CFBundleURLSchemes, FacebookAppID, FacebookDisplayName
 - `ios/fastlane/Appfile` app_identifier, apple_id, etc. (basically everything)
 
 You will also need to move the files within `android/app/src/main/java/com/daohoangson/flutter_ttdemo` to another directory to match the new Android package.
