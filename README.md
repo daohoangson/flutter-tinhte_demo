@@ -120,3 +120,18 @@ class Config extends ConfigBase {
   final siteRoot = 'https://domain.com/community';
 }
 ```
+
+### How to use another package name
+
+Pick a unique package name across Play Store and App Store then update these files:
+
+- `android/app/build.gradle` applicationId
+- `android/app/src/main/AndroidManifest.xml` package
+- `android/app/src/main/res/values/strings.xml` app_name, facebook_app_id, fb_login_protocol_scheme
+- `android/fastlane/metadata/android/en-US/title.txt`
+- `android/fastlane/Appfile` package_name
+- `ios/Runner/Info.plist` CFBundleURLSchemes, FacebookAppID, FacebookDisplayName
+- `ios/fastlane/Appfile` app_identifier, apple_id, etc. (basically everything)
+
+You will also need to move the files within `android/app/src/main/java/com/daohoangson/flutter_ttdemo` to another directory to match the new Android package.
+The `google-services.json` and `GoogleService-Info.plist` must be replaced too.
