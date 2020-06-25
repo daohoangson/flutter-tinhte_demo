@@ -46,11 +46,13 @@ class HomeScreen extends StatelessWidget {
       );
 
   void _fetchOnSuccess(Map json, FetchContext<_HomeListItem> fc) {
-    if (!json.containsKey('threads')) return;
+    if (!json.containsKey(config.homeThreadsKey)) return;
+    final threadsJson = json[config.homeThreadsKey] as List;
+    final l = threadsJson.length;
 
     final items = fc.items;
     List<SearchResult<Thread>> top5;
-    if (fc.id == FetchContextId.FetchInitial) {
+    if (fc.id == FetchContextId.FetchInitial && l >= 5) {
       top5 = [];
       items.add(_HomeListItem(top5: top5));
 
@@ -61,8 +63,6 @@ class HomeScreen extends StatelessWidget {
       if (slot2 != null) items.add(_HomeListItem(widget: slot2));
     }
 
-    final threadsJson = json[config.homeThreadsKey] as List;
-    final l = threadsJson.length;
     for (int i = 0; i < l; i++) {
       var srt = config.homeParser(threadsJson[i]);
       if (srt == null || srt.content == null) continue;

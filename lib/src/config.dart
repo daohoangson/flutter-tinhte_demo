@@ -33,6 +33,8 @@ abstract class ConfigBase {
   bool get loginWithApple => false;
   bool get loginWithFacebook => false;
   bool get loginWithGoogle => false;
+
+  bool get threadWidgetShowCoverImageOnly => true;
 }
 
 final config = Config();

@@ -16,6 +16,7 @@ import 'package:tinhte_demo/src/widgets/tinhte/tinhte_fact.dart';
 import 'package:tinhte_demo/src/widgets/super_list.dart';
 import 'package:tinhte_demo/src/widgets/image.dart';
 import 'package:tinhte_demo/src/api.dart';
+import 'package:tinhte_demo/src/config.dart';
 import 'package:tinhte_demo/src/intl.dart';
 import 'package:tinhte_demo/src/link.dart';
 import 'package:tinhte_demo/src/widgets/x_user_feed/thread.dart';

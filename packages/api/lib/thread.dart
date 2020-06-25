@@ -7,6 +7,8 @@ import 'thread_prefix.dart';
 part 'thread.g.dart';
 
 final _kThreadTitleEllipsisRegEx = RegExp(r'^(.+)\.\.\.$');
+final _kThreadPostBodyImgBbCodeRegExp =
+    RegExp(r'\[IMG\]([^[]+)\[/IMG\]', caseSensitive: false);
 
 bool isThreadTitleRedundant(Thread thread, [Post firstPost]) {
   firstPost ??= thread?.firstPost;
@@ -18,6 +20,30 @@ bool isThreadTitleRedundant(Thread thread, [Post firstPost]) {
   }
 
   return firstPost.postBody?.startsWith(thread.threadTitle) == true;
+}
+
+ThreadImage getThreadImage(Thread thread) {
+  if (thread.threadImage != null) return thread.threadImage;
+
+  if (thread.firstPost == null) return null;
+  final post = thread.firstPost;
+
+  if (post.attachments?.isNotEmpty == true) {
+    for (final attachment in post.attachments) {
+      if (attachment.links?.thumbnail?.isNotEmpty == true) {
+        return ThreadImage(attachment.links.data)
+          ..width = attachment.attachmentWidth
+          ..height = attachment.attachmentHeight;
+      }
+    }
+  }
+
+  if (post.postBodyHtml?.isNotEmpty == true) {
+    final match = _kThreadPostBodyImgBbCodeRegExp.firstMatch(post.postBody);
+    if (match != null) return ThreadImage(match.group(1));
+  }
+
+  return null;
 }
 
 @JsonSerializable()
