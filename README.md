@@ -128,3 +128,21 @@ class Config extends ConfigBase {
 1. Update `supportedLocales` param in `lib/main.dart`
 1. Update `isSupported` method in `lib/src/intl.dart`
 1. Update `CFBundleLocalizations` in `ios/Runner/Info.plist` to include the new language code
+
+### How to use another package name
+
+Pick a unique package name across Play Store and App Store then update these files:
+
+- `android/app/build.gradle` applicationId, signingConfigs.release
+- `android/app/google-services.json`
+- `android/app/src/main/AndroidManifest.xml` package, android:label
+- `android/app/src/main/res/values/strings.xml` app_name, facebook_app_id, fb_login_protocol_scheme
+- `android/fastlane/metadata/android/en-US/` title.txt, full_description.txt, short_description.txt
+- `android/fastlane/Appfile` package_name
+- `android/release.jks`
+- `ios/Runner.xcodeproj/project.pbxproj` PRODUCT_BUNDLE_IDENTIFIER x2
+- `ios/Runner/GoogleService-Info.plist`
+- `ios/Runner/Info.plist` CFBundleName, CFBundleURLSchemes, FacebookAppID, FacebookDisplayName
+- `ios/fastlane/Appfile` app_identifier, apple_id, etc. (basically everything)
+
+You will also need to move the files within `android/app/src/main/java/com/daohoangson/flutter_ttdemo` to another directory to match the new Android package.
