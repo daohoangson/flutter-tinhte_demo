@@ -121,6 +121,14 @@ class Config extends ConfigBase {
 }
 ```
 
+### How to support a new language?
+
+1. Translate the `lib/l10n/intl_messages.arb` into your new language. Save it as `/lib/l10n/intl_(language_code).arb`.
+1. Execute `./tool/l10n_2.sh` to generate l10n files
+1. Update `supportedLocales` param in `lib/main.dart`
+1. Update `isSupported` method in `lib/src/intl.dart`
+1. Update `CFBundleLocalizations` in `ios/Runner/Info.plist` to include the new language code
+
 ### How to use another package name
 
 Pick a unique package name across Play Store and App Store then update these files:
