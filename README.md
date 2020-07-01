@@ -140,9 +140,18 @@ Pick a unique package name across Play Store and App Store then update these fil
 - `android/fastlane/metadata/android/en-US/` title.txt, full_description.txt, short_description.txt
 - `android/fastlane/Appfile` package_name
 - `android/release.jks`
+- `firebase/.firebaserc` projects.default
 - `ios/Runner.xcodeproj/project.pbxproj` PRODUCT_BUNDLE_IDENTIFIER x2
 - `ios/Runner/GoogleService-Info.plist`
 - `ios/Runner/Info.plist` CFBundleName, CFBundleURLSchemes, FacebookAppID, FacebookDisplayName
 - `ios/fastlane/Appfile` app_identifier, apple_id, etc. (basically everything)
 
 You will also need to move the files within `android/app/src/main/java/com/daohoangson/flutter_ttdemo` to another directory to match the new Android package.
+
+For Firebase Messaging, execute these commands to set the proper config variables:
+
+```bash
+firebase functions:config:set websub.hub=https://domain.com/xenforo/api/index.php\?subscriptions
+
+firebase functions:config:set websub.url=https://region-project.cloudfunctions.net/websub
+```
