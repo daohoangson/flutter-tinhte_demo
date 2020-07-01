@@ -48,7 +48,10 @@ export default (_: Config) => functions.firestore
       admin.messaging().sendToDevice(registrationTokens, payload, options),
       snap.ref.update({
         [firestoreFieldSendDate]: admin.firestore.FieldValue.serverTimestamp(),
-        [firestoreFieldSentPayload]: payload,
+        [firestoreFieldSentPayload]: {
+          data: data ? data : 'N/A',
+          notification: notification ? notification : 'N/A',
+        },
         [firestoreFieldSentOptions]: options,
       }),
     ]);
