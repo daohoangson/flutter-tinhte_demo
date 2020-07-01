@@ -1,8 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:tinhte_api/feature_page.dart';
-
-import '../../screens/fp_view.dart';
+import 'package:tinhte_demo/src/intl.dart';
+import 'package:tinhte_demo/src/screens/fp_view.dart';
 
 const kTagWidgetPadding = 2.5;
 
@@ -19,8 +19,8 @@ class FpWidget extends StatelessWidget {
         image: fp?.links?.thumbnail ?? fp?.links?.image,
         label: fp?.fullName,
         onTap: () => Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => FpViewScreen(fp)),
-            ),
+          MaterialPageRoute(builder: (_) => FpViewScreen(fp)),
+        ),
       );
 }
 
@@ -52,7 +52,7 @@ class TagWidget extends StatelessWidget {
               alignment: Alignment.centerLeft,
               child: Padding(
                 child: Text(
-                  label ?? 'Loading...',
+                  label ?? l(context).loadingEllipsis,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(fontSize: bc.biggest.height / 2),

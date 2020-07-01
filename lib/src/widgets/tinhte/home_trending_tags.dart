@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import '../../api.dart';
-import '../../config.dart';
-import '../../link.dart';
-import '../tag/widget.dart';
-import '../super_list.dart';
-import 'header.dart';
+import 'package:tinhte_demo/src/widgets/home/header.dart';
+import 'package:tinhte_demo/src/widgets/tag/widget.dart';
+import 'package:tinhte_demo/src/widgets/super_list.dart';
+import 'package:tinhte_demo/src/api.dart';
+import 'package:tinhte_demo/src/config.dart';
+import 'package:tinhte_demo/src/link.dart';
 
 const _kTrendingTagsMax = 6;
 
@@ -25,7 +24,7 @@ class TrendingTagsWidget extends StatelessWidget {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                HeaderWidget('#trending tags'),
+                HeaderWidget('#tag đang hot'),
                 Padding(
                   child: _buildGrid(context, data.tags, cols),
                   padding: const EdgeInsets.all(kTagWidgetPadding),
@@ -67,7 +66,7 @@ class TrendingTagsWidget extends StatelessWidget {
         onTap: tag?.tagName != null
             ? () => launchLink(
                   context,
-                  "$configSiteRoot/tags?t=${Uri.encodeQueryComponent(tag.tagName)}",
+                  "${config.siteRoot}/tags?t=${Uri.encodeQueryComponent(tag.tagName)}",
                 )
             : null,
       );

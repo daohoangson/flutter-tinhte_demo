@@ -1,51 +1,82 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
-import '../../screens/search/thread.dart';
-import '../../screens/forum_list.dart';
-import '../../screens/menu.dart';
+import 'package:tinhte_demo/src/intl.dart';
+import 'package:tinhte_demo/src/screens/forum_list.dart';
+import 'package:tinhte_demo/src/screens/menu.dart';
+import 'package:tinhte_demo/src/screens/my_feed.dart';
 
 class HomeBottomBar extends StatelessWidget {
   @override
-  Widget build(BuildContext context) => BottomNavigationBar(
-        items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(FontAwesomeIcons.home),
-            title: Text('Home'),
+  Widget build(BuildContext context) => BottomAppBar(
+        child: Row(
+          children: <Widget>[
+            Expanded(
+              child: _BottomBarItem(
+                icon: Icon(FontAwesomeIcons.home),
+                onTap: () {},
+                tooltip: l(context).home,
+              ),
+            ),
+            Expanded(
+              child: _BottomBarItem(
+                icon: Icon(FontAwesomeIcons.newspaper),
+                onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                  builder: (_) => MyFeedScreen(),
+                )),
+                tooltip: l(context).myFeed,
+              ),
+            ),
+            Expanded(
+              child: _BottomBarItem(
+                icon: Icon(FontAwesomeIcons.listAlt),
+                onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                  builder: (_) => ForumListScreen(),
+                )),
+                tooltip: l(context).forums,
+              ),
+            ),
+            Expanded(
+              child: _BottomBarItem(
+                icon: Icon(FontAwesomeIcons.bars),
+                onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                  builder: (_) => MenuScreen(),
+                )),
+                tooltip: l(context).menu,
+              ),
+            ),
+          ],
+          mainAxisSize: MainAxisSize.max,
+        ),
+        shape: CircularNotchedRectangle(),
+      );
+}
+
+class _BottomBarItem extends StatelessWidget {
+  final Widget icon;
+  final VoidCallback onTap;
+  final String tooltip;
+
+  const _BottomBarItem({Key key, this.icon, this.onTap, this.tooltip})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) => InkWell(
+        child: Padding(
+          child: Column(
+            children: <Widget>[
+              Padding(
+                child: icon,
+                padding: const EdgeInsets.all(4),
+              ),
+              Text(
+                tooltip,
+                style: TextStyle(color: Theme.of(context).disabledColor),
+              ),
+            ],
+            mainAxisSize: MainAxisSize.min,
           ),
-          BottomNavigationBarItem(
-            icon: Icon(FontAwesomeIcons.search),
-            title: Text('Search'),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(FontAwesomeIcons.newspaper),
-            title: Text('Forums'),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(FontAwesomeIcons.bars),
-            title: Text('Menu'),
-          ),
-        ],
-        onTap: (index) {
-          switch (index) {
-            case 1:
-              showSearch(
-                context: context,
-                delegate: ThreadSearchDelegate(),
-              );
-              break;
-            case 2:
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (_) => ForumListScreen(),
-              ));
-              break;
-            case 3:
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (_) => MenuScreen(),
-              ));
-              break;
-          }
-        },
-        type: BottomNavigationBarType.fixed,
+          padding: const EdgeInsets.all(4),
+        ),
+        onTap: onTap,
       );
 }

@@ -1,26 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:tinhte_api/content_list.dart';
+import 'package:tinhte_api/search.dart';
 import 'package:tinhte_api/thread.dart';
-
-import '../../screens/thread_view.dart';
-import '../../intl.dart';
-import '../image.dart';
+import 'package:tinhte_api/x_content_list.dart';
+import 'package:tinhte_demo/src/constants.dart';
+import 'package:tinhte_demo/src/screens/thread_view.dart';
+import 'package:tinhte_demo/src/intl.dart';
+import 'package:tinhte_demo/src/widgets/image.dart';
 
 class HomeThreadWidget extends StatelessWidget {
-  final double imageWidth;
-  final ListItem item;
+  final ContentListItem item;
   final Thread thread;
 
   HomeThreadWidget(
-    ThreadListItem tli, {
-    this.imageWidth,
+    SearchResult<Thread> srt, {
     Key key,
-  })  : assert(tli?.item != null),
-        assert(tli?.thread != null),
-        assert(imageWidth != null),
-        item = tli.item,
-        thread = tli.thread,
+  })  : assert(srt?.content != null),
+        item = srt.listItem,
+        thread = srt.content,
         super(key: key);
 
   @override
@@ -38,7 +35,7 @@ class HomeThreadWidget extends StatelessWidget {
                 Expanded(
                   child: Column(
                     children: <Widget>[
-                      _buildInfo(theme),
+                      _buildInfo(context, theme),
                       const SizedBox(height: 5),
                       _buildTitle(),
                       const SizedBox(height: 5),
@@ -70,14 +67,14 @@ class HomeThreadWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(3),
         child: SizedBox(
           child: ThreadImageWidget(
-            image: thread.threadThumbnail,
+            image: thread.threadThumbnail ?? getThreadImage(thread),
             threadId: thread.threadId,
           ),
-          width: imageWidth * imageScale,
+          width: kThreadThumbnailWidth * imageScale,
         ),
       );
 
-  Widget _buildInfo(ThemeData theme) {
+  Widget _buildInfo(BuildContext context, ThemeData theme) {
     final List<TextSpan> spans = List();
 
     spans.add(TextSpan(
@@ -86,7 +83,7 @@ class HomeThreadWidget extends StatelessWidget {
     ));
 
     if (item?.itemDate != null) {
-      spans.add(TextSpan(text: " ${formatTimestamp(item.itemDate)}"));
+      spans.add(TextSpan(text: " ${formatTimestamp(context, item.itemDate)}"));
     }
 
     return RichText(

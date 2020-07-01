@@ -1,127 +1,94 @@
 import 'package:flutter/material.dart';
-import 'package:package_info/package_info.dart';
-import 'package:tinhte_api/content_list.dart';
+import 'package:tinhte_api/search.dart';
+import 'package:tinhte_api/thread.dart';
+import 'package:tinhte_demo/src/constants.dart';
+import 'package:tinhte_demo/src/screens/thread_create.dart';
+import 'package:tinhte_demo/src/widgets/home/bottom_bar.dart';
+import 'package:tinhte_demo/src/widgets/home/thread.dart';
+import 'package:tinhte_demo/src/widgets/home/top_5.dart';
+import 'package:tinhte_demo/src/widgets/super_list.dart';
+import 'package:tinhte_demo/src/config.dart';
+import 'package:tinhte_demo/src/intl.dart';
 
-import '../widgets/home/bottom_bar.dart';
-import '../widgets/home/channels.dart';
-import '../widgets/home/feature_pages.dart';
-import '../widgets/home/thread.dart';
-import '../widgets/home/top_5.dart';
-import '../widgets/home/top_threads.dart';
-import '../widgets/home/trending_tags.dart';
-import '../widgets/super_list.dart';
-import 'content_list_view.dart';
-
-class HomeScreen extends StatefulWidget {
-  HomeScreen({Key key}) : super(key: key);
-
-  @override
-  _HomeScreenState createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  String _title = '';
-
-  @override
-  void initState() {
-    super.initState();
-    _detectTitle();
-  }
-
+class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          title: Text(_title),
-        ),
-        body: SuperListView<_HomeListItem>(
-          complexItems: [
-            FeaturePagesWidget.registerSuperListComplexItem,
-            TopThreadsWidget.registerSuperListComplexItem,
-            TrendingTagsWidget.registerSuperListComplexItem,
-          ],
-          fetchPathInitial: 'lists/1/threads?limit=20'
-              '&_bdImageApiThreadThumbnailWidth=${(kContentListViewThumbnailWidth * 3).toInt()}'
-              '&_bdImageApiThreadThumbnailHeight=sh',
-          fetchOnSuccess: _fetchOnSuccess,
-          itemBuilder: (context, state, item) {
-            if (item.widget != null) return item.widget;
+        body: SafeArea(
+          child: SuperListView<_HomeListItem>(
+            complexItems: config.homeComplexItems,
+            fetchPathInitial: config.homePath,
+            fetchOnSuccess: _fetchOnSuccess,
+            itemBuilder: (context, state, item) {
+              if (item.widget != null) return item.widget;
 
-            if (item.top5?.length == 5) {
-              return SuperListItemFullWidth(
-                child: HomeTop5Widget(item.top5),
-              );
-            }
+              if (item.top5?.length == 5) {
+                return SuperListItemFullWidth(
+                  child: HomeTop5Widget(item.top5),
+                );
+              }
 
-            if (item.thread != null)
-              return HomeThreadWidget(
-                item.thread,
-                imageWidth: kContentListViewThumbnailWidth,
-              );
+              if (item.thread != null) return HomeThreadWidget(item.thread);
 
-            return null;
-          },
-          itemMaxWidth: 800,
+              return null;
+            },
+            itemMaxWidth: 800,
+          ),
         ),
         bottomNavigationBar: HomeBottomBar(),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButton: FloatingActionButton(
+          onPressed: () => Navigator.of(context)
+              .push(MaterialPageRoute(builder: (_) => ThreadCreateScreen())),
+          tooltip: l(context).threadCreateNew,
+          child: Icon(Icons.add),
+          elevation: 2.0,
+        ),
       );
 
-  void _detectTitle() => PackageInfo.fromPlatform().then(
-      (info) => setState(() => _title = "${info.version}+${info.buildNumber}"));
-
   void _fetchOnSuccess(Map json, FetchContext<_HomeListItem> fc) {
-    if (!json.containsKey('threads')) return;
+    if (!json.containsKey(config.homeThreadsKey)) return;
+    final threadsJson = json[config.homeThreadsKey] as List;
+    final l = threadsJson.length;
 
     final items = fc.items;
-    List<ThreadListItem> top5;
-    if (fc.id == FetchContextId.FetchInitial) {
+    List<SearchResult<Thread>> top5;
+    if (fc.id == FetchContextId.FetchInitial && l >= 5) {
       top5 = [];
       items.add(_HomeListItem(top5: top5));
-      items.add(_HomeListItem(
-        widget: SuperListItemFullWidth(
-          child: ChannelsWidget(),
-        ),
-      ));
-      items.add(_HomeListItem(
-        widget: SuperListItemFullWidth(
-          child: FeaturePagesWidget(),
-        ),
-      ));
+
+      final slot1 = config.homeSlot1BelowTop5;
+      if (slot1 != null) items.add(_HomeListItem(widget: slot1));
+
+      final slot2 = config.homeSlot2BelowSlot1;
+      if (slot2 != null) items.add(_HomeListItem(widget: slot2));
     }
 
-    final threadsJson = json['threads'] as List;
-    final l = threadsJson.length;
     for (int i = 0; i < l; i++) {
-      final Map threadJson = threadsJson[i];
-      final tli = ThreadListItem.fromJson(threadJson);
+      var srt = config.homeParser(threadsJson[i]);
+      if (srt == null || srt.content == null) continue;
 
-      if (tli?.thread?.threadImage != null) {
+      if (srt.content?.threadImage != null) {
         // force display mode for edge case: when thread has custom home image
         // thread view will have an annoying jump effect (no cover -> has cover)
         // we know home thread always has cover image so it's safe to do this
-        tli.thread.threadImage.displayMode = 'cover';
+        srt.content.threadImage.displayMode = 'cover';
       }
 
       if (top5 != null && top5.length < 5) {
-        top5.add(tli);
+        top5.add(srt);
       } else {
-        items.add(_HomeListItem(thread: tli));
+        items.add(_HomeListItem(thread: srt));
       }
 
       if (fc.id == FetchContextId.FetchInitial && i == l - 4) {
-        items.add(_HomeListItem(
-          widget: SuperListItemFullWidth(
-            child: TrendingTagsWidget(),
-          ),
-        ));
+        final slot3 = config.homeSlot3NearEndOfPage1;
+        if (slot3 != null) items.add(_HomeListItem(widget: slot3));
       }
     }
 
     if (fc.id == FetchContextId.FetchInitial) {
-      items.add(_HomeListItem(
-        widget: SuperListItemFullWidth(
-          child: TopThreadsWidget(),
-        ),
-      ));
+      final slot4 = config.homeSlot4EndOfPage1;
+      if (slot4 != null) items.add(_HomeListItem(widget: slot4));
     }
   }
 }
@@ -131,8 +98,8 @@ class HomeScreenRoute extends MaterialPageRoute {
 }
 
 class _HomeListItem {
-  final ThreadListItem thread;
-  final List<ThreadListItem> top5;
+  final SearchResult<Thread> thread;
+  final List<SearchResult<Thread>> top5;
   final Widget widget;
 
   _HomeListItem({

@@ -7,7 +7,9 @@ part of 'attachment.dart';
 // **************************************************************************
 
 Attachment _$AttachmentFromJson(Map<String, dynamic> json) {
-  return Attachment(json['attachment_id'] as int)
+  return Attachment(
+    json['attachment_id'] as int,
+  )
     ..attachmentDownloadCount = json['attachment_download_count'] as int
     ..attachmentHeight = json['attachment_height'] as int
     ..attachmentIsInserted = json['attachment_is_inserted'] as bool

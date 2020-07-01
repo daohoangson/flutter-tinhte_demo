@@ -1,15 +1,16 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tinhte_api/api.dart';
 import 'package:tinhte_api/oauth_token.dart';
 import 'package:tinhte_api/user.dart';
-
-import 'screens/login.dart';
-import 'config.dart';
-import 'constants.dart';
+import 'package:tinhte_demo/src/intl.dart';
+import 'package:tinhte_demo/src/screens/login.dart';
+import 'package:tinhte_demo/src/config.dart';
+import 'package:tinhte_demo/src/constants.dart';
 
 final _oauthTokenRegEx = RegExp(r'oauth_token=.+(&|$)');
 
@@ -21,9 +22,9 @@ void apiDelete(ApiCaller caller, String path,
     _setupApiJsonHandlers(
       caller,
       (d) => d.api.deleteJson(
-            d._appendOauthToken(path),
-            bodyFields: bodyFields,
-          ),
+        d._appendOauthToken(path),
+        bodyFields: bodyFields,
+      ),
       onSuccess,
       onError,
       onComplete,
@@ -50,10 +51,10 @@ void apiPost(ApiCaller caller, String path,
     _setupApiJsonHandlers(
       caller,
       (d) => d.api.postJson(
-            d._appendOauthToken(path),
-            bodyFields: bodyFields,
-            fileFields: fileFields,
-          ),
+        d._appendOauthToken(path),
+        bodyFields: bodyFields,
+        fileFields: fileFields,
+      ),
       onSuccess,
       onError,
       onComplete,
@@ -80,18 +81,22 @@ void prepareForApiAction(
 Future showApiErrorDialog(
   BuildContext context,
   dynamic error, {
-  String title = 'Api Error',
+  String title,
 }) =>
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-            title: Text(title),
-            content: Text(
-              error is ApiError
-                  ? error.message
-                  : "${error.runtimeType.toString()}: ${error.toString()}",
-            ),
-          ),
+        title: Text(title ?? l(context).apiError),
+        content: error is ApiError
+            ? error.isHtml
+                ? HtmlWidget(error.message)
+                : Text(
+                    error is ApiErrorUnexpectedStatusCode
+                        ? l(context).apiUnexpectedResponse
+                        : error.message,
+                  )
+            : Text("${error.runtimeType.toString()}: ${error.toString()}"),
+      ),
     );
 
 void _setupApiCompleter<T>(
@@ -142,10 +147,8 @@ void _setupApiJsonHandlers(
     completer,
     onSuccess != null
         ? (json) {
-            if (json is! Map) {
-              print(json);
-              throw new ApiError(message: 'Unexpected api response');
-            }
+            if (json is! Map)
+              throw new ApiErrorSingle(l(caller.context).apiUnexpectedResponse);
             return onSuccess(json);
           }
         : null,
@@ -174,7 +177,7 @@ class ApiApp extends StatefulWidget {
     @required this.child,
     Key key,
   })  : assert(child != null),
-        api = Api(configApiRoot, configClientId, configClientSecret)
+        api = Api(config.apiRoot, config.clientId, config.clientSecret)
           ..httpHeaders['Api-Bb-Code-Chr'] = '1'
           ..httpHeaders['Api-Post-Tree'] = '1',
         super(key: key);
@@ -233,8 +236,8 @@ class _ApiAppState extends State<ApiApp> {
     return "${path.replaceAll(_oauthTokenRegEx, '')}${connector}oauth_token=$accessToken";
   }
 
-  void _enqueue(VoidCallback callback) {
-    Timer.run(_dequeue);
+  void _enqueue(VoidCallback callback, {bool scheduleDequeue = true}) {
+    if (scheduleDequeue) Timer.run(_dequeue);
 
     _queue ??= List();
     _queue.add(callback);
@@ -261,7 +264,7 @@ class _ApiAppState extends State<ApiApp> {
     batch.fetch();
   }
 
-  void _fetchUser() => _enqueue(() async {
+  void _fetchUser(bool scheduleDequeue) => _enqueue(() async {
         if (_token == null) return;
 
         try {
@@ -275,7 +278,7 @@ class _ApiAppState extends State<ApiApp> {
         } catch (e) {
           print(e);
         }
-      });
+      }, scheduleDequeue: scheduleDequeue);
 
   void _refreshToken() {
     if (_isRefreshingToken) return;
@@ -308,8 +311,11 @@ class _ApiAppState extends State<ApiApp> {
     _tokenHasBeenSet = true;
 
     if (value != null) {
-      _fetchUser();
-    } else if (_user.userId != 0) {
+      _fetchUser(savePref);
+      return;
+    }
+
+    if (_user.userId != 0) {
       setState(() => _user = User(0));
     }
 

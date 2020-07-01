@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'oauth_token.g.dart';
 
-@JsonSerializable(createToJson: false, fieldRename: FieldRename.snake)
+@JsonSerializable()
 class OauthToken {
   final String accessToken;
   final String refreshToken;
@@ -16,29 +16,24 @@ class OauthToken {
   final DateTime expiresAt;
 
   @JsonKey(ignore: true)
-  ObtainMethod _obtainMethod;
+  ObtainMethod obtainMethod;
 
   OauthToken(
     this.accessToken,
     this.expiresIn,
     this.refreshToken,
     this.scope,
-    this.userId, {
-    ObtainMethod obtainMethod,
-  })  : expiresAt =
-            DateTime.now().add(Duration(milliseconds: expiresIn * 1000)),
-        _obtainMethod = obtainMethod;
-  factory OauthToken.fromJson(
-          ObtainMethod obtainMethod, Map<String, dynamic> json) =>
-      _$OauthTokenFromJson(json).._obtainMethod = obtainMethod;
+    this.userId,
+  ) : expiresAt = DateTime.now().add(Duration(milliseconds: expiresIn * 1000));
+  factory OauthToken.fromJson(Map<String, dynamic> json) =>
+      _$OauthTokenFromJson(json);
 
   bool get hasExpired => expiresAt.isBefore(DateTime.now());
-
-  ObtainMethod get obtainMethod => _obtainMethod;
 }
 
 enum ObtainMethod {
   UsernamePassword,
+  Apple,
   Facebook,
   Google,
 }

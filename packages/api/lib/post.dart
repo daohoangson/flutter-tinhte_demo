@@ -1,12 +1,11 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import 'src/_.dart';
 import 'attachment.dart';
 import 'user.dart';
 
 part 'post.g.dart';
 
-@JsonSerializable(fieldRename: FieldRename.snake)
+@JsonSerializable()
 class Post {
   int postAttachmentCount;
   String postBody;
@@ -29,30 +28,22 @@ class Post {
   int threadId;
   bool userIsIgnored;
 
-  @JsonKey(toJson: none)
   List<Attachment> attachments;
-
-  @JsonKey(toJson: none)
   PostLinks links;
-
-  @JsonKey(toJson: none)
   PostPermissions permissions;
 
-  @JsonKey(toJson: none)
   List<PostReply> postReplies;
   bool postHasOtherReplies;
   int postReplyTo;
   int postReplyDepth;
 
-  @JsonKey(toJson: none)
   UserRank posterRank;
 
   Post(this.postId);
   factory Post.fromJson(Map<String, dynamic> json) => _$PostFromJson(json);
-  Map<String, dynamic> toJson() => _$PostToJson(this);
 }
 
-@JsonSerializable(createToJson: false, fieldRename: FieldRename.snake)
+@JsonSerializable()
 class PostLinks {
   String attachments;
   String detail;
@@ -68,7 +59,7 @@ class PostLinks {
       _$PostLinksFromJson(json);
 }
 
-@JsonSerializable(createToJson: false, fieldRename: FieldRename.snake)
+@JsonSerializable()
 class PostPermissions {
   bool delete;
   bool edit;
@@ -83,7 +74,7 @@ class PostPermissions {
       _$PostPermissionsFromJson(json);
 }
 
-@JsonSerializable(createToJson: false, fieldRename: FieldRename.snake)
+@JsonSerializable()
 class PostReply {
   int from;
   String link;

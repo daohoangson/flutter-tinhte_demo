@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:tinhte_api/user.dart';
-
-import '../widgets/user/member_view_header.dart';
-import '../widgets/threads.dart';
-import '../api.dart';
-import 'search/thread.dart';
+import 'package:tinhte_demo/src/intl.dart';
+import 'package:tinhte_demo/src/screens/search/thread.dart';
+import 'package:tinhte_demo/src/widgets/user/member_view_header.dart';
+import 'package:tinhte_demo/src/widgets/threads.dart';
+import 'package:tinhte_demo/src/api.dart';
 
 class MemberViewScreen extends StatefulWidget {
   final User user;
@@ -46,9 +46,10 @@ class _MemberViewScreenState extends State<MemberViewScreen> {
             ? FloatingActionButton(
                 child: Icon(Icons.search),
                 onPressed: () => showSearch(
-                      context: context,
-                      delegate: ThreadSearchDelegate(user: user),
-                    ),
+                  context: context,
+                  delegate: ThreadSearchDelegate(user: user),
+                ),
+                tooltip: l(context).searchThisUser,
               )
             : null,
       );

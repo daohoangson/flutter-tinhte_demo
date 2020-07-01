@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'thread_prefix.g.dart';
 
-@JsonSerializable(createToJson: false, fieldRename: FieldRename.snake)
+@JsonSerializable()
 class ThreadPrefix {
   final int prefixId;
   final String prefixTitle;

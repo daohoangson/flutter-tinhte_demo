@@ -7,7 +7,9 @@ part of 'node.dart';
 // **************************************************************************
 
 Category _$CategoryFromJson(Map<String, dynamic> json) {
-  return Category(json['category_id'] as int)
+  return Category(
+    json['category_id'] as int,
+  )
     ..categoryDescription = json['category_description'] as String
     ..categoryTitle = json['category_title'] as String
     ..links = json['links'] == null
@@ -33,7 +35,9 @@ CategoryPermissions _$CategoryPermissionsFromJson(Map<String, dynamic> json) {
 }
 
 Forum _$ForumFromJson(Map<String, dynamic> json) {
-  return Forum(json['forum_id'] as int)
+  return Forum(
+    json['forum_id'] as int,
+  )
     ..forumDescription = json['forum_description'] as String
     ..forumIsFollowed = json['forum_is_followed'] as bool
     ..forumPostCount = json['forum_post_count'] as int

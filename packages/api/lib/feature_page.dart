@@ -1,12 +1,10 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import 'src/_.dart';
-
 part 'feature_page.g.dart';
 
 final _kIdRegExp = RegExp(r'/([\w-]+)/$');
 
-@JsonSerializable(createToJson: false)
+@JsonSerializable(fieldRename: FieldRename.none)
 class FeaturePage {
   final int forumId;
   final String fullName;
@@ -15,10 +13,8 @@ class FeaturePage {
   final int tagId;
   final String tagText;
 
-  @JsonKey(toJson: none)
   FeaturePageLinks links;
 
-  @JsonKey(toJson: none)
   FeaturePageValues values;
 
   FeaturePage(
@@ -39,7 +35,7 @@ class FeaturePage {
   }
 }
 
-@JsonSerializable(createToJson: false)
+@JsonSerializable()
 class FeaturePageLinks {
   String follow;
   String image;
@@ -51,7 +47,7 @@ class FeaturePageLinks {
       _$FeaturePageLinksFromJson(json);
 }
 
-@JsonSerializable(createToJson: false, fieldRename: FieldRename.snake)
+@JsonSerializable()
 class FeaturePageValues {
   int followerCount;
   int newsCount;

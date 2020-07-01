@@ -1,30 +1,33 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_custom_tabs/flutter_custom_tabs.dart'
+    as flutter_custom_tabs;
 import 'package:tinhte_api/feature_page.dart';
 import 'package:tinhte_api/tag.dart';
 import 'package:tinhte_api/thread.dart';
 import 'package:tinhte_api/user.dart';
+import 'package:tinhte_demo/src/api.dart';
+import 'package:tinhte_demo/src/config.dart';
+import 'package:tinhte_demo/src/intl.dart';
+import 'package:tinhte_demo/src/screens/fp_view.dart';
+import 'package:tinhte_demo/src/screens/member_view.dart';
+import 'package:tinhte_demo/src/screens/tag_view.dart';
+import 'package:tinhte_demo/src/screens/thread_view.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import 'api.dart';
-import 'config.dart';
-import 'screens/fp_view.dart';
-import 'screens/member_view.dart';
-import 'screens/tag_view.dart';
-import 'screens/thread_view.dart';
 
 void launchLink(BuildContext context, String link) async {
   // automatically cancel launching for CHR links
   // TODO: reconsider when https://github.com/daohoangson/flutter_widget_from_html/pull/116 is merged
   if (link.contains('misc/api-chr')) return;
 
-  if (link.startsWith(configSiteRoot)) {
-    final parsed = await parseLink(context: context, link: link);
+  if (link.startsWith(config.siteRoot)) {
+    final path = "tools/parse-link?link=${Uri.encodeQueryComponent(link)}";
+    final parsed = await parsePath(path, context: context);
     if (parsed) return;
 
     final apiAuth = ApiAuth.of(context, listen: false);
     if (apiAuth.hasToken) {
-      link = "$configApiRoot?tools/login"
+      link = "${config.apiRoot}?tools/login"
           "&oauth_token=${apiAuth.token.accessToken}"
           "&redirect_uri=${Uri.encodeQueryComponent(link)}";
     }
@@ -32,34 +35,40 @@ void launchLink(BuildContext context, String link) async {
 
   if (!await canLaunch(link)) return;
 
+  if (link.startsWith('http')) {
+    flutter_custom_tabs.launch(link,
+        option: flutter_custom_tabs.CustomTabsOption(
+          toolbarColor: Theme.of(context).primaryColor,
+          enableUrlBarHiding: true,
+          showPageTitle: true,
+        ));
+    return;
+  }
+
   launch(link);
 }
 
 void launchMemberView(BuildContext context, int userId) =>
-    launchLink(context, "$configSiteRoot/members/$userId/");
+    launchLink(context, "${config.siteRoot}/members/$userId/");
 
-Future<bool> parseLink({
+Future<bool> parsePath(
+  String path, {
   BuildContext context,
-  String link,
+  Widget defaultWidget,
   NavigatorState rootNavigator,
-  String path,
 }) {
+  assert(path != null);
   assert((context == null) != (rootNavigator == null));
-  assert((link == null) != (path == null));
   final navigator = rootNavigator ?? Navigator.of(context);
   var cancelled = false;
-  final completer = Completer<bool>();
-  var parsed = false;
-  var userCancelled = false;
 
   navigator.push(_DialogRoute((_) => AlertDialog(
-        content: Text('Just a moment...'),
+        content: Text(l(context).justAMomentEllipsis),
         actions: <Widget>[
           FlatButton(
-            child: Text('Cancel'),
+            child: Text(lm(context).cancelButtonLabel),
             onPressed: () {
               cancelled = true;
-              userCancelled = true;
               navigator.pop();
             },
           )
@@ -73,73 +82,80 @@ Future<bool> parseLink({
     cancelled = true;
   };
 
-  apiGet(
+  return buildWidget(
     ApiCaller.stateless(context ?? rootNavigator.context),
-    path ?? 'tools/parse-link?link=${Uri.encodeQueryComponent(link)}',
-    onSuccess: (json) {
-      if (cancelled) return;
+    path,
+    defaultWidget: defaultWidget,
+  ).then<bool>(
+    (widget) {
+      if (cancelled || widget == null) return false;
 
-      Route route;
-      if (json.containsKey('tag') && json.containsKey('tagged')) {
-        route = _parseTag(json);
-      } else if (json.containsKey('thread') && json.containsKey('posts')) {
-        route = _parseThread(json);
-      } else if (json.containsKey('user')) {
-        route = _parseUser(json);
-      }
-      if (cancelled) return;
-
-      if (route != null) {
-        parsed = true;
-        cancelDialog();
-        navigator.push(route);
-      }
-    },
-    onError: (error) => debugPrint("$error"),
-    onComplete: () {
       cancelDialog();
-      completer.complete(parsed || userCancelled);
+      navigator.push(MaterialPageRoute(builder: (_) => widget));
+      return true;
     },
+    onError: (error) {
+      print(error);
+      return false;
+    },
+  ).whenComplete(() => cancelDialog());
+}
+
+Future<Widget> buildWidget(
+  ApiCaller caller,
+  String path, {
+  Widget defaultWidget,
+}) {
+  final completer = Completer<Widget>();
+
+  apiGet(
+    caller,
+    path,
+    onSuccess: (json) {
+      Widget widget = defaultWidget;
+      if (json.containsKey('tag') && json.containsKey('tagged')) {
+        widget = _parseTag(json);
+      } else if (json.containsKey('thread') && json.containsKey('posts')) {
+        widget = _parseThread(json);
+      } else if (json.containsKey('user')) {
+        widget = _parseUser(json);
+      }
+
+      completer.complete(widget);
+    },
+    onError: (error) => completer.completeError(error),
   );
 
   return completer.future;
 }
 
-Route _parseTag(Map json) {
+Widget _parseTag(Map json) {
   final Map jsonTag = json['tag'];
   final tag = Tag.fromJson(jsonTag);
   if (tag.tagId == null) return null;
 
   if (json.containsKey('feature_page')) {
     final fp = FeaturePage.fromJson(json['feature_page']);
-    if (fp.id != null) {
-      return MaterialPageRoute(builder: (_) => FpViewScreen(fp));
-    }
+    if (fp.id != null) return FpViewScreen(fp);
   }
 
-  return MaterialPageRoute(
-    builder: (_) => TagViewScreen(tag, initialJson: json),
-  );
+  return TagViewScreen(tag, initialJson: json);
 }
 
-Route _parseThread(Map json) {
+Widget _parseThread(Map json) {
   final Map jsonThread = json['thread'];
   final thread = Thread.fromJson(jsonThread);
   if (thread.threadId == null) return null;
 
-  return MaterialPageRoute(
-    builder: (_) => ThreadViewScreen(thread, initialJson: json),
-  );
+  return ThreadViewScreen(thread, initialJson: json);
 }
 
-Route _parseUser(Map json) {
+Widget _parseUser(Map json) {
   final Map jsonUser = json['user'];
   final user = User.fromJson(jsonUser);
   if (user.userId == null) return null;
 
-  return MaterialPageRoute(
-    builder: (_) => MemberViewScreen(user),
-  );
+  return MemberViewScreen(user);
 }
 
 class _DialogRoute extends PopupRoute {

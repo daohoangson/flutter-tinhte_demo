@@ -8,11 +8,14 @@ part of 'navigation.dart';
 
 Element _$ElementFromJson(Map<String, dynamic> json) {
   return Element(
-      json['navigation_id'] as int, json['navigation_type'] as String)
+    json['navigation_id'] as int,
+    json['navigation_type'] as String,
+  )
     ..hasSubElements = json['has_sub_elements'] as bool
     ..links = json['links'] == null
         ? null
         : ElementLinks.fromJson(json['links'] as Map<String, dynamic>)
+    ..navigationDepth = json['navigation_depth'] as int
     ..navigationParentId = json['navigation_parent_id'] as int;
 }
 
@@ -23,7 +26,9 @@ ElementLinks _$ElementLinksFromJson(Map<String, dynamic> json) {
 }
 
 LinkForum _$LinkForumFromJson(Map<String, dynamic> json) {
-  return LinkForum(json['link_id'] as int)
+  return LinkForum(
+    json['link_id'] as int,
+  )
     ..linkDescription = json['link_description'] as String
     ..linkTitle = json['link_title'] as String
     ..links = json['links'] == null

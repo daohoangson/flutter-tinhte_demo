@@ -3,9 +3,8 @@ targets:
     builders:
       json_serializable:
         options:
-          # https://pub.dartlang.org/packages/json_serializable
-          use_wrappers: false
+          # https://pub.dev/packages/json_serializable
           any_map: false
           checked: false
-          explicit_to_json: false
-          generate_to_json_function: true
+          create_to_json: false
+          field_rename: 'snake'

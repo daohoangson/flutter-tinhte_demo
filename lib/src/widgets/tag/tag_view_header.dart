@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tinhte_api/tag.dart';
-
-import '../../api.dart';
-import '../../intl.dart';
+import 'package:tinhte_demo/src/widgets/tag/follow_button.dart';
+import 'package:tinhte_demo/src/intl.dart';
 
 class TagViewHeader extends StatelessWidget {
   final Tag tag;
@@ -13,12 +12,11 @@ class TagViewHeader extends StatelessWidget {
   Widget build(BuildContext context) => Row(
         children: <Widget>[
           Expanded(
-            child: _buildStats(context, tag.tagUseCount, 'discussions') ??
-                Container(),
+            child: _buildStats(context, tag.tagUseCount,
+                    l(context).tagLowercaseDiscussions) ??
+                const SizedBox.shrink(),
           ),
-          Expanded(
-            child: _FollowButton(tag),
-          ),
+          Expanded(child: FollowButton(_FollowableTag(tag))),
         ],
       );
 
@@ -39,51 +37,20 @@ class TagViewHeader extends StatelessWidget {
           : null;
 }
 
-class _FollowButton extends StatefulWidget {
+class _FollowableTag extends Followable {
   final Tag tag;
 
-  _FollowButton(this.tag) : assert(tag != null);
+  _FollowableTag(this.tag);
 
   @override
-  State<StatefulWidget> createState() => _FollowButtonState();
-}
-
-class _FollowButtonState extends State<_FollowButton> {
-  var _isRequesting = false;
-
-  bool get isFollowed => widget.tag.tagIsFollowed == true;
+  bool get isFollowed => tag.tagIsFollowed;
 
   @override
-  Widget build(BuildContext context) =>
-      widget.tag.links?.followers?.isNotEmpty == true
-          ? RaisedButton(
-              child: Text(isFollowed ? 'Unfollow' : 'Follow'),
-              onPressed:
-                  _isRequesting ? null : isFollowed ? _unfollow : _follow,
-            )
-          : Container();
+  String get followersLink => tag.links?.followers;
 
-  void _follow() => prepareForApiAction(context, () {
-        if (_isRequesting) return;
-        setState(() => _isRequesting = true);
+  @override
+  String get name => "#${tag.tagText}";
 
-        apiPost(
-          ApiCaller.stateful(this),
-          widget.tag.links.followers,
-          onSuccess: (_) => setState(() => widget.tag.tagIsFollowed = true),
-          onComplete: () => setState(() => _isRequesting = false),
-        );
-      });
-
-  void _unfollow() => prepareForApiAction(context, () {
-        if (_isRequesting) return;
-        setState(() => _isRequesting = true);
-
-        apiDelete(
-          ApiCaller.stateful(this),
-          widget.tag.links.followers,
-          onSuccess: (_) => setState(() => widget.tag.tagIsFollowed = false),
-          onComplete: () => setState(() => _isRequesting = false),
-        );
-      });
+  @override
+  set isFollowed(bool v) => tag.tagIsFollowed = v;
 }

@@ -1,10 +1,8 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import 'src/_.dart';
-
 part 'attachment.g.dart';
 
-@JsonSerializable(createToJson: false, fieldRename: FieldRename.snake)
+@JsonSerializable()
 class Attachment {
   int attachmentDownloadCount;
   final int attachmentId;
@@ -13,10 +11,8 @@ class Attachment {
   int attachmentWidth;
   String filename;
 
-  @JsonKey(toJson: none)
   AttachmentLinks links;
 
-  @JsonKey(toJson: none)
   AttachmentPermissions permissions;
 
   Attachment(this.attachmentId);
@@ -24,7 +20,7 @@ class Attachment {
       _$AttachmentFromJson(json);
 }
 
-@JsonSerializable(createToJson: false)
+@JsonSerializable()
 class AttachmentLinks {
   String permalink;
   String data;
@@ -35,7 +31,7 @@ class AttachmentLinks {
       _$AttachmentLinksFromJson(json);
 }
 
-@JsonSerializable(createToJson: false)
+@JsonSerializable()
 class AttachmentPermissions {
   bool view;
   bool delete;

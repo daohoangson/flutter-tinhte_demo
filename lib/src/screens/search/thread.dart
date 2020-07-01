@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:tinhte_api/node.dart';
 import 'package:tinhte_api/user.dart';
-
-import '../../widgets/threads.dart';
-import '../../api.dart';
+import 'package:tinhte_demo/src/intl.dart';
+import 'package:tinhte_demo/src/widgets/threads.dart';
+import 'package:tinhte_demo/src/api.dart';
 
 class ThreadSearchDelegate extends SearchDelegate {
   final Forum forum;
@@ -23,6 +23,7 @@ class ThreadSearchDelegate extends SearchDelegate {
         IconButton(
           icon: Icon(Icons.clear),
           onPressed: () => query = '',
+          tooltip: lm(context).cancelButtonLabel,
         )
       ];
 
@@ -30,6 +31,7 @@ class ThreadSearchDelegate extends SearchDelegate {
   Widget buildLeading(BuildContext context) => IconButton(
         icon: BackButtonIcon(),
         onPressed: () => close(context, null),
+        tooltip: lm(context).cancelButtonLabel,
       );
 
   @override
@@ -43,21 +45,21 @@ class ThreadSearchDelegate extends SearchDelegate {
 
   @override
   Widget buildSuggestions(BuildContext context) =>
-      _apiQuery != null ? _buildResults(context) : _buildExplain();
+      _apiQuery != null ? _buildResults(context) : _buildExplain(context);
 
-  Widget _buildExplain() {
+  Widget _buildExplain(BuildContext context) {
     final sb = StringBuffer();
     if (query.isEmpty) {
-      sb.write("Enter something to search");
+      sb.write(l(context).searchEnterSomething);
     } else {
-      sb.write("Submit to search for '$query'");
+      sb.write(l(context).searchSubmitToContinue(query));
     }
 
     if (forum != null) {
-      sb.write(" in forum '${forum.title}'");
+      sb.write(l(context).searchThreadInForum(forum.title));
     }
     if (user != null) {
-      sb.write(" by user '${user.username}'");
+      sb.write(l(context).searchThreadByUser(user.username));
     }
 
     sb.write(query.isEmpty ? '...' : '.');

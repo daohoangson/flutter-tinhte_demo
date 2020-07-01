@@ -1,22 +1,25 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
-import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart'
-    as core;
 import 'package:html/dom.dart' as dom;
+import 'package:html_unescape/html_unescape.dart';
 import 'package:photo_view/photo_view_gallery.dart';
-
-import '../config.dart';
-import '../constants.dart';
-import '../link.dart';
-import 'image.dart';
+import 'package:tinhte_demo/src/config.dart';
+import 'package:tinhte_demo/src/constants.dart';
+import 'package:tinhte_demo/src/intl.dart';
+import 'package:tinhte_demo/src/link.dart';
+import 'package:tinhte_demo/src/widgets/image.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 part 'html/galleria.dart';
 part 'html/link_expander.dart';
 part 'html/lb_trigger.dart';
 part 'html/photo_compare.dart';
+part 'html/youtube.dart';
 
 const _kSmilies = {
   'Smile': '🙂',
@@ -34,9 +37,6 @@ const _kSmilies = {
 };
 
 const _kTextPadding = const EdgeInsets.symmetric(horizontal: kPostBodyPadding);
-
-Widget _buildSpacing(NodeMetadata meta) => core.SpacingPlaceholder(
-    height: CssLength(0.5, unit: CssLengthUnit.em), tsb: meta.tsb);
 
 class TinhteHtmlWidget extends StatelessWidget {
   final String html;
@@ -61,11 +61,10 @@ class TinhteHtmlWidget extends StatelessWidget {
   Widget build(BuildContext _) => LayoutBuilder(
         builder: (c, bc) => HtmlWidget(
           "<html><body>$html</body></html>",
-          baseUrl: Uri.parse(configSiteRoot),
-          bodyPadding: const EdgeInsets.all(0),
+          baseUrl: Uri.parse(config.siteRoot),
+          buildAsync: false,
           enableCaching: enableCaching,
-          factoryBuilder: (config) => TinhteWidgetFactory(
-            config,
+          factoryBuilder: () => TinhteWidgetFactory(
             devicePixelRatio: MediaQuery.of(c).devicePixelRatio,
             deviceWidth: bc.biggest.width,
             needBottomMargin: needBottomMargin,
@@ -86,6 +85,7 @@ class TinhteWidgetFactory extends WidgetFactory {
 
   BuildOp _blockquoteOp;
   BuildOp _chrOp;
+  BuildOp _metaBbCodeOp;
   BuildOp _smilieOp;
   BuildOp _webViewDataUriOp;
 
@@ -94,12 +94,11 @@ class TinhteWidgetFactory extends WidgetFactory {
   LinkExpander _linkExpander;
   PhotoCompare _photoCompare;
 
-  TinhteWidgetFactory(
-    HtmlWidgetConfig config, {
+  TinhteWidgetFactory({
     this.devicePixelRatio,
     this.deviceWidth,
     this.needBottomMargin,
-  }) : super(config);
+  });
 
   BuildOp get blockquoteOp {
     _blockquoteOp ??= BuildOp(
@@ -126,18 +125,40 @@ class TinhteWidgetFactory extends WidgetFactory {
   }
 
   BuildOp get chrOp {
-    _chrOp ??= BuildOp(onWidgets: (meta, __) {
-      final a = meta.domElement.attributes;
-      final url = constructFullUrl(a['href']);
-      if (url?.isEmpty != false) return null;
+    _chrOp ??= BuildOp(
+      defaultStyles: (_, __) => ['margin', '0.5em 0'],
+      onWidgets: (meta, __) {
+        final a = meta.domElement.attributes;
+        final url = constructFullUrl(a['href']);
+        if (url?.isEmpty != false) return null;
 
-      return [
-        _buildSpacing(meta),
-        buildWebView(url),
-        _buildSpacing(meta),
-      ];
-    });
+        final youtubeId = !Platform.isIOS && a.containsKey('data-chr-thumbnail')
+            ? RegExp(r'^https://img.youtube.com/vi/([^/]+)/0.jpg$')
+                .firstMatch(a['data-chr-thumbnail'])
+                ?.group(1)
+            : null;
+
+        final contents = youtubeId != null
+            ? YouTubeWidget(
+                youtubeId,
+                lowresThumbnailUrl: a['data-chr-thumbnail'],
+              )
+            : buildWebView(url);
+
+        return [contents];
+      },
+    );
     return _chrOp;
+  }
+
+  BuildOp get metaBbCodeOp {
+    _metaBbCodeOp ??= BuildOp(
+      onChild: (meta, e) =>
+          (e.localName == 'span' && !e.classes.contains('value'))
+              ? meta.isNotRenderable = true
+              : null,
+    );
+    return _metaBbCodeOp;
   }
 
   BuildOp get smilieOp {
@@ -148,9 +169,13 @@ class TinhteWidgetFactory extends WidgetFactory {
         final title = a['data-title'];
         if (!_kSmilies.containsKey(title)) return pieces;
 
-        return pieces
-          ..first.block.rebuildBits(
-              (b) => b is DataBit ? b.rebuild(data: _kSmilies[title]) : b);
+        final text = pieces.first.text;
+        for (final bit in List.unmodifiable(text.bits)) {
+          bit.detach();
+        }
+        text.addText(_kSmilies[title]);
+
+        return pieces;
       },
     );
     return _smilieOp;
@@ -210,66 +235,82 @@ class TinhteWidgetFactory extends WidgetFactory {
   }
 
   @override
-  NodeMetadata parseElement(NodeMetadata meta, dom.Element e) {
-    switch (e.localName) {
+  void parseTag(NodeMetadata meta, String tag, Map<dynamic, String> attrs) {
+    final clazz = attrs.containsKey('class') ? attrs['class'] : '';
+    switch (tag) {
       case 'a':
-        if (e.attributes.containsKey('data-chr') &&
-            e.attributes['data-chr'] == 'true' &&
-            e.attributes.containsKey('href')) {
-          return lazySet(null, buildOp: chrOp);
+        if (attrs.containsKey('data-chr') && attrs.containsKey('href')) {
+          meta.op = chrOp;
+          return;
         }
 
-        if (e.classes.contains('LbTrigger') &&
-            e.attributes.containsKey('data-height') &&
-            e.attributes.containsKey('data-permalink') &&
-            e.attributes.containsKey('data-width')) {
-          return lazySet(null,
-              buildOp: lbTrigger.prepareBuildOpForATag(meta, e));
+        if (clazz.contains('LinkExpander') && clazz.contains('expanded')) {
+          meta.op = linkExpander.buildOp;
+          return;
         }
 
-        if (e.classes.contains('LinkExpander') &&
-            e.classes.contains('expanded')) {
-          return lazySet(null, buildOp: linkExpander.buildOp);
+        if (clazz.contains('LbTrigger') &&
+            attrs.containsKey('data-height') &&
+            attrs.containsKey('data-permalink') &&
+            attrs.containsKey('data-width')) {
+          meta.op = lbTrigger.prepareThumbnailOp(attrs);
+          return;
         }
         break;
       case 'blockquote':
-        return lazySet(null, buildOp: blockquoteOp);
+        meta.op = blockquoteOp;
+        return;
       case 'div':
-        if (e.classes.contains('LinkExpander') &&
-            e.classes.contains('is-oembed')) {
-          return lazySet(null, buildOp: linkExpander.oembedOp);
+        if (clazz.contains('LinkExpander') && clazz.contains('is-oembed')) {
+          meta.op = linkExpander.oembedOp;
+          return;
+        }
+        break;
+      case 'ul':
+        if (clazz.contains('Tinhte_Galleria')) {
+          meta.op = galleria.buildOp;
+          return;
         }
         break;
       case 'script':
-        if (e.attributes.containsKey('src') &&
-            e.attributes['src'] == 'https://e.infogr.am/js/embed.js') {
-          return lazySet(null, buildOp: webViewDataUriOp);
+        if (attrs.containsKey('src') &&
+            attrs['src'] == 'https://e.infogr.am/js/embed.js') {
+          meta.op = webViewDataUriOp;
+          return;
+        }
+        break;
+      case 'span':
+        if (clazz.contains('bdImage_attachImage')) {
+          meta.op = lbTrigger.fullOp;
+          return;
+        }
+        if (clazz.contains('metaBbCode')) {
+          meta.op = metaBbCodeOp;
+          return;
+        }
+
+        if (clazz.contains('Tinhte_PhotoCompare')) {
+          meta.op = photoCompare.buildOp;
+          return;
+        }
+
+        if (clazz.contains('smilie')) {
+          meta.op = smilieOp;
+          return;
         }
         break;
     }
 
-    switch (e.className) {
-      case 'Tinhte_Galleria':
-        return lazySet(null, buildOp: galleria.buildOp);
-      case 'Tinhte_PhotoCompare':
-        return lazySet(null, buildOp: photoCompare.buildOp);
-      case 'bdImage_attachImage':
-        return lazySet(null, buildOp: lbTrigger.buildOp);
-      case 'smilie':
-        return lazySet(null, buildOp: smilieOp);
-    }
-
-    return super.parseElement(meta, e);
+    return super.parseTag(meta, tag, attrs);
   }
 
-  Iterable<Widget> _buildTextPadding(
-      BuilderContext bc, Iterable<Widget> ws, _) {
+  Iterable<Widget> _buildTextPadding(BuildContext _, Iterable<Widget> ws, __) {
     final output = <Widget>[SizedBox(height: kPostBodyPadding)];
 
     final last = ws.last;
     for (final widget in ws) {
       final isText = widget is RichText ||
-          (widget is core.ImageLayout &&
+          (widget is ImageLayout &&
               widget.width != null &&
               widget.width < deviceWidth);
       output.add(isText ? buildPadding(widget, _kTextPadding) : widget);

@@ -1,9 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:tinhte_api/feature_page.dart';
-
-import '../../api.dart';
-import '../../intl.dart';
+import 'package:tinhte_demo/src/widgets/tag/follow_button.dart';
+import 'package:tinhte_demo/src/intl.dart';
 
 class FpHeader extends StatelessWidget {
   final FeaturePage fp;
@@ -13,28 +12,28 @@ class FpHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) =>
       Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: <Widget>[
-        _buildImage() ?? Container(),
+        _buildImage() ?? const SizedBox.shrink(),
         Row(
           children: <Widget>[
             Expanded(
               child: _buildStats(
                     context,
                     fp.values?.tagUseCount,
-                    'discussions',
+                    l(context).tagLowercaseDiscussions,
                   ) ??
-                  Container(),
+                  const SizedBox.shrink(),
             ),
             Expanded(
               child: _buildStats(
                     context,
                     fp.values?.newsCount,
-                    'news',
+                    l(context).tagLowercaseNews,
                   ) ??
-                  Container(),
+                  const SizedBox.shrink(),
             ),
             Expanded(
               flex: 2,
-              child: _FollowButton(fp),
+              child: FollowButton(_FollowableFp(fp)),
             ),
           ],
         )
@@ -64,51 +63,20 @@ class FpHeader extends StatelessWidget {
           : null;
 }
 
-class _FollowButton extends StatefulWidget {
+class _FollowableFp extends Followable {
   final FeaturePage fp;
 
-  _FollowButton(this.fp) : assert(fp != null);
+  _FollowableFp(this.fp);
 
   @override
-  State<StatefulWidget> createState() => _FollowButtonState();
-}
-
-class _FollowButtonState extends State<_FollowButton> {
-  var _isRequesting = false;
-
-  bool get isFollowed => widget.fp.isFollowed == true;
+  bool get isFollowed => fp.isFollowed;
 
   @override
-  Widget build(BuildContext context) =>
-      widget.fp.links?.follow?.isNotEmpty == true
-          ? FlatButton(
-              child: Text(isFollowed ? 'Unfollow' : 'Follow'),
-              onPressed:
-                  _isRequesting ? null : isFollowed ? _unfollow : _follow,
-            )
-          : Container();
+  String get followersLink => fp.links?.follow;
 
-  void _follow() => prepareForApiAction(context, () {
-        if (_isRequesting) return;
-        setState(() => _isRequesting = true);
+  @override
+  String get name => fp.fullName;
 
-        apiPost(
-          ApiCaller.stateful(this),
-          widget.fp.links.follow,
-          onSuccess: (_) => setState(() => widget.fp.isFollowed = true),
-          onComplete: () => setState(() => _isRequesting = false),
-        );
-      });
-
-  void _unfollow() => prepareForApiAction(context, () {
-        if (_isRequesting) return;
-        setState(() => _isRequesting = true);
-
-        apiDelete(
-          ApiCaller.stateful(this),
-          widget.fp.links.follow,
-          onSuccess: (_) => setState(() => widget.fp.isFollowed = false),
-          onComplete: () => setState(() => _isRequesting = false),
-        );
-      });
+  @override
+  set isFollowed(bool v) => fp.isFollowed = v;
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tinhte_api/feature_page.dart';
-
-import '../../widgets/tag/widget.dart';
+import 'package:tinhte_demo/src/intl.dart';
+import 'package:tinhte_demo/src/widgets/tag/widget.dart';
 
 class FpSearchDelegate extends SearchDelegate {
   final List<FeaturePage> pages;
@@ -13,6 +13,7 @@ class FpSearchDelegate extends SearchDelegate {
         IconButton(
           icon: Icon(Icons.clear),
           onPressed: () => query = '',
+          tooltip: lm(context).cancelButtonLabel,
         )
       ];
 
@@ -20,6 +21,7 @@ class FpSearchDelegate extends SearchDelegate {
   Widget buildLeading(BuildContext context) => IconButton(
         icon: BackButtonIcon(),
         onPressed: () => close(context, null),
+        tooltip: lm(context).backButtonTooltip,
       );
 
   @override

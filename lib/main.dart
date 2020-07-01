@@ -1,45 +1,76 @@
 import 'dart:async';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
-
-import 'src/screens/home.dart';
-import 'src/widgets/menu/dark_theme.dart';
-import 'src/api.dart';
-import 'src/push_notification.dart';
+import 'package:timeago/timeago.dart' as timeago;
+import 'package:tinhte_demo/src/intl.dart';
+import 'package:tinhte_demo/src/screens/home.dart';
+import 'package:tinhte_demo/src/widgets/font_control.dart';
+import 'package:tinhte_demo/src/widgets/menu/dark_theme.dart';
+import 'package:tinhte_demo/src/widgets/dismiss_keyboard.dart';
+import 'package:tinhte_demo/src/api.dart';
+import 'package:tinhte_demo/src/push_notification.dart';
 
 void main() {
+  timeago.setLocaleMessages('vi', timeago.ViMessages());
+
   FlutterError.onError = Crashlytics.instance.recordFlutterError;
 
-  runZoned<Future<void>>(() async {
+  runZonedGuarded<Future<void>>(() async {
+    WidgetsFlutterBinding.ensureInitialized();
+
+    configureFcm();
+
     final darkTheme = await DarkTheme.create();
-    runApp(MyApp(darkTheme: darkTheme));
-  }, onError: Crashlytics.instance.recordError);
+    final fontScale = await FontScale.create();
+    runApp(MyApp(
+      darkTheme: darkTheme,
+      fontScale: fontScale,
+    ));
+  }, Crashlytics.instance.recordError);
 }
 
 class MyApp extends StatelessWidget {
   final DarkTheme darkTheme;
-  final primaryNavKey = GlobalKey<NavigatorState>();
+  final FontScale fontScale;
 
-  MyApp({this.darkTheme});
+  MyApp({
+    this.darkTheme,
+    this.fontScale,
+  });
 
   @override
-  Widget build(BuildContext context) => ChangeNotifierProvider<DarkTheme>.value(
+  Widget build(BuildContext context) => MultiProvider(
         child: Consumer<DarkTheme>(builder: (_, __, ___) => _buildApp()),
-        value: darkTheme,
+        providers: [
+          ChangeNotifierProvider<DarkTheme>.value(value: darkTheme),
+          ChangeNotifierProvider<FontScale>.value(value: fontScale),
+        ],
       );
 
   Widget _buildApp() => ApiApp(
         child: PushNotificationApp(
-          child: MaterialApp(
-            darkTheme: _theme(_themeDark),
-            home: HomeScreen(),
-            key: ValueKey("darkTheme=${darkTheme.value}"),
-            navigatorKey: primaryNavKey,
-            theme: _theme(_themeLight),
-            title: 'Tinh tế Demo',
+          child: DismissKeyboard(
+            MaterialApp(
+              darkTheme: _theme(_themeDark),
+              home: onLaunchMessageWidgetOr(HomeScreen()),
+              localizationsDelegates: [
+                const L10nDelegate(),
+                GlobalCupertinoLocalizations.delegate,
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+              ],
+              navigatorKey: primaryNavKey,
+              navigatorObservers: [FontControlWidget.routeObserver],
+              onGenerateTitle: (context) => l(context).appTitle,
+              supportedLocales: [
+                const Locale('en', ''),
+                const Locale('vi', ''),
+              ],
+              theme: _theme(_themeLight),
+            ),
           ),
-          primaryNavKey: primaryNavKey,
         ),
       );
 

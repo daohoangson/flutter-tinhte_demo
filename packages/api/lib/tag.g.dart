@@ -7,7 +7,9 @@ part of 'tag.dart';
 // **************************************************************************
 
 Tag _$TagFromJson(Map<String, dynamic> json) {
-  return Tag(json['tag_id'] as int)
+  return Tag(
+    json['tag_id'] as int,
+  )
     ..tagIsFollowed = json['tag_is_followed'] as bool
     ..tagText = json['tag_text'] as String
     ..tagUseCount = json['tag_use_count'] as int

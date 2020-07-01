@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:tinhte_api/content_list.dart';
+import 'package:tinhte_api/search.dart';
 import 'package:tinhte_api/thread.dart';
-
-import '../../screens/thread_view.dart';
-import '../../intl.dart';
-import '../image.dart';
+import 'package:tinhte_api/x_content_list.dart';
+import 'package:tinhte_demo/src/screens/thread_view.dart';
+import 'package:tinhte_demo/src/intl.dart';
+import 'package:tinhte_demo/src/widgets/image.dart';
 
 class HomeTop5Widget extends StatelessWidget {
-  final List<ThreadListItem> items;
+  final List<SearchResult<Thread>> items;
 
   HomeTop5Widget(this.items, {Key key})
       : assert(items?.length == 5),
@@ -89,14 +89,13 @@ class HomeTop5Widget extends StatelessWidget {
 }
 
 class _HomeTop5WidgetThread extends StatelessWidget {
-  final ListItem item;
+  final ContentListItem item;
   final Thread thread;
 
-  _HomeTop5WidgetThread(ThreadListItem tli, {Key key})
-      : assert(tli?.item != null),
-        assert(tli?.thread != null),
-        item = tli.item,
-        thread = tli.thread,
+  _HomeTop5WidgetThread(SearchResult<Thread> srt, {Key key})
+      : assert(srt?.content != null),
+        item = srt.listItem,
+        thread = srt.content,
         super(key: key);
 
   @override
@@ -105,7 +104,7 @@ class _HomeTop5WidgetThread extends StatelessWidget {
         <Widget>[
           _buildImage(),
           const SizedBox(height: 5),
-          _buildInfo(Theme.of(context)),
+          _buildInfo(context),
           const SizedBox(height: 5),
           _buildTitle(),
         ],
@@ -131,7 +130,8 @@ class _HomeTop5WidgetThread extends StatelessWidget {
         ),
       );
 
-  Widget _buildInfo(ThemeData theme) {
+  Widget _buildInfo(BuildContext context) {
+    final theme = Theme.of(context);
     final List<TextSpan> spans = List();
 
     spans.add(TextSpan(
@@ -140,7 +140,7 @@ class _HomeTop5WidgetThread extends StatelessWidget {
     ));
 
     if (item?.itemDate != null) {
-      spans.add(TextSpan(text: " ${formatTimestamp(item.itemDate)}"));
+      spans.add(TextSpan(text: " ${formatTimestamp(context, item.itemDate)}"));
     }
 
     return RichText(
@@ -156,7 +156,7 @@ class _HomeTop5WidgetThread extends StatelessWidget {
   Widget _buildTitle() => Text(thread.threadTitle);
 
   ThreadImage _chooseImageForBox(Thread t, BuildContext c, BoxConstraints bc) {
-    if (t.threadThumbnail == null) return t.threadImage;
+    if (t.threadThumbnail == null) return getThreadImage(t);
 
     final devicePixelRatio = MediaQuery.of(c).devicePixelRatio;
     final thumbnail = t.threadThumbnail;
@@ -169,6 +169,6 @@ class _HomeTop5WidgetThread extends StatelessWidget {
         break;
     }
 
-    return t.threadImage;
+    return getThreadImage(t);
   }
 }

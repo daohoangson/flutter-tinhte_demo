@@ -6,13 +6,12 @@ import 'package:provider/provider.dart';
 import 'package:tinhte_api/notification.dart' as api;
 import 'package:tinhte_api/oauth_token.dart';
 import 'package:tinhte_api/user.dart';
-
-import '../api.dart';
-import '../config.dart';
-import '../intl.dart';
-import '../push_notification.dart';
-import 'html.dart';
-import 'super_list.dart';
+import 'package:tinhte_demo/src/widgets/html.dart';
+import 'package:tinhte_demo/src/widgets/super_list.dart';
+import 'package:tinhte_demo/src/api.dart';
+import 'package:tinhte_demo/src/config.dart';
+import 'package:tinhte_demo/src/intl.dart';
+import 'package:tinhte_demo/src/push_notification.dart';
 
 int _subscribedUserId = 0;
 
@@ -97,7 +96,7 @@ class _NotificationsState extends State<NotificationsWidget> {
   }
 
   Widget _buildTimestamp(BuildContext context, api.Notification n) => Text(
-        formatTimestamp(n.notificationCreateDate),
+        formatTimestamp(context, n.notificationCreateDate),
         style: Theme.of(context).textTheme.caption,
       );
 
@@ -143,8 +142,8 @@ class _NotificationsState extends State<NotificationsWidget> {
   ) async {
     if (fcmToken?.isNotEmpty != true) return;
 
-    final url = "$configPushServer/subscribe";
-    final hubUri = "$configApiRoot?subscriptions";
+    final url = "${config.pushServer}/subscribe";
+    final hubUri = "${config.apiRoot}?subscriptions";
     final hubTopic = "user_notification_${user.userId}";
 
     final response = await http.post(
@@ -154,12 +153,12 @@ class _NotificationsState extends State<NotificationsWidget> {
         'device_id': fcmToken,
         'hub_uri': hubUri,
         'hub_topic': hubTopic,
-        'oauth_client_id': configClientId,
+        'oauth_client_id': config.clientId,
         'oauth_token': token.accessToken,
         'extra_data[click_action]': 'FLUTTER_NOTIFICATION_CLICK',
         'extra_data[notification]': '1',
         'extra_data[platform]': Theme.of(context).platform.toString(),
-        'extra_data[project]': configFcmProjectId,
+        'extra_data[project]': config.fcmProjectId,
       },
     );
 

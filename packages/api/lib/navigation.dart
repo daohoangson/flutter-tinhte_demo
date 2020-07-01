@@ -1,7 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
 import 'node.dart';
-import 'src/_.dart';
 
 part 'navigation.g.dart';
 
@@ -9,13 +8,13 @@ const NavigationTypeCategory = 'category';
 const NavigationTypeForum = 'forum';
 const NavigationTypeLinkForum = 'linkforum';
 
-@JsonSerializable(createToJson: false, fieldRename: FieldRename.snake)
+@JsonSerializable()
 class Element {
   bool hasSubElements;
 
-  @JsonKey(toJson: none)
   ElementLinks links;
 
+  int navigationDepth;
   final int navigationId;
   int navigationParentId;
   final String navigationType;
@@ -44,7 +43,7 @@ class Element {
   }
 }
 
-@JsonSerializable(createToJson: false)
+@JsonSerializable()
 class ElementLinks {
   String permalink;
 
@@ -56,13 +55,12 @@ class ElementLinks {
       _$ElementLinksFromJson(json);
 }
 
-@JsonSerializable(createToJson: false, fieldRename: FieldRename.snake)
+@JsonSerializable()
 class LinkForum extends Node {
   String linkDescription;
   final int linkId;
   String linkTitle;
 
-  @JsonKey(toJson: none)
   LinkForumLinks links;
 
   @override
@@ -76,7 +74,7 @@ class LinkForum extends Node {
       _$LinkForumFromJson(json);
 }
 
-@JsonSerializable(createToJson: false)
+@JsonSerializable()
 class LinkForumLinks {
   String target;
 

@@ -5,19 +5,29 @@ const _kThreadWidgetSpacing = const SizedBox(height: _kThreadWidgetPadding);
 
 class ThreadWidget extends StatelessWidget {
   final Thread thread;
+  final UserFeedData feedData;
 
-  ThreadWidget(this.thread, {Key key})
-      : assert(thread != null),
+  ThreadWidget(
+    this.thread, {
+    Key key,
+    this.feedData,
+  })  : assert(thread != null),
         super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final _isBackgroundPost = isBackgroundPost(thread.firstPost);
+    final _isTinhteFact = isTinhteFact(thread);
+    final _isCustomPost = _isBackgroundPost || _isTinhteFact;
+    final _isThreadTitleRedundant =
+        _isCustomPost || isThreadTitleRedundant(thread);
+
     final children = <Widget>[
       _kThreadWidgetSpacing,
       _buildTextPadding(_buildInfo(context)),
     ];
 
-    if (!isThreadTitleRedundant(thread)) {
+    if (!_isThreadTitleRedundant) {
       children.addAll([
         _kThreadWidgetSpacing,
         _buildTextPadding(_buildTitle(context)),
@@ -26,11 +36,15 @@ class ThreadWidget extends StatelessWidget {
 
     children.addAll([
       _kThreadWidgetSpacing,
-      _buildTextPadding(_buildBody(context)),
+      _buildTextPadding(
+        _isBackgroundPost
+            ? BackgroundPost(thread.firstPost)
+            : (_isTinhteFact ? TinhteFact(thread) : _buildBody(context)),
+      ),
     ]);
 
     final image = _buildImage();
-    if (image != null) {
+    if (!_isCustomPost && image != null) {
       children.addAll([
         _kThreadWidgetSpacing,
         image,
@@ -41,16 +55,22 @@ class ThreadWidget extends StatelessWidget {
 
     Widget built = _buildCard(context, children);
 
-    if (thread.threadIsSticky) built = _buildBanner(built);
+    final popupMenuButton =
+        buildPopupMenuButtonForThread(context, thread, feedData);
+    if (popupMenuButton != null) {
+      built = _buildPopupMenu(built, popupMenuButton);
+    } else {
+      if (thread.threadIsSticky) built = _buildBanner(context, built);
+    }
 
     return built;
   }
 
-  Widget _buildBanner(Widget child) => ClipRect(
+  Widget _buildBanner(BuildContext context, Widget child) => ClipRect(
         child: Banner(
           child: child,
           location: BannerLocation.topEnd,
-          message: 'Sticky',
+          message: l(context).threadStickyBanner,
         ),
       );
 
@@ -74,10 +94,14 @@ class ThreadWidget extends StatelessWidget {
       );
 
   Widget _buildImage() {
-    final image = thread.threadImage;
-    if (image?.displayMode != 'cover' ||
-        image.width == null ||
-        image.height == null ||
+    final image = config.threadWidgetShowCoverImageOnly
+        ? thread.threadImage
+        : getThreadImage(thread);
+    if (config.threadWidgetShowCoverImageOnly && image?.displayMode != 'cover')
+      return null;
+
+    if (image.width != null &&
+        image.height != null &&
         image.height > image.width) return null;
 
     return ThreadImageWidget(
@@ -89,7 +113,7 @@ class ThreadWidget extends StatelessWidget {
 
   Widget _buildInfo(BuildContext context) {
     final theme = Theme.of(context);
-    final style = theme.textTheme.subhead;
+    final style = theme.textTheme.subtitle1;
 
     return Row(
       children: <Widget>[
@@ -102,7 +126,7 @@ class ThreadWidget extends StatelessWidget {
               _buildInfoUsername(theme, style),
               const SizedBox(height: _kThreadWidgetPadding / 4),
               Text(
-                formatTimestamp(thread.threadCreateDate),
+                formatTimestamp(context, thread.threadCreateDate),
                 style: theme.textTheme.caption,
                 textScaleFactor: 1,
               ),
@@ -124,7 +148,7 @@ class ThreadWidget extends StatelessWidget {
     final buffer = StringBuffer(thread.creatorUsername ?? '');
     final inlineSpans = <InlineSpan>[];
 
-    if (thread.creatorHasVerifiedBadge) {
+    if (thread.creatorHasVerifiedBadge == true) {
       buffer.write(' ');
       inlineSpans.add(WidgetSpan(
         alignment: PlaceholderAlignment.middle,
@@ -147,8 +171,16 @@ class ThreadWidget extends StatelessWidget {
     );
   }
 
+  Widget _buildPopupMenu(Widget child, PopupMenuButton popupMenuButton) =>
+      Stack(
+        children: <Widget>[
+          child,
+          Align(alignment: Alignment.topRight, child: popupMenuButton)
+        ],
+      );
+
   Widget _buildTextPadding(Widget child) => Padding(
-        padding: EdgeInsets.symmetric(horizontal: _kThreadWidgetPadding),
+        padding: const EdgeInsets.symmetric(horizontal: _kThreadWidgetPadding),
         child: child,
       );
 
@@ -207,7 +239,7 @@ class _ThreadWidgetActionsState extends State<_ThreadWidgetActions> {
               Expanded(
                 child: FlatButton.icon(
                   icon: Icon(FontAwesomeIcons.commentAlt),
-                  label: Text('Reply'),
+                  label: Text(l(context).postReply),
                   onPressed: () => Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (_) => ThreadViewScreen(
@@ -221,7 +253,7 @@ class _ThreadWidgetActionsState extends State<_ThreadWidgetActions> {
               Expanded(
                 child: FlatButton.icon(
                   icon: Icon(FontAwesomeIcons.shareAlt),
-                  label: Text('Share'),
+                  label: Text(l(context).share),
                   onPressed: linkPermalink?.isNotEmpty == true
                       ? () => Share.share(linkPermalink)
                       : null,
@@ -236,7 +268,9 @@ class _ThreadWidgetActionsState extends State<_ThreadWidgetActions> {
         icon: postIsLiked
             ? const Icon(FontAwesomeIcons.solidHeart)
             : const Icon(FontAwesomeIcons.heart),
-        label: postIsLiked ? const Text('Unlike') : const Text('Like'),
+        label: postIsLiked
+            ? Text(l(context).postUnlike)
+            : Text(l(context).postLike),
         onPressed: _isLiking
             ? null
             : linkLikes?.isNotEmpty != true
@@ -271,9 +305,7 @@ class _ThreadWidgetActionsState extends State<_ThreadWidgetActions> {
 
   Widget _buildCounterReply(TextStyle textStyle) => threadReplyCount > 0
       ? Text(
-          threadReplyCount > 1
-              ? "${formatNumber(threadReplyCount)} replies"
-              : '1 reply',
+          l(context).statsXReplies(threadReplyCount),
           style: textStyle,
           textScaleFactor: 1,
         )

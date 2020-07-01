@@ -1,10 +1,8 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import 'src/_.dart';
-
 part 'user.g.dart';
 
-@JsonSerializable(fieldRename: FieldRename.snake)
+@JsonSerializable()
 class User {
   int userId;
   bool userHasVerifiedBadge;
@@ -21,21 +19,17 @@ class User {
   int userUnreadNotificationCount;
   String username;
 
-  @JsonKey(toJson: none)
   UserLinks links;
 
-  @JsonKey(toJson: none)
   UserPermissions permissions;
 
-  @JsonKey(toJson: none)
   UserRank rank;
 
   User(this.userId);
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
-  Map<String, dynamic> toJson() => _$UserToJson(this);
 }
 
-@JsonSerializable(createToJson: false, fieldRename: FieldRename.snake)
+@JsonSerializable()
 class UserLinks {
   String avatar;
   String avatarBig;
@@ -52,7 +46,7 @@ class UserLinks {
       _$UserLinksFromJson(json);
 }
 
-@JsonSerializable(createToJson: false, fieldRename: FieldRename.snake)
+@JsonSerializable()
 class UserPermissions {
   bool edit;
   bool follow;
@@ -64,12 +58,12 @@ class UserPermissions {
       _$UserPermissionsFromJson(json);
 }
 
-@JsonSerializable(createToJson: false, fieldRename: FieldRename.snake)
+@JsonSerializable()
 class UserRank {
   int rankGroupId;
   int rankLevel;
   String rankName;
-  
+
   // TODO: handle rank_points, it could be String or int (-1)
 
   UserRank();

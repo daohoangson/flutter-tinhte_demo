@@ -2,17 +2,18 @@ part of '../html.dart';
 
 class LbTrigger {
   final captions = Map<int, Widget>();
+  final hashCodes = <int>[0];
   final sources = <String>[];
   final WidgetFactory wf;
 
-  BuildOp _buildOp;
+  BuildOp _fullOp;
 
   LbTrigger({this.wf});
 
   Widget buildGestureDetector(int index, Widget child) =>
-      Builder(builder: (c) => buildGestureDetectorWithContext(c, index, child));
+      Builder(builder: (c) => buildGestureDetectorWithContext(c, child, index));
 
-  Widget buildGestureDetectorWithContext(BuildContext c, int i, Widget child) =>
+  Widget buildGestureDetectorWithContext(BuildContext c, Widget child, int i) =>
       GestureDetector(
         child: child,
         onTap: () => Navigator.push(
@@ -23,8 +24,7 @@ class LbTrigger {
         ),
       );
 
-  BuildOp prepareBuildOpForATag(NodeMetadata meta, dom.Element e) {
-    final a = e.attributes;
+  BuildOp prepareThumbnailOp(Map<dynamic, String> a) {
     if (!a.containsKey('data-height') ||
         !a.containsKey('data-width') ||
         !a.containsKey('href')) return null;
@@ -46,52 +46,69 @@ class LbTrigger {
       childWidth = childHeight * ratio;
     }
 
-    final index = sources.length;
-    sources.add(url);
-
     return BuildOp(
       onChild: (meta, e) {
-        if (e.localName != 'img') return meta;
+        if (e.localName != 'img') return;
 
-        return lazySet(
-          meta,
-          styles: [
-            'height',
-            "${childHeight.toString()}px",
-            'width',
-            "${childWidth.toString()}px",
-          ],
-        );
+        meta.styles = [
+          'height',
+          "${childHeight.toString()}px",
+          'width',
+          "${childWidth.toString()}px",
+        ];
       },
-      onPieces: (meta, pieces) =>
-          pieces.map((piece) => piece.hasWidgets ? piece : piece
-            ..block.rebuildBits(
-              (b) => b is WidgetBit
-                  ? b.rebuild(
-                      child: buildGestureDetector(
-                        index,
-                        b.widgetSpan.child,
-                      ),
-                    )
-                  : b,
-            )),
+      onPieces: (meta, pieces) {
+        final index = _addSource(meta.domElement, url);
+
+        for (final piece in pieces) {
+          if (piece.hasWidgets) continue;
+          for (final bit in piece.text.bits) {
+            if (bit is TextWidget) {
+              bit.widget.wrapWith(
+                  (context, widgets, index) => widgets.map((widget) =>
+                      buildGestureDetectorWithContext(context, widget, index)),
+                  index);
+            }
+          }
+        }
+        return pieces;
+      },
     );
   }
 
-  BuildOp get buildOp {
-    _buildOp ??= BuildOp(
+  BuildOp get fullOp {
+    _fullOp = BuildOp(
       onChild: (meta, e) {
-        if (e.localName != 'img') return meta;
+        if (e.localName != 'img') return;
 
-        return lazySet(
-          meta,
-          isBlockElement: true,
-          styles: ['margin', '0.5em 0'],
-        );
+        final a = e.attributes;
+        final href = a['src'];
+        final url = wf.constructFullUrl(href);
+        if (url == null) return;
+
+        final index = _addSource(e, url);
+        meta
+          ..op = BuildOp(
+            onWidgets: (_, widgets) =>
+                widgets.map((widget) => buildGestureDetector(index, widget)),
+          )
+          ..styles = ['margin', '0.5em 0'];
       },
     );
 
-    return _buildOp;
+    return _fullOp;
+  }
+
+  int _addSource(dom.Element e, String source) {
+    final rootElement = _rootElement(e);
+    if (hashCodes.last != rootElement.hashCode) {
+      hashCodes.add(rootElement.hashCode);
+      sources.clear();
+    }
+    final index = sources.length;
+    sources.add(source);
+
+    return index;
   }
 }
 
@@ -147,7 +164,15 @@ class _ScreenState extends State<_Screen> {
             PhotoViewGallery.builder(
               builder: _buildItem,
               itemCount: widget.sources.length,
-              loadingChild: Container(
+              loadingBuilder: (context, event) => Container(
+                child: Center(
+                  child: CircularProgressIndicator(
+                    value: event == null
+                        ? null
+                        : event.cumulativeBytesLoaded /
+                            event.expectedTotalBytes,
+                  ),
+                ),
                 decoration: BoxDecoration(color: Colors.black),
               ),
               pageController: widget.pageController,
@@ -171,10 +196,10 @@ class _ScreenState extends State<_Screen> {
             style: TextStyle(color: Colors.white70),
             child: widget.captions.containsKey(index)
                 ? widget.captions[index]
-                : Text("${index + 1} of ${widget.sources.length}"),
+                : Text(l(context).navXOfY(index + 1, widget.sources.length)),
           ),
           FlatButton(
-            child: Text('OK'),
+            child: Text(lm(context).okButtonLabel),
             colorBrightness: Brightness.dark,
             onPressed: () => Navigator.of(context).pop(),
           )
@@ -184,6 +209,12 @@ class _ScreenState extends State<_Screen> {
 
   PhotoViewGalleryPageOptions _buildItem(BuildContext context, int index) =>
       PhotoViewGalleryPageOptions(
-        imageProvider: CachedNetworkImageProvider(widget.sources[index]),
+        imageProvider: NetworkImage(widget.sources[index]),
       );
+}
+
+dom.Element _rootElement(dom.Element e) {
+  var x = e;
+  while (x.parent != null) x = x.parent;
+  return x;
 }

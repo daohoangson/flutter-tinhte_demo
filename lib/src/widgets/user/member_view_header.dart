@@ -2,9 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tinhte_api/user.dart';
-
-import '../../api.dart';
-import '../../intl.dart';
+import 'package:tinhte_demo/src/api.dart';
+import 'package:tinhte_demo/src/intl.dart';
 
 class MemberViewHeader extends StatelessWidget {
   final User user;
@@ -51,11 +50,11 @@ class MemberViewHeader extends StatelessWidget {
               children: <Widget>[
                 Text(
                   user.username,
-                  style: theme.textTheme.subhead
+                  style: theme.textTheme.subtitle1
                       .copyWith(fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  "Joined: ${formatTimestamp(user.userRegisterDate)}",
+                  "${l(context).userRegisterDate}: ${formatTimestamp(context, user.userRegisterDate)}",
                   style: theme.textTheme.caption,
                 ),
               ],
@@ -123,7 +122,8 @@ class _FollowButtonState extends State<_FollowButton> {
   Widget build(BuildContext context) =>
       widget.user.links?.followers?.isNotEmpty == true
           ? FlatButton(
-              child: Text(isFollowed ? 'Unfollow' : 'Follow'),
+              child: Text(
+                  isFollowed ? l(context).userUnfollow : l(context).userFollow),
               onPressed: widget.user.permissions?.follow == true
                   ? (_isRequesting ? null : isFollowed ? _unfollow : _follow)
                   : null,
@@ -170,15 +170,16 @@ class _IgnoreButtonState extends State<_IgnoreButton> {
   bool get isIgnored => widget.user.userIsIgnored == true;
 
   @override
-  Widget build(BuildContext context) =>
-      widget.user.links?.ignore?.isNotEmpty == true
-          ? FlatButton(
-              child: Text(isIgnored ? 'Unignore' : 'Ignore'),
-              onPressed: widget.user.permissions?.ignore == true
-                  ? (_isRequesting ? null : isIgnored ? _unignore : _ignore)
-                  : null,
-            )
-          : Container();
+  Widget build(BuildContext context) => widget.user.links?.ignore?.isNotEmpty ==
+          true
+      ? FlatButton(
+          child:
+              Text(isIgnored ? l(context).userUnignore : l(context).userIgnore),
+          onPressed: widget.user.permissions?.ignore == true
+              ? (_isRequesting ? null : isIgnored ? _unignore : _ignore)
+              : null,
+        )
+      : Container();
 
   void _ignore() => prepareForApiAction(context, () {
         if (_isRequesting) return;

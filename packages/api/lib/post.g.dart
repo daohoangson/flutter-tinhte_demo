@@ -7,7 +7,9 @@ part of 'post.dart';
 // **************************************************************************
 
 Post _$PostFromJson(Map<String, dynamic> json) {
-  return Post(json['post_id'] as int)
+  return Post(
+    json['post_id'] as int,
+  )
     ..postAttachmentCount = json['post_attachment_count'] as int
     ..postBody = json['post_body'] as String
     ..postBodyHtml = json['post_body_html'] as String
@@ -48,41 +50,6 @@ Post _$PostFromJson(Map<String, dynamic> json) {
         ? null
         : UserRank.fromJson(json['poster_rank'] as Map<String, dynamic>);
 }
-
-Map<String, dynamic> _$PostToJson(Post instance) => <String, dynamic>{
-      'post_attachment_count': instance.postAttachmentCount,
-      'post_body': instance.postBody,
-      'post_body_html': instance.postBodyHtml,
-      'post_body_plain_text': instance.postBodyPlainText,
-      'post_create_date': instance.postCreateDate,
-      'post_id': instance.postId,
-      'post_is_deleted': instance.postIsDeleted,
-      'post_is_first_post': instance.postIsFirstPost,
-      'post_is_liked': instance.postIsLiked,
-      'post_is_published': instance.postIsPublished,
-      'post_like_count': instance.postLikeCount,
-      'post_update_date': instance.postUpdateDate,
-      'poster_has_verified_badge': instance.posterHasVerifiedBadge,
-      'poster_user_id': instance.posterUserId,
-      'poster_username': instance.posterUsername,
-      'signature': instance.signature,
-      'signature_html': instance.signatureHtml,
-      'signature_plain_text': instance.signaturePlainText,
-      'thread_id': instance.threadId,
-      'user_is_ignored': instance.userIsIgnored,
-      'attachments':
-          instance.attachments == null ? null : none(instance.attachments),
-      'links': instance.links == null ? null : none(instance.links),
-      'permissions':
-          instance.permissions == null ? null : none(instance.permissions),
-      'post_replies':
-          instance.postReplies == null ? null : none(instance.postReplies),
-      'post_has_other_replies': instance.postHasOtherReplies,
-      'post_reply_to': instance.postReplyTo,
-      'post_reply_depth': instance.postReplyDepth,
-      'poster_rank':
-          instance.posterRank == null ? null : none(instance.posterRank)
-    };
 
 PostLinks _$PostLinksFromJson(Map<String, dynamic> json) {
   return PostLinks()

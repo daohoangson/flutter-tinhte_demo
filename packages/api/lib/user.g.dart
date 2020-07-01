@@ -7,7 +7,9 @@ part of 'user.dart';
 // **************************************************************************
 
 User _$UserFromJson(Map<String, dynamic> json) {
-  return User(json['user_id'] as int)
+  return User(
+    json['user_id'] as int,
+  )
     ..userHasVerifiedBadge = json['user_has_verified_badge'] as bool
     ..userIsFollowed = json['user_is_followed'] as bool
     ..userIsIgnored = json['user_is_ignored'] as bool
@@ -32,27 +34,6 @@ User _$UserFromJson(Map<String, dynamic> json) {
         ? null
         : UserRank.fromJson(json['rank'] as Map<String, dynamic>);
 }
-
-Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
-      'user_id': instance.userId,
-      'user_has_verified_badge': instance.userHasVerifiedBadge,
-      'user_is_followed': instance.userIsFollowed,
-      'user_is_ignored': instance.userIsIgnored,
-      'user_is_valid': instance.userIsValid,
-      'user_is_verified': instance.userIsVerified,
-      'user_is_visitor': instance.userIsVisitor,
-      'user_last_seen_date': instance.userLastSeenDate,
-      'user_like_count': instance.userLikeCount,
-      'user_message_count': instance.userMessageCount,
-      'user_register_date': instance.userRegisterDate,
-      'user_title': instance.userTitle,
-      'user_unread_notification_count': instance.userUnreadNotificationCount,
-      'username': instance.username,
-      'links': instance.links == null ? null : none(instance.links),
-      'permissions':
-          instance.permissions == null ? null : none(instance.permissions),
-      'rank': instance.rank == null ? null : none(instance.rank)
-    };
 
 UserLinks _$UserLinksFromJson(Map<String, dynamic> json) {
   return UserLinks()

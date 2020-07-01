@@ -1,10 +1,8 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import 'src/_.dart';
-
 part 'notification.g.dart';
 
-@JsonSerializable(createToJson: false, fieldRename: FieldRename.snake)
+@JsonSerializable()
 class Notification {
   String contentAction;
   int contentId;
@@ -17,7 +15,6 @@ class Notification {
   bool notificationIsUnread;
   String notificationType;
 
-  @JsonKey(toJson: none)
   NotificationLinks links;
 
   Notification(this.notificationId);
@@ -25,7 +22,7 @@ class Notification {
       _$NotificationFromJson(json);
 }
 
-@JsonSerializable(createToJson: false, fieldRename: FieldRename.snake)
+@JsonSerializable()
 class NotificationLinks {
   String content;
   String creatorAvatar;

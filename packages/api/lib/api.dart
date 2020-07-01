@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'package:async/async.dart';
 import 'package:http/http.dart';
 import 'package:path/path.dart';
 
@@ -81,7 +80,8 @@ class Api {
       "password": password,
     });
 
-    return OauthToken.fromJson(ObtainMethod.UsernamePassword, json);
+    return OauthToken.fromJson(json)
+      ..obtainMethod = ObtainMethod.UsernamePassword;
   }
 
   Future<OauthToken> refreshToken(OauthToken token) async {
@@ -95,7 +95,7 @@ class Api {
       "refresh_token": refreshToken,
     });
 
-    return OauthToken.fromJson(token.obtainMethod, json);
+    return OauthToken.fromJson(json)..obtainMethod = token.obtainMethod;
   }
 
   Future<dynamic> deleteJson(String path, {Map<String, String> bodyFields}) {
@@ -147,12 +147,57 @@ class Api {
   }
 }
 
-class ApiError extends Error {
-  final String message;
+abstract class ApiError extends Error {
+  String get message;
 
-  ApiError({String message, List<String> messages})
-      : message = messages != null ? messages.join(', ') : message;
+  bool get isHtml => false;
 
   @override
   String toString() => "Api error: $message";
+}
+
+class ApiErrorMapped extends ApiError {
+  final Map<String, String> errors;
+
+  ApiErrorMapped(this.errors);
+
+  @override
+  String get message => errors.values.join(', ');
+
+  @override
+  bool get isHtml => true;
+}
+
+class ApiErrorSingle extends ApiError {
+  @override
+  final String message;
+
+  @override
+  final bool isHtml;
+
+  ApiErrorSingle(this.message, {this.isHtml = false});
+}
+
+class ApiErrorUnexpectedStatusCode extends ApiError {
+  final int statusCode;
+
+  ApiErrorUnexpectedStatusCode(this.statusCode);
+
+  @override
+  String get message => 'Unexpected status code: $statusCode';
+}
+
+class ApiErrors extends ApiError {
+  final Iterable<String> messages;
+
+  ApiErrors(this.messages);
+
+  @override
+  String get message => messages.join(', ');
+
+  @override
+  bool get isHtml => true;
+
+  @override
+  String toString() => "Api errors: $messages";
 }

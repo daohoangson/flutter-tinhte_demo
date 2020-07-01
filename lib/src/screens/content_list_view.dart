@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:tinhte_api/content_list.dart';
-
-import '../widgets/home/thread.dart';
-import '../widgets/super_list.dart';
-
-const kContentListViewThumbnailWidth = 200.0;
+import 'package:tinhte_api/search.dart';
+import 'package:tinhte_api/thread.dart';
+import 'package:tinhte_demo/src/constants.dart';
+import 'package:tinhte_demo/src/widgets/home/thread.dart';
+import 'package:tinhte_demo/src/widgets/super_list.dart';
 
 class ContentListViewScreen extends StatelessWidget {
   final int listId;
@@ -23,22 +22,19 @@ class ContentListViewScreen extends StatelessWidget {
         appBar: AppBar(
           title: Text(title),
         ),
-        body: SuperListView<ThreadListItem>(
+        body: SuperListView<SearchResult<Thread>>(
           fetchPathInitial: "lists/$listId/threads?limit=20"
-              '&_bdImageApiThreadThumbnailWidth=${(kContentListViewThumbnailWidth * 3).toInt()}'
+              '&_bdImageApiThreadThumbnailWidth=${(kThreadThumbnailWidth * 3).toInt()}'
               '&_bdImageApiThreadThumbnailHeight=sh',
           fetchOnSuccess: _fetchOnSuccess,
-          itemBuilder: (_, __, thread) => HomeThreadWidget(
-            thread,
-            imageWidth: kContentListViewThumbnailWidth,
-          ),
+          itemBuilder: (_, __, thread) => HomeThreadWidget(thread),
         ),
       );
 
-  void _fetchOnSuccess(Map json, FetchContext<ThreadListItem> fc) {
+  void _fetchOnSuccess(Map json, FetchContext<SearchResult<Thread>> fc) {
     if (!json.containsKey('threads')) return;
 
     final list = json['threads'] as List;
-    fc.items.addAll(list.map((j) => ThreadListItem.fromJson(j)));
+    fc.items.addAll(list.map((j) => SearchResult<Thread>.fromJson(j)));
   }
 }

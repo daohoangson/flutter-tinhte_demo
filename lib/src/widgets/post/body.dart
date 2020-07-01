@@ -1,9 +1,10 @@
 part of '../posts.dart';
 
 TextStyle getPostBodyTextStyle(BuildContext context, bool isFirstPost) {
-  final themeStyle = Theme.of(context).textTheme.body1;
+  final themeStyle = Theme.of(context).textTheme.bodyText2;
   return themeStyle.copyWith(
-    fontSize: themeStyle.fontSize + (isFirstPost ? 1 : 0),
+    fontSize: (themeStyle.fontSize + (isFirstPost ? 1 : 0)) *
+        context.watch<FontScale>().value,
   );
 }
 
@@ -20,7 +21,7 @@ class _PostBodyWidget extends StatelessWidget {
           if (post.postIsDeleted)
             return Padding(
               child: Text(
-                'Deleted post.',
+                l(context).postDeleted,
                 style: Theme.of(context).textTheme.caption.copyWith(
                       decoration: TextDecoration.lineThrough,
                     ),

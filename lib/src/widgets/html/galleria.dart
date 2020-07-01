@@ -17,13 +17,13 @@ class Galleria {
       onChild: (meta, e) {
         switch (e.localName) {
           case 'a':
-            meta = lazySet(null, buildOp: childOpA);
+            meta.op = childOpA;
             break;
           case 'img':
-            meta = lazySet(meta, isBlockElement: true);
+            meta.isBlockElement = true;
             break;
           case 'li':
-            meta = lazySet(meta, buildOp: childOpLi);
+            meta.op = childOpLi;
             break;
         }
 
@@ -57,14 +57,23 @@ class Galleria {
   }
 
   BuildOp get childOpA {
-    _childOpA ??= BuildOp(onWidgets: (meta, widgets) {
-      final a = meta.domElement.attributes;
-      if (a.containsKey('href') && widgets.length == 1) {
-        return [Text(a['href']), widgets.first];
-      }
+    _childOpA ??= BuildOp(
+      onPieces: (meta, pieces) {
+        final a = meta.domElement.attributes;
+        if (!a.containsKey('href')) return pieces;
 
-      return null;
-    });
+        return pieces.map(
+          (piece) {
+            if (!piece.hasWidgets || piece.widgets.length != 1) return piece;
+            final first = piece.widgets.first;
+            if (first is! ImageLayout) return piece;
+
+            return BuiltPiece.widgets([_GalleriaPlaceholder(a['href'], first)]);
+          },
+        );
+      },
+      priority: 0,
+    );
 
     return _childOpA;
   }
@@ -74,12 +83,11 @@ class Galleria {
       Widget caption, image;
       String source;
       for (final widget in widgets) {
-        if (widget is WidgetPlaceholder<TextBlock>) {
+        if (widget is WidgetPlaceholder<TextBits>) {
           caption = widget;
-        } else if (widget is core.ImageLayout) {
+        } else if (widget is _GalleriaPlaceholder) {
           image = Image(image: widget.image, fit: BoxFit.cover);
-        } else if (widget is Text) {
-          source = widget.data;
+          source = widget.source;
         }
       }
 
@@ -127,4 +135,17 @@ class _GalleriaItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => image;
+}
+
+class _GalleriaPlaceholder extends WidgetPlaceholder<Galleria> {
+  final String source;
+  final ImageProvider image;
+
+  _GalleriaPlaceholder(this.source, ImageLayout imageLayout)
+      : image = imageLayout.image,
+        super(builder: _builder, children: [imageLayout]);
+
+  static Iterable<Widget> _builder(
+          BuildContext _, Iterable<Widget> children, Galleria __) =>
+      children;
 }

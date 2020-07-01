@@ -35,6 +35,7 @@ class PostsState extends State<PostsWidget> {
         providers: [
           Provider<Thread>.value(value: _thread),
           ThreadNavigationWidget.buildProvider(),
+          PollWidget.buildProvider(),
         ],
         child: SuperListView<_PostListItem>(
           enableScrollToIndex: true,
@@ -97,7 +98,7 @@ class PostsState extends State<PostsWidget> {
     if (state.isFetching) {
       return Stack(children: <Widget>[
         const Divider(height: _kPageIndicatorHeight),
-        _buildPageIndicatorText(context, 'Loading...'),
+        _buildPageIndicatorText(context, l(context).loadingEllipsis),
       ]);
     }
 
@@ -105,7 +106,9 @@ class PostsState extends State<PostsWidget> {
       const Divider(height: _kPageIndicatorHeight),
       _buildPageIndicatorText(
         context,
-        total == null ? "Page $page" : "Page $page of $total",
+        total == null
+            ? l(context).navPageX(page)
+            : l(context).navXOfY(page, total),
       ),
     ];
 
@@ -113,7 +116,7 @@ class PostsState extends State<PostsWidget> {
       if (page > 2) {
         children.add(_buildPageIndicatorText(
           context,
-          "previous",
+          l(context).navLowercasePrevious,
           alignment: Alignment.centerLeft,
           onTap: () => _scrollToPage(state, page - 1),
         ));
@@ -121,7 +124,7 @@ class PostsState extends State<PostsWidget> {
     } else if (state.canFetchPrev) {
       children.add(_buildPageIndicatorText(
         context,
-        "previous",
+        l(context).navLowercasePrevious,
         alignment: Alignment.centerLeft,
         onTap: () => state.fetchPrev(),
       ));
@@ -130,14 +133,14 @@ class PostsState extends State<PostsWidget> {
     if (page < state.fetchedPageMax) {
       children.add(_buildPageIndicatorText(
         context,
-        'next',
+        l(context).navLowercaseNext,
         alignment: Alignment.centerRight,
         onTap: () => _scrollToPage(state, page + 1),
       ));
     } else if (state.canFetchNext) {
       children.add(_buildPageIndicatorText(
         context,
-        'next',
+        l(context).navLowercaseNext,
         alignment: Alignment.centerRight,
         onTap: () => state.fetchNext(scrollToRelativeIndex: 0),
       ));
@@ -217,7 +220,7 @@ class PostsState extends State<PostsWidget> {
   void _showSnackBarUnread(SuperListState<_PostListItem> sls) =>
       Scaffold.of(context).showSnackBar(SnackBar(
         action: SnackBarAction(
-          label: 'YES',
+          label: l(context).postGoUnreadYes,
           onPressed: () => sls.fetch(
             clearItems: true,
             fc: FetchContext<_PostListItem>(
@@ -226,7 +229,7 @@ class PostsState extends State<PostsWidget> {
             ),
           ),
         ),
-        content: Text('Continue reading?'),
+        content: Text(l(context).postGoUnreadQuestion),
         duration: const Duration(seconds: 10),
       ));
 

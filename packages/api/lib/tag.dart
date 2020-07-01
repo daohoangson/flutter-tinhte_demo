@@ -1,27 +1,23 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import 'src/_.dart';
-
 part 'tag.g.dart';
 
-@JsonSerializable(createToJson: false, fieldRename: FieldRename.snake)
+@JsonSerializable()
 class Tag {
   final int tagId;
   bool tagIsFollowed;
   String tagText;
   int tagUseCount;
 
-  @JsonKey(toJson: none)
   TagLinks links;
 
-  @JsonKey(toJson: none)
   TagPermissions permissions;
 
   Tag(this.tagId);
   factory Tag.fromJson(Map<String, dynamic> json) => _$TagFromJson(json);
 }
 
-@JsonSerializable(createToJson: false)
+@JsonSerializable()
 class TagLinks {
   String detail;
   String followers;
@@ -32,7 +28,7 @@ class TagLinks {
       _$TagLinksFromJson(json);
 }
 
-@JsonSerializable(createToJson: false, fieldRename: FieldRename.snake)
+@JsonSerializable()
 class TagPermissions {
   bool follow;
 

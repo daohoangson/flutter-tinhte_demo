@@ -1,6 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import 'src/_.dart';
 import 'node.dart';
 import 'post.dart';
 import 'thread_prefix.dart';
@@ -8,6 +7,8 @@ import 'thread_prefix.dart';
 part 'thread.g.dart';
 
 final _kThreadTitleEllipsisRegEx = RegExp(r'^(.+)\.\.\.$');
+final _kThreadPostBodyImgBbCodeRegExp =
+    RegExp(r'\[IMG\]([^[]+)\[/IMG\]', caseSensitive: false);
 
 bool isThreadTitleRedundant(Thread thread, [Post firstPost]) {
   firstPost ??= thread?.firstPost;
@@ -21,7 +22,31 @@ bool isThreadTitleRedundant(Thread thread, [Post firstPost]) {
   return firstPost.postBody?.startsWith(thread.threadTitle) == true;
 }
 
-@JsonSerializable(fieldRename: FieldRename.snake)
+ThreadImage getThreadImage(Thread thread) {
+  if (thread.threadImage != null) return thread.threadImage;
+
+  if (thread.firstPost == null) return null;
+  final post = thread.firstPost;
+
+  if (post.attachments?.isNotEmpty == true) {
+    for (final attachment in post.attachments) {
+      if (attachment.links?.thumbnail?.isNotEmpty == true) {
+        return ThreadImage(attachment.links.data)
+          ..width = attachment.attachmentWidth
+          ..height = attachment.attachmentHeight;
+      }
+    }
+  }
+
+  if (post.postBodyHtml?.isNotEmpty == true) {
+    final match = _kThreadPostBodyImgBbCodeRegExp.firstMatch(post.postBody);
+    if (match != null) return ThreadImage(match.group(1));
+  }
+
+  return null;
+}
+
+@JsonSerializable()
 class Thread {
   bool creatorHasVerifiedBadge;
   int creatorUserId;
@@ -29,7 +54,9 @@ class Thread {
   int forumId;
   Post firstPost;
   int threadCreateDate;
+  bool threadHasPoll;
   final int threadId;
+  bool threadIsBookmark;
   bool threadIsDeleted;
   bool threadIsFollowed;
   bool threadIsNew;
@@ -45,32 +72,19 @@ class Thread {
   int threadViewCount;
   bool userIsIgnored;
 
-  @JsonKey(toJson: none)
   Forum forum;
-
-  @JsonKey(toJson: none)
   ThreadLinks links;
-
-  @JsonKey(toJson: none)
   ThreadPermissions permissions;
-
-  @JsonKey(toJson: none)
   ThreadImage threadImage;
-
-  @JsonKey(toJson: none)
   List<ThreadPrefix> threadPrefixes;
-
-  @JsonKey(toJson: none)
   ThreadImage threadThumbnail;
 
   Thread(this.threadId);
   factory Thread.fromJson(Map<String, dynamic> json) => _$ThreadFromJson(json);
-  Map<String, dynamic> toJson() => _$ThreadToJson(this);
 }
 
-@JsonSerializable(createToJson: false)
+@JsonSerializable()
 class ThreadImage {
-  @JsonKey(name: "display_mode")
   String displayMode;
 
   int height;
@@ -84,7 +98,7 @@ class ThreadImage {
       _$ThreadImageFromJson(json);
 }
 
-@JsonSerializable(createToJson: false, fieldRename: FieldRename.snake)
+@JsonSerializable()
 class ThreadLinks {
   String detail;
 
@@ -106,6 +120,8 @@ class ThreadLinks {
 
   String permalink;
 
+  String poll;
+
   String posts;
 
   String postsUnread;
@@ -115,7 +131,7 @@ class ThreadLinks {
       _$ThreadLinksFromJson(json);
 }
 
-@JsonSerializable(createToJson: false)
+@JsonSerializable()
 class ThreadPermissions {
   bool delete;
 
@@ -125,7 +141,6 @@ class ThreadPermissions {
 
   bool post;
 
-  @JsonKey(name: "upload_attachment")
   bool uploadAttachment;
 
   bool view;
@@ -136,10 +151,10 @@ class ThreadPermissions {
 }
 
 Map<String, String> _threadTagsFromJson(json) {
-  if (json is List) {
-    // php returns empty json array if thread has no tags...
-    return null;
-  }
+  if (json == null) return null;
+
+  // php returns empty json array if thread has no tags...
+  if (json is List) return null;
 
   return Map<String, String>.from(json);
 }

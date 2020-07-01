@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:tinhte_api/links.dart';
-
-import '../api.dart';
+import 'package:tinhte_demo/src/api.dart';
 
 class SuperListView<T> extends StatefulWidget {
   final ApiMethod apiMethodInitial;
@@ -65,10 +64,9 @@ class FetchContext<T> {
   FetchContext({
     this.apiMethod,
     this.id = FetchContextId.FetchCustom,
-    @required this.path,
+    this.path,
     @required this.state,
-  })  : assert(path != null),
-        assert(state != null);
+  })  : assert(state != null);
 }
 
 enum FetchContextId { FetchCustom, FetchInitial, FetchNext, FetchPrev }
@@ -421,11 +419,11 @@ typedef SuperListComplexItemRegistration SuperListComplexItemRegister();
 typedef void SuperListComplexItemClearer();
 
 class SuperListComplexItemRegistration {
-  SingleChildCloneableWidget _provider;
+  InheritedProvider _provider;
   SuperListComplexItemClearer _clear;
 
   SuperListComplexItemRegistration(
-    SingleChildCloneableWidget provider, {
+    InheritedProvider provider, {
     SuperListComplexItemClearer clear,
   })  : assert(provider != null),
         _provider = provider,

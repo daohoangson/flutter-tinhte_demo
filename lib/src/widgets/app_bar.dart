@@ -2,10 +2,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tinhte_api/user.dart';
-
-import '../screens/login.dart';
-import '../api.dart';
-import '../link.dart';
+import 'package:tinhte_demo/src/intl.dart';
+import 'package:tinhte_demo/src/screens/login.dart';
+import 'package:tinhte_demo/src/api.dart';
+import 'package:tinhte_demo/src/link.dart';
 
 class AppBarDrawerHeader extends StatelessWidget {
   AppBarDrawerHeader({Key key}) : super(key: key);
@@ -19,7 +19,7 @@ class AppBarDrawerHeader extends StatelessWidget {
                 ),
                 child: _buildVisitorPanel(context, user))
             : ListTile(
-                title: const Text('Login'),
+                title: Text(l(context).login),
                 onTap: () => Navigator.push(context, LoginScreenRoute()),
               ),
       );
@@ -66,7 +66,7 @@ class AppBarDrawerHeader extends StatelessWidget {
 
   TextSpan _compileUserRank(BuildContext context, User user) => TextSpan(
         text: " ${user.rank?.rankName ?? ''}",
-        style: Theme.of(context).textTheme.subhead.copyWith(
+        style: Theme.of(context).textTheme.subtitle1.copyWith(
               color: Theme.of(context).hintColor,
               fontWeight: FontWeight.bold,
             ),
@@ -74,7 +74,7 @@ class AppBarDrawerHeader extends StatelessWidget {
 
   TextSpan _compileUsername(BuildContext context, User user) => TextSpan(
         text: user.username ?? '',
-        style: Theme.of(context).textTheme.title.copyWith(
+        style: Theme.of(context).textTheme.headline6.copyWith(
               color: Theme.of(context).accentColor,
             ),
       );
@@ -86,7 +86,7 @@ class AppBarDrawerFooter extends StatelessWidget {
   Widget build(BuildContext _) => Consumer<ApiAuth>(
       builder: (context, apiAuth, __) => apiAuth.hasToken
           ? ListTile(
-              title: const Text('Logout'),
+              title: Text(l(context).menuLogout),
               onTap: () => logout(context),
             )
           : SizedBox.shrink());
