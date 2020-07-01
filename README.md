@@ -66,6 +66,7 @@ Apple App Store: [TestFlight](https://testflight.apple.com/join/4lGGYeSU)
 
 - Primary list: notifications
 - Push notification via [firebase_messaging](https://pub.dev/packages/firebase_messaging)
+- Note: FCM support requires deployment of [Cloud Functions for Firebase](firebase/functions)
 
 ### Tag view / Feature page
 
