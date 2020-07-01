@@ -144,7 +144,7 @@ const _getRegistrationTokens = async (topic: string): Promise<string[]> => {
   const snapshot = await admin.firestore()
     .collection(firestoreCollectionSubscriptions).doc(topic)
     .collection(firestoreCollectionRegistrationTokens).get();
-  return snapshot.docs.map((doc) => doc.id);
+  return snapshot.docs.map((registrationToken) => registrationToken.id);
 }
 
 const _prepareDataValue = (target: any, key: string, value: any): boolean => {

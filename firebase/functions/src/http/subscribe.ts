@@ -39,7 +39,13 @@ export default (config: Config) => functions.https.onRequest(async (req, resp) =
       .collection(firestoreCollectionSubscriptions).doc(hubTopic)
       .collection(firestoreCollectionRegistrationTokens).doc(registrationToken).set({
         [firestoreFieldSubscribeDate]: admin.firestore.FieldValue.serverTimestamp(),
-      })
+      }),
+    admin.firestore()
+      .collection(firestoreCollectionRegistrationTokens).doc(registrationToken)
+      .collection(firestoreCollectionSubscriptions).doc(hubTopic)
+      .set({
+        [firestoreFieldSubscribeDate]: admin.firestore.FieldValue.serverTimestamp(),
+      }),
   ]).then<number, number>(
     ([hubResp]) => {
       const hubRespMessage = `hubTopic=${hubTopic} registrationToken=${registrationToken} hubResp.statusCode=${hubResp.statusCode}`;
