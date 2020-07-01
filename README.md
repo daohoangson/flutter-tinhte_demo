@@ -120,3 +120,11 @@ class Config extends ConfigBase {
   final siteRoot = 'https://domain.com/community';
 }
 ```
+
+### How to support a new language?
+
+1. Translate the `lib/l10n/intl_messages.arb` into your new language. Save it as `/lib/l10n/intl_(language_code).arb`.
+1. Execute `./tool/l10n_2.sh` to generate l10n files
+1. Update `supportedLocales` param in `lib/main.dart`
+1. Update `isSupported` method in `lib/src/intl.dart`
+1. Update `CFBundleLocalizations` in `ios/Runner/Info.plist` to include the new language code
