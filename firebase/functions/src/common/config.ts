@@ -15,5 +15,10 @@ export const firestoreFieldSendDate = 'send_date';
 export const firestoreFieldSentPayload = 'payload';
 export const firestoreFieldSentOptions = 'options';
 
+export const firestoreCollectionInvalids = 'invalids';
+export const firestoreFieldInvalidDate = 'invalid_date';
+export const firestoreFieldInvalidError = 'error';
+export const firestoreFieldInvalidRegistrationToken = 'registration_token';
+
 export const extraParamsParamKey = 'extra_params';
 export const registrationTokenParamKey = 'registration_token';

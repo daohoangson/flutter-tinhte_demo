@@ -2,6 +2,7 @@ import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
 
 import { Config } from './common/config';
+import firestoreProcessInvalid from './firestore/process_invalid';
 import firestoreProcessPing from './firestore/process_ping';
 import httpSubscribe from './http/subscribe';
 import httpUnregister from './http/unregister';
@@ -30,6 +31,7 @@ class _Config implements Config {
 
 const config = new _Config();
 
+export const processInvalid = firestoreProcessInvalid(config);
 export const processPing = firestoreProcessPing(config);
 export const subscribe = httpSubscribe(config);
 export const unregister = httpUnregister(config);

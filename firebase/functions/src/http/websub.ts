@@ -18,23 +18,23 @@ export default (_: Config) => functions.https.onRequest(async (req, resp) => {
 
   if (challenge) return resp.send(challenge);
 
-  if (!Array.isArray(body)) {
-    console.error(`body !isArray`);
-    return resp.sendStatus(400);
-  }
+  if (!Array.isArray(body)) return resp.sendStatus(400);
+  if (body.length === 0) return resp.sendStatus(200);
 
-  let fulfilled = 0;
-  let rejected = 0;
+  const pingIds: string[] = [];
   await Promise.all(body.map((ping) => admin.firestore()
     .collection(firestoreCollectionPings).add({
       [firestoreFieldPingData]: ping,
       [firestoreFieldPingDate]: admin.firestore.FieldValue.serverTimestamp(),
     }).then(
-      () => fulfilled++,
-      (reason) => { rejected++; console.error(reason); },
+      (ref) => pingIds.push(ref.id),
+      (reason) => console.error(`${ping} -> ${reason}`),
     )));
 
-  console.log(`fulfilled=${fulfilled}, rejected=${rejected}`);
-
-  return resp.sendStatus(202);
+  if (pingIds.length > 0) {
+    console.log(`pingIds=${pingIds}`);
+    return resp.sendStatus(202);
+  } else {
+    return resp.sendStatus(500);
+  }
 });

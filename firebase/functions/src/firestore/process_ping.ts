@@ -11,6 +11,10 @@ import {
   firestoreFieldSendDate,
   firestoreFieldSentPayload,
   firestoreFieldSentOptions,
+  firestoreCollectionInvalids,
+  firestoreFieldInvalidDate,
+  firestoreFieldInvalidError,
+  firestoreFieldInvalidRegistrationToken,
 } from '../common/config';
 
 export default (_: Config) => functions.firestore
@@ -22,7 +26,7 @@ export default (_: Config) => functions.firestore
     const { id: pingId } = snap;
     const { data: pingData } = ping as any;
     if (!pingData) {
-      console.error(`[${pingId}] ping.data=${pingData}`);
+      console.error(`[${pingId}] pingData=${pingData}`);
       return;
     }
 
@@ -57,12 +61,50 @@ export default (_: Config) => functions.firestore
     ]);
 
     if (sendResult.failureCount === 0) {
-      console.log(`[${pingId}] topic=${topic} successCount=${sendResult.successCount}`)
+      console.log(`[${pingId}] topic=${topic} successCount=${sendResult.successCount}`);
       return;
     }
 
-    // TODO: handle token errors
-    console.error(`[${pingId}] sendResults=${sendResult.results}`);
+    const invalidPromises: Promise<any>[] = [];
+    const invalidIds: string[] = [];
+    sendResult.results.forEach((result, i) => {
+      const registrationToken = registrationTokens[i];
+      if (result.canonicalRegistrationToken && result.canonicalRegistrationToken !== registrationToken) {
+        console.error(`canonicalRegistrationToken !== registrationToken: ${result.canonicalRegistrationToken} vs. ${registrationToken}`);
+      }
+
+      const { error } = result;
+      if (!error) return;
+      const { code, message } = error;
+
+      // https://firebase.google.com/docs/cloud-messaging/send-message#admin
+      switch (code) {
+        case 'messaging/authentication-error':
+        case 'messaging/invalid-package-name':
+        case 'messaging/invalid-recipient':
+        case 'messaging/invalid-registration-token':
+        case 'messaging/mismatched-credential':
+        case 'messaging/registration-token-not-registered':
+          invalidPromises.push(admin.firestore()
+            .collection(firestoreCollectionInvalids).add({
+              [firestoreFieldInvalidDate]: admin.firestore.FieldValue.serverTimestamp(),
+              [firestoreFieldInvalidError]: { code, message },
+              [firestoreFieldInvalidRegistrationToken]: registrationToken,
+            }).then(
+              (ref) => invalidIds.push(ref.id),
+              (reason) => console.error(`${registrationToken} -> ${message} -> ${reason}`),
+            )
+          );
+          break;
+        default:
+          console.error(`${registrationToken} -> ${message}`);
+      }
+    });
+
+    if (invalidPromises.length > 0) {
+      await Promise.all(invalidPromises);
+      console.log(`[${pingId}] topic=${topic} invalidIds=${invalidIds}`);
+    }
   });
 
 const _buildMessage = (objectData: any): {
