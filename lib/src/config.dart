@@ -11,7 +11,6 @@ abstract class ConfigBase {
   String get clientSecret;
   String get siteRoot;
 
-  String get fcmProjectId => null;
   String get pushServer => null;
 
   List<SuperListComplexItemRegister> get homeComplexItems => null;
