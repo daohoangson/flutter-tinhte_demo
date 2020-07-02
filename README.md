@@ -101,7 +101,7 @@ Apple App Store: [TestFlight](https://testflight.apple.com/join/4lGGYeSU)
     - Post body
     - Attachments
 
-### Thread Create
+### Create new thread
 
 - Forum picker
 - Thread title
@@ -142,6 +142,8 @@ class Config extends ConfigBase {
 }
 ```
 
+See [How to use another package name?](#how-to-use-another-package-name) for more information to rename the app.
+
 ### How to support a new language?
 
 1. Translate the `lib/l10n/intl_messages.arb` into your new language. Save it as `/lib/l10n/intl_(language_code).arb`.
@@ -150,7 +152,7 @@ class Config extends ConfigBase {
 1. Update `isSupported` method in `lib/src/intl.dart`
 1. Update `CFBundleLocalizations` in `ios/Runner/Info.plist` to include the new language code
 
-### How to use another package name
+### How to use another package name?
 
 Pick a unique package name across Play Store and App Store then update these files:
 
