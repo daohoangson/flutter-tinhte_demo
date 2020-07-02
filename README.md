@@ -8,7 +8,7 @@ Google Play Store: [Open Beta Testing](https://play.google.com/apps/testing/com.
 
 Apple App Store: [TestFlight](https://testflight.apple.com/join/4lGGYeSU)
 
-## Screens
+## Features
 
 ### Home
 
@@ -21,6 +21,8 @@ Apple App Store: [TestFlight](https://testflight.apple.com/join/4lGGYeSU)
   - Feature pages
   - Top threads
   - Trending tags
+- Actions:
+  - Create new thread
 
 ### Login
 
@@ -90,9 +92,27 @@ Apple App Store: [TestFlight](https://testflight.apple.com/join/4lGGYeSU)
   - Actions: like, reply, delete, open in browser, report
   - Replies
 - Actions:
+  - Font control
+  - Bookmark
   - Open in browser
   - Share
   - Quick reply
+    - Post body
+    - Attachments
+
+### Thread Create
+
+- Forum picker
+- Thread title
+- Post body
+- Attachments
+
+### Others
+
+- Dark mode: on / off / auto
+- Localization (auto)
+  - English
+  - Tiếng Việt
 
 ## FAQ
 
