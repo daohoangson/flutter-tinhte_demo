@@ -71,13 +71,19 @@ class _FontControlState extends State<FontControlWidget> with RouteAware {
     final buttonSize = renderBox.size;
     final buttonPosition = renderBox.localToGlobal(Offset.zero);
     final screenWidth = MediaQuery.of(context).size.width;
-    final top = buttonPosition.dy + buttonSize.height;
-    final right = screenWidth - (buttonPosition.dx + buttonSize.width);
     final theme = Theme.of(context);
+
+    final direction = Directionality.of(context);
+    final top = buttonPosition.dy + buttonSize.height;
+    final right = direction == TextDirection.ltr
+        ? screenWidth - (buttonPosition.dx + buttonSize.width)
+        : null;
+    final left = direction == TextDirection.rtl ? buttonPosition.dx : null;
 
     return OverlayEntry(
         builder: (_) => Positioned(
             top: top,
+            left: left,
             right: right,
             child: Opacity(
               child: Material(
