@@ -188,17 +188,12 @@ class _PushNotificationAppState extends State<PushNotificationApp> {
     if (_fcmToken?.isNotEmpty != true) return;
 
     final url = "${config.pushServer}/unregister";
-
     final response = await http.post(
       url,
-      body: {
-        'device_type': 'firebase',
-        'device_id': _fcmToken,
-        'oauth_client_id': config.clientId,
-      },
+      body: {'registration_token': _fcmToken},
     );
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 202) {
       debugPrint("Unregistered $_fcmToken at $url...");
     } else {
       debugPrint("Failed unregistering $_fcmToken: "

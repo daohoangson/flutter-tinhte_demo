@@ -143,27 +143,18 @@ class _NotificationsState extends State<NotificationsWidget> {
     if (fcmToken?.isNotEmpty != true) return;
 
     final url = "${config.pushServer}/subscribe";
-    final hubUri = "${config.apiRoot}?subscriptions";
     final hubTopic = "user_notification_${user.userId}";
-
     final response = await http.post(
       url,
       body: {
-        'device_type': 'firebase',
-        'device_id': fcmToken,
-        'hub_uri': hubUri,
-        'hub_topic': hubTopic,
-        'oauth_client_id': config.clientId,
-        'oauth_token': token.accessToken,
-        'extra_data[click_action]': 'FLUTTER_NOTIFICATION_CLICK',
-        'extra_data[notification]': '1',
-        'extra_data[platform]': Theme.of(context).platform.toString(),
-        'extra_data[project]': config.fcmProjectId,
+        'extra_params[oauth_token]': token.accessToken,
+        'hub.topic': hubTopic,
+        'registration_token': fcmToken,
       },
     );
 
     if (response.statusCode == 202) {
-      debugPrint("Subscribed $fcmToken at $url for $hubUri/$hubTopic...");
+      debugPrint("Subscribed $fcmToken at $url for $hubTopic...");
       _subscribedUserId = user.userId;
     } else {
       debugPrint("Failed subscribing $fcmToken: "
