@@ -18,7 +18,6 @@ import 'package:tinhte_demo/src/widgets/image.dart';
 import 'package:tinhte_demo/src/widgets/super_list.dart';
 import 'package:tinhte_demo/src/widgets/threads.dart';
 import 'package:tinhte_demo/src/api.dart';
-import 'package:tinhte_demo/src/config.dart';
 import 'package:tinhte_demo/src/constants.dart';
 import 'package:tinhte_demo/src/intl.dart';
 import 'package:tinhte_demo/src/link.dart';

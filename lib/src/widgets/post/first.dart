@@ -75,7 +75,7 @@ class _FirstPostWidget extends StatelessWidget {
     return Padding(
       child: Wrap(
         children: thread.threadTags
-            .map((tagId, tagText) => MapEntry(tagId, _TagChip(tagText)))
+            .map((tagId, tagText) => MapEntry(tagId, _TagChip(tagId, tagText)))
             .values
             .toList(),
         spacing: 5,
@@ -86,17 +86,15 @@ class _FirstPostWidget extends StatelessWidget {
 }
 
 class _TagChip extends StatelessWidget {
+  final String tagId;
   final String tagText;
 
-  _TagChip(this.tagText);
+  _TagChip(this.tagId, this.tagText);
 
   @override
   Widget build(BuildContext context) => ActionChip(
         label: Text("#$tagText", style: TextStyle(fontSize: 11)),
         labelPadding: const EdgeInsets.symmetric(horizontal: 3),
-        onPressed: () => launchLink(
-          context,
-          "${config.siteRoot}/tags?t=${Uri.encodeQueryComponent(tagText)}",
-        ),
+        onPressed: () => parsePath('tags/$tagId', context: context),
       );
 }
