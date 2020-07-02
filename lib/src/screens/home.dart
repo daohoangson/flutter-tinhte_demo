@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tinhte_api/search.dart';
 import 'package:tinhte_api/thread.dart';
-import 'package:tinhte_demo/src/constants.dart';
 import 'package:tinhte_demo/src/screens/thread_create.dart';
 import 'package:tinhte_demo/src/widgets/home/bottom_bar.dart';
 import 'package:tinhte_demo/src/widgets/home/thread.dart';
