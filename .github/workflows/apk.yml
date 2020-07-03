@@ -58,7 +58,7 @@ jobs:
         _apksMarkdown=$( \
           ls -d build/app/outputs/apk/release/*.apk \
           | xargs -n 1 basename \
-          | xargs -n 1 -I {} printf -- ' [%s](https://storage.cloud.google.com/${GCS_BUCKET}/apks/${GITHUB_SHA}/%s)' {} {} \
+          | xargs -n 1 -I {} printf -- " [%s](https://storage.cloud.google.com/${GCS_BUCKET}/apks/${GITHUB_SHA}/%s)" {} {} \
         )
         echo "::set-output name=APKS_MARKDOWN::$_apksMarkdown"
     - name: Post GitHub comment
