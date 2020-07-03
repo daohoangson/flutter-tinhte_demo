@@ -98,4 +98,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          msg: "Built APK:${{ steps.markdown.outputs.APK }}\nBuilt IPA: [${{ env.GITHUB_SHA }}](https://storage.cloud.google.com/${{ env.GCS_BUCKET }}/${{ env.GITHUB_SHA }}/ipa/manifest.html)"
+          msg: "Built APK:${{ steps.markdown.outputs.APK }}\nBuilt IPA: [${{ github.sha }}](https://storage.cloud.google.com/${{ env.GCS_BUCKET }}/${{ github.sha }}/ipa/manifest.html)"
