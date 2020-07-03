@@ -20,6 +20,7 @@ platform :ios do
   lane :ipa do
     desc "Build ad-hoc ipa (CI)"
 
+    setup_ci
     commit = last_git_commit
 
     sync_code_signing(
