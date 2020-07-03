@@ -67,7 +67,7 @@ jobs:
           flutter build ios --no-codesign
           cd ios && fastlane ipa
 
-          echo '<script>location='itms-services://?action=download-manifest&url='+encodeURIComponent(location.href.replace(/\/[^.]+\.html$/,'')+'/manifest.plist');</script>' |
+          echo "<script>location='itms-services://?action=download-manifest&url='+encodeURIComponent(location.href.replace(/\/[^.]+\.html$/,'')+'/manifest.plist');</script>" |
             >build/app/outputs/ipa/release/manifest.html
           gsutil cp build/app/outputs/ipa/release/* gs://${GCS_BUCKET}/${GITHUB_SHA}/ipa
 
