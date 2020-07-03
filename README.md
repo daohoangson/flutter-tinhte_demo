@@ -168,6 +168,8 @@ Pick a unique package name across Play Store and App Store then update these fil
 - `ios/Runner/GoogleService-Info.plist`
 - `ios/Runner/Info.plist` CFBundleName, CFBundleURLSchemes, FacebookAppID, FacebookDisplayName
 - `ios/fastlane/Appfile` app_identifier, apple_id, etc. (basically everything)
+- `ios/fastlane/Matchfile` google_cloud_bucket_name
+- `ios/gc_keys.json`
 
 You will also need to move the files within `android/app/src/main/java/com/daohoangson/flutter_ttdemo` to another directory to match the new Android package.
 
