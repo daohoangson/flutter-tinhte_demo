@@ -21,11 +21,11 @@ if [ -z "$PILOT_BETA_APP_REVIEW_INFO" ]; then
 fi
 
 cd "$_pwd"
-flutter build appbundle --release
+flutter build appbundle
 cd android && fastlane beta
 
 cd "$_pwd"
-flutter build ios --release --no-codesign
+flutter build ios --no-codesign
 cd ios && fastlane beta
 
 echo Done
