@@ -1,11 +1,12 @@
 on: push
 name: iOS IPA
+env:
+  GCS_BUCKET: flutterttdemo
+
 jobs:
   build:
     name: Build IPA
     runs-on: macos-latest
-    env:
-      GCS_BUCKET: flutterttdemo
 
     steps:
     - uses: actions/checkout@v1
@@ -49,6 +50,12 @@ jobs:
       with:
         service_account_key: ${{ secrets.GCP_UPLOADER_SA_KEY }}
     - run: gsutil cp build/app/outputs/ipa/release/* gs://${GCS_BUCKET}/${GITHUB_SHA}/ipa
+
+  comment:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
     - name: Post GitHub comment
       uses: unsplash/comment-on-pr@master
       env:
