@@ -4,6 +4,9 @@ jobs:
   build:
     name: Build APK
     runs-on: ubuntu-latest
+    env:
+      GCS_BUCKET: flutterttdemo
+
     steps:
     - uses: actions/checkout@v1
     - run: git submodule update --init --recursive
@@ -41,7 +44,22 @@ jobs:
         artifacts: "build/app/outputs/apk/release/*.apk"
         token: ${{ secrets.TOKEN }}
 
-    - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+    - name: Setup gsutil
+      uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
       with:
         service_account_key: ${{ secrets.GCP_UPLOADER_SA_KEY }}
-    - run: gsutil cp -r build/app/outputs/* gs://flutterttdemo/${GITHUB_SHA}
+    - run: gsutil cp build/app/outputs/apk/release/*.apk gs://${GCS_BUCKET}/${GITHUB_SHA}/apks
+
+    - name: Prepare GitHub comment
+      id: comment
+      run: |
+        set -e
+
+        _apksMarkdown=$( ls -d build/app/outputs/apk/release/*.apk | xargs -n 1 basename | xargs printf -- ' [%1$s](https://storage.cloud.google.com/${GCS_BUCKET}/apks/${GITHUB_SHA}/%1$s)' )
+        echo "::set-output name=APKS_MARKDOWN::$_apksMarkdown"
+    - name: Post GitHub comment
+      uses: unsplash/comment-on-pr@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        msg: "Built APKs:${{ steps.comment.outputs.APKS_MARKDOWN }}"
