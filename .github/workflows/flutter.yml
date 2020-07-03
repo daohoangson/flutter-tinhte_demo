@@ -67,7 +67,7 @@ jobs:
           flutter build ios --no-codesign
           ( cd ios && fastlane ipa )
 
-          echo "<script>location='itms-services://?action=download-manifest&url='+encodeURIComponent('https://storage.cloud.google.com/${GCS_BUCKET}/${GITHUB_SHA}/ipa/manifest.plist');</script>" \
+          echo "<script>location='itms-services://?action=download-manifest&url='+encodeURIComponent('https://storage.googleapis.com/${GCS_BUCKET}/${GITHUB_SHA}/ipa/manifest.plist');</script>" \
             >build/app/outputs/ipa/release/manifest.html
           gsutil cp build/app/outputs/ipa/release/* gs://${GCS_BUCKET}/${GITHUB_SHA}/ipa
 
@@ -88,7 +88,7 @@ jobs:
           _apk=$( \
             gsutil ls "gs://${GCS_BUCKET}/${GITHUB_SHA}/apk" \
             | xargs -n 1 basename \
-            | xargs -n 1 -I {} printf -- " [%s](https://storage.cloud.google.com/${GCS_BUCKET}/${GITHUB_SHA}/apk/%s)" {} {} \
+            | xargs -n 1 -I {} printf -- " [%s](https://storage.googleapis.com/${GCS_BUCKET}/${GITHUB_SHA}/apk/%s)" {} {} \
           )
           echo "::set-output name=APK::$_apk"
 
@@ -98,4 +98,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          msg: "Built APK:${{ steps.markdown.outputs.APK }}\nBuilt IPA: [${{ github.sha }}](https://storage.cloud.google.com/${{ env.GCS_BUCKET }}/${{ github.sha }}/ipa/manifest.html)"
+          msg: "Built APK:${{ steps.markdown.outputs.APK }}\nBuilt IPA: [${{ github.sha }}](https://storage.googleapis.com/${{ env.GCS_BUCKET }}/${{ github.sha }}/ipa/manifest.html)"
