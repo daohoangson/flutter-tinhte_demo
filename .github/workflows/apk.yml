@@ -50,7 +50,7 @@ jobs:
         service_account_key: ${{ secrets.GCP_UPLOADER_SA_KEY }}
     - run: gsutil cp build/app/outputs/apk/release/*.apk gs://${GCS_BUCKET}/${GITHUB_SHA}/apks
 
-    - name: Prepare GitHub comment
+    - name: Prepare APKs markdown
       id: comment
       run: |
         set -e
@@ -58,7 +58,7 @@ jobs:
         _apksMarkdown=$( \
           ls -d build/app/outputs/apk/release/*.apk \
           | xargs -n 1 basename \
-          | xargs -n 1 -I {} printf -- " [%s](https://storage.cloud.google.com/${GCS_BUCKET}/apks/${GITHUB_SHA}/%s)" {} {} \
+          | xargs -n 1 -I {} printf -- " [%s](https://storage.cloud.google.com/${GCS_BUCKET}/${GITHUB_SHA}/apks/%s)" {} {} \
         )
         echo "::set-output name=APKS_MARKDOWN::$_apksMarkdown"
     - name: Post GitHub comment
