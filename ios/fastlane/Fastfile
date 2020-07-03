@@ -31,6 +31,9 @@ platform :ios do
     build_app(
       workspace: "Runner.xcworkspace",
       scheme: "Runner",
+
+      xcargs: "PROVISIONING_PROFILE_SPECIFIER='match AdHoc com.daohoangson.flutterttdemo'",
+
       export_options: {
         method: "ad-hoc",
         manifest: {
