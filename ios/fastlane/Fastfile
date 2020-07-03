@@ -1,8 +1,9 @@
 default_platform(:ios)
 
 platform :ios do
-  desc "Push a new beta build to TestFlight"
   lane :beta do
+    desc "Push a new beta build to TestFlight"
+
     get_certificates
     get_provisioning_profile
     build_app(
@@ -13,6 +14,31 @@ platform :ios do
     upload_to_testflight(
       distribute_external: true,
       groups: "Public group",
+    )
+  end
+
+  lane :ipa do
+    desc "Build ad-hoc ipa (CI)"
+
+    commit = last_git_commit
+
+    sync_code_signing(
+      type: "adhoc",
+      readonly: true
+    )
+
+    build_app(
+      workspace: "Runner.xcworkspace",
+      scheme: "Runner",
+      export_options: {
+        method: "ad-hoc",
+        manifest: {
+          appURL: "https://storage.cloud.google.com/flutterttdemo/#{commit[:commit_hash]}/ipa/release/Runner.ipa",
+          displayImageURL: "https://storage.cloud.google.com/flutterttdemo/display.png",
+          fullSizeImageURL: "https://storage.cloud.google.com/flutterttdemo/full_size.png"
+        }
+      },
+      output_directory: "../build/app/outputs/ipa/release"
     )
   end
 end
