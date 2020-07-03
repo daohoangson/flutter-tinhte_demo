@@ -94,7 +94,7 @@ jobs:
 
           _ipa=$()
       - name: Post GitHub comment
-        uses: unsplash/comment-on-pr@master
+        uses: daohoangson/action-comment-on-github@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
