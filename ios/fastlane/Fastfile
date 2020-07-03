@@ -37,9 +37,9 @@ platform :ios do
       export_options: {
         method: "ad-hoc",
         manifest: {
-          appURL: "https://storage.cloud.google.com/flutterttdemo/#{commit[:commit_hash]}/ipa/release/Runner.ipa",
-          displayImageURL: "https://storage.cloud.google.com/flutterttdemo/display.png",
-          fullSizeImageURL: "https://storage.cloud.google.com/flutterttdemo/full_size.png"
+          appURL: "https://storage.cloud.google.com/flutterttdemo/#{commit[:commit_hash]}/ipa/Runner.ipa",
+          displayImageURL: "https://github.com/daohoangson/flutter-tinhte_demo/raw/master/ios/fastlane/flutter_57.png",
+          fullSizeImageURL: "https://github.com/daohoangson/flutter-tinhte_demo/raw/master/ios/fastlane/flutter_512.png"
         }
       },
       output_directory: "../build/app/outputs/ipa/release"
