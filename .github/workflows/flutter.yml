@@ -1,0 +1,101 @@
+on: push
+name: Flutter
+env:
+  GCS_BUCKET: flutterttdemo
+  GIT_CRYPT_KEY: ${{ secrets.GIT_CRYPT_KEY }}
+  JAVA_VERSION: 12.x
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        target:
+          - apk
+          - ipa
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - run: git submodule update --init --recursive
+      - name: Unlock git-crypt
+        run: |
+          set -e
+
+          brew install git-crypt
+
+          # https://github.com/sliteteam/github-action-git-crypt-unlock/blob/master/entrypoint.sh
+          echo $GIT_CRYPT_KEY | base64 --decode > ./git-crypt-key
+          git-crypt unlock ./git-crypt-key
+          rm ./git-crypt-key
+      - name: Extract Flutter version from pubspec.yaml
+        id: yq
+        run: |
+          set -e
+
+          brew install yq
+          _flutterVersion=$( yq read pubspec.yaml environment.flutter )
+          echo "::set-output name=FLUTTER_VERSION::$_flutterVersion"
+
+      - name: Setup Java@${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v1
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+      - name: Setup Flutter@${{ steps.yq.outputs.FLUTTER_VERSION }}
+        uses: subosito/flutter-action@v1
+        with:
+          flutter-version: ${{ steps.yq.outputs.FLUTTER_VERSION }}
+      - name: Setup gsutil
+        uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        with:
+          service_account_key: ${{ secrets.GCP_UPLOADER_SA_KEY }}
+
+      - run: flutter pub get
+
+      - name: build apk
+        if: matrix.target == 'apk'
+        run: |
+          set -e
+
+          flutter build apk --split-per-abi
+          gsutil cp build/app/outputs/apk/release/*.apk gs://${GCS_BUCKET}/${GITHUB_SHA}/apk
+
+      - name: build ipa
+        if: matrix.target == 'ipa'
+        run: |
+          set -e
+
+          flutter build ios --no-codesign
+          ( cd ios && fastlane ipa )
+
+          echo "<script>location='itms-services://?action=download-manifest&url='+encodeURIComponent('https://storage.cloud.google.com/${GCS_BUCKET}/${GITHUB_SHA}/ipa/manifest.plist');</script>" \
+            >build/app/outputs/ipa/release/manifest.html
+          gsutil cp build/app/outputs/ipa/release/* gs://${GCS_BUCKET}/${GITHUB_SHA}/ipa
+
+  comment:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Setup gsutil
+        uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        with:
+          service_account_key: ${{ secrets.GCP_UPLOADER_SA_KEY }}
+      - name: Prepare markdown
+        id: markdown
+        run: |
+          set -e
+
+          _apk=$( \
+            gsutil ls "gs://${GCS_BUCKET}/${GITHUB_SHA}/apk" \
+            | xargs -n 1 basename \
+            | xargs -n 1 -I {} printf -- " [%s](https://storage.cloud.google.com/${GCS_BUCKET}/${GITHUB_SHA}/apk/%s)" {} {} \
+          )
+          echo "::set-output name=APK::$_apk"
+
+          _ipa=$()
+      - name: Post GitHub comment
+        uses: daohoangson/action-comment-on-github@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          msg: "Built APK:${{ steps.markdown.outputs.APK }}\nBuilt IPA: [${{ github.sha }}](https://storage.cloud.google.com/${{ env.GCS_BUCKET }}/${{ github.sha }}/ipa/manifest.html)"
