@@ -1,7 +1,9 @@
 on: push
+name: Flutter
 env:
   GCS_BUCKET: flutterttdemo
   GIT_CRYPT_KEY: ${{ secrets.GIT_CRYPT_KEY }}
+  JAVA_VERSION: 12.x
 
 jobs:
   build:
@@ -34,10 +36,10 @@ jobs:
           _flutterVersion=$( yq read pubspec.yaml environment.flutter )
           echo "::set-output name=FLUTTER_VERSION::$_flutterVersion"
 
-      - name: Setup Java
+      - name: Setup Java@${JAVA_VERSION}
         uses: actions/setup-java@v1
         with:
-          java-version: "12.x"
+          java-version: ${JAVA_VERSION}
       - name: Setup Flutter@${{ steps.yq.outputs.FLUTTER_VERSION }}
         uses: subosito/flutter-action@v1
         with:
