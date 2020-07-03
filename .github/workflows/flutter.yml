@@ -67,7 +67,7 @@ jobs:
           flutter build ios --no-codesign
           ( cd ios && fastlane ipa )
 
-          echo "<script>location='itms-services://?action=download-manifest&url='+encodeURIComponent(location.href.replace(/\/[^.]+\.html$/,'')+'/manifest.plist');</script>" |
+          echo "<script>location='itms-services://?action=download-manifest&url='+encodeURIComponent('https://storage.cloud.google.com/${GCS_BUCKET}/${GITHUB_SHA}/ipa/manifest.plist');</script>" \
             >build/app/outputs/ipa/release/manifest.html
           gsutil cp build/app/outputs/ipa/release/* gs://${GCS_BUCKET}/${GITHUB_SHA}/ipa
 
@@ -98,4 +98,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          msg: "Built APK:${{ steps.markdown.outputs.APK }}\nBuilt IPA: [${GITHUB_SHA}](https://storage.cloud.google.com/${GCS_BUCKET}/${GITHUB_SHA}/ipa/manifest.html)"
+          msg: "Built APK:${{ steps.markdown.outputs.APK }}\nBuilt IPA: [${{ env.GITHUB_SHA }}](https://storage.cloud.google.com/${{ env.GCS_BUCKET }}/${{ env.GITHUB_SHA }}/ipa/manifest.html)"
