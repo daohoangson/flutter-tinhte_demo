@@ -4,8 +4,13 @@ set -eo pipefail
 cd "$( dirname "${BASH_SOURCE[0]}" )/.."
 _pwd=$( pwd )
 
-if [ -z "$FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD" ]; then
-  echo 'Env var FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD must be set' >&2
+if [ -z "$FASTLANE_SESSION" ]; then
+  # docker run --rm -it -e LC_ALL=en_US.UTF-8 -e LANG=en_US.UTF-8 -v $PWD:$PWD -w $PWD/ios ruby /bin/bash
+  #   gem install fastlane -NV
+  #   fastlane spaceauth
+  #   exit
+  # export FASTLANE_SESSION='---\n- !ruby/object:HTTP::Cookie\n...'
+  echo 'Env var FASTLANE_SESSION must be set' >&2
   exit 1
 fi
 
