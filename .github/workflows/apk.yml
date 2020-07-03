@@ -32,10 +32,8 @@ jobs:
         flutter-version: ${{ steps.yq.outputs.FLUTTER_VERSION }}
 
     - run: flutter pub get
+    - run: flutter build apk --split-per-abi
 
-    - name: Build splitted APKs
-      if: startsWith(github.ref, 'refs/tags/')
-      run: flutter build apk --split-per-abi
     - name: Create a GitHub Release
       if: startsWith(github.ref, 'refs/tags/')
       uses: ncipollo/release-action@v1
@@ -43,11 +41,7 @@ jobs:
         artifacts: "build/app/outputs/apk/release/*.apk"
         token: ${{ secrets.TOKEN }}
 
-    - name: Build fat APK
-      if: startsWith(github.ref, 'refs/tags/') != true
-      run: flutter build apk
-    - uses: actions/upload-artifact@v2
-      if: startsWith(github.ref, 'refs/tags/') != true
+    - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
       with:
-        name: app-release.apk
-        path: build/app/outputs/apk/release/app-release.apk
+        service_account_key: ${{ secrets.GCP_UPLOADER_SA_KEY }}
+    - run: gsutil cp -r build/app/outputs/* gs://flutterttdemo/${GITHUB_SHA}
