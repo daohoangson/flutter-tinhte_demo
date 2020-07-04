@@ -8,6 +8,10 @@ Google Play Store: [Open Beta Testing](https://play.google.com/apps/testing/com.
 
 Apple App Store: [TestFlight](https://testflight.apple.com/join/4lGGYeSU)
 
+Or check the PR / commit comments, this repo has GitHub Actions setup to build the apk+ipa then
+upload them to GCS (automatically deleted after 30 days).
+The comment includes link to download the apks and iTunes manifest to install on mobile devices.
+
 ## Features
 
 ### Home
@@ -156,6 +160,7 @@ See [How to use another package name?](#how-to-use-another-package-name) for mor
 
 Pick a unique package name across Play Store and App Store then update these files:
 
+- `.github/workflows/flutter.yml` GCS_BUCKET
 - `android/app/build.gradle` applicationId, signingConfigs.release
 - `android/app/google-services.json`
 - `android/app/src/main/AndroidManifest.xml` package, android:label
@@ -164,10 +169,11 @@ Pick a unique package name across Play Store and App Store then update these fil
 - `android/fastlane/Appfile` package_name
 - `android/release.jks`
 - `firebase/.firebaserc` projects.default
-- `ios/Runner.xcodeproj/project.pbxproj` PRODUCT_BUNDLE_IDENTIFIER x2
+- `ios/Runner.xcodeproj/project.pbxproj` PRODUCT_BUNDLE_IDENTIFIER x2, PROVISIONING_PROFILE_SPECIFIER x2
 - `ios/Runner/GoogleService-Info.plist`
 - `ios/Runner/Info.plist` CFBundleName, CFBundleURLSchemes, FacebookAppID, FacebookDisplayName
 - `ios/fastlane/Appfile` app_identifier, apple_id, etc. (basically everything)
+- `ios/fastlane/Fastfile` xcargs (PROVISIONING_PROFILE_SPECIFIER), manifest (appURL, displayImageURL, fullSizeImageURL)
 - `ios/fastlane/Matchfile` google_cloud_bucket_name
 - `ios/gc_keys.json`
 
