@@ -77,6 +77,19 @@ jobs:
             >build/app/outputs/ipa/release/manifest.html
           gsutil cp build/app/outputs/ipa/release/* gs://${GCS_BUCKET}/${GITHUB_SHA}/ipa
 
+      - name: dump environment variables
+        run: |
+          set -e
+
+          _path=build/app/outputs/.env
+
+          { \
+            echo "JAVA_VERSION=$JAVA_VERSION"; \
+            echo 'FLUTTER_VERSION=${{ steps.yq.outputs.FLUTTER_VERSION }}'; \
+            echo 'BUILD_NAME=${{ steps.yq.outputs.BUILD_NAME }}'; \
+          } >"$_path"
+          gsutil cp "$_path" gs://${GCS_BUCKET}/${GITHUB_SHA}
+
   comment:
     needs: build
     runs-on: ubuntu-latest
@@ -91,6 +104,9 @@ jobs:
         run: |
           set -e
 
+          _env=$( gsutil cat "gs://${GCS_BUCKET}/${GITHUB_SHA}/.env" )
+          echo "::set-output name=ENV::$_env"
+
           _apk=$( \
             gsutil ls "gs://${GCS_BUCKET}/${GITHUB_SHA}/apk" \
             | xargs -n 1 basename \
@@ -104,4 +120,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          msg: "Built APK:${{ steps.markdown.outputs.APK }}\nBuilt IPA: [${{ github.sha }}](https://storage.googleapis.com/${{ env.GCS_BUCKET }}/${{ github.sha }}/ipa/manifest.html)"
+          msg: "Built APK:${{ steps.markdown.outputs.APK }}\nBuilt IPA: [${{ github.sha }}](https://storage.googleapis.com/${{ env.GCS_BUCKET }}/${{ github.sha }}/ipa/manifest.html)\n\nEnvironment variables:\n```${{ steps.markdown.outputs.ENV }}\n```"
