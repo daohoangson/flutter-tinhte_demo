@@ -84,6 +84,7 @@ jobs:
           _path=build/app/outputs/.env
 
           { \
+            echo "GITHUB_SHA=$GITHUB_SHA"; \
             echo "JAVA_VERSION=$JAVA_VERSION"; \
             echo 'FLUTTER_VERSION=${{ steps.yq.outputs.FLUTTER_VERSION }}'; \
             echo 'BUILD_NAME=${{ steps.yq.outputs.BUILD_NAME }}'; \
@@ -113,8 +114,11 @@ jobs:
           _apk=$( \
             gsutil ls "gs://${GCS_BUCKET}/${GITHUB_SHA}/apk" \
             | xargs -n 1 basename \
-            | xargs -n 1 -I {} printf -- " [%s](https://storage.googleapis.com/${GCS_BUCKET}/${GITHUB_SHA}/apk/%s)" {} {} \
+            | xargs -n 1 -I {} printf -- "- For Android: [%s](https://storage.googleapis.com/${GCS_BUCKET}/${GITHUB_SHA}/apk/%s)\n" {} {} \
           )
+          _apk="${_apk//'%'/'%25'}"
+          _apk="${_apk//$'\n'/'%0A'}"
+          _apk="${_apk//$'\r'/'%0D'}"
           echo "::set-output name=APK::$_apk"
 
           _ipa=$()
@@ -123,4 +127,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          msg: "Built APK:${{ steps.markdown.outputs.APK }}\nBuilt IPA: [${{ github.sha }}](https://storage.googleapis.com/${{ env.GCS_BUCKET }}/${{ github.sha }}/ipa/manifest.html)\n\nEnvironment variables:\n```\n${{ steps.markdown.outputs.ENV }}\n```"
+          msg: "Built app outputs:\n${{ steps.markdown.outputs.APK }}- For iOS: [OTA manifest](https://storage.googleapis.com/${{ env.GCS_BUCKET }}/${{ github.sha }}/ipa/manifest.html)\n\nEnvironment variables:\n```\n${{ steps.markdown.outputs.ENV }}\n```"
