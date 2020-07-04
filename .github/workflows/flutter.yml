@@ -27,12 +27,17 @@ jobs:
           echo $GIT_CRYPT_KEY | base64 --decode > ./git-crypt-key
           git-crypt unlock ./git-crypt-key
           rm ./git-crypt-key
-      - name: Extract Flutter version from pubspec.yaml
+      - name: Extract config from pubspec.yaml
         id: yq
         run: |
           set -e
 
           brew install yq
+
+          _appVersion=$( yq read pubspec.yaml version )
+          _appVersionWithoutNumber=$( echo "$_appVersion" | sed 's/+.*$//' )
+          echo "::set-output name=BUILD_NAME::$_appVersionWithoutNumber${GITHUB_SHA:0:7}"
+
           _flutterVersion=$( yq read pubspec.yaml environment.flutter )
           echo "::set-output name=FLUTTER_VERSION::$_flutterVersion"
 
@@ -51,20 +56,20 @@ jobs:
 
       - run: flutter pub get
 
-      - name: build apk
+      - name: build apk v${{ steps.yq.outputs.BUILD_NAME }}
         if: matrix.target == 'apk'
         run: |
           set -e
 
-          flutter build apk --split-per-abi
+          flutter build apk --build-name=${{ steps.yq.outputs.BUILD_NAME }} --split-per-abi
           gsutil cp build/app/outputs/apk/release/*.apk gs://${GCS_BUCKET}/${GITHUB_SHA}/apk
 
-      - name: build ipa
+      - name: build ipa v${{ steps.yq.outputs.BUILD_NAME }}
         if: matrix.target == 'ipa'
         run: |
           set -e
 
-          flutter build ios --no-codesign
+          flutter build ios --build-name=${{ steps.yq.outputs.BUILD_NAME }} --no-codesign
           ( cd ios && fastlane ipa )
 
           echo "<script>location='itms-services://?action=download-manifest&url='+encodeURIComponent('https://storage.googleapis.com/${GCS_BUCKET}/${GITHUB_SHA}/ipa/manifest.plist');</script>" \
