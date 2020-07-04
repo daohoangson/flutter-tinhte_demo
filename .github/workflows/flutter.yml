@@ -42,6 +42,7 @@ jobs:
           echo "::set-output name=FLUTTER_VERSION::$_flutterVersion"
 
       - name: Setup Java@${{ env.JAVA_VERSION }}
+        if: matrix.target == 'apk'
         uses: actions/setup-java@v1
         with:
           java-version: ${{ env.JAVA_VERSION }}
