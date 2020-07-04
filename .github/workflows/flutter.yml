@@ -36,7 +36,7 @@ jobs:
 
           _appVersion=$( yq read pubspec.yaml version )
           _appVersionWithoutNumber=$( echo "$_appVersion" | sed 's/+.*$//' )
-          echo "::set-output name=BUILD_NAME::$_appVersionWithoutNumber${GITHUB_SHA:0:7}"
+          echo "::set-output name=BUILD_NAME::${_appVersionWithoutNumber}-${GITHUB_SHA:0:7}"
 
           _flutterVersion=$( yq read pubspec.yaml environment.flutter )
           echo "::set-output name=FLUTTER_VERSION::$_flutterVersion"
