@@ -105,6 +105,9 @@ jobs:
           set -e
 
           _env=$( gsutil cat "gs://${GCS_BUCKET}/${GITHUB_SHA}/.env" )
+          _env="${_env//'%'/'%25'}"
+          _env="${_env//$'\n'/'%0A'}"
+          _env="${_env//$'\r'/'%0D'}"
           echo "::set-output name=ENV::$_env"
 
           _apk=$( \
@@ -120,4 +123,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          msg: "Built APK:${{ steps.markdown.outputs.APK }}\nBuilt IPA: [${{ github.sha }}](https://storage.googleapis.com/${{ env.GCS_BUCKET }}/${{ github.sha }}/ipa/manifest.html)\n\nEnvironment variables:\n```${{ steps.markdown.outputs.ENV }}\n```"
+          msg: "Built APK:${{ steps.markdown.outputs.APK }}\nBuilt IPA: [${{ github.sha }}](https://storage.googleapis.com/${{ env.GCS_BUCKET }}/${{ github.sha }}/ipa/manifest.html)\n\nEnvironment variables:\n```\n${{ steps.markdown.outputs.ENV }}\n```"
