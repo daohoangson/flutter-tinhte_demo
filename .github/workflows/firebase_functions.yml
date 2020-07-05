@@ -1,7 +1,7 @@
 on: push
 name: Cloud Functions for Firebase
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -20,19 +20,4 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm run build
-
-  deploy:
-    if: startsWith(github.ref, 'refs/heads/firebase/functions') || github.ref == 'refs/heads/master'
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: firebase
-    steps:
-      - uses: actions/checkout@v2
-      - name: Deploy to Firebase
-        uses: w9jds/firebase-action@master
-        with:
-          args: deploy --only functions
-        env:
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-    
+      - run: npm run deploy --token ${{ secrets.FIREBASE_TOKEN }}
