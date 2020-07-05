@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tinhte_api/post.dart';
-import 'package:tinhte_api/thread.dart';
+import 'package:the_api/post.dart';
+import 'package:the_api/thread.dart';
 import 'package:the_app/src/intl.dart';
 import 'package:the_app/src/widgets/attachment_editor.dart';
 import 'package:the_app/src/widgets/posts.dart';

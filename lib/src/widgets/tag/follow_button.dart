@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:tinhte_api/user.dart';
+import 'package:the_api/user.dart';
 import 'package:the_app/src/api.dart';
 import 'package:the_app/src/intl.dart';
 

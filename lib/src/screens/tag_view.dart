@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tinhte_api/tag.dart';
+import 'package:the_api/tag.dart';
 import 'package:the_app/src/widgets/tag/tag_view_header.dart';
 import 'package:the_app/src/widgets/threads.dart';
 

@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
-import 'package:tinhte_api/search.dart';
-import 'package:tinhte_api/thread.dart';
+import 'package:the_api/search.dart';
+import 'package:the_api/thread.dart';
 import 'package:the_app/src/widgets/super_list.dart';
 import 'package:the_app/config.encrypted.dart';
 

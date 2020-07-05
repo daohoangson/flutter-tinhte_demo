@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:tinhte_api/feature_page.dart';
+import 'package:the_api/feature_page.dart';
 import 'package:the_app/src/widgets/tag/follow_button.dart';
 import 'package:the_app/src/intl.dart';
 

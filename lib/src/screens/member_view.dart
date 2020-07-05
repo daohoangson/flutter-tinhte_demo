@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tinhte_api/user.dart';
+import 'package:the_api/user.dart';
 import 'package:the_app/src/intl.dart';
 import 'package:the_app/src/screens/search/thread.dart';
 import 'package:the_app/src/widgets/user/member_view_header.dart';

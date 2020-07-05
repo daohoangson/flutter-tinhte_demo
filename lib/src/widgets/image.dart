@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:tinhte_api/thread.dart';
+import 'package:the_api/thread.dart';
 import 'package:the_app/src/config.dart';
 
 const kThreadImageAspectRatio = 594 / 368;

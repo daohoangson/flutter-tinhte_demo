@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tinhte_api/user.dart';
+import 'package:the_api/user.dart';
 import 'package:the_app/src/intl.dart';
 import 'package:the_app/src/screens/login.dart';
 import 'package:the_app/src/api.dart';

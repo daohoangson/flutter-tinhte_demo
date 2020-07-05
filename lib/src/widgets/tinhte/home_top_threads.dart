@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tinhte_api/thread.dart';
+import 'package:the_api/thread.dart';
 import 'package:the_app/src/screens/thread_view.dart';
 import 'package:the_app/src/widgets/home/header.dart';
 import 'package:the_app/src/widgets/super_list.dart';

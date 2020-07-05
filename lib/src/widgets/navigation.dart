@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:tinhte_api/navigation.dart' as navigation;
+import 'package:the_api/navigation.dart' as navigation;
 import 'package:the_app/src/screens/forum_view.dart';
 import 'package:the_app/src/screens/node_view.dart';
 import 'package:the_app/src/widgets/super_list.dart';

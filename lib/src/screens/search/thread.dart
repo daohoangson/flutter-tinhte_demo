@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:tinhte_api/node.dart';
-import 'package:tinhte_api/user.dart';
+import 'package:the_api/node.dart';
+import 'package:the_api/user.dart';
 import 'package:the_app/src/intl.dart';
 import 'package:the_app/src/widgets/threads.dart';
 import 'package:the_app/src/api.dart';

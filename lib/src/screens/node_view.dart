@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tinhte_api/navigation.dart' as navigation;
+import 'package:the_api/navigation.dart' as navigation;
 import 'package:the_app/src/widgets/navigation.dart';
 
 class NodeViewScreen extends StatelessWidget {

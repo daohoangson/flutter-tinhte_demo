@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tinhte_api/feature_page.dart';
+import 'package:the_api/feature_page.dart';
 import 'package:the_app/src/widgets/tag/fp_header.dart';
 import 'package:the_app/src/widgets/threads.dart';
 

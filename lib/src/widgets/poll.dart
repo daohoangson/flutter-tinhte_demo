@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tinhte_api/poll.dart';
+import 'package:the_api/poll.dart';
 import 'package:the_app/src/api.dart';
 import 'package:the_app/src/constants.dart';
 import 'package:the_app/src/intl.dart';
