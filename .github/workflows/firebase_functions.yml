@@ -17,10 +17,8 @@ jobs:
           key: npm-${{ hashFiles('firebase/functions/package-lock.json') }}
           restore-keys: |
             npm-
-      - run: npm ci
 
-      - run: npm run lint
-      - run: npm run build
+      - run: npm ci
       - run: npm run deploy -- --token ${{ secrets.FIREBASE_TOKEN }}
 
       - name: Upload npm logs
