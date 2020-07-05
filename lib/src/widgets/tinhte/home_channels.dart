@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:tinhte_demo/src/screens/content_list_view.dart';
-import 'package:tinhte_demo/src/widgets/home/header.dart';
+import 'package:the_app/src/screens/content_list_view.dart';
+import 'package:the_app/src/widgets/home/header.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ChannelsWidget extends StatelessWidget {

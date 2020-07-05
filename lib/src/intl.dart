@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:the_app/l10n/messages_all.dart';
 import 'package:timeago/timeago.dart' as timeago;
-import 'package:tinhte_demo/l10n/messages_all.dart';
 
 final _numberFormatCompact = NumberFormat.compact();
 

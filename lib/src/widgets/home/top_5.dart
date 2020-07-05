@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:tinhte_api/search.dart';
 import 'package:tinhte_api/thread.dart';
 import 'package:tinhte_api/x_content_list.dart';
-import 'package:tinhte_demo/src/screens/thread_view.dart';
-import 'package:tinhte_demo/src/intl.dart';
-import 'package:tinhte_demo/src/widgets/image.dart';
+import 'package:the_app/src/screens/thread_view.dart';
+import 'package:the_app/src/intl.dart';
+import 'package:the_app/src/widgets/image.dart';
 
 class HomeTop5Widget extends StatelessWidget {
   final List<SearchResult<Thread>> items;

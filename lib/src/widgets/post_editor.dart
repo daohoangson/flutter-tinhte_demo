@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tinhte_api/post.dart';
 import 'package:tinhte_api/thread.dart';
-import 'package:tinhte_demo/src/intl.dart';
-import 'package:tinhte_demo/src/widgets/attachment_editor.dart';
-import 'package:tinhte_demo/src/widgets/posts.dart';
-import 'package:tinhte_demo/src/data/emojis.dart';
-import 'package:tinhte_demo/src/api.dart';
+import 'package:the_app/src/intl.dart';
+import 'package:the_app/src/widgets/attachment_editor.dart';
+import 'package:the_app/src/widgets/posts.dart';
+import 'package:the_app/src/data/emojis.dart';
+import 'package:the_app/src/api.dart';
 
 class PostEditorWidget extends StatefulWidget {
   final PostEditorCallback callback;

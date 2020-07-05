@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tinhte_api/tag.dart';
-import 'package:tinhte_demo/src/widgets/tag/follow_button.dart';
-import 'package:tinhte_demo/src/intl.dart';
+import 'package:the_app/src/widgets/tag/follow_button.dart';
+import 'package:the_app/src/intl.dart';
 
 class TagViewHeader extends StatelessWidget {
   final Tag tag;

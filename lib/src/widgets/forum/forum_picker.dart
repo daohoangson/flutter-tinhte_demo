@@ -3,8 +3,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:tinhte_api/navigation.dart' as navigation;
 import 'package:tinhte_api/node.dart' as node;
-import 'package:tinhte_demo/src/intl.dart';
-import 'package:tinhte_demo/src/widgets/super_list.dart';
+import 'package:the_app/src/intl.dart';
+import 'package:the_app/src/widgets/super_list.dart';
 
 class ForumPickerWidget extends StatelessWidget {
   @override

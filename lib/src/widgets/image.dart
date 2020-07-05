@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:tinhte_api/thread.dart';
-import 'package:tinhte_demo/src/config.dart';
+import 'package:the_app/src/config.dart';
 
 const kThreadImageAspectRatio = 594 / 368;
 
@@ -10,10 +10,10 @@ final String _apiUrlAttachments = "${config.apiRoot}?attachments";
 Widget buildCachedNetworkImage(String imageUrl) => CachedNetworkImage(
       imageUrl: imageUrl,
       errorWidget: (_, __, ___) => const DecoratedBox(
-            decoration: BoxDecoration(
-              color: Colors.grey,
-            ),
-          ),
+        decoration: BoxDecoration(
+          color: Colors.grey,
+        ),
+      ),
       fit: BoxFit.cover,
     );
 

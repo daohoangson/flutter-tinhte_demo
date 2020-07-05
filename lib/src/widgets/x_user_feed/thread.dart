@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tinhte_api/thread.dart';
 import 'package:tinhte_api/x_user_feed.dart';
-import 'package:tinhte_demo/src/link.dart';
+import 'package:the_app/src/link.dart';
 
 final _sourceRegExp = RegExp(r'^(.+) (.+)$');
 

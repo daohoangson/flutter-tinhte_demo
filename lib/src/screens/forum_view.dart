@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tinhte_api/node.dart';
-import 'package:tinhte_demo/src/intl.dart';
-import 'package:tinhte_demo/src/screens/search/thread.dart';
-import 'package:tinhte_demo/src/screens/thread_create.dart';
-import 'package:tinhte_demo/src/widgets/navigation.dart';
-import 'package:tinhte_demo/src/widgets/threads.dart';
+import 'package:the_app/src/intl.dart';
+import 'package:the_app/src/screens/search/thread.dart';
+import 'package:the_app/src/screens/thread_create.dart';
+import 'package:the_app/src/widgets/navigation.dart';
+import 'package:the_app/src/widgets/threads.dart';
 
 class ForumViewScreen extends StatefulWidget {
   final Forum forum;

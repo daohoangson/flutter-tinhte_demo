@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:tinhte_api/search.dart';
 import 'package:tinhte_api/thread.dart';
-import 'package:tinhte_demo/src/screens/thread_create.dart';
-import 'package:tinhte_demo/src/widgets/home/bottom_bar.dart';
-import 'package:tinhte_demo/src/widgets/home/thread.dart';
-import 'package:tinhte_demo/src/widgets/home/top_5.dart';
-import 'package:tinhte_demo/src/widgets/super_list.dart';
-import 'package:tinhte_demo/src/config.dart';
-import 'package:tinhte_demo/src/intl.dart';
+import 'package:the_app/src/screens/thread_create.dart';
+import 'package:the_app/src/widgets/home/bottom_bar.dart';
+import 'package:the_app/src/widgets/home/thread.dart';
+import 'package:the_app/src/widgets/home/top_5.dart';
+import 'package:the_app/src/widgets/super_list.dart';
+import 'package:the_app/src/config.dart';
+import 'package:the_app/src/intl.dart';
 
 class HomeScreen extends StatelessWidget {
   @override

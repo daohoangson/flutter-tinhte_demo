@@ -7,9 +7,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:tinhte_api/attachment.dart';
 import 'package:tinhte_api/user.dart';
-import 'package:tinhte_demo/src/intl.dart';
-import 'package:tinhte_demo/src/widgets/image.dart';
-import 'package:tinhte_demo/src/api.dart';
+import 'package:the_app/src/intl.dart';
+import 'package:the_app/src/widgets/image.dart';
+import 'package:the_app/src/api.dart';
 
 class AttachmentEditorWidget extends StatefulWidget {
   final String apiPostPath;

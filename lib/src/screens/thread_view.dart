@@ -4,12 +4,12 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
 import 'package:tinhte_api/thread.dart';
-import 'package:tinhte_demo/src/widgets/font_control.dart';
-import 'package:tinhte_demo/src/widgets/post_editor.dart';
-import 'package:tinhte_demo/src/widgets/posts.dart';
-import 'package:tinhte_demo/src/intl.dart';
-import 'package:tinhte_demo/src/link.dart';
-import 'package:tinhte_demo/src/widgets/thread/thread_bookmark.dart';
+import 'package:the_app/src/widgets/font_control.dart';
+import 'package:the_app/src/widgets/post_editor.dart';
+import 'package:the_app/src/widgets/posts.dart';
+import 'package:the_app/src/intl.dart';
+import 'package:the_app/src/link.dart';
+import 'package:the_app/src/widgets/thread/thread_bookmark.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 const _kPopupActionOpenInBrowser = 'openInBrowser';

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tinhte_api/tag.dart';
-import 'package:tinhte_demo/src/widgets/tag/tag_view_header.dart';
-import 'package:tinhte_demo/src/widgets/threads.dart';
+import 'package:the_app/src/widgets/tag/tag_view_header.dart';
+import 'package:the_app/src/widgets/threads.dart';
 
 class TagViewScreen extends StatelessWidget {
   final Tag tag;

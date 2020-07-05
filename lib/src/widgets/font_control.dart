@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tinhte_demo/src/constants.dart';
+import 'package:the_app/src/constants.dart';
 
 class FontScale extends ChangeNotifier {
   double _value;

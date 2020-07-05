@@ -7,10 +7,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tinhte_api/api.dart';
 import 'package:tinhte_api/oauth_token.dart';
 import 'package:tinhte_api/user.dart';
-import 'package:tinhte_demo/src/intl.dart';
-import 'package:tinhte_demo/src/screens/login.dart';
-import 'package:tinhte_demo/src/config.dart';
-import 'package:tinhte_demo/src/constants.dart';
+import 'package:the_app/src/intl.dart';
+import 'package:the_app/src/screens/login.dart';
+import 'package:the_app/src/config.dart';
+import 'package:the_app/src/constants.dart';
 
 final _oauthTokenRegEx = RegExp(r'oauth_token=.+(&|$)');
 

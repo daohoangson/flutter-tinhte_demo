@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tinhte_api/poll.dart';
-import 'package:tinhte_demo/src/api.dart';
-import 'package:tinhte_demo/src/constants.dart';
-import 'package:tinhte_demo/src/intl.dart';
+import 'package:the_app/src/api.dart';
+import 'package:the_app/src/constants.dart';
+import 'package:the_app/src/intl.dart';
 
 class PollWidget extends StatefulWidget {
   final String link;

@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:tinhte_api/node.dart';
 import 'package:tinhte_api/user.dart';
-import 'package:tinhte_demo/src/intl.dart';
-import 'package:tinhte_demo/src/widgets/threads.dart';
-import 'package:tinhte_demo/src/api.dart';
+import 'package:the_app/src/intl.dart';
+import 'package:the_app/src/widgets/threads.dart';
+import 'package:the_app/src/api.dart';
 
 class ThreadSearchDelegate extends SearchDelegate {
   final Forum forum;
