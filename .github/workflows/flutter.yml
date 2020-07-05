@@ -7,13 +7,7 @@ env:
 
 jobs:
   build:
-    strategy:
-      matrix:
-        target:
-          - apk
-          - ipa
     runs-on: macos-latest
-
     steps:
       - uses: actions/checkout@v2
       - run: git submodule update --init --recursive
@@ -41,7 +35,6 @@ jobs:
           echo "::set-env name=FLUTTER_VERSION::${_flutterVersion}"
 
       - name: Setup Java
-        if: matrix.target == 'apk'
         uses: actions/setup-java@v1
         with:
           java-version: ${{ env.JAVA_VERSION }}
@@ -57,7 +50,6 @@ jobs:
       - run: flutter pub get
 
       - name: build apk
-        if: matrix.target == 'apk'
         run: |
           set -e
 
@@ -65,7 +57,6 @@ jobs:
           gsutil cp build/app/outputs/apk/release/*.apk "gs://${GCS_BUCKET}/${GITHUB_SHA}/apk"
 
       - name: build ipa
-        if: matrix.target == 'ipa'
         run: |
           set -e
 
