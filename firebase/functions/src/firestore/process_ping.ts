@@ -134,7 +134,7 @@ const _buildMessage = (objectData: any): {
     data['notification_id'] = `${notificationId}`;
 
     hasNotification = true;
-    notification['body'] = striptags(notificationHtml).trim();
+    notification['body'] = striptags(notificationHtml).trim().replace(/\s{2,}/g, ' ');
     notification['tag'] = `notificationId=${notificationId}`
   }
 
