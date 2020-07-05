@@ -21,3 +21,9 @@ jobs:
       - run: npm run lint
       - run: npm run build
       - run: npm run deploy --token ${{ secrets.FIREBASE_TOKEN }}
+      - name: upload npm logs
+        uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: npm-logs
+          path: "~/.npm/_logs/**/*"
