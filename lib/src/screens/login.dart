@@ -3,11 +3,11 @@ import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:tinhte_api/api.dart';
-import 'package:tinhte_api/oauth_token.dart';
-import 'package:tinhte_demo/src/api.dart';
-import 'package:tinhte_demo/src/config.dart';
-import 'package:tinhte_demo/src/intl.dart';
+import 'package:the_api/api.dart';
+import 'package:the_api/oauth_token.dart';
+import 'package:the_app/src/api.dart';
+import 'package:the_app/src/config.dart';
+import 'package:the_app/src/intl.dart';
 
 final _facebookLogin = FacebookLogin();
 

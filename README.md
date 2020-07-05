@@ -129,7 +129,7 @@ You have to replace the files mentioned in [.gitattributes](https://github.com/d
 For example, `lib/config.encrypted.dart` should look like below:
 
 ```dart
-import 'package:tinhte_demo/src/config.dart';
+import 'package:the_app/src/config.dart';
 
 class Config extends ConfigBase {
   @override

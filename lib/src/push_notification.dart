@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
-import 'package:tinhte_api/user.dart';
-import 'package:tinhte_demo/src/screens/notification_list.dart';
-import 'package:tinhte_demo/src/api.dart';
-import 'package:tinhte_demo/src/config.dart';
-import 'package:tinhte_demo/src/link.dart';
+import 'package:the_api/user.dart';
+import 'package:the_app/src/screens/notification_list.dart';
+import 'package:the_app/src/api.dart';
+import 'package:the_app/src/config.dart';
+import 'package:the_app/src/link.dart';
 
 const _kUnreadIconSize = 30.0;
 const _kUnreadIconBoxSize = 50.0;

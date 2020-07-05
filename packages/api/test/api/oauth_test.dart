@@ -1,5 +1,5 @@
 import 'package:test/test.dart';
-import 'package:tinhte_api/api.dart';
+import 'package:the_api/api.dart';
 
 void main() {
   group('oauth/token', () {
