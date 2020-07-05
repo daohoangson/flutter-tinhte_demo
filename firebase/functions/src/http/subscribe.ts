@@ -20,7 +20,7 @@ export default (config: Config) => functions.https.onRequest(async (req, resp) =
     },
   } = req;
 
-  if (!hubTopic || !registrationToken) return resp.sendStatus(400);
+  if (!hubTopic || !registrationToken) { resp.sendStatus(400); return; }
 
   const statusCode = await Promise.all([
     post(
@@ -64,5 +64,5 @@ export default (config: Config) => functions.https.onRequest(async (req, resp) =
     },
   );
 
-  return resp.sendStatus(statusCode);
+  resp.sendStatus(statusCode);
 });

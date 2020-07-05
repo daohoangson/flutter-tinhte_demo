@@ -16,10 +16,10 @@ export default (_: Config) => functions.https.onRequest(async (req, resp) => {
     },
   } = req;
 
-  if (challenge) return resp.send(challenge);
+  if (challenge) { resp.send(challenge); return; }
 
-  if (!Array.isArray(body)) return resp.sendStatus(400);
-  if (body.length === 0) return resp.sendStatus(200);
+  if (!Array.isArray(body)) { resp.sendStatus(400); return; }
+  if (body.length === 0) { resp.sendStatus(200); return; }
 
   const pingIds: string[] = [];
   await Promise.all(body.map((ping) => admin.firestore()
@@ -31,10 +31,8 @@ export default (_: Config) => functions.https.onRequest(async (req, resp) => {
       (reason) => console.error(`${ping} -> ${reason}`),
     )));
 
-  if (pingIds.length > 0) {
-    console.log(`pingIds=${pingIds}`);
-    return resp.sendStatus(202);
-  } else {
-    return resp.sendStatus(500);
-  }
+  if (pingIds.length === 0) { resp.sendStatus(500); return; }
+
+  console.log(`pingIds=${pingIds}`);
+  resp.sendStatus(202);
 });

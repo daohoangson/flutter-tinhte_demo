@@ -13,11 +13,9 @@ export default (_: Config) => functions.https.onRequest(async (req, resp) => {
     },
   } = req;
 
-  if (!registrationToken) return resp.sendStatus(400);
+  if (!registrationToken) { resp.sendStatus(400); return; }
 
-  if (await unsubscribe(registrationToken)) {
-    return resp.sendStatus(202);
-  } else {
-    return resp.sendStatus(500);
-  }
+  if (!await unsubscribe(registrationToken)) { resp.sendStatus(500); return; }
+
+  resp.sendStatus(202);
 });
