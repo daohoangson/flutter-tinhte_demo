@@ -80,14 +80,11 @@ jobs:
         run: |
           set -e
 
-          _path=build/app/outputs/.env
-
           { \
             echo "BUILD_NAME=${BUILD_NAME}"; \
             echo "FLUTTER_VERSION=${FLUTTER_VERSION}"; \
             echo "JAVA_VERSION=${JAVA_VERSION}"; \
-          } >"$_path"
-          gsutil cp "${_path}" "gs://${GCS_BUCKET}/${GITHUB_SHA}"
+          } | gsutil cp - "gs://${GCS_BUCKET}/${GITHUB_SHA}/.env"
 
   comment:
     needs: build
