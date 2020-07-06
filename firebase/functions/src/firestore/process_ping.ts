@@ -114,7 +114,6 @@ const _buildPayload = (objectData: any): {
     // alert
     notification_id: notificationId,
     notification_html: notificationHtml,
-    links,
 
     // conversation
     creator_username: creatorUsername,
@@ -151,13 +150,6 @@ const _buildPayload = (objectData: any): {
     badge = 0;
     if (convoCount) badge += convoCount;
     if (notificationCount) badge += notificationCount;
-
-    if (typeof links === 'object') {
-      const { creator_avatar: creatorAvatar } = links;
-      if (creatorAvatar) {
-        notification.imageUrl = creatorAvatar;
-      }
-    }
   }
 
   for (const key in objectData) {
