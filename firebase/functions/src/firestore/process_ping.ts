@@ -51,7 +51,7 @@ export default (_: Config) => functions.firestore
       }),
       snap.ref.update({
         [firestoreFieldSendDate]: admin.firestore.FieldValue.serverTimestamp(),
-        [firestoreFieldSentPayload]: payload,
+        [firestoreFieldSentPayload]: _prepareFirestorePayload(payload),
       }),
     ]);
 
@@ -210,4 +210,15 @@ const _prepareDataValue = (target: any, key: string, value: any): void => {
   } else {
     target[key] = `${value}`;
   }
+}
+const _prepareFirestorePayload = (input: any): any => {
+  if (typeof input !== 'object') return input;
+
+  const output: any = {};
+  for (const k in input) {
+    if (input[k]) {
+      output[k] = _prepareFirestorePayload(input[k]);
+    }
+  }
+  return output;
 }
