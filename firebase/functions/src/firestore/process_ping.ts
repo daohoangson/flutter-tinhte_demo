@@ -169,6 +169,7 @@ const _buildPayload = (objectData: any): {
     android: hasNotification ? {
       notification: {
         clickAction: 'FLUTTER_NOTIFICATION_CLICK',
+        notificationCount: badge,
         tag,
       },
     } : undefined,
