@@ -35,8 +35,8 @@ export default (_: Config) => functions.firestore
       return;
     }
 
-    const [message, registrationTokens] = await Promise.all([
-      _buildMessage(objectData),
+    const [payload, registrationTokens] = await Promise.all([
+      _buildPayload(objectData),
       _getRegistrationTokens(topic),
     ]);
     if (!registrationTokens) {
@@ -47,11 +47,11 @@ export default (_: Config) => functions.firestore
     const [batchResponse] = await Promise.all([
       admin.messaging().sendMulticast({
         tokens: registrationTokens,
-        ...message,
+        ...payload,
       }),
       snap.ref.update({
         [firestoreFieldSendDate]: admin.firestore.FieldValue.serverTimestamp(),
-        [firestoreFieldSentPayload]: message,
+        [firestoreFieldSentPayload]: payload,
       }),
     ]);
 
@@ -99,7 +99,7 @@ export default (_: Config) => functions.firestore
     }
   });
 
-const _buildMessage = (objectData: any): {
+const _buildPayload = (objectData: any): {
   data?: { [key: string]: string },
   notification?: admin.messaging.Notification,
   android?: admin.messaging.AndroidConfig,
