@@ -108,6 +108,7 @@ const _buildPayload = (objectData: any): {
   const data: { [key: string]: string } = {};
   const notification: admin.messaging.Notification = {};
   let badge: number | undefined;
+  let priority: ('default' | 'max') = 'default';
   let tag: string | undefined;
 
   const {
@@ -141,6 +142,7 @@ const _buildPayload = (objectData: any): {
     if (convoId && convoMessageBody && convoMessageId && convoTitle) {
       notification.title = convoTitle;
       notification.body = `${creatorUsername}: ${convoMessageBody}`;
+      priority = 'max';
       tag = `conversationId=${convoId} messageId=${convoMessageId}`;
     }
   }
@@ -170,6 +172,7 @@ const _buildPayload = (objectData: any): {
       notification: {
         clickAction: 'FLUTTER_NOTIFICATION_CLICK',
         notificationCount: badge,
+        priority,
         tag,
       },
     } : undefined,
