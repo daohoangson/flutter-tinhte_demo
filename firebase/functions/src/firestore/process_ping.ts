@@ -110,6 +110,7 @@ const _buildPayload = (objectData: any): {
   let badge: number | undefined;
   let priority: ('default' | 'max') = 'default';
   let tag: string | undefined;
+  let visibility: ('public' | 'secret') = 'public';
 
   const {
     // alert
@@ -144,6 +145,7 @@ const _buildPayload = (objectData: any): {
       notification.body = `${creatorUsername}: ${convoMessageBody}`;
       priority = 'max';
       tag = `conversationId=${convoId} messageId=${convoMessageId}`;
+      visibility = 'secret';
     }
   }
 
@@ -174,6 +176,7 @@ const _buildPayload = (objectData: any): {
         notificationCount: badge,
         priority,
         tag,
+        visibility,
       },
     } : undefined,
     apns: hasNotification ? {
