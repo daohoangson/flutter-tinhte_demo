@@ -119,6 +119,7 @@ const _buildMessage = (objectData: any): {
     // alert
     notification_id: notificationId,
     notification_html: notificationHtml,
+    links,
 
     // conversation
     creator_username: creatorUsername,
@@ -158,6 +159,13 @@ const _buildMessage = (objectData: any): {
     if (convoCount) badge += convoCount;
     if (notificationCount) badge += notificationCount;
     notification['badge'] = `${badge}`;
+    
+    if (typeof links === 'object') {
+      const { creator_avatar: creatorAvatar } = links;
+      if (creatorAvatar) {
+        notification['imageUrl'] = creatorAvatar;
+      }
+    }
 
     notification['clickAction'] = 'FLUTTER_NOTIFICATION_CLICK';
   }
