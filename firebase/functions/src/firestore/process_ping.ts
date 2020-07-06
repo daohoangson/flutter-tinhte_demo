@@ -108,12 +108,14 @@ const _buildPayload = (objectData: any): {
   const data: { [key: string]: string } = {};
   const notification: admin.messaging.Notification = {};
   let badge: number | undefined;
+  let icon: string | undefined;
   let priority: ('default' | 'max') = 'default';
   let tag: string | undefined;
   let visibility: ('public' | 'secret') = 'public';
 
   const {
     // alert
+    content_action: contentAction,
     notification_id: notificationId,
     notification_html: notificationHtml,
 
@@ -154,6 +156,15 @@ const _buildPayload = (objectData: any): {
     badge = 0;
     if (convoCount) badge += convoCount;
     if (notificationCount) badge += notificationCount;
+
+    if (typeof contentAction === 'string') {
+      switch (contentAction) {
+        case 'like':
+        case 'tinhte_xentag_tag_watch':
+          icon = contentAction;
+          break;
+      }
+    }
   }
 
   for (const key in objectData) {
@@ -173,6 +184,7 @@ const _buildPayload = (objectData: any): {
     android: hasNotification ? {
       notification: {
         clickAction: 'FLUTTER_NOTIFICATION_CLICK',
+        icon,
         notificationCount: badge,
         priority,
         tag,
