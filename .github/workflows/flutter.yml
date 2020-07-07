@@ -57,16 +57,16 @@ jobs:
           set -e
 
           _message=$( \
-            echo '## Android builds'; \
-            ls build/app/outputs/apk/release/*.apk \
-              | xargs -n 1 basename \
-              | xargs -n 1 -I {} printf -- "- [%s](${GCS_URL}/apk/%s)\n" {} {}; \
-            echo; \
+            echo '### Android builds'; \
             echo '```'; \
             echo "BUILD_NAME=${BUILD_NAME}"; \
             echo "FLUTTER_VERSION=${FLUTTER_VERSION}"; \
             echo "JAVA_VERSION=${JAVA_VERSION}"; \
             echo '```'; \
+            echo; \
+            ls build/app/outputs/apk/release/*.apk \
+              | xargs -n 1 basename \
+              | xargs -n 1 -I {} printf -- "- [%s](${GCS_URL}/apk/%s)\n" {} {}; \
           )
 
           _message="${_message//'%'/'%25'}"
@@ -126,7 +126,7 @@ jobs:
 
           { \
             xcodebuild -version; \
-            cat ios/Flutter/Generated.xcconfig | grep BUILD_NUMBER; \
+            cat ios/Flutter/Generated.xcconfig | grep BUILD_NAME | sed s/FLUTTER_//; \
             echo "FLUTTER_VERSION=${FLUTTER_VERSION}"; \
           } | gsutil cp - "${GCS_PATH}/ipa.env"
 
@@ -149,12 +149,12 @@ jobs:
           set -e
 
           _message=$( \
-            echo '## iOS build'; \
-            printf '[manifest.plist](%s)' "${GCS_URL}/ipa/redirect.html"; \
-            echo; \
+            echo '### iOS build'; \
             echo '```'; \
             gsutil cat "${GCS_PATH}/ipa.env"; \
             echo '```'; \
+            echo; \
+            printf '[manifest.plist](%s)' "${GCS_URL}/ipa/redirect.html"; \
           )
 
           _message="${_message//'%'/'%25'}"
