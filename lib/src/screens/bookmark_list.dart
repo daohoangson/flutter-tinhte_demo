@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:tinhte_demo/src/intl.dart';
-import 'package:tinhte_demo/src/widgets/threads.dart';
-import 'package:tinhte_demo/src/config.dart';
+import 'package:the_app/src/intl.dart';
+import 'package:the_app/src/widgets/threads.dart';
+import 'package:the_app/src/config.dart';
 
 class BookmarkListScreen extends StatelessWidget {
   @override

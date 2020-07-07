@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tinhte_api/api.dart';
-import 'package:tinhte_api/oauth_token.dart';
-import 'package:tinhte_api/user.dart';
-import 'package:tinhte_demo/src/intl.dart';
-import 'package:tinhte_demo/src/screens/login.dart';
-import 'package:tinhte_demo/src/config.dart';
-import 'package:tinhte_demo/src/constants.dart';
+import 'package:the_api/api.dart';
+import 'package:the_api/oauth_token.dart';
+import 'package:the_api/user.dart';
+import 'package:the_app/src/intl.dart';
+import 'package:the_app/src/screens/login.dart';
+import 'package:the_app/src/config.dart';
+import 'package:the_app/src/constants.dart';
 
 final _oauthTokenRegEx = RegExp(r'oauth_token=.+(&|$)');
 

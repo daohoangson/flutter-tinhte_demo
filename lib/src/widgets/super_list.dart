@@ -2,8 +2,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
-import 'package:tinhte_api/links.dart';
-import 'package:tinhte_demo/src/api.dart';
+import 'package:the_api/links.dart';
+import 'package:the_app/src/api.dart';
 
 class SuperListView<T> extends StatefulWidget {
   final ApiMethod apiMethodInitial;

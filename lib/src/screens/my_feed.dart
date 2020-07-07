@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tinhte_demo/src/intl.dart';
-import 'package:tinhte_demo/src/widgets/x_user_feed.dart';
+import 'package:the_app/src/intl.dart';
+import 'package:the_app/src/widgets/x_user_feed.dart';
 
 class MyFeedScreen extends StatefulWidget {
   @override

@@ -1,8 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:tinhte_api/post.dart';
-import 'package:tinhte_demo/src/widgets/html.dart';
-import 'package:tinhte_demo/src/widgets/posts.dart';
+import 'package:the_api/post.dart';
+import 'package:the_app/src/widgets/html.dart';
+import 'package:the_app/src/widgets/posts.dart';
 
 bool isBackgroundPost(Post post) =>
     post.postBodyHtml

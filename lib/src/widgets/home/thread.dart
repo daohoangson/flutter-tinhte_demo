@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:tinhte_api/search.dart';
-import 'package:tinhte_api/thread.dart';
-import 'package:tinhte_api/x_content_list.dart';
-import 'package:tinhte_demo/src/constants.dart';
-import 'package:tinhte_demo/src/screens/thread_view.dart';
-import 'package:tinhte_demo/src/intl.dart';
-import 'package:tinhte_demo/src/widgets/image.dart';
+import 'package:the_api/search.dart';
+import 'package:the_api/thread.dart';
+import 'package:the_api/x_content_list.dart';
+import 'package:the_app/src/constants.dart';
+import 'package:the_app/src/screens/thread_view.dart';
+import 'package:the_app/src/intl.dart';
+import 'package:the_app/src/widgets/image.dart';
 
 class HomeThreadWidget extends StatelessWidget {
   final ContentListItem item;

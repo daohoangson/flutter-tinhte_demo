@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tinhte_demo/src/intl.dart';
-import 'package:tinhte_demo/src/widgets/notifications.dart';
+import 'package:the_app/src/intl.dart';
+import 'package:the_app/src/widgets/notifications.dart';
 
 class NotificationListScreen extends StatelessWidget {
   const NotificationListScreen({Key key}) : super(key: key);

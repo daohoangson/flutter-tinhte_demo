@@ -2,17 +2,17 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_tabs/flutter_custom_tabs.dart'
     as flutter_custom_tabs;
-import 'package:tinhte_api/feature_page.dart';
-import 'package:tinhte_api/tag.dart';
-import 'package:tinhte_api/thread.dart';
-import 'package:tinhte_api/user.dart';
-import 'package:tinhte_demo/src/api.dart';
-import 'package:tinhte_demo/src/config.dart';
-import 'package:tinhte_demo/src/intl.dart';
-import 'package:tinhte_demo/src/screens/fp_view.dart';
-import 'package:tinhte_demo/src/screens/member_view.dart';
-import 'package:tinhte_demo/src/screens/tag_view.dart';
-import 'package:tinhte_demo/src/screens/thread_view.dart';
+import 'package:the_api/feature_page.dart';
+import 'package:the_api/tag.dart';
+import 'package:the_api/thread.dart';
+import 'package:the_api/user.dart';
+import 'package:the_app/src/api.dart';
+import 'package:the_app/src/config.dart';
+import 'package:the_app/src/intl.dart';
+import 'package:the_app/src/screens/fp_view.dart';
+import 'package:the_app/src/screens/member_view.dart';
+import 'package:the_app/src/screens/tag_view.dart';
+import 'package:the_app/src/screens/thread_view.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 void launchLink(BuildContext context, String link) async {
