@@ -5,15 +5,23 @@ env:
   GCS_URL: https://storage.googleapis.com/flutterttdemo/${{ github.sha }}
   GIT_CRYPT_KEY: ${{ secrets.GIT_CRYPT_KEY }}
   JAVA_VERSION: 12.x
-  SCRIPT_EXTRACT_CONFIG: |
-    set -ex
+  SCRIPT_PREPARE_REPO: |
+    set -e
 
+    git submodule update --init --recursive
+
+    # Unlock git-crypt
+    brew install git-crypt
+    # https://github.com/sliteteam/github-action-git-crypt-unlock/blob/master/entrypoint.sh
+    echo "${GIT_CRYPT_KEY}" | base64 --decode > ./git-crypt-key
+    git-crypt unlock ./git-crypt-key
+    rm ./git-crypt-key
+
+    # Extract config from pubspec.yaml
     brew install yq
-
     _appVersion=$( yq read pubspec.yaml version )
     _appVersionWithoutNumber=$( echo "${_appVersion}" | sed 's/+.*$//' )
     echo "::set-env name=BUILD_NAME::${_appVersionWithoutNumber}-${GITHUB_SHA:0:7}"
-
     _flutterVersion=$( yq read pubspec.yaml environment.flutter )
     echo "::set-env name=FLUTTER_VERSION::${_flutterVersion}"
 
@@ -22,13 +30,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: git submodule update --init --recursive
-      - name: Unlock git-crypt
-        uses: sliteteam/github-action-git-crypt-unlock@1.0.2
-        env:
-          GIT_CRYPT_KEY: ${{ env.GIT_CRYPT_KEY }}
-      - name: Extract config from pubspec.yaml
-        run: echo "${SCRIPT_EXTRACT_CONFIG}" | bash -
+      - name: Prepare repo
+        run: echo "${SCRIPT_PREPARE_REPO}" | bash -
 
       - name: Setup Java
         uses: actions/setup-java@v1
@@ -38,18 +41,15 @@ jobs:
         uses: subosito/flutter-action@v1
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
-      - name: Setup gsutil
+      - run: flutter pub get
+      - run: flutter build apk "--build-name=${BUILD_NAME}" --split-per-abi
+
+      - name: Setup gcloud
         uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
         with:
           service_account_key: ${{ secrets.GCP_UPLOADER_SA_KEY }}
-
-      - run: flutter pub get
-      - name: build apk
-        run: |
-          set -e
-
-          flutter build apk "--build-name=${BUILD_NAME}" --split-per-abi
-          gsutil cp build/app/outputs/apk/release/*.apk "${GCS_PATH}/apk"
+      - name: Run gsutil cp
+        run: gsutil cp build/app/outputs/apk/release/*.apk "${GCS_PATH}/apk"
 
       - name: Prepare markdown
         id: markdown
@@ -85,61 +85,47 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
-      - run: git submodule update --init --recursive
-      - name: Unlock git-crypt
-        run: |
-          set -e
-
-          brew install git-crypt
-
-          # https://github.com/sliteteam/github-action-git-crypt-unlock/blob/master/entrypoint.sh
-          echo "${GIT_CRYPT_KEY}" | base64 --decode > ./git-crypt-key
-          git-crypt unlock ./git-crypt-key
-          rm ./git-crypt-key
-      - name: Extract config from pubspec.yaml
-        run: echo "${SCRIPT_EXTRACT_CONFIG}" | bash -
+      - name: Prepare repo
+        run: echo "${SCRIPT_PREPARE_REPO}" | bash -
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v1
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
-      - name: Setup gsutil
-        uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
-        with:
-          service_account_key: ${{ secrets.GCP_UPLOADER_SA_KEY }}
-
       - run: flutter pub get
-      - name: build ios
+      - name: Run flutter build ios
         run: |
           set -e
 
           flutter build ios "--build-name=${BUILD_NAME}" --no-codesign
           ( cd ios && fastlane ipa )
 
-          echo "<script>location='itms-services://?action=download-manifest&url='+encodeURIComponent('${GCS_URL}/ipa/manifest.plist');</script>" \
-            >build/app/outputs/ipa/release/redirect.html
-          gsutil cp build/app/outputs/ipa/release/* "${GCS_PATH}/ipa"
-
-      - name: Dump environment variables
+      - name: Setup gcloud
+        uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        with:
+          service_account_key: ${{ secrets.GCP_UPLOADER_SA_KEY }}
+      - name: Run gsutil cp
         run: |
           set -e
+
+          _releaseDir=build/app/outputs/ipa/release
 
           { \
             xcodebuild -version; \
             cat ios/Flutter/Generated.xcconfig | grep BUILD_NAME | sed s/FLUTTER_//; \
             echo "FLUTTER_VERSION=${FLUTTER_VERSION}"; \
-          } | gsutil cp - "${GCS_PATH}/ipa.env"
+          } >"${_releaseDir}/ipa.env"
 
-    # the checkout step has a `if` to prevent it from running in the wrong branch
-    # the job is configured to continue on error to let `comment` job to work
-    continue-on-error: true
+          echo "<script>location='itms-services://?action=download-manifest&url='+encodeURIComponent('${GCS_URL}/ipa/manifest.plist');</script>" \
+            >"${_releaseDir}/redirect.html"
+
+          gsutil cp "${_releaseDir}"/* "${GCS_PATH}/ipa"
 
   comment_ipa:
     needs: build_ipa
     runs-on: ubuntu-latest
-
     steps:
-      - name: Setup gsutil
+      - name: Setup gcloud
         uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
         with:
           service_account_key: ${{ secrets.GCP_UPLOADER_SA_KEY }}
