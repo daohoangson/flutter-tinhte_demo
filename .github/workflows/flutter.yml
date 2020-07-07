@@ -1,38 +1,34 @@
 on: push
 name: Flutter
 env:
-  GCS_BUCKET: flutterttdemo
+  GCS_PATH: gs://flutterttdemo/${{ github.sha }}
+  GCS_URL: https://storage.googleapis.com/flutterttdemo/${{ github.sha }}
   GIT_CRYPT_KEY: ${{ secrets.GIT_CRYPT_KEY }}
   JAVA_VERSION: 12.x
+  SCRIPT_EXTRACT_CONFIG: |
+    set -ex
+
+    brew install yq
+
+    _appVersion=$( yq read pubspec.yaml version )
+    _appVersionWithoutNumber=$( echo "${_appVersion}" | sed 's/+.*$//' )
+    echo "::set-env name=BUILD_NAME::${_appVersionWithoutNumber}-${GITHUB_SHA:0:7}"
+
+    _flutterVersion=$( yq read pubspec.yaml environment.flutter )
+    echo "::set-env name=FLUTTER_VERSION::${_flutterVersion}"
 
 jobs:
-  build:
-    runs-on: macos-latest
+  build_apk:
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - run: git submodule update --init --recursive
       - name: Unlock git-crypt
-        run: |
-          set -e
-
-          brew install git-crypt
-
-          # https://github.com/sliteteam/github-action-git-crypt-unlock/blob/master/entrypoint.sh
-          echo "${GIT_CRYPT_KEY}" | base64 --decode > ./git-crypt-key
-          git-crypt unlock ./git-crypt-key
-          rm ./git-crypt-key
+        uses: sliteteam/github-action-git-crypt-unlock@1.0.2
+        env:
+          GIT_CRYPT_KEY: ${{ env.GIT_CRYPT_KEY }}
       - name: Extract config from pubspec.yaml
-        run: |
-          set -e
-
-          brew install yq
-
-          _appVersion=$( yq read pubspec.yaml version )
-          _appVersionWithoutNumber=$( echo "${_appVersion}" | sed 's/+.*$//' )
-          echo "::set-env name=BUILD_NAME::${_appVersionWithoutNumber}-${GITHUB_SHA:0:7}"
-
-          _flutterVersion=$( yq read pubspec.yaml environment.flutter )
-          echo "::set-env name=FLUTTER_VERSION::${_flutterVersion}"
+        run: echo "${SCRIPT_EXTRACT_CONFIG}" | bash -
 
       - name: Setup Java
         uses: actions/setup-java@v1
@@ -54,18 +50,7 @@ jobs:
           set -e
 
           flutter build apk "--build-name=${BUILD_NAME}" --split-per-abi
-          gsutil cp build/app/outputs/apk/release/*.apk "gs://${GCS_BUCKET}/${GITHUB_SHA}/apk"
-
-      - name: build ipa
-        run: |
-          set -e
-
-          flutter build ios "--build-name=${BUILD_NAME}" --no-codesign
-          ( cd ios && fastlane ipa )
-
-          echo "<script>location='itms-services://?action=download-manifest&url='+encodeURIComponent('https://storage.googleapis.com/${GCS_BUCKET}/${GITHUB_SHA}/ipa/manifest.plist');</script>" \
-            >build/app/outputs/ipa/release/manifest.html
-          gsutil cp build/app/outputs/ipa/release/* "gs://${GCS_BUCKET}/${GITHUB_SHA}/ipa"
+          gsutil cp build/app/outputs/apk/release/*.apk "${GCS_PATH}/apk"
 
       - name: dump environment variables
         run: |
@@ -75,10 +60,63 @@ jobs:
             echo "BUILD_NAME=${BUILD_NAME}"; \
             echo "FLUTTER_VERSION=${FLUTTER_VERSION}"; \
             echo "JAVA_VERSION=${JAVA_VERSION}"; \
-          } | gsutil cp - "gs://${GCS_BUCKET}/${GITHUB_SHA}/.env"
+          } | gsutil cp - "${GCS_PATH}/apk.env"
+
+  build_ipa:
+    if: startsWith(github.ref, 'refs/heads/ios') || github.ref == 'refs/heads/master'
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: git submodule update --init --recursive
+      - name: Unlock git-crypt
+        run: |
+          set -e
+
+          brew install git-crypt
+
+          # https://github.com/sliteteam/github-action-git-crypt-unlock/blob/master/entrypoint.sh
+          echo "${GIT_CRYPT_KEY}" | base64 --decode > ./git-crypt-key
+          git-crypt unlock ./git-crypt-key
+          rm ./git-crypt-key
+      - name: Extract config from pubspec.yaml
+        run: echo "${SCRIPT_EXTRACT_CONFIG}" | bash -
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v1
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+      - name: Setup gsutil
+        uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        with:
+          service_account_key: ${{ secrets.GCP_UPLOADER_SA_KEY }}
+
+      - run: flutter pub get
+
+      - name: build ipa
+        run: |
+          set -e
+
+          flutter build ios "--build-name=${BUILD_NAME}" --no-codesign
+          ( cd ios && fastlane ipa )
+
+          echo "<script>location='itms-services://?action=download-manifest&url='+encodeURIComponent('${GCS_URL}/ipa/manifest.plist');</script>" \
+            >build/app/outputs/ipa/release/redirect.html
+          gsutil cp build/app/outputs/ipa/release/* "${GCS_PATH}/ipa"
+
+      - name: dump environment variables
+        run: |
+          set -e
+
+          { \
+            xcodebuild -version; \
+            cat ios/Flutter/Generated.xcconfig | grep BUILD_NUMBER; \
+            echo "FLUTTER_VERSION=${FLUTTER_VERSION}"; \
+          } | gsutil cp - "${GCS_PATH}/ipa.env"
 
   comment:
-    needs: build
+    needs:
+      - build_ipa
+      - build_apk
     runs-on: ubuntu-latest
 
     steps:
@@ -91,24 +129,31 @@ jobs:
         run: |
           set -e
 
-          _env=$( gsutil cat "gs://${GCS_BUCKET}/${GITHUB_SHA}/.env" )
-          _env="${_env//'%'/'%25'}"
-          _env="${_env//$'\n'/'%0A'}"
-          _env="${_env//$'\r'/'%0D'}"
-          echo "::set-output name=ENV::${_env}"
+          _message=''
 
-          _apk=$( \
-            gsutil ls "gs://${GCS_BUCKET}/${GITHUB_SHA}/apk" \
-            | xargs -n 1 basename \
-            | xargs -n 1 -I {} printf -- "- Android: [%s](https://storage.googleapis.com/${GCS_BUCKET}/${GITHUB_SHA}/apk/%s)\n" {} {} \
-          )
-          _apk="${_apk//'%'/'%25'}"
-          _apk="${_apk//$'\n'/'%0A'}"
-          _apk="${_apk//$'\r'/'%0D'}"
-          echo "::set-output name=APK::${_apk}"
+          _envApk=$( gsutil cat "${GCS_PATH}/apk.env" || true )
+          if [ ! -z "${_envApk}" ]; then
+            _apk=$( \
+              gsutil ls "${GCS_PATH}/apk" \
+              | xargs -n 1 basename \
+              | xargs -n 1 -I {} printf -- "- [%s](${GCS_URL}/apk/%s)\n" {} {} \
+            )
+
+            _message="${_message}## Android builds\n${_apk}\n```\n${_envApk}\n```\n"
+          fi
+
+          _envIpa=$( gsutil cat "${GCS_PATH}/ipa.env" || true )
+          if [ ! -z "${_envIpa}" ]; then
+            _message="${_message}## iOS build\n[manifest.plist](${GCS_URL}/ipa/redirect.html)\n```\n${_envIpa}\n```\n"
+          fi
+
+          _message="${_message//'%'/'%25'}"
+          _message="${_message//$'\n'/'%0A'}"
+          _message="${_message//$'\r'/'%0D'}"
+          echo "::set-output name=MESSAGE::${_message}"
       - name: Post GitHub comment
         uses: daohoangson/action-comment-on-github@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          msg: "Built app outputs:\n${{ steps.markdown.outputs.APK }}\n- iOS: [OTA manifest](https://storage.googleapis.com/${{ env.GCS_BUCKET }}/${{ github.sha }}/ipa/manifest.html)\n\nEnvironment variables:\n```\n${{ steps.markdown.outputs.ENV }}\n```"
+          msg: ${{ steps.markdown.outputs.MESSAGE }}
