@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:the_api/notification.dart' as api;
@@ -61,7 +62,7 @@ class _NotificationsState extends State<NotificationsWidget> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Padding(
-              padding: const EdgeInsets.fromLTRB(5.0, 5.0, 0.0, 0.0),
+              padding: const EdgeInsets.fromLTRB(5, 5, 0, 0),
               child: _buildAvatar(n),
             ),
             Expanded(
@@ -70,8 +71,8 @@ class _NotificationsState extends State<NotificationsWidget> {
                 children: <Widget>[
                   _buildHtmlWidget(context, n),
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 5.0),
-                    child: _buildTimestamp(context, n),
+                    padding: const EdgeInsets.fromLTRB(10, 0, 0, 5),
+                    child: _buildInfo(context, n),
                   ),
                 ],
               ),
@@ -95,10 +96,24 @@ class _NotificationsState extends State<NotificationsWidget> {
     );
   }
 
-  Widget _buildTimestamp(BuildContext context, api.Notification n) => Text(
-        formatTimestamp(context, n.notificationCreateDate),
-        style: Theme.of(context).textTheme.caption,
-      );
+  Widget _buildInfo(BuildContext context, api.Notification n) {
+    final style = Theme.of(context).textTheme.caption;
+    final timestamp = Text(
+      formatTimestamp(context, n.notificationCreateDate),
+      style: style,
+    );
+
+    final icon = _getContentActionIcon(n.contentAction);
+    if (icon == null) return timestamp;
+
+    return Wrap(
+      children: <Widget>[
+        Icon(icon, color: style.color, size: style.fontSize),
+        timestamp,
+      ],
+      spacing: 5,
+    );
+  }
 
   void _fetchOnSuccess(Map json, FetchContext<api.Notification> fc) {
     if (json.containsKey('notifications')) {
@@ -160,5 +175,16 @@ class _NotificationsState extends State<NotificationsWidget> {
       debugPrint("Failed subscribing $fcmToken: "
           "status=${response.statusCode}, body=${response.body}");
     }
+  }
+
+  static IconData _getContentActionIcon(String contentAction) {
+    switch (contentAction) {
+      case 'like':
+        return FontAwesomeIcons.solidHeart;
+      case 'tinhte_xentag_tag_watch':
+        return FontAwesomeIcons.tag;
+    }
+
+    return null;
   }
 }
