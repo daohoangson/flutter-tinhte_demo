@@ -181,6 +181,8 @@ class _NotificationsState extends State<NotificationsWidget> {
     switch (contentAction) {
       case 'like':
         return FontAwesomeIcons.solidHeart;
+      case 'quote':
+        return FontAwesomeIcons.quoteRight;
       case 'tinhte_xentag_tag_watch':
         return FontAwesomeIcons.tag;
     }

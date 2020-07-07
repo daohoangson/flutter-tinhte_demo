@@ -160,6 +160,7 @@ const _buildPayload = (objectData: any): {
     if (typeof contentAction === 'string') {
       switch (contentAction) {
         case 'like':
+        case 'quote':
         case 'tinhte_xentag_tag_watch':
           icon = contentAction;
           break;
