@@ -113,11 +113,9 @@ jobs:
             echo "FLUTTER_VERSION=${FLUTTER_VERSION}"; \
           } | gsutil cp - "${GCS_PATH}/ipa.env"
 
-      # the checkout step has a `if` to prevent it from running in the wrong branch
-      # this step double checks that and allows the job to complete in success
-      - name: Check whether checkout has been skipped
-        if: failure() && !startsWith(github.ref, 'refs/heads/ios') && github.ref != 'refs/heads/master'
-        run: ':'
+    # the checkout step has a `if` to prevent it from running in the wrong branch
+    # the job is configured to continue on error to let `comment` job to work
+    continue-on-error: true
 
   comment:
     needs:
