@@ -143,12 +143,12 @@ jobs:
               | xargs -n 1 -I {} printf -- "- [%s](${GCS_URL}/apk/%s)\n" {} {} \
             )
 
-            _message="${_message}## Android builds\n${_apk}\n\`\`\`\n${_envApk}\n\`\`\`\n"
+            _message=$( printf "## Android builds\n%s\n\n\`\`\`\n%s\n\`\`\`\n" "${_apk}" "${_envApk}" )
           fi
 
           _envIpa=$( gsutil cat "${GCS_PATH}/ipa.env" || true )
           if [ ! -z "${_envIpa}" ]; then
-            _message="${_message}## iOS build\n[manifest.plist](${GCS_URL}/ipa/redirect.html)\n\`\`\`\n${_envIpa}\n\`\`\`\n"
+            _message=$( printf "%s## iOS build\n[manifest.plist](%s)\n\n\`\`\`\n%s\n\`\`\`\n" "${_message}" "${GCS_URL}/ipa/redirect.html" "${_envIpa}" )
           fi
 
           _message="${_message//'%'/'%25'}"
