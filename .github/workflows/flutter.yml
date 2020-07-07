@@ -44,7 +44,6 @@ jobs:
           service_account_key: ${{ secrets.GCP_UPLOADER_SA_KEY }}
 
       - run: flutter pub get
-
       - name: build apk
         run: |
           set -e
@@ -52,21 +51,40 @@ jobs:
           flutter build apk "--build-name=${BUILD_NAME}" --split-per-abi
           gsutil cp build/app/outputs/apk/release/*.apk "${GCS_PATH}/apk"
 
-      - name: Dump environment variables
+      - name: Prepare markdown
+        id: markdown
         run: |
           set -e
 
-          { \
+          _message=$( \
+            echo '## Android builds'; \
+            ls build/app/outputs/apk/release/*.apk \
+              | xargs -n 1 basename \
+              | xargs -n 1 -I {} printf -- "- [%s](${GCS_URL}/apk/%s)\n" {} {}; \
+            echo; \
+            echo '```'; \
             echo "BUILD_NAME=${BUILD_NAME}"; \
             echo "FLUTTER_VERSION=${FLUTTER_VERSION}"; \
             echo "JAVA_VERSION=${JAVA_VERSION}"; \
-          } | gsutil cp - "${GCS_PATH}/apk.env"
+            echo '```'; \
+          )
+
+          _message="${_message//'%'/'%25'}"
+          _message="${_message//$'\n'/'%0A'}"
+          _message="${_message//$'\r'/'%0D'}"
+          echo "::set-output name=MESSAGE::${_message}"
+      - name: Post GitHub comment
+        uses: daohoangson/action-comment-on-github@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          msg: ${{ steps.markdown.outputs.MESSAGE }}
 
   build_ipa:
+    if: startsWith(github.ref, 'refs/heads/ios') || github.ref == 'refs/heads/master'
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
-        if: startsWith(github.ref, 'refs/heads/ios') || github.ref == 'refs/heads/master'
       - run: git submodule update --init --recursive
       - name: Unlock git-crypt
         run: |
@@ -91,7 +109,6 @@ jobs:
           service_account_key: ${{ secrets.GCP_UPLOADER_SA_KEY }}
 
       - run: flutter pub get
-
       - name: build ios
         run: |
           set -e
@@ -117,10 +134,8 @@ jobs:
     # the job is configured to continue on error to let `comment` job to work
     continue-on-error: true
 
-  comment:
-    needs:
-      - build_ipa
-      - build_apk
+  comment_ipa:
+    needs: build_ipa
     runs-on: ubuntu-latest
 
     steps:
@@ -133,23 +148,14 @@ jobs:
         run: |
           set -e
 
-          _message=''
-
-          _envApk=$( gsutil cat "${GCS_PATH}/apk.env" || true )
-          if [ ! -z "${_envApk}" ]; then
-            _apk=$( \
-              gsutil ls "${GCS_PATH}/apk" \
-              | xargs -n 1 basename \
-              | xargs -n 1 -I {} printf -- "- [%s](${GCS_URL}/apk/%s)\n" {} {} \
-            )
-
-            _message=$( printf "## Android builds\n%s\n\n\`\`\`\n%s\n\`\`\`\n" "${_apk}" "${_envApk}" )
-          fi
-
-          _envIpa=$( gsutil cat "${GCS_PATH}/ipa.env" || true )
-          if [ ! -z "${_envIpa}" ]; then
-            _message=$( printf "%s## iOS build\n[manifest.plist](%s)\n\n\`\`\`\n%s\n\`\`\`\n" "${_message}" "${GCS_URL}/ipa/redirect.html" "${_envIpa}" )
-          fi
+          _message=$( \
+            echo '## iOS build'; \
+            printf '[manifest.plist](%s)' "${GCS_URL}/ipa/redirect.html"; \
+            echo; \
+            echo '```'; \
+            gsutil cat "${GCS_PATH}/ipa.env"; \
+            echo '```'; \
+          )
 
           _message="${_message//'%'/'%25'}"
           _message="${_message//$'\n'/'%0A'}"
