@@ -63,10 +63,10 @@ jobs:
           } | gsutil cp - "${GCS_PATH}/apk.env"
 
   build_ipa:
-    if: startsWith(github.ref, 'refs/heads/ios') || github.ref == 'refs/heads/master'
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
+        if: startsWith(github.ref, 'refs/heads/ios') || github.ref == 'refs/heads/master'
       - run: git submodule update --init --recursive
       - name: Unlock git-crypt
         run: |
@@ -112,6 +112,9 @@ jobs:
             cat ios/Flutter/Generated.xcconfig | grep BUILD_NUMBER; \
             echo "FLUTTER_VERSION=${FLUTTER_VERSION}"; \
           } | gsutil cp - "${GCS_PATH}/ipa.env"
+    # the checkout step has a `if` to prevent it from running in the wrong branch
+    # the job is configured to continue on error to let `comment` job to work
+    continue-on-error: true
 
   comment:
     needs:
