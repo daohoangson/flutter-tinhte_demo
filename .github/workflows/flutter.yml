@@ -52,7 +52,7 @@ jobs:
           flutter build apk "--build-name=${BUILD_NAME}" --split-per-abi
           gsutil cp build/app/outputs/apk/release/*.apk "${GCS_PATH}/apk"
 
-      - name: dump environment variables
+      - name: Dump environment variables
         run: |
           set -e
 
@@ -92,7 +92,7 @@ jobs:
 
       - run: flutter pub get
 
-      - name: build ipa
+      - name: build ios
         run: |
           set -e
 
@@ -103,7 +103,7 @@ jobs:
             >build/app/outputs/ipa/release/redirect.html
           gsutil cp build/app/outputs/ipa/release/* "${GCS_PATH}/ipa"
 
-      - name: dump environment variables
+      - name: Dump environment variables
         run: |
           set -e
 
@@ -112,9 +112,12 @@ jobs:
             cat ios/Flutter/Generated.xcconfig | grep BUILD_NUMBER; \
             echo "FLUTTER_VERSION=${FLUTTER_VERSION}"; \
           } | gsutil cp - "${GCS_PATH}/ipa.env"
-    # the checkout step has a `if` to prevent it from running in the wrong branch
-    # the job is configured to continue on error to let `comment` job to work
-    continue-on-error: true
+
+      # the checkout step has a `if` to prevent it from running in the wrong branch
+      # this step double checks that and allows the job to complete in success
+      - name: Check whether checkout has been skipped
+        if: failure() && !startsWith(github.ref, 'refs/heads/ios') && github.ref != 'refs/heads/master'
+        run: ':'
 
   comment:
     needs:
