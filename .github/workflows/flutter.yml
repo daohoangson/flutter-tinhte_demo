@@ -74,11 +74,12 @@ jobs:
           _message="${_message//$'\r'/'%0D'}"
           echo "::set-output name=MESSAGE::${_message}"
       - name: Post GitHub comment
-        uses: daohoangson/action-comment-on-github@master
+        uses: daohoangson/comment-on-github@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          msg: ${{ steps.markdown.outputs.MESSAGE }}
+          body: ${{ steps.markdown.outputs.MESSAGE }}
+          fingerprint: <!-- ${{ github.sha }} -->
 
   build_ipa:
     if: startsWith(github.ref, 'refs/heads/ios') || github.ref == 'refs/heads/master'
@@ -109,26 +110,11 @@ jobs:
           set -e
 
           _releaseDir=build/app/outputs/ipa/release
-
-          { \
-            xcodebuild -version; \
-            cat ios/Flutter/Generated.xcconfig | grep BUILD_NAME | sed s/FLUTTER_//; \
-            echo "FLUTTER_VERSION=${FLUTTER_VERSION}"; \
-          } >"${_releaseDir}/ipa.env"
-
           echo "<script>location='itms-services://?action=download-manifest&url='+encodeURIComponent('${GCS_URL}/ipa/manifest.plist');</script>" \
             >"${_releaseDir}/redirect.html"
 
           gsutil cp "${_releaseDir}"/* "${GCS_PATH}/ipa"
 
-  comment_ipa:
-    needs: build_ipa
-    runs-on: ubuntu-latest
-    steps:
-      - name: Setup gcloud
-        uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
-        with:
-          service_account_key: ${{ secrets.GCP_UPLOADER_SA_KEY }}
       - name: Prepare markdown
         id: markdown
         run: |
@@ -137,19 +123,22 @@ jobs:
           _message=$( \
             echo '### iOS build'; \
             echo '```'; \
-            gsutil cat "${GCS_PATH}/ipa/ipa.env"; \
+            xcodebuild -version; \
+            cat ios/Flutter/Generated.xcconfig | grep BUILD_NAME | sed s/FLUTTER_//; \
+            echo "FLUTTER_VERSION=${FLUTTER_VERSION}"; \
             echo '```'; \
             echo; \
             printf '[manifest.plist](%s)' "${GCS_URL}/ipa/redirect.html"; \
           )
 
-          _message="${_message//'%'/'%25'}"
-          _message="${_message//$'\n'/'%0A'}"
-          _message="${_message//$'\r'/'%0D'}"
+          _message="${_message//'%'/%25}"
+          _message="${_message//$'\n'/%0A}"
+          _message="${_message//$'\r'/%0D}"
           echo "::set-output name=MESSAGE::${_message}"
       - name: Post GitHub comment
-        uses: daohoangson/action-comment-on-github@master
+        uses: daohoangson/comment-on-github@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          msg: ${{ steps.markdown.outputs.MESSAGE }}
+          body: ${{ steps.markdown.outputs.MESSAGE }}
+          fingerprint: <!-- ${{ github.sha }} -->
