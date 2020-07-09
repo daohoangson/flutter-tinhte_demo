@@ -28,6 +28,7 @@ env:
 jobs:
   build_apk:
     runs-on: ubuntu-latest
+    if: "!startsWith(github.ref, 'refs/heads/macos')"
     steps:
       - uses: actions/checkout@v2
       - name: Prepare repo
@@ -40,7 +41,6 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v1
         with:
-          channel: dev
           flutter-version: ${{ env.FLUTTER_VERSION }}
       - run: flutter pub get
       - run: flutter build apk "--build-name=${BUILD_NAME}" --split-per-abi
@@ -142,6 +142,89 @@ jobs:
             echo '```'; \
             echo; \
             printf '[manifest.plist](%s)' "${GCS_URL}/ipa/redirect.html"; \
+          )
+
+          _message="${_message//'%'/'%25'}"
+          _message="${_message//$'\n'/'%0A'}"
+          _message="${_message//$'\r'/'%0D'}"
+          echo "::set-output name=MESSAGE::${_message}"
+      - name: Post GitHub comment
+        uses: daohoangson/action-comment-on-github@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          msg: ${{ steps.markdown.outputs.MESSAGE }}
+
+  build_macos:
+    if: startsWith(github.ref, 'refs/heads/macos') || github.ref == 'refs/heads/master'
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Prepare repo
+        run: echo "${SCRIPT_PREPARE_REPO}" | bash -
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v1
+        with:
+          channel: dev
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+      - run: flutter config --enable-macos-desktop
+      - run: flutter pub get
+      - name: Run flutter build macos
+        run: |
+          set -e
+
+          flutter build macos "--build-name=${BUILD_NAME}"
+          _appPath=$( ls -d build/macos/Build/Products/Release/*.app )
+          _appBasename=$( basename "${_appPath}" )
+
+          _releaseDir=build/app/outputs/macos/release
+          mkdir -p "${_releaseDir}"
+
+          _releaseDirRealpath=$( cd "${_releaseDir}" && pwd )
+          ( cd `dirname "${_appPath}"` && zip -r "${_releaseDirRealpath}/${_appBasename}.zip" "${_appBasename}" )
+
+
+      - name: Setup gcloud
+        uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        with:
+          service_account_key: ${{ secrets.GCP_UPLOADER_SA_KEY }}
+      - name: Run gsutil cp
+        run: |
+          set -e
+
+          _releaseDir=build/app/outputs/macos/release
+
+          { \
+            xcodebuild -version; \
+            cat macos/Flutter/ephemeral/Flutter-Generated.xcconfig | grep BUILD_NAME | sed s/FLUTTER_//; \
+            echo "FLUTTER_VERSION=${FLUTTER_VERSION}"; \
+          } >"${_releaseDir}/macos.env"
+
+          gsutil cp "${_releaseDir}"/* "${GCS_PATH}/macos"
+
+  comment_macos:
+    needs: build_macos
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup gcloud
+        uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        with:
+          service_account_key: ${{ secrets.GCP_UPLOADER_SA_KEY }}
+      - name: Prepare markdown
+        id: markdown
+        run: |
+          set -e
+
+          _message=$( \
+            echo '### macOS build'; \
+            echo '```'; \
+            gsutil cat "${GCS_PATH}/macos/macos.env"; \
+            echo '```'; \
+            echo; \
+            gsutil ls "${GCS_PATH}/macos/*.zip" \
+              | xargs -n 1 basename \
+              | xargs -n 1 -I {} printf -- "- [%s](${GCS_URL}/macos/%s)\n" {} {}; \
           )
 
           _message="${_message//'%'/'%25'}"
