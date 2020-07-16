@@ -66,7 +66,7 @@ class Galleria {
           (piece) {
             if (!piece.hasWidgets || piece.widgets.length != 1) return piece;
             final first = piece.widgets.first;
-            if (first is! ImageLayout) return piece;
+            if (first is! Image) return piece;
 
             return BuiltPiece.widgets([_GalleriaPlaceholder(a['href'], first)]);
           },
@@ -141,9 +141,9 @@ class _GalleriaPlaceholder extends WidgetPlaceholder<Galleria> {
   final String source;
   final ImageProvider image;
 
-  _GalleriaPlaceholder(this.source, ImageLayout imageLayout)
-      : image = imageLayout.image,
-        super(builder: _builder, children: [imageLayout]);
+  _GalleriaPlaceholder(this.source, Image image)
+      : image = image.image,
+        super(builder: _builder, children: [image]);
 
   static Iterable<Widget> _builder(
           BuildContext _, Iterable<Widget> children, Galleria __) =>

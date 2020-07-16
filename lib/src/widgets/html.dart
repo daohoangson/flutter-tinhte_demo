@@ -222,16 +222,25 @@ class TinhteWidgetFactory extends WidgetFactory {
   }
 
   @override
-  Widget buildImage(String url, {double height, String text, double width}) {
-    final resizedUrl = getResizedUrl(
-      apiUrl: url,
-      boxWidth: devicePixelRatio * deviceWidth,
-      imageHeight: height,
-      imageWidth: width,
-    );
+  Widget buildImage(Object provider, ImgMetadata img) {
+    if (provider is String) {
+      final String apiUrl = provider;
+      final resizedUrl = getResizedUrl(
+        apiUrl: apiUrl,
+        boxWidth: devicePixelRatio * deviceWidth,
+        imageHeight: img.height,
+        imageWidth: img.width,
+      );
+      provider = super.buildImageProvider(resizedUrl ?? apiUrl);
+    }
 
-    return super.buildImage(resizedUrl ?? url,
-        height: height, text: text, width: width);
+    return super.buildImage(provider, img);
+  }
+
+  @override
+  Object buildImageProvider(String url) {
+    if (url.startsWith(config.apiRoot)) return url;
+    return super.buildImageProvider(url);
   }
 
   @override
@@ -304,15 +313,15 @@ class TinhteWidgetFactory extends WidgetFactory {
     return super.parseTag(meta, tag, attrs);
   }
 
+  @override
+  BuildOp styleSizing() => null;
+
   Iterable<Widget> _buildTextPadding(BuildContext _, Iterable<Widget> ws, __) {
     final output = <Widget>[SizedBox(height: kPostBodyPadding)];
 
     final last = ws.last;
     for (final widget in ws) {
-      final isText = widget is RichText ||
-          (widget is ImageLayout &&
-              widget.width != null &&
-              widget.width < deviceWidth);
+      final isText = widget is RichText;
       output.add(isText ? buildPadding(widget, _kTextPadding) : widget);
 
       if (widget == last && (isText || needBottomMargin == true)) {

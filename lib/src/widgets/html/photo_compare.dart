@@ -35,8 +35,14 @@ class PhotoCompare {
         return [
           _PhotoCompareWidget(
             aspectRatio: width / height,
-            image0: wf.buildImage(images.first, height: height, width: width),
-            image1: wf.buildImage(images.last, height: height, width: width),
+            image0: wf.buildImage(
+              wf.buildImageProvider(images.first),
+              ImgMetadata(height: height, url: images.first, width: width),
+            ),
+            image1: wf.buildImage(
+              wf.buildImageProvider(images.last),
+              ImgMetadata(height: height, url: images.last, width: width),
+            ),
           ),
         ];
       },

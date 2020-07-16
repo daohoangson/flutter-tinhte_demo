@@ -167,6 +167,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.0"
+  flutter_layout_grid:
+    dependency: transitive
+    description:
+      name: flutter_layout_grid
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.10.2"
   flutter_localizations:
     dependency: "direct main"
     description: flutter
@@ -209,14 +216,14 @@ packages:
       path: "packages/flutter_widget_from_html"
       relative: true
     source: path
-    version: "0.4.1"
+    version: "0.5.0-rc.2020071301"
   flutter_widget_from_html_core:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
-      name: flutter_widget_from_html_core
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.4.1"
+      path: "packages/flutter_widget_from_html/packages/core"
+      relative: true
+    source: path
+    version: "0.5.0-rc.2020071301"
   font_awesome_flutter:
     dependency: "direct main"
     description:
@@ -751,4 +758,4 @@ packages:
     version: "2.2.1"
 sdks:
   dart: ">=2.7.0 <3.0.0"
-  flutter: "1.17.3"
+  flutter: "1.17.5"
