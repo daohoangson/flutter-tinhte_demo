@@ -19,6 +19,8 @@ class _PostWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final post = context.watch<Post>();
+    if (post.userIsIgnored) return widget0;
+
     final isPostReply = post.postReplyTo != null;
     final attachments = _PostAttachmentsWidget.forPost(post);
 
