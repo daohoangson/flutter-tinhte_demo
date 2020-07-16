@@ -16,6 +16,8 @@ class ThreadWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (thread.userIsIgnored) return const SizedBox.shrink();
+
     final _isBackgroundPost = isBackgroundPost(thread.firstPost);
     final _isTinhteFact = isTinhteFact(thread);
     final _isCustomPost = _isBackgroundPost || _isTinhteFact;
