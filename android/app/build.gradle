@@ -55,6 +55,7 @@ android {
         }
 
         release {
+            shrinkResources false
             signingConfig signingConfigs.release
         }
     }

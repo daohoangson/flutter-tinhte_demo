@@ -10,7 +10,6 @@ import {
   firestoreFieldProcessStartDate,
   firestoreFieldSendDate,
   firestoreFieldSentPayload,
-  firestoreFieldSentOptions,
   firestoreCollectionInvalids,
   firestoreFieldInvalidDate,
   firestoreFieldInvalidError,
@@ -36,8 +35,8 @@ export default (_: Config) => functions.firestore
       return;
     }
 
-    const [{ data, notification, contentAvailable }, registrationTokens] = await Promise.all([
-      _buildMessage(objectData),
+    const [payload, registrationTokens] = await Promise.all([
+      _buildPayload(objectData),
       _getRegistrationTokens(topic),
     ]);
     if (!registrationTokens) {
@@ -45,35 +44,28 @@ export default (_: Config) => functions.firestore
       return;
     }
 
-    const payload: admin.messaging.MessagingPayload = { data, notification };
-    const options: admin.messaging.MessagingOptions = { contentAvailable };
-
-    const [sendResult] = await Promise.all([
-      admin.messaging().sendToDevice(registrationTokens, payload, options),
+    const [batchResponse] = await Promise.all([
+      admin.messaging().sendMulticast({
+        tokens: registrationTokens,
+        ...payload,
+      }),
       snap.ref.update({
         [firestoreFieldSendDate]: admin.firestore.FieldValue.serverTimestamp(),
-        [firestoreFieldSentPayload]: {
-          data: data ? data : 'N/A',
-          notification: notification ? notification : 'N/A',
-        },
-        [firestoreFieldSentOptions]: options,
+        [firestoreFieldSentPayload]: _prepareFirestorePayload(payload),
       }),
     ]);
 
-    if (sendResult.failureCount === 0) {
-      console.log(`[${pingId}] topic=${topic} successCount=${sendResult.successCount}`);
+    if (batchResponse.failureCount === 0) {
+      console.log(`[${pingId}] topic=${topic} successCount=${batchResponse.successCount}`);
       return;
     }
 
     const invalidPromises: Promise<any>[] = [];
     const invalidIds: string[] = [];
-    sendResult.results.forEach((result, i) => {
+    batchResponse.responses.forEach((response, i) => {
       const registrationToken = registrationTokens[i];
-      if (result.canonicalRegistrationToken && result.canonicalRegistrationToken !== registrationToken) {
-        console.error(`canonicalRegistrationToken !== registrationToken: ${result.canonicalRegistrationToken} vs. ${registrationToken}`);
-      }
 
-      const { error } = result;
+      const { error } = response;
       if (!error) return;
       const { code, message } = error;
 
@@ -107,16 +99,23 @@ export default (_: Config) => functions.firestore
     }
   });
 
-const _buildMessage = (objectData: any): {
-  data: any,
-  notification: any,
-  contentAvailable: boolean,
+const _buildPayload = (objectData: any): {
+  data?: { [key: string]: string },
+  notification?: admin.messaging.Notification,
+  android?: admin.messaging.AndroidConfig,
+  apns?: admin.messaging.ApnsConfig,
 } => {
-  const data: any = {}, notification: any = {};
-  let hasData = false;
-  let hasNotification = false;
+  const data: { [key: string]: string } = {};
+  const notification: admin.messaging.Notification = {};
+  let badge: number | undefined;
+  let icon: string | undefined;
+  let priority: ('default' | 'max') = 'default';
+  let tag: string | undefined;
+  let visibility: ('public' | 'secret') = 'public';
+
   const {
     // alert
+    content_action: contentAction,
     notification_id: notificationId,
     notification_html: notificationHtml,
 
@@ -130,15 +129,13 @@ const _buildMessage = (objectData: any): {
   } = objectData;
 
   if (notificationId && notificationId > 0 && notificationHtml) {
-    hasData = true;
     data['notification_id'] = `${notificationId}`;
 
-    hasNotification = true;
-    notification['body'] = striptags(notificationHtml).trim().replace(/\s{2,}/g, ' ');
-    notification['tag'] = `notificationId=${notificationId}`
+    notification.body = striptags(notificationHtml).trim().replace(/\s{2,}/g, ' ');
+    tag = `notificationId=${notificationId}`
   }
 
-  if (!hasNotification && creatorUsername && convoMessage) {
+  if (Object.keys(notification).length === 0 && creatorUsername && convoMessage) {
     const {
       conversation_id: convoId,
       message: convoMessageBody,
@@ -146,20 +143,29 @@ const _buildMessage = (objectData: any): {
       title: convoTitle,
     } = convoMessage;
     if (convoId && convoMessageBody && convoMessageId && convoTitle) {
-      hasNotification = true;
-      notification['title'] = convoTitle;
-      notification['body'] = `${creatorUsername}: ${convoMessageBody}`;
-      notification['tag'] = `conversationId=${convoId} messageId=${convoMessageId}`;
+      notification.title = convoTitle;
+      notification.body = `${creatorUsername}: ${convoMessageBody}`;
+      priority = 'max';
+      tag = `conversationId=${convoId} messageId=${convoMessageId}`;
+      visibility = 'secret';
     }
   }
 
+  const hasNotification = Object.keys(notification).length > 0;
   if (hasNotification) {
-    let badge = 0;
+    badge = 0;
     if (convoCount) badge += convoCount;
     if (notificationCount) badge += notificationCount;
-    notification['badge'] = `${badge}`;
 
-    notification['clickAction'] = 'FLUTTER_NOTIFICATION_CLICK';
+    if (typeof contentAction === 'string') {
+      switch (contentAction) {
+        case 'like':
+        case 'quote':
+        case 'tinhte_xentag_tag_watch':
+          icon = contentAction;
+          break;
+      }
+    }
   }
 
   for (const key in objectData) {
@@ -169,16 +175,31 @@ const _buildMessage = (objectData: any): {
         // already processed above, ignore these here
         break;
       default:
-        if (_prepareDataValue(data, key, objectData[key])) {
-          hasData = true;
-        }
+        _prepareDataValue(data, key, objectData[key]);
     }
   }
 
   return {
-    data: hasData ? data : undefined,
+    data,
     notification: hasNotification ? notification : undefined,
-    contentAvailable: !hasNotification,
+    android: hasNotification ? {
+      notification: {
+        clickAction: 'FLUTTER_NOTIFICATION_CLICK',
+        icon,
+        notificationCount: badge,
+        priority,
+        tag,
+        visibility,
+      },
+    } : undefined,
+    apns: hasNotification ? {
+      payload: {
+        aps: {
+          badge,
+          contentAvailable: !hasNotification,
+        },
+      },
+    } : undefined,
   };
 }
 
@@ -189,24 +210,28 @@ const _getRegistrationTokens = async (topic: string): Promise<string[]> => {
   return snapshot.docs.map((registrationToken) => registrationToken.id);
 }
 
-const _prepareDataValue = (target: any, key: string, value: any): boolean => {
-  let hasData = false;
-
+const _prepareDataValue = (target: any, key: string, value: any): void => {
   // invalid data key
   if (key === 'from' || key === 'gcm' || key.startsWith('google')) {
-    return hasData;
+    return;
   }
 
   if (typeof value === 'object') {
     for (const k in value) {
-      if (_prepareDataValue(target, `${key}.${k}`, value[k])) {
-        hasData = true;
-      }
+      _prepareDataValue(target, `${key}.${k}`, value[k]);
     }
   } else {
     target[key] = `${value}`;
-    hasData = true;
   }
+}
+const _prepareFirestorePayload = (input: any): any => {
+  if (typeof input !== 'object') return input;
 
-  return hasData;
+  const output: any = {};
+  for (const k in input) {
+    if (input[k]) {
+      output[k] = _prepareFirestorePayload(input[k]);
+    }
+  }
+  return output;
 }
