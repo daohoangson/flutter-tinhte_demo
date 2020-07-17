@@ -1,5 +1,6 @@
 import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
+import * as he from 'he';
 import * as striptags from 'striptags';
 
 import {
@@ -131,7 +132,7 @@ const _buildPayload = (objectData: any): {
   if (notificationId && notificationId > 0 && notificationHtml) {
     data['notification_id'] = `${notificationId}`;
 
-    notification.body = striptags(notificationHtml).trim().replace(/\s{2,}/g, ' ');
+    notification.body = he.decode(striptags(notificationHtml)).trim().replace(/\s{2,}/g, ' ');
     tag = `notificationId=${notificationId}`
   }
 
