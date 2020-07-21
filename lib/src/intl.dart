@@ -116,6 +116,19 @@ class L10n {
       locale: localeName,
       name: 'loginUsernameHint');
 
+  String get loginTfaErrorCodeIsEmpty => 'Please enter your verification code';
+
+  String get loginTfaMethodBackup => 'Backup codes';
+
+  String get loginTfaMethodEmail => 'Email confirmation';
+
+  String get loginTfaMethodPleaseChooseOne =>
+      'Two-factor authorization code is required, please select a method to verify:';
+
+  String get loginTfaMethodTotp => 'Verification code via app';
+
+  String get loginTfaVerify => 'Verify';
+
   String get loginUsernameOrEmail => Intl.message('Username / email',
       desc: 'Label text for username / email field',
       locale: localeName,

@@ -10,6 +10,7 @@ import 'src/batch.dart';
 import 'src/crypto.dart';
 
 part 'src/api_internal.dart';
+part 'src/api_login.dart';
 
 class Api {
   final Client httpClient = Client();
@@ -69,19 +70,6 @@ class Api {
               (j) => Future.value(true),
               onError: (e) => Future.value(false),
             ));
-  }
-
-  Future<OauthToken> login(String username, String password) async {
-    final json = await postJson('oauth/token', bodyFields: {
-      "grant_type": "password",
-      "client_id": _clientId,
-      "client_secret": _clientSecret,
-      "username": username,
-      "password": password,
-    });
-
-    return OauthToken.fromJson(json)
-      ..obtainMethod = ObtainMethod.UsernamePassword;
   }
 
   Future<OauthToken> refreshToken(OauthToken token) async {
@@ -176,6 +164,15 @@ class ApiErrorSingle extends ApiError {
   final bool isHtml;
 
   ApiErrorSingle(this.message, {this.isHtml = false});
+}
+
+class ApiErrorUnexpectedResponse extends ApiError {
+  final body;
+
+  ApiErrorUnexpectedResponse(this.body);
+
+  @override
+  String get message => 'Unexpected response: $body';
 }
 
 class ApiErrorUnexpectedStatusCode extends ApiError {
