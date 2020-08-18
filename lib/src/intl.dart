@@ -315,8 +315,8 @@ class L10n {
       locale: localeName,
       name: 'threadBookmarkList');
 
-  String get threadBookmarkUndo =>
-      Intl.message('Unbookmark', locale: localeName, name: 'threadBookmarkUndo');
+  String get threadBookmarkUndo => Intl.message('Unbookmark',
+      locale: localeName, name: 'threadBookmarkUndo');
 
   String get threadCreateBody =>
       Intl.message('Post body', locale: localeName, name: 'threadCreateBody');
