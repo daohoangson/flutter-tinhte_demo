@@ -20,6 +20,7 @@ part 'html/galleria.dart';
 part 'html/link_expander.dart';
 part 'html/lb_trigger.dart';
 part 'html/photo_compare.dart';
+part 'html/unfurl.dart';
 part 'html/youtube.dart';
 
 const _kSmilies = {
@@ -300,6 +301,11 @@ class TinhteWidgetFactory extends WidgetFactory {
           meta.register(LinkExpander.getOembedOp());
           return;
         }
+
+        if (classes.contains('bbCodeBlock--unfurl')) {
+          meta.register(Unfurl(this, meta).op);
+        }
+
         break;
       case 'img':
         if (attrs.containsKey('data-height')) {
