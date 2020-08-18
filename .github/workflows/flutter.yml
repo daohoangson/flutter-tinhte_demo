@@ -1,5 +1,14 @@
-on: push
 name: Flutter
+on:
+  push:
+    paths: 
+      - .github/workflows/flutter.yml
+      - 'android/**'
+      - 'ios/**'
+      - 'lib/**'
+      - 'packages/**'
+      - pubspec.yaml
+
 env:
   GCS_PATH: gs://flutterttdemo/${{ github.sha }}
   GCS_URL: https://storage.googleapis.com/flutterttdemo/${{ github.sha }}
@@ -82,7 +91,6 @@ jobs:
           fingerprint: <!-- ${{ github.sha }} -->
 
   build_ipa:
-    if: startsWith(github.ref, 'refs/heads/ios') || github.ref == 'refs/heads/master'
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2

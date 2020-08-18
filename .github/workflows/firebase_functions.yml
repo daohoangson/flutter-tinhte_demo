@@ -1,8 +1,12 @@
-on: push
 name: Cloud Functions for Firebase
+on:
+  push:
+    paths: 
+      - .github/workflows/firebase_functions.yml
+      - 'firebase/functions/**'
+
 jobs:
   deploy:
-    if: startsWith(github.ref, 'refs/heads/firebase/functions') || github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     defaults:
       run:
