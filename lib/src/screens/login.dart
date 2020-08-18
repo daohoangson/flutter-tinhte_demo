@@ -60,23 +60,20 @@ class _LoginFormState extends State<LoginForm> {
   }
 
   @override
-  Widget build(BuildContext context) => LayoutBuilder(
-        builder: (_, box) => Form(
+  Widget build(BuildContext context) => SafeArea(
+        child: Form(
           key: formKey,
-          child: _buildBox(
-            box,
-            _tfa != null
-                ? _buildFieldsTfa()
-                : _associatable != null
-                    ? _buildFieldsAssociate()
-                    : _buildFieldsLogin(),
+          child: AutofillGroup(
+            child: ListView(
+              padding: const EdgeInsets.all(20.0),
+              children: _tfa != null
+                  ? _buildFieldsTfa()
+                  : _associatable != null
+                      ? _buildFieldsAssociate()
+                      : _buildFieldsLogin(),
+            ),
           ),
         ),
-      );
-
-  Widget _buildBox(BoxConstraints box, List<Widget> children) => ListView(
-        padding: const EdgeInsets.all(20.0),
-        children: children,
       );
 
   List<Widget> _buildFieldsAssociate() => [
@@ -192,6 +189,7 @@ class _LoginFormState extends State<LoginForm> {
       );
 
   Widget _buildPassword({bool autofocus = false}) => TextFormField(
+        autofillHints: [AutofillHints.password],
         autofocus: autofocus,
         decoration: InputDecoration(
           hintText: l(context).loginPasswordHint,
@@ -210,6 +208,7 @@ class _LoginFormState extends State<LoginForm> {
       );
 
   Widget _buildUsername() => TextFormField(
+      autofillHints: [AutofillHints.email, AutofillHints.username],
       autofocus: true,
       decoration: InputDecoration(
         hintText: l(context).loginUsernameHint,
