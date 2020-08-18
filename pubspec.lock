@@ -201,7 +201,7 @@ packages:
     source: hosted
     version: "1.2.5"
   flutter_svg:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: flutter_svg
       url: "https://pub.dartlang.org"
@@ -220,7 +220,7 @@ packages:
   flutter_widget_from_html:
     dependency: "direct main"
     description:
-      path: "packages/flutter_widget_from_html"
+      path: "packages/flutter_widget_from_html/packages/enhanced"
       relative: true
     source: path
     version: "0.5.0-rc.2020071301"

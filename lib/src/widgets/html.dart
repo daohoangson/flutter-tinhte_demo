@@ -5,7 +5,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
-import 'package:html/dom.dart' as dom;
+// ignore: implementation_imports
+import 'package:flutter_widget_from_html_core/src/internal/css_sizing.dart';
 import 'package:html_unescape/html_unescape.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 import 'package:the_app/src/config.dart';
@@ -41,13 +42,11 @@ const _kTextPadding = const EdgeInsets.symmetric(horizontal: kPostBodyPadding);
 class TinhteHtmlWidget extends StatelessWidget {
   final String html;
   final Color hyperlinkColor;
-  final bool needBottomMargin;
   final TextStyle textStyle;
 
   TinhteHtmlWidget(
     this.html, {
     this.hyperlinkColor,
-    this.needBottomMargin,
     this.textStyle,
   });
 
@@ -67,7 +66,6 @@ class TinhteHtmlWidget extends StatelessWidget {
           factoryBuilder: () => TinhteWidgetFactory(
             devicePixelRatio: MediaQuery.of(c).devicePixelRatio,
             deviceWidth: bc.biggest.width,
-            needBottomMargin: needBottomMargin,
           ),
           hyperlinkColor: hyperlinkColor,
           onTapUrl: (url) => launchLink(c, url),
@@ -81,7 +79,6 @@ class TinhteHtmlWidget extends StatelessWidget {
 class TinhteWidgetFactory extends WidgetFactory {
   final double devicePixelRatio;
   final double deviceWidth;
-  final bool needBottomMargin;
 
   BuildOp _blockquoteOp;
   BuildOp _chrOp;
@@ -89,36 +86,34 @@ class TinhteWidgetFactory extends WidgetFactory {
   BuildOp _smilieOp;
   BuildOp _webViewDataUriOp;
 
-  Galleria _galleria;
   LbTrigger _lbTrigger;
-  LinkExpander _linkExpander;
   PhotoCompare _photoCompare;
 
   TinhteWidgetFactory({
     this.devicePixelRatio,
     this.deviceWidth,
-    this.needBottomMargin,
   });
 
   BuildOp get blockquoteOp {
     _blockquoteOp ??= BuildOp(
-      onWidgets: (_, ws) => [
-        Padding(
-          child: Builder(
-            builder: (context) => DecoratedBox(
-              child: buildBody(ws),
-              decoration: BoxDecoration(
-                border: Border(
-                  left: BorderSide(
-                    color: Theme.of(context).dividerColor,
-                    width: 3,
+      onWidgets: (meta, widgets) => [
+        buildColumnPlaceholder(meta, widgets)
+          ..wrapWith(
+            (context, child) => Padding(
+              child: DecoratedBox(
+                child: child,
+                decoration: BoxDecoration(
+                  border: Border(
+                    left: BorderSide(
+                      color: Theme.of(context).dividerColor,
+                      width: 3,
+                    ),
                   ),
                 ),
               ),
+              padding: const EdgeInsets.all(kPostBodyPadding),
             ),
           ),
-          padding: const EdgeInsets.all(kPostBodyPadding),
-        ),
       ],
     );
     return _blockquoteOp;
@@ -126,10 +121,10 @@ class TinhteWidgetFactory extends WidgetFactory {
 
   BuildOp get chrOp {
     _chrOp ??= BuildOp(
-      defaultStyles: (_, __) => ['margin', '0.5em 0'],
+      defaultStyles: (_) => {'margin': '0.5em 0'},
       onWidgets: (meta, __) {
         final a = meta.domElement.attributes;
-        final url = constructFullUrl(a['href']);
+        final url = urlFull(a['href']);
         if (url?.isEmpty != false) return null;
 
         final youtubeId = !Platform.isIOS && a.containsKey('data-chr-thumbnail')
@@ -143,7 +138,7 @@ class TinhteWidgetFactory extends WidgetFactory {
                 youtubeId,
                 lowresThumbnailUrl: a['data-chr-thumbnail'],
               )
-            : buildWebView(url);
+            : buildWebView(meta, url);
 
         return [contents];
       },
@@ -153,10 +148,10 @@ class TinhteWidgetFactory extends WidgetFactory {
 
   BuildOp get metaBbCodeOp {
     _metaBbCodeOp ??= BuildOp(
-      onChild: (meta, e) =>
-          (e.localName == 'span' && !e.classes.contains('value'))
-              ? meta.isNotRenderable = true
-              : null,
+      onChild: (meta) => (meta.domElement.localName == 'span' &&
+              !meta.domElement.classes.contains('value'))
+          ? meta.isNotRenderable = true
+          : null,
     );
     return _metaBbCodeOp;
   }
@@ -184,29 +179,21 @@ class TinhteWidgetFactory extends WidgetFactory {
   BuildOp get webViewDataUriOp {
     _webViewDataUriOp ??= BuildOp(
       onWidgets: (meta, _) => [
-        buildWebView(Uri.dataFromString(
-          """<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"></head><body>${meta.domElement.outerHtml}</body></html>""",
-          encoding: Encoding.getByName('utf-8'),
-          mimeType: 'text/html',
-        ).toString())
+        buildWebView(
+            meta,
+            Uri.dataFromString(
+              """<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"></head><body>${meta.domElement.outerHtml}</body></html>""",
+              encoding: Encoding.getByName('utf-8'),
+              mimeType: 'text/html',
+            ).toString())
       ],
     );
     return _webViewDataUriOp;
   }
 
-  Galleria get galleria {
-    _galleria ??= Galleria(this);
-    return _galleria;
-  }
-
   LbTrigger get lbTrigger {
     _lbTrigger ??= LbTrigger(wf: this);
     return _lbTrigger;
-  }
-
-  LinkExpander get linkExpander {
-    _linkExpander ??= LinkExpander(this);
-    return _linkExpander;
   }
 
   PhotoCompare get photoCompare {
@@ -215,120 +202,173 @@ class TinhteWidgetFactory extends WidgetFactory {
   }
 
   @override
-  Widget buildBody(Iterable<Widget> children) {
-    final WidgetPlaceholder placeholder = super.buildBody(children);
-    placeholder.wrapWith(_buildTextPadding);
-    return placeholder;
-  }
+  WidgetPlaceholder buildColumnPlaceholder(
+    NodeMetadata meta,
+    Iterable<Widget> children, {
+    bool trimMarginVertical = false,
+  }) {
+    if (_isBuildingText > 0) {
+      if (_isBuildingText != 1) print('_isBuildingText=$_isBuildingText');
+      children = List.from(children.map((child) {
+        if (child is WidgetPlaceholder<TextBits>)
+          child.wrapWith((_, w) => _TextPadding(w));
 
-  @override
-  Widget buildImage(Object provider, ImgMetadata img) {
-    if (provider is String) {
-      final String apiUrl = provider;
-      final resizedUrl = getResizedUrl(
-        apiUrl: apiUrl,
-        boxWidth: devicePixelRatio * deviceWidth,
-        imageHeight: img.height,
-        imageWidth: img.width,
-      );
-      provider = super.buildImageProvider(resizedUrl ?? apiUrl);
+        return child;
+      }));
     }
 
-    return super.buildImage(provider, img);
+    final built = super.buildColumnPlaceholder(meta, children,
+        trimMarginVertical: trimMarginVertical);
+
+    if (trimMarginVertical) {
+      built.wrapWith((_, child) {
+        final last = _lastOf(child);
+
+        return Padding(
+          child: child,
+          padding: EdgeInsets.only(
+            top: kPostBodyPadding,
+            bottom: last is _TextPadding || last is WidgetPlaceholder<TextBits>
+                ? kPostBodyPadding
+                : 0.0,
+          ),
+        );
+      });
+    }
+
+    return built;
   }
 
   @override
-  Object buildImageProvider(String url) {
-    if (url.startsWith(config.apiRoot)) return url;
-    return super.buildImageProvider(url);
+  Widget buildImage(NodeMetadata meta, Object provider, ImageMetadata image) {
+    if (image.sources?.first?.width == null) {
+      final attrs = meta.domElement.attributes;
+      if (attrs.containsKey('data-height') && attrs.containsKey('data-width')) {
+        final resizedUrl = getResizedUrl(
+          apiUrl: image.sources.first.url,
+          boxWidth: devicePixelRatio * deviceWidth,
+          imageHeight: double.tryParse(attrs['data-height']),
+          imageWidth: double.tryParse(attrs['data-width']),
+        );
+        if (resizedUrl != null)
+          provider = imageProvider(ImageSource(resizedUrl));
+      }
+    }
+
+    return super.buildImage(meta, provider, image);
+  }
+
+  var _isBuildingText = 0;
+  @override
+  WidgetPlaceholder buildText(NodeMetadata meta, TextBits text) {
+    _isBuildingText++;
+    final built = super.buildText(meta, text);
+    _isBuildingText--;
+
+    return built;
   }
 
   @override
-  void parseTag(NodeMetadata meta, String tag, Map<dynamic, String> attrs) {
-    final clazz = attrs.containsKey('class') ? attrs['class'] : '';
-    switch (tag) {
+  void parse(NodeMetadata meta) {
+    final attrs = meta.domElement.attributes;
+    final classes = meta.domElement.classes;
+    switch (meta.domElement.localName) {
       case 'a':
         if (attrs.containsKey('data-chr') && attrs.containsKey('href')) {
-          meta.op = chrOp;
+          meta.register(chrOp);
           return;
         }
 
-        if (clazz.contains('LinkExpander') && clazz.contains('expanded')) {
-          meta.op = linkExpander.buildOp;
+        if (classes.contains('LinkExpander') && classes.contains('expanded')) {
+          meta.register(LinkExpander(this, meta).op);
           return;
         }
 
-        if (clazz.contains('LbTrigger') &&
+        if (classes.contains('LbTrigger') &&
             attrs.containsKey('data-height') &&
             attrs.containsKey('data-permalink') &&
             attrs.containsKey('data-width')) {
-          meta.op = lbTrigger.prepareThumbnailOp(attrs);
+          meta.register(lbTrigger.prepareThumbnailOp(attrs));
           return;
         }
         break;
       case 'blockquote':
-        meta.op = blockquoteOp;
+        meta.register(blockquoteOp);
         return;
       case 'div':
-        if (clazz.contains('LinkExpander') && clazz.contains('is-oembed')) {
-          meta.op = linkExpander.oembedOp;
+        if (classes.contains('LinkExpander') && classes.contains('is-oembed')) {
+          meta.register(LinkExpander.getOembedOp());
           return;
         }
         break;
+      case 'img':
+        if (attrs.containsKey('data-height')) {
+          meta['height'] = '${attrs["data-height"]}px';
+        }
+        if (attrs.containsKey('data-width')) {
+          meta['width'] = '${attrs["data-width"]}px';
+        }
+        break;
       case 'ul':
-        if (clazz.contains('Tinhte_Galleria')) {
-          meta.op = galleria.buildOp;
+        if (classes.contains('Tinhte_Galleria')) {
+          meta.register(Galleria(this, meta).op);
           return;
         }
         break;
       case 'script':
         if (attrs.containsKey('src') &&
             attrs['src'] == 'https://e.infogr.am/js/embed.js') {
-          meta.op = webViewDataUriOp;
+          meta.register(webViewDataUriOp);
           return;
         }
         break;
       case 'span':
-        if (clazz.contains('bdImage_attachImage')) {
-          meta.op = lbTrigger.fullOp;
+        if (classes.contains('bdImage_attachImage')) {
+          meta.register(lbTrigger.fullOp);
           return;
         }
-        if (clazz.contains('metaBbCode')) {
-          meta.op = metaBbCodeOp;
-          return;
-        }
-
-        if (clazz.contains('Tinhte_PhotoCompare')) {
-          meta.op = photoCompare.buildOp;
+        if (classes.contains('metaBbCode')) {
+          meta.register(metaBbCodeOp);
           return;
         }
 
-        if (clazz.contains('smilie')) {
-          meta.op = smilieOp;
+        if (classes.contains('Tinhte_PhotoCompare')) {
+          meta.register(photoCompare.buildOp);
+          return;
+        }
+
+        if (classes.contains('smilie')) {
+          meta.register(smilieOp);
           return;
         }
         break;
     }
 
-    return super.parseTag(meta, tag, attrs);
+    return super.parse(meta);
   }
 
   @override
-  BuildOp styleSizing() => null;
+  void reset(State state) {
+    this._lbTrigger = null;
 
-  Iterable<Widget> _buildTextPadding(BuildContext _, Iterable<Widget> ws, __) {
-    final output = <Widget>[SizedBox(height: kPostBodyPadding)];
-
-    final last = ws.last;
-    for (final widget in ws) {
-      final isText = widget is RichText;
-      output.add(isText ? buildPadding(widget, _kTextPadding) : widget);
-
-      if (widget == last && (isText || needBottomMargin == true)) {
-        output.add(SizedBox(height: kPostBodyPadding));
-      }
-    }
-
-    return output;
+    super.reset(state);
   }
+}
+
+class _TextPadding extends StatelessWidget {
+  final Widget child;
+
+  const _TextPadding(this.child, {Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) =>
+      Padding(child: child, padding: _kTextPadding);
+}
+
+Widget _lastOf(Widget widget) {
+  if (widget is Column) {
+    return _lastOf(widget.children.last);
+  }
+
+  return widget;
 }

@@ -16,7 +16,7 @@ class _PostAttachmentsWidget extends StatelessWidget {
       child: SizedBox(
         height: 100,
         child: ListView.separated(
-          itemBuilder: (c, i) => lbTrigger.buildGestureDetectorWithContext(
+          itemBuilder: (c, i) => lbTrigger.buildGestureDetector(
               c, _buildAttachment(attachments[i]), i),
           itemCount: attachments.length,
           scrollDirection: Axis.horizontal,

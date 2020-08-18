@@ -9,10 +9,6 @@ TextStyle getPostBodyTextStyle(BuildContext context, bool isFirstPost) {
 }
 
 class _PostBodyWidget extends StatelessWidget {
-  final bool needBottomMargin;
-
-  _PostBodyWidget({this.needBottomMargin});
-
   @override
   Widget build(BuildContext context) => Consumer<ActionablePost>(
         builder: (context, ap, _) {
@@ -30,10 +26,7 @@ class _PostBodyWidget extends StatelessWidget {
             );
 
           return DefaultTextStyle(
-            child: TinhteHtmlWidget(
-              post.postBodyHtml,
-              needBottomMargin: needBottomMargin,
-            ),
+            child: TinhteHtmlWidget(post.postBodyHtml),
             style: getPostBodyTextStyle(context, post.postIsFirstPost),
           );
         },

@@ -21,9 +21,8 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   flutter_speed_dial: 1.2.5
-  flutter_svg: ^0.18.0
   flutter_widget_from_html:
-    path: ./packages/flutter_widget_from_html
+    path: ./packages/flutter_widget_from_html/packages/enhanced
   font_awesome_flutter: ^8.8.1
   google_sign_in: ^4.5.1
   html_unescape: ^1.0.1+3
