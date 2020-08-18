@@ -16,24 +16,25 @@ void main() {
 
     group('grant_type=password', () {
       test('works with username/password', () async {
-        final token = await api.login(username, password);
-        expect(token.userId, equals(userId));
+        final result = await login(api, username, password);
+        expect(result.token?.userId, equals(userId));
       });
 
       test('works with email/password', () async {
-        final token = await api.login(email, password);
-        expect(token.userId, equals(userId));
+        final result = await login(api, email, password);
+        expect(result.token?.userId, equals(userId));
       });
 
       test('fails with wrong password', () {
-        expect(api.login(username, 'xxx'), throwsA(TypeMatcher<ApiError>()));
+        expect(login(api, username, 'xxx'), throwsA(TypeMatcher<ApiError>()));
       });
     });
 
     group('grant_type=refresh_token', () {
       test('works', () async {
-        final loginToken = await api.login(username, password);
-        final refreshedToken = await api.refreshToken(loginToken);
+        final loginResult = await login(api, username, password);
+        expect(loginResult.token, isNotNull);
+        final refreshedToken = await api.refreshToken(loginResult.token);
         expect(refreshedToken.userId, equals(userId));
       });
     });

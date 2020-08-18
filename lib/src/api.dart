@@ -91,7 +91,8 @@ Future showApiErrorDialog(
             ? error.isHtml
                 ? HtmlWidget(error.message)
                 : Text(
-                    error is ApiErrorUnexpectedStatusCode
+                    (error is ApiErrorUnexpectedResponse ||
+                            error is ApiErrorUnexpectedStatusCode)
                         ? l(context).apiUnexpectedResponse
                         : error.message,
                   )
@@ -147,8 +148,7 @@ void _setupApiJsonHandlers(
     completer,
     onSuccess != null
         ? (json) {
-            if (json is! Map)
-              throw new ApiErrorSingle(l(caller.context).apiUnexpectedResponse);
+            if (json is! Map) throw new ApiErrorUnexpectedResponse(json);
             return onSuccess(json);
           }
         : null,
