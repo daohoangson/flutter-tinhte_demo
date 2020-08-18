@@ -4,99 +4,113 @@ const kColumns = 3;
 const kSpacing = 3.0;
 
 class Galleria {
+  final NodeMetadata galleryMeta;
   final TinhteWidgetFactory wf;
 
-  BuildOp _buildOp;
-  BuildOp _childOpA;
-  BuildOp _childOpLi;
+  final _lb = LbTrigger();
 
-  Galleria(this.wf);
+  Galleria(this.wf, this.galleryMeta);
 
-  BuildOp get buildOp {
-    _buildOp ??= BuildOp(
-      onChild: (meta, e) {
-        switch (e.localName) {
-          case 'a':
-            meta.op = childOpA;
-            break;
-          case 'img':
-            meta.isBlockElement = true;
-            break;
-          case 'li':
-            meta.op = childOpLi;
-            break;
-        }
-
-        return meta;
-      },
-      onWidgets: (meta, widgets) {
-        final children = <Widget>[];
-        final lb = LbTrigger();
-
-        var i = -1;
-        for (final widget in widgets) {
-          if (!(widget is _GalleriaItem)) continue;
-          i++;
-
-          final item = widget as _GalleriaItem;
-          lb.sources.add(item.source);
-          if (item.caption != null) {
-            lb.captions[i] = item.caption;
-          }
-
-          children.add(lb.buildGestureDetector(i, item.image));
-        }
-
-        if (children.isEmpty) return [Container()];
-
-        return [_GalleriaGrid(children)];
-      },
+  BuildOp _galleriaOp;
+  BuildOp get op {
+    _galleriaOp ??= BuildOp(
+      onChild: onChild,
+      onWidgets: onWidgets,
     );
-
-    return _buildOp;
+    return _galleriaOp;
   }
 
-  BuildOp get childOpA {
-    _childOpA ??= BuildOp(
-      onPieces: (meta, pieces) {
-        final a = meta.domElement.attributes;
-        if (!a.containsKey('href')) return pieces;
+  void onChild(NodeMetadata childMeta) {
+    final e = childMeta.domElement;
+    if (e.parent != galleryMeta.domElement) return;
+    if (e.localName != 'li') return;
 
-        return pieces.map(
-          (piece) {
-            if (!piece.hasWidgets || piece.widgets.length != 1) return piece;
-            final first = piece.widgets.first;
-            if (first is! Image) return piece;
+    childMeta.register(_GalleriaItem(wf, this, childMeta).op);
+  }
 
-            return BuiltPiece.widgets([_GalleriaPlaceholder(a['href'], first)]);
+  Iterable<Widget> onWidgets(
+          NodeMetadata _, Iterable<WidgetPlaceholder> widgets) =>
+      [
+        WidgetPlaceholder<Galleria>(this,
+            child: _GalleriaGrid(widgets.toList(growable: false)))
+      ];
+}
+
+class _GalleriaItem {
+  final NodeMetadata itemMeta;
+  final Galleria galleria;
+  final WidgetFactory wf;
+
+  Widget _description;
+  BuildOp _descriptionOp;
+  String _source;
+  WidgetPlaceholder _trigger;
+  BuildOp _triggerOp;
+
+  _GalleriaItem(this.wf, this.galleria, this.itemMeta);
+
+  BuildOp _itemOp;
+  BuildOp get op {
+    _itemOp ??= BuildOp(
+      onChild: onChild,
+      onWidgets: onWidgets,
+    );
+    return _itemOp;
+  }
+
+  void onChild(NodeMetadata childMeta) {
+    final e = childMeta.domElement;
+    if (e.parent != itemMeta.domElement) return;
+
+    switch (e.className) {
+      case 'LbTrigger':
+        _source ??= wf.urlFull(e.attributes['href']);
+        _triggerOp ??= BuildOp(
+          // onChild: (childMeta) {
+          //   if (childMeta.domElement.localName == 'img') {
+          //     childMeta.isBlockElement = true;
+          //   }
+          // },
+          onWidgets: (meta, widgets) {
+            // bypass built-in A tag handling with 0 priority
+            // and NOT returning anything in `onWidgets`
+            _trigger = wf.buildColumnPlaceholder(meta, widgets);
+            return [];
           },
+          priority: 0,
         );
-      },
-      priority: 0,
-    );
-
-    return _childOpA;
+        childMeta.register(_triggerOp);
+        break;
+      case 'Tinhte_Gallery_Description':
+        _descriptionOp ??= BuildOp(onWidgets: (meta, widgets) {
+          meta.tsb((p, _) => p.copyWith(
+              style: p
+                  .getDependency<ThemeData>()
+                  .textTheme
+                  .caption
+                  .copyWith(color: kCaptionColor)));
+          _description = wf.buildColumnPlaceholder(meta, widgets);
+          return [];
+        });
+        childMeta.register(_descriptionOp);
+        break;
+    }
   }
 
-  BuildOp get childOpLi {
-    _childOpLi ??= BuildOp(onWidgets: (meta, widgets) {
-      Widget caption, image;
-      String source;
-      for (final widget in widgets) {
-        if (widget is WidgetPlaceholder<TextBits>) {
-          caption = widget;
-        } else if (widget is _GalleriaPlaceholder) {
-          image = Image(image: widget.image, fit: BoxFit.cover);
-          source = widget.source;
-        }
-      }
+  Iterable<Widget> onWidgets(
+      NodeMetadata _, Iterable<WidgetPlaceholder> widgets) {
+    if (_source == null) return widgets;
+    if (_trigger == null) return widgets;
 
-      if (source?.isNotEmpty != true || image == null) return null;
+    final index = galleria._lb._addSource(_source);
+    if (_description != null) {
+      galleria._lb.captions[index] = _description;
+    }
 
-      return [_GalleriaItem(caption, image, source)];
-    });
+    _trigger.wrapWith((context, child) =>
+        galleria._lb.buildGestureDetector(context, child, index));
 
-    return _childOpLi;
+    return [_trigger];
   }
 }
 
@@ -122,30 +136,4 @@ class _GalleriaGrid extends StatelessWidget {
           );
         },
       );
-}
-
-class _GalleriaItem extends StatelessWidget {
-  final Widget caption;
-  final Widget image;
-  final String source;
-
-  _GalleriaItem(this.caption, this.image, this.source)
-      : assert(image != null),
-        assert(source != null);
-
-  @override
-  Widget build(BuildContext context) => image;
-}
-
-class _GalleriaPlaceholder extends WidgetPlaceholder<Galleria> {
-  final String source;
-  final ImageProvider image;
-
-  _GalleriaPlaceholder(this.source, Image image)
-      : image = image.image,
-        super(builder: _builder, children: [image]);
-
-  static Iterable<Widget> _builder(
-          BuildContext _, Iterable<Widget> children, Galleria __) =>
-      children;
 }

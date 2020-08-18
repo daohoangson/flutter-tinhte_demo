@@ -3,131 +3,101 @@ part of '../html.dart';
 const kLinkExpanderSquareThumbnailSize = 120.0;
 
 class LinkExpander {
+  final NodeMetadata linkMeta;
   final TinhteWidgetFactory wf;
 
-  LinkExpander(this.wf);
+  WidgetPlaceholder _info;
+  bool _isCover;
+  WidgetPlaceholder _thumbnail;
 
-  BuildOp _buildOp;
-  BuildOp _infoOp;
-  BuildOp _oembedOp;
-  BuildOp _thumbnailOp;
+  LinkExpander(this.wf, this.linkMeta);
 
-  BuildOp get buildOp {
-    _buildOp ??= BuildOp(
-      defaultStyles: (_, __) => ['margin', '0.5em 0'],
-      onChild: (meta, e) {
-        final c = e.classes;
-        switch (e.localName) {
-          case 'div':
-            if (c.contains('thumbnail')) {
-              meta.op = thumbnailOp;
-            } else if (c.contains('info')) {
-              meta
-                ..op = infoOp
-                ..styles = ['text-align', 'left'];
-            }
-            break;
-          case 'h4':
-            meta.styles = ['margin', '0px', 'text-align', 'left'];
-            break;
-          case 'span':
-            if (c.contains('host')) {
-              meta.color = Colors.grey;
-            }
-            break;
+  BuildOp _leOp;
+  BuildOp get op {
+    _leOp ??= BuildOp(
+      defaultStyles: (_) => {'margin': '0.5em 0'},
+      onChild: onChild,
+      onWidgets: onWidgets,
+    );
+    return _leOp;
+  }
+
+  void onChild(NodeMetadata childMeta) {
+    final e = childMeta.domElement;
+    switch (e.localName) {
+      case 'div':
+        if (e.classes.contains('thumbnail')) {
+          _isCover = e.classes.contains('thumbnail-cover');
+
+          childMeta.register(BuildOp(onWidgets: (meta, widgets) {
+            _thumbnail = wf.buildColumnPlaceholder(meta, widgets);
+            return [_thumbnail];
+          }));
+        } else if (e.classes.contains('info')) {
+          childMeta
+            ..['text-align'] = 'left'
+            ..register(_LinkExpanderInfo(wf, this, childMeta).op);
         }
-
-        return meta;
-      },
-      onWidgets: (meta, widgets) => build(meta, widgets),
-    );
-    return _buildOp;
-  }
-
-  BuildOp get infoOp {
-    _infoOp ??= BuildOp(
-      onWidgets: (meta, widgets) => [_Info(wf.buildColumn(widgets))],
-    );
-    return _infoOp;
-  }
-
-  BuildOp get oembedOp {
-    _oembedOp ??= BuildOp(
-      defaultStyles: (_, __) => ['margin', '0.5em 0'],
-      onWidgets: (meta, _) => [_buildOembedWebView(meta.domElement.outerHtml)],
-    );
-    return _oembedOp;
-  }
-
-  BuildOp get thumbnailOp {
-    _thumbnailOp ??= BuildOp(
-      onWidgets: (meta, widgets) => [
-        _Thumbnail(
-          widgets.first,
-          isCover: meta.domElement.classes.contains('thumbnail-cover'),
-        ),
-      ],
-    );
-    return _thumbnailOp;
-  }
-
-  Iterable<Widget> build(NodeMetadata meta, Iterable<Widget> children) {
-    _Thumbnail thumbnail;
-    _Info info;
-
-    for (final child in children) {
-      if (child is _Thumbnail) thumbnail = child;
-      if (child is _Info) info = child;
+        break;
+      case 'img':
+        childMeta.isBlockElement = true;
+        break;
+      case 'span':
+        if (e.classes.contains('host')) {
+          childMeta.tsb((p, _) =>
+              p.copyWith(style: p.style.copyWith(color: Colors.grey)));
+        }
+        break;
     }
-
-    if (info == null) return null;
-
-    return [
-      Wrap(
-        children: <Widget>[
-          thumbnail?.isCover != false
-              ? _buildCover(meta, thumbnail, info)
-              : _buildSquare(meta, thumbnail, info),
-        ],
-      ),
-    ];
   }
 
-  Widget _buildBox(NodeMetadata meta, Widget child) {
+  Iterable<Widget> onWidgets(NodeMetadata _, Iterable<WidgetPlaceholder> __) =>
+      _thumbnail != null && _info != null
+          ? [_isCover != false ? _buildCover() : _buildSquare()]
+          : [];
+
+  Widget _buildBox(NodeMetadata meta, Widget child, {double width}) {
     final a = meta.domElement.attributes;
     final href = a.containsKey('href') ? a['href'] : null;
-    final fullUrl = wf.constructFullUrl(href) ?? href;
-    final onTap = wf.buildGestureTapCallbackForUrl(fullUrl);
+    final fullUrl = wf.urlFull(href) ?? href;
+    final onTap = wf.gestureTapCallback(fullUrl);
 
-    return WidgetPlaceholder(
-      builder: wf.buildGestureDetectors,
-      children: [
-        Builder(
-          builder: (context) => wf.buildDecoratedBox(
-            child,
-            color: Theme.of(context).cardColor,
-          ),
-        ),
-      ],
-      input: onTap,
-    );
+    return WidgetPlaceholder<LinkExpander>(this)
+      ..wrapWith((context, _) {
+        Widget built = wf.buildDecoratedBox(meta, child,
+            color: Theme.of(context).cardColor);
+
+        if (width != null) {
+          built = CssSizing(
+            child: built,
+            constraints: BoxConstraints(
+              maxWidth: width,
+              minWidth: width,
+            ),
+            size: Size.infinite,
+          );
+        }
+
+        built = wf.buildGestureDetector(meta, built, onTap);
+
+        return built;
+      });
   }
 
-  Widget _buildSquare(NodeMetadata meta, _Thumbnail thumbnail, _Info info) =>
-      _buildBox(
-        meta,
+  Widget _buildSquare() => _buildBox(
+        linkMeta,
         LayoutBuilder(
           builder: (_, bc) {
-            if (bc.maxWidth < 480) return info;
+            if (bc.maxWidth < 480) return _info;
 
             return Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                thumbnail,
+                _thumbnail,
                 Expanded(
                   child: SizedBox(
                     height: kLinkExpanderSquareThumbnailSize,
-                    child: SingleChildScrollView(child: info),
+                    child: _info,
                   ),
                 ),
               ],
@@ -136,22 +106,27 @@ class LinkExpander {
         ),
       );
 
-  Widget _buildCover(NodeMetadata meta, _Thumbnail thumbnail, _Info info) =>
-      SizedBox(
-        child: _buildBox(
-          meta,
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              thumbnail ?? Container(),
-              info,
-            ],
-          ),
+  Widget _buildCover() => _buildBox(
+        linkMeta,
+        Column(
+          children: <Widget>[
+            _thumbnail ?? Container(),
+            _info,
+          ],
         ),
         width: 480,
       );
 
-  Widget _buildOembedWebView(String html) {
+  static BuildOp _oembedOp;
+  static BuildOp getOembedOp() {
+    _oembedOp ??= BuildOp(
+      defaultStyles: (_) => {'margin': '0.5em 0'},
+      onWidgets: (meta, _) => [_buildOembedWebView(meta.domElement.outerHtml)],
+    );
+    return _oembedOp;
+  }
+
+  static Widget _buildOembedWebView(String html) {
     html = html.replaceAll('src="//', 'src="https://');
     html = """<!doctype html>
 <html lang="en">
@@ -169,35 +144,77 @@ class LinkExpander {
         encoding: Encoding.getByName('utf-8'),
       ).toString(),
       aspectRatio: 16 / 9,
-      getDimensions: true,
+      autoResize: true,
     );
   }
 }
 
-class _Thumbnail extends StatelessWidget {
-  final Widget child;
-  final bool isCover;
+class _LinkExpanderInfo {
+  final NodeMetadata infoMeta;
+  final LinkExpander le;
+  final TinhteWidgetFactory wf;
 
-  _Thumbnail(this.child, {this.isCover = false});
+  Widget _description;
+  BuildOp _descriptionOp;
 
-  @override
-  Widget build(BuildContext context) => isCover
-      ? child
-      : SizedBox(
-          width: kLinkExpanderSquareThumbnailSize,
-          height: kLinkExpanderSquareThumbnailSize,
-          child: child,
-        );
-}
+  _LinkExpanderInfo(this.wf, this.le, this.infoMeta);
 
-class _Info extends StatelessWidget {
-  final Widget child;
+  BuildOp _infoOp;
+  BuildOp get op {
+    _infoOp ??= BuildOp(
+      onChild: onChild,
+      onWidgets: onWidgets,
+    );
+    return _infoOp;
+  }
 
-  _Info(this.child);
+  void onChild(NodeMetadata childMeta) {
+    if (childMeta.domElement.parent != infoMeta.domElement) return;
 
-  @override
-  Widget build(BuildContext context) => Padding(
-        child: child,
-        padding: const EdgeInsets.all(kPostBodyPadding),
-      );
+    switch (childMeta.domElement.className) {
+      case 'title':
+        childMeta
+          ..['margin'] = '0px'
+          ..['max-lines'] = '1'
+          ..['text-align'] = 'left'
+          ..['text-overflow'] = 'ellipsis';
+        break;
+      case 'description':
+        _descriptionOp ??= BuildOp(onWidgets: (meta, widgets) {
+          _description = wf.buildColumnPlaceholder(meta, widgets);
+          return [_description];
+        });
+        childMeta.register(_descriptionOp);
+        break;
+    }
+  }
+
+  Iterable<Widget> onWidgets(
+      NodeMetadata _, Iterable<WidgetPlaceholder> widgets) {
+    widgets = widgets.toList(growable: false);
+    final expanded = <Widget>[];
+    for (final widget in widgets) {
+      if (widget == _description) {
+        expanded.add(Expanded(child: widget));
+      } else {
+        expanded.add(widget);
+      }
+    }
+
+    le._info = WidgetPlaceholder<_LinkExpanderInfo>(
+      this,
+      child: LayoutBuilder(
+        builder: (_, bc) => Padding(
+          padding: const EdgeInsets.symmetric(vertical: kPostBodyPadding),
+          child: Column(
+            children: bc.maxHeight.isFinite ? expanded : widgets,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisSize: MainAxisSize.max,
+          ),
+        ),
+      ),
+    );
+
+    return [le._info];
+  }
 }

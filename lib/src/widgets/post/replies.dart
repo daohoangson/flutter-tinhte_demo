@@ -38,7 +38,7 @@ class _PostWidget extends StatelessWidget {
           userHasVerifiedBadge: post.posterHasVerifiedBadge,
           userRank: post.posterRank?.rankName,
         ),
-        _PostBodyWidget(needBottomMargin: attachments != null),
+        _PostBodyWidget(),
         attachments ?? widget0,
       ],
       footer: <Widget>[

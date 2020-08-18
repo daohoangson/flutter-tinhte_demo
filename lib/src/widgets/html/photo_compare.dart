@@ -5,49 +5,37 @@ class PhotoCompare {
 
   PhotoCompare(this.wf);
 
-  BuildOp get buildOp {
-    final images = <String>[];
-    return BuildOp(
-      defaultStyles: (_, __) => ['margin', '0.5em 0'],
-      onChild: (meta, e) {
-        if (e.localName != 'img') return meta;
-        if (!e.attributes.containsKey('src')) return meta;
-        final src = wf.constructFullUrl(e.attributes['src']);
-        if (src != null) images.add(src);
+  BuildOp get buildOp => BuildOp(
+        defaultStyles: (_) => {'margin': '0.5em 0'},
+        onWidgets: (meta, widgets) {
+          if (widgets.length != 2) return widgets;
 
-        return meta;
-      },
-      onWidgets: (meta, widgets) {
-        if (images.length != 2) return widgets;
+          final image0 = widgets.first;
+          final image1 = widgets.last;
+          if (image0 is! WidgetPlaceholder<ImageMetadata> ||
+              image1 is! WidgetPlaceholder<ImageMetadata>) return widgets;
 
-        final a = meta.domElement.attributes;
-        if (!a.containsKey('data-config')) return widgets;
+          final a = meta.domElement.attributes;
+          if (!a.containsKey('data-config')) return widgets;
 
-        final Map config = json.decode(a['data-config']);
-        if (!config.containsKey('width') ||
-            !(config['width'] is num) ||
-            !config.containsKey('height') ||
-            !(config['height'] is num)) return widgets;
+          final Map config = json.decode(a['data-config']);
+          if (!config.containsKey('width') ||
+              (config['width'] is! num) ||
+              !config.containsKey('height') ||
+              (config['height'] is! num)) return widgets;
 
-        final width = (config['width'] as num).toDouble();
-        final height = (config['height'] as num).toDouble();
+          final width = (config['width'] as num).toDouble();
+          final height = (config['height'] as num).toDouble();
 
-        return [
-          _PhotoCompareWidget(
-            aspectRatio: width / height,
-            image0: wf.buildImage(
-              wf.buildImageProvider(images.first),
-              ImgMetadata(height: height, url: images.first, width: width),
+          return [
+            _PhotoCompareWidget(
+              aspectRatio: width / height,
+              image0: image0,
+              image1: image1,
             ),
-            image1: wf.buildImage(
-              wf.buildImageProvider(images.last),
-              ImgMetadata(height: height, url: images.last, width: width),
-            ),
-          ),
-        ];
-      },
-    );
-  }
+          ];
+        },
+      );
 }
 
 class _PhotoCompareWidget extends StatefulWidget {
