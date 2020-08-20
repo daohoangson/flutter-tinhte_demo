@@ -112,8 +112,8 @@ class _RegisterState extends State<RegisterForm> {
     form.save();
 
     setState(() => _isRegistering = true);
-    final apiAuth = ApiAuth.of(context, listen: false);
-    final api = apiAuth.api;
+
+    final api = ApiAuth.of(context, listen: false).api;
     api
         .postJson(
           'users',
@@ -124,18 +124,19 @@ class _RegisterState extends State<RegisterForm> {
             'password': password,
           },
         )
-        .then((result) => _onResult(apiAuth, result))
+        .then(_onJson)
         .catchError(_showError)
         .whenComplete(() => setState(() => _isRegistering = false));
   }
 
-  void _onResult(ApiAuth apiAuth, json) {
+  void _onJson(json) {
     if (!mounted || json == null || json is! Map) return;
 
     final map = json as Map;
     if (!map.containsKey('token'))
       return _showError(l(context).registerErrorNoAccessToken);
 
+    final apiAuth = ApiAuth.of(context, listen: false);
     apiAuth.setToken(OauthToken.fromJson(map['token']));
     Navigator.pop(context, true);
   }

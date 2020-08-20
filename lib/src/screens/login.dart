@@ -256,11 +256,9 @@ class _LoginFormState extends State<LoginForm> {
 
     setState(() => _isLoggingIn = true);
 
-    final apiAuth = ApiAuth.of(context, listen: false);
-    final api = apiAuth.api;
-
+    final api = ApiAuth.of(context, listen: false).api;
     loginAssociate(api, _associatable, password)
-        .then((result) => _onResult(apiAuth, result))
+        .then(_onResult)
         .catchError(_showError)
         .whenComplete(() => setState(() => _isLoggingIn = false));
   }
@@ -274,9 +272,9 @@ class _LoginFormState extends State<LoginForm> {
 
     setState(() => _isLoggingIn = true);
 
-    final apiAuth = ApiAuth.of(context, listen: false);
-    login(apiAuth.api, username, password)
-        .then((result) => _onResult(apiAuth, result))
+    final api = ApiAuth.of(context, listen: false).api;
+    login(api, username, password)
+        .then(_onResult)
         .catchError(_showError)
         .whenComplete(() => setState(() => _isLoggingIn = false));
   }
@@ -285,8 +283,7 @@ class _LoginFormState extends State<LoginForm> {
     if (_isLoggingIn) return;
     setState(() => _isLoggingIn = true);
 
-    final apiAuth = ApiAuth.of(context, listen: false);
-    final api = apiAuth.api;
+    final api = ApiAuth.of(context, listen: false).api;
     final req = apple.AppleIdRequest(requestedScopes: [apple.Scope.email]);
 
     apple.AppleSignIn.performRequests([req])
@@ -309,7 +306,7 @@ class _LoginFormState extends State<LoginForm> {
               'apple_token':
                   String.fromCharCodes(appleIdCredential.identityToken),
             }))
-        .then((result) => _onResult(apiAuth, result))
+        .then(_onResult)
         .catchError(_showError)
         .whenComplete(() => setState(() => _isLoggingIn = false));
   }
@@ -318,9 +315,7 @@ class _LoginFormState extends State<LoginForm> {
     if (_isLoggingIn) return;
     setState(() => _isLoggingIn = true);
 
-    final apiAuth = ApiAuth.of(context, listen: false);
-    final api = apiAuth.api;
-
+    final api = ApiAuth.of(context, listen: false).api;
     _facebookLogin
         .logIn(['email'])
         .then<String>((result) {
@@ -341,7 +336,7 @@ class _LoginFormState extends State<LoginForm> {
               'client_secret': api.clientSecret,
               'facebook_token': facebookToken,
             }))
-        .then((result) => _onResult(apiAuth, result))
+        .then(_onResult)
         .catchError(_showError)
         .whenComplete(() => setState(() => _isLoggingIn = false));
   }
@@ -350,9 +345,7 @@ class _LoginFormState extends State<LoginForm> {
     if (_isLoggingIn) return;
     setState(() => _isLoggingIn = true);
 
-    final apiAuth = ApiAuth.of(context, listen: false);
-    final api = apiAuth.api;
-
+    final api = ApiAuth.of(context, listen: false).api;
     _googleSignIn
         .signIn()
         .then<GoogleSignInAuthentication>((account) {
@@ -376,15 +369,16 @@ class _LoginFormState extends State<LoginForm> {
               'client_secret': api.clientSecret,
               'google_token': googleToken,
             }))
-        .then((result) => _onResult(apiAuth, result))
+        .then(_onResult)
         .catchError(_showError)
         .whenComplete(() => setState(() => _isLoggingIn = false));
   }
 
-  void _onResult(ApiAuth apiAuth, LoginResult result) {
+  void _onResult(LoginResult result) {
     if (!mounted || result == null) return;
 
     if (result.token != null) {
+      final apiAuth = ApiAuth.of(context, listen: false);
       apiAuth.setToken(result.token);
       Navigator.pop(context, true);
       return;
@@ -404,9 +398,9 @@ class _LoginFormState extends State<LoginForm> {
     if (_isLoggingIn) return;
     setState(() => _isLoggingIn = true);
 
-    final apiAuth = ApiAuth.of(context, listen: false);
-    loginTfa(apiAuth.api, _tfa, provider, trigger: true)
-        .then((result) => _onResult(apiAuth, result))
+    final api = ApiAuth.of(context, listen: false).api;
+    loginTfa(api, _tfa, provider, trigger: true)
+        .then(_onResult)
         .catchError(_showError)
         .whenComplete(() => setState(() => _isLoggingIn = false));
   }
@@ -420,9 +414,9 @@ class _LoginFormState extends State<LoginForm> {
 
     setState(() => _isLoggingIn = true);
 
-    final apiAuth = ApiAuth.of(context, listen: false);
-    loginTfa(apiAuth.api, _tfa, _tfa.triggeredProvider, code: tfaCode)
-        .then((result) => _onResult(apiAuth, result))
+    final api = ApiAuth.of(context, listen: false).api;
+    loginTfa(api, _tfa, _tfa.triggeredProvider, code: tfaCode)
+        .then(_onResult)
         .catchError(_showError)
         .whenComplete(() => setState(() => _isLoggingIn = false));
   }
