@@ -60,23 +60,16 @@ class _LoginFormState extends State<LoginForm> {
   }
 
   @override
-  Widget build(BuildContext context) => LayoutBuilder(
-        builder: (_, box) => Form(
-          key: formKey,
-          child: _buildBox(
-            box,
-            _tfa != null
-                ? _buildFieldsTfa()
-                : _associatable != null
-                    ? _buildFieldsAssociate()
-                    : _buildFieldsLogin(),
-          ),
+  Widget build(BuildContext context) => Form(
+        key: formKey,
+        child: ListView(
+          children: _tfa != null
+              ? _buildFieldsTfa()
+              : _associatable != null
+                  ? _buildFieldsAssociate()
+                  : _buildFieldsLogin(),
+          padding: const EdgeInsets.all(20.0),
         ),
-      );
-
-  Widget _buildBox(BoxConstraints box, List<Widget> children) => ListView(
-        padding: const EdgeInsets.all(20.0),
-        children: children,
       );
 
   List<Widget> _buildFieldsAssociate() => [
@@ -252,7 +245,7 @@ class _LoginFormState extends State<LoginForm> {
 
     loginAssociate(api, _associatable, password)
         .then((result) => _onResult(apiAuth, result))
-        .catchError((e) => _showError(context, e))
+        .catchError(_showError)
         .whenComplete(() => setState(() => _isLoggingIn = false));
   }
 
@@ -268,7 +261,7 @@ class _LoginFormState extends State<LoginForm> {
     final apiAuth = ApiAuth.of(context, listen: false);
     login(apiAuth.api, username, password)
         .then((result) => _onResult(apiAuth, result))
-        .catchError((e) => _showError(context, e))
+        .catchError(_showError)
         .whenComplete(() => setState(() => _isLoggingIn = false));
   }
 
@@ -301,7 +294,7 @@ class _LoginFormState extends State<LoginForm> {
                   String.fromCharCodes(appleIdCredential.identityToken),
             }))
         .then((result) => _onResult(apiAuth, result))
-        .catchError((e) => _showError(context, e))
+        .catchError(_showError)
         .whenComplete(() => setState(() => _isLoggingIn = false));
   }
 
@@ -333,7 +326,7 @@ class _LoginFormState extends State<LoginForm> {
               'facebook_token': facebookToken,
             }))
         .then((result) => _onResult(apiAuth, result))
-        .catchError((e) => _showError(context, e))
+        .catchError(_showError)
         .whenComplete(() => setState(() => _isLoggingIn = false));
   }
 
@@ -368,7 +361,7 @@ class _LoginFormState extends State<LoginForm> {
               'google_token': googleToken,
             }))
         .then((result) => _onResult(apiAuth, result))
-        .catchError((e) => _showError(context, e))
+        .catchError(_showError)
         .whenComplete(() => setState(() => _isLoggingIn = false));
   }
 
@@ -387,10 +380,9 @@ class _LoginFormState extends State<LoginForm> {
     if (result.tfa != null) setState(() => _tfa = result.tfa);
   }
 
-  void _showError(BuildContext context, error) =>
-      Scaffold.of(context).showSnackBar(SnackBar(
-          backgroundColor: Colors.redAccent,
-          content: Text(error is ApiError ? error.message : "$error")));
+  void _showError(error) => Scaffold.of(context).showSnackBar(SnackBar(
+      backgroundColor: Colors.redAccent,
+      content: Text(error is ApiError ? error.message : "$error")));
 
   void _tfaTrigger(String provider) {
     if (_isLoggingIn) return;
@@ -399,7 +391,7 @@ class _LoginFormState extends State<LoginForm> {
     final apiAuth = ApiAuth.of(context, listen: false);
     loginTfa(apiAuth.api, _tfa, provider, trigger: true)
         .then((result) => _onResult(apiAuth, result))
-        .catchError((e) => _showError(context, e))
+        .catchError(_showError)
         .whenComplete(() => setState(() => _isLoggingIn = false));
   }
 
@@ -415,7 +407,7 @@ class _LoginFormState extends State<LoginForm> {
     final apiAuth = ApiAuth.of(context, listen: false);
     loginTfa(apiAuth.api, _tfa, _tfa.triggeredProvider, code: tfaCode)
         .then((result) => _onResult(apiAuth, result))
-        .catchError((e) => _showError(context, e))
+        .catchError(_showError)
         .whenComplete(() => setState(() => _isLoggingIn = false));
   }
 }
