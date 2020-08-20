@@ -1,5 +1,6 @@
 /android/fastlane/README.md
 /android/fastlane/report.xml
+/ios/Flutter/.last_build_id
 /ios/fastlane/README.md
 /ios/fastlane/report.xml
 /ios/*.cer
