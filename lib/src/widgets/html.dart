@@ -37,16 +37,16 @@ const _kSmilies = {
   'Er... what?': '😳',
 };
 
-const _kTextPadding = const EdgeInsets.symmetric(horizontal: kPostBodyPadding);
-
 class TinhteHtmlWidget extends StatelessWidget {
   final String html;
   final Color hyperlinkColor;
+  final double textPadding;
   final TextStyle textStyle;
 
   TinhteHtmlWidget(
     this.html, {
     this.hyperlinkColor,
+    this.textPadding = kPostBodyPadding,
     this.textStyle,
   });
 
@@ -66,6 +66,7 @@ class TinhteHtmlWidget extends StatelessWidget {
           factoryBuilder: () => TinhteWidgetFactory(
             devicePixelRatio: MediaQuery.of(c).devicePixelRatio,
             deviceWidth: bc.biggest.width,
+            textPadding: textPadding,
           ),
           hyperlinkColor: hyperlinkColor,
           onTapUrl: (url) => launchLink(c, url),
@@ -79,6 +80,7 @@ class TinhteHtmlWidget extends StatelessWidget {
 class TinhteWidgetFactory extends WidgetFactory {
   final double devicePixelRatio;
   final double deviceWidth;
+  final double textPadding;
 
   BuildOp _blockquoteOp;
   BuildOp _chrOp;
@@ -92,6 +94,7 @@ class TinhteWidgetFactory extends WidgetFactory {
   TinhteWidgetFactory({
     this.devicePixelRatio,
     this.deviceWidth,
+    this.textPadding,
   });
 
   BuildOp get blockquoteOp {
@@ -111,7 +114,7 @@ class TinhteWidgetFactory extends WidgetFactory {
                   ),
                 ),
               ),
-              padding: const EdgeInsets.all(kPostBodyPadding),
+              padding: EdgeInsets.all(textPadding),
             ),
           ),
       ],
@@ -211,7 +214,7 @@ class TinhteWidgetFactory extends WidgetFactory {
       if (_isBuildingText != 1) print('_isBuildingText=$_isBuildingText');
       children = List.from(children.map((child) {
         if (child is WidgetPlaceholder<TextBits>)
-          child.wrapWith((_, w) => _TextPadding(w));
+          child.wrapWith((_, w) => _TextPadding(w, textPadding));
 
         return child;
       }));
@@ -227,9 +230,9 @@ class TinhteWidgetFactory extends WidgetFactory {
         return Padding(
           child: child,
           padding: EdgeInsets.only(
-            top: kPostBodyPadding,
+            top: textPadding,
             bottom: last is _TextPadding || last is WidgetPlaceholder<TextBits>
-                ? kPostBodyPadding
+                ? textPadding
                 : 0.0,
           ),
         );
@@ -357,12 +360,13 @@ class TinhteWidgetFactory extends WidgetFactory {
 
 class _TextPadding extends StatelessWidget {
   final Widget child;
+  final double padding;
 
-  const _TextPadding(this.child, {Key key}) : super(key: key);
+  const _TextPadding(this.child, this.padding, {Key key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) =>
-      Padding(child: child, padding: _kTextPadding);
+  Widget build(BuildContext _) =>
+      Padding(child: child, padding: EdgeInsets.symmetric(horizontal: padding));
 }
 
 Widget _lastOf(Widget widget) {

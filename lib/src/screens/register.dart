@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:the_api/api.dart';
 import 'package:the_api/oauth_token.dart';
 import 'package:the_app/src/api.dart';
+import 'package:the_app/src/config.dart';
 import 'package:the_app/src/intl.dart';
 import 'package:the_app/src/screens/login.dart';
+import 'package:the_app/src/widgets/html.dart';
 
 class RegisterScreen extends StatelessWidget {
   @override
@@ -28,6 +30,7 @@ class _RegisterState extends State<RegisterForm> {
   String email;
   String emailError;
   String password;
+  bool agreed = false;
 
   @override
   Widget build(BuildContext context) => Form(
@@ -42,6 +45,7 @@ class _RegisterState extends State<RegisterForm> {
         _buildInputPadding(_buildUsername()),
         _buildInputPadding(_buildUserEmail()),
         _buildInputPadding(_buildPassword()),
+        _buildAgreed(),
         Row(
           children: <Widget>[
             Expanded(
@@ -56,7 +60,7 @@ class _RegisterState extends State<RegisterForm> {
             Expanded(
               child: RaisedButton(
                 child: Text(l(context).register),
-                onPressed: _isRegistering ? null : _register,
+                onPressed: !agreed || _isRegistering ? null : _register,
               ),
             ),
           ],
@@ -114,6 +118,28 @@ class _RegisterState extends State<RegisterForm> {
 
         return null;
       });
+
+  Widget _buildAgreed() => InkWell(
+        child: Row(
+          children: [
+            Checkbox(
+              onChanged: (value) => setState(() => agreed = value),
+              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              value: agreed,
+            ),
+            Expanded(
+              child: TinhteHtmlWidget(
+                l(context).registerAgreeCheckboxHtml(
+                  privacyPolicy: config.linkPrivacyPolicy,
+                  terms: config.linkTos,
+                ),
+                textPadding: 0,
+              ),
+            ),
+          ],
+        ),
+        onTap: () => setState(() => agreed = !agreed),
+      );
 
   void _register() {
     if (_isRegistering) return;

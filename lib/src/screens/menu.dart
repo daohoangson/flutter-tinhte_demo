@@ -63,7 +63,7 @@ class MenuScreen extends StatelessWidget {
 
   Widget _buildPrivacyPolicy(BuildContext context) => ListTile(
         title: Text(l(context).privacyPolicy),
-        onTap: () => launchLink(context, 'https://tinhte.vn/threads/2864415/'),
+        onTap: () => launchLink(context, config.linkPrivacyPolicy),
       );
 
   Widget _buildRegister(BuildContext context, User user) => user.userId == 0
