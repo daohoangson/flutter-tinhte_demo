@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-06-21T22:19:37.058839",
+  "@@last_modified": "2020-08-20T22:55:59.184363",
   "appTitle": "tinhte.vn Demo",
   "@appTitle": {
     "type": "text",
@@ -327,6 +327,11 @@
   },
   "privacyPolicy": "Privacy Policy",
   "@privacyPolicy": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "search": "Search",
+  "@search": {
     "type": "text",
     "placeholders": {}
   },

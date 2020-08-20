@@ -3,7 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:the_app/src/intl.dart';
 import 'package:the_app/src/screens/forum_list.dart';
 import 'package:the_app/src/screens/menu.dart';
-import 'package:the_app/src/screens/my_feed.dart';
+import 'package:the_app/src/screens/search/thread.dart';
 
 class HomeBottomBar extends StatelessWidget {
   @override
@@ -19,11 +19,10 @@ class HomeBottomBar extends StatelessWidget {
             ),
             Expanded(
               child: _BottomBarItem(
-                icon: Icon(FontAwesomeIcons.newspaper),
-                onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                  builder: (_) => MyFeedScreen(),
-                )),
-                tooltip: l(context).myFeed,
+                icon: Icon(FontAwesomeIcons.search),
+                onTap: () => showSearch(
+                    context: context, delegate: ThreadSearchDelegate()),
+                tooltip: l(context).search,
               ),
             ),
             Expanded(
