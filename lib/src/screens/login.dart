@@ -9,6 +9,7 @@ import 'package:the_api/oauth_token.dart';
 import 'package:the_app/src/api.dart';
 import 'package:the_app/src/config.dart';
 import 'package:the_app/src/intl.dart';
+import 'package:the_app/src/screens/register.dart';
 
 final _facebookLogin = FacebookLogin();
 
@@ -104,9 +105,24 @@ class _LoginFormState extends State<LoginForm> {
   List<Widget> _buildFieldsLogin() => [
         _buildInputPadding(_buildUsername()),
         _buildInputPadding(_buildPassword()),
-        RaisedButton(
-          child: Text(lm(context).continueButtonLabel),
-          onPressed: _isLoggingIn ? null : _login,
+        Row(
+          children: <Widget>[
+            Expanded(
+              child: FlatButton(
+                child: Text(l(context).register),
+                onPressed: _isLoggingIn
+                    ? null
+                    : () => Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(builder: (_) => RegisterScreen())),
+              ),
+            ),
+            Expanded(
+              child: RaisedButton(
+                child: Text(l(context).login),
+                onPressed: _isLoggingIn ? null : _login,
+              ),
+            ),
+          ],
         ),
         config.loginWithFacebook
             ? FacebookSignInButton(

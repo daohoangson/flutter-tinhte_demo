@@ -42,7 +42,7 @@ class _RegisterState extends State<RegisterForm> {
         _buildInputPadding(_buildUserEmail()),
         _buildInputPadding(_buildPassword()),
         RaisedButton(
-          child: Text(lm(context).continueButtonLabel),
+          child: Text(l(context).register),
           onPressed: _isRegistering ? null : _register,
         ),
       ];
