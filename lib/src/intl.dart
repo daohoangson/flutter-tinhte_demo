@@ -246,6 +246,9 @@ class L10n {
   String get privacyPolicy =>
       Intl.message('Privacy Policy', locale: localeName, name: 'privacyPolicy');
 
+  String get search =>
+      Intl.message('Search', locale: localeName, name: 'search');
+
   String get searchEnterSomething => Intl.message('Enter something to search',
       locale: localeName, name: 'searchEnterSomething');
 
