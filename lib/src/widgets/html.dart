@@ -123,7 +123,7 @@ class TinhteWidgetFactory extends WidgetFactory {
     _chrOp ??= BuildOp(
       defaultStyles: (_) => {'margin': '0.5em 0'},
       onWidgets: (meta, __) {
-        final a = meta.domElement.attributes;
+        final a = meta.element.attributes;
         final url = urlFull(a['href']);
         if (url?.isEmpty != false) return null;
 
@@ -148,8 +148,8 @@ class TinhteWidgetFactory extends WidgetFactory {
 
   BuildOp get metaBbCodeOp {
     _metaBbCodeOp ??= BuildOp(
-      onChild: (meta) => (meta.domElement.localName == 'span' &&
-              !meta.domElement.classes.contains('value'))
+      onChild: (meta) => (meta.element.localName == 'span' &&
+              !meta.element.classes.contains('value'))
           ? meta.isNotRenderable = true
           : null,
     );
@@ -159,7 +159,7 @@ class TinhteWidgetFactory extends WidgetFactory {
   BuildOp get smilieOp {
     _smilieOp ??= BuildOp(
       onPieces: (meta, pieces) {
-        final a = meta.domElement.attributes;
+        final a = meta.element.attributes;
         if (!a.containsKey('data-title')) return pieces;
         final title = a['data-title'];
         if (!_kSmilies.containsKey(title)) return pieces;
@@ -182,7 +182,7 @@ class TinhteWidgetFactory extends WidgetFactory {
         buildWebView(
             meta,
             Uri.dataFromString(
-              """<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"></head><body>${meta.domElement.outerHtml}</body></html>""",
+              """<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"></head><body>${meta.element.outerHtml}</body></html>""",
               encoding: Encoding.getByName('utf-8'),
               mimeType: 'text/html',
             ).toString())
@@ -203,7 +203,7 @@ class TinhteWidgetFactory extends WidgetFactory {
 
   @override
   WidgetPlaceholder buildColumnPlaceholder(
-    NodeMetadata meta,
+    BuildMetadata meta,
     Iterable<Widget> children, {
     bool trimMarginVertical = false,
   }) {
@@ -240,9 +240,9 @@ class TinhteWidgetFactory extends WidgetFactory {
   }
 
   @override
-  Widget buildImage(NodeMetadata meta, Object provider, ImageMetadata image) {
+  Widget buildImage(BuildMetadata meta, Object provider, ImageMetadata image) {
     if (image.sources?.first?.width == null) {
-      final attrs = meta.domElement.attributes;
+      final attrs = meta.element.attributes;
       if (attrs.containsKey('data-height') && attrs.containsKey('data-width')) {
         final resizedUrl = getResizedUrl(
           apiUrl: image.sources.first.url,
@@ -260,7 +260,7 @@ class TinhteWidgetFactory extends WidgetFactory {
 
   var _isBuildingText = 0;
   @override
-  WidgetPlaceholder buildText(NodeMetadata meta, TextBits text) {
+  WidgetPlaceholder buildText(BuildMetadata meta, TextBits text) {
     _isBuildingText++;
     final built = super.buildText(meta, text);
     _isBuildingText--;
@@ -269,10 +269,10 @@ class TinhteWidgetFactory extends WidgetFactory {
   }
 
   @override
-  void parse(NodeMetadata meta) {
-    final attrs = meta.domElement.attributes;
-    final classes = meta.domElement.classes;
-    switch (meta.domElement.localName) {
+  void parse(BuildMetadata meta) {
+    final attrs = meta.element.attributes;
+    final classes = meta.element.classes;
+    switch (meta.element.localName) {
       case 'a':
         if (attrs.containsKey('data-chr') && attrs.containsKey('href')) {
           meta.register(chrOp);

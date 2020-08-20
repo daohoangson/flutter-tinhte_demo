@@ -8,7 +8,7 @@ class PhotoCompare {
   BuildOp get buildOp => BuildOp(
         defaultStyles: (_) => {'margin': '0.5em 0'},
         onChild: (childMeta) {
-          if (childMeta.domElement.localName == 'img') {
+          if (childMeta.element.localName == 'img') {
             childMeta.isBlockElement = true;
           }
         },
@@ -22,7 +22,7 @@ class PhotoCompare {
 
           if (images.length != 2) return widgets;
 
-          final a = meta.domElement.attributes;
+          final a = meta.element.attributes;
           if (!a.containsKey('data-config')) return widgets;
 
           final Map config = json.decode(a['data-config']);

@@ -3,7 +3,7 @@ part of '../html.dart';
 const kLinkExpanderSquareThumbnailSize = 120.0;
 
 class LinkExpander {
-  final NodeMetadata linkMeta;
+  final BuildMetadata linkMeta;
   final TinhteWidgetFactory wf;
 
   WidgetPlaceholder _info;
@@ -22,8 +22,8 @@ class LinkExpander {
     return _leOp;
   }
 
-  void onChild(NodeMetadata childMeta) {
-    final e = childMeta.domElement;
+  void onChild(BuildMetadata childMeta) {
+    final e = childMeta.element;
     switch (e.localName) {
       case 'div':
         if (e.classes.contains('thumbnail')) {
@@ -51,13 +51,13 @@ class LinkExpander {
     }
   }
 
-  Iterable<Widget> onWidgets(NodeMetadata _, Iterable<WidgetPlaceholder> __) =>
+  Iterable<Widget> onWidgets(BuildMetadata _, Iterable<WidgetPlaceholder> __) =>
       _thumbnail != null && _info != null
           ? [_isCover != false ? _buildCover() : _buildSquare()]
           : [];
 
-  Widget _buildBox(NodeMetadata meta, Widget child, {double width}) {
-    final a = meta.domElement.attributes;
+  Widget _buildBox(BuildMetadata meta, Widget child, {double width}) {
+    final a = meta.element.attributes;
     final href = a.containsKey('href') ? a['href'] : null;
     final fullUrl = wf.urlFull(href) ?? href;
     final onTap = wf.gestureTapCallback(fullUrl);
@@ -121,7 +121,7 @@ class LinkExpander {
   static BuildOp getOembedOp() {
     _oembedOp ??= BuildOp(
       defaultStyles: (_) => {'margin': '0.5em 0'},
-      onWidgets: (meta, _) => [_buildOembedWebView(meta.domElement.outerHtml)],
+      onWidgets: (meta, _) => [_buildOembedWebView(meta.element.outerHtml)],
     );
     return _oembedOp;
   }
@@ -150,7 +150,7 @@ class LinkExpander {
 }
 
 class _LinkExpanderInfo {
-  final NodeMetadata infoMeta;
+  final BuildMetadata infoMeta;
   final LinkExpander le;
   final TinhteWidgetFactory wf;
 
@@ -168,10 +168,10 @@ class _LinkExpanderInfo {
     return _infoOp;
   }
 
-  void onChild(NodeMetadata childMeta) {
-    if (childMeta.domElement.parent != infoMeta.domElement) return;
+  void onChild(BuildMetadata childMeta) {
+    if (childMeta.element.parent != infoMeta.element) return;
 
-    switch (childMeta.domElement.className) {
+    switch (childMeta.element.className) {
       case 'title':
         childMeta
           ..['margin'] = '0px'
@@ -190,7 +190,7 @@ class _LinkExpanderInfo {
   }
 
   Iterable<Widget> onWidgets(
-      NodeMetadata _, Iterable<WidgetPlaceholder> widgets) {
+      BuildMetadata _, Iterable<WidgetPlaceholder> widgets) {
     widgets = widgets.toList(growable: false);
     final expanded = <Widget>[];
     for (final widget in widgets) {

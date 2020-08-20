@@ -47,7 +47,7 @@ class LbTrigger {
 
     return BuildOp(
       onChild: (meta) {
-        if (meta.domElement.localName != 'img') return;
+        if (meta.element.localName != 'img') return;
 
         meta
           ..['height'] = "${childHeight}px"
@@ -72,9 +72,9 @@ class LbTrigger {
   BuildOp get fullOp {
     _fullOp = BuildOp(
       onChild: (meta) {
-        if (meta.domElement.localName != 'img') return;
+        if (meta.element.localName != 'img') return;
 
-        final a = meta.domElement.attributes;
+        final a = meta.element.attributes;
         final href = a['src'];
         final url = wf.urlFull(href);
         if (url == null) return;
