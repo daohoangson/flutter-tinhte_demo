@@ -1,7 +1,7 @@
 part of '../html.dart';
 
 class Unfurl {
-  final NodeMetadata unfurlMeta;
+  final BuildMetadata unfurlMeta;
   final TinhteWidgetFactory wf;
 
   WidgetPlaceholder _figure;
@@ -19,8 +19,8 @@ class Unfurl {
     return _unfurlOp;
   }
 
-  void onChild(NodeMetadata childMeta) {
-    final e = childMeta.domElement;
+  void onChild(BuildMetadata childMeta) {
+    final e = childMeta.element;
     switch (e.localName) {
       case 'div':
         if (e.classes.contains('contentRow-figure')) {
@@ -30,7 +30,7 @@ class Unfurl {
             ..['width'] = '60px'
             ..register(BuildOp(
               onChild: (childMeta) {
-                if (childMeta.domElement.localName == 'img') {
+                if (childMeta.element.localName == 'img') {
                   childMeta.isBlockElement = true;
                 }
               },
@@ -49,7 +49,7 @@ class Unfurl {
         } else if (e.classes.contains('contentRow-minor')) {
           childMeta
             ..register(BuildOp(onChild: (childMeta) {
-              if (childMeta.domElement.localName == 'img') {
+              if (childMeta.element.localName == 'img') {
                 childMeta['width'] = '1em';
               }
             }))
@@ -70,13 +70,13 @@ class Unfurl {
     }
   }
 
-  Iterable<Widget> onWidgets(NodeMetadata _, Iterable<WidgetPlaceholder> __) =>
+  Iterable<Widget> onWidgets(BuildMetadata _, Iterable<WidgetPlaceholder> __) =>
       _main != null
           ? [_figure != null ? _buildWithFigure() : _buildMainOnly()]
           : [];
 
   Widget _buildBox(Widget child) {
-    final attrs = unfurlMeta.domElement.attributes;
+    final attrs = unfurlMeta.element.attributes;
     final url = attrs.containsKey('data-url') ? attrs['data-url'] : null;
     final fullUrl = wf.urlFull(url) ?? url;
     final onTap = wf.gestureTapCallback(fullUrl);
