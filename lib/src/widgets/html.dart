@@ -290,6 +290,10 @@ class TinhteWidgetFactory extends WidgetFactory {
             attrs.containsKey('data-width')) {
           meta.register(lbTrigger.prepareThumbnailOp(attrs));
           return;
+        } else if (classes.contains('js-lbImage')) {
+          // [ATTACH] (thumbnail)
+          meta.register(lbTrigger.prepareXenForo2Op(attrs, 'href'));
+          return;
         }
         break;
       case 'blockquote':
@@ -307,6 +311,13 @@ class TinhteWidgetFactory extends WidgetFactory {
         }
         if (attrs.containsKey('data-width')) {
           meta['width'] = '${attrs["data-width"]}px';
+        }
+
+        if (classes.contains('bbImage') &&
+            meta.element.parent?.classes?.contains('js-lbImage') == false) {
+          // [ATTACH=full]
+          meta.isBlockElement = true;
+          meta.register(lbTrigger.prepareXenForo2Op(attrs, 'src'));
         }
         break;
       case 'ul':

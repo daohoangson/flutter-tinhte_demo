@@ -69,6 +69,37 @@ class LbTrigger {
     );
   }
 
+  BuildOp prepareXenForo2Op(Map<dynamic, String> attrs, String key) {
+    final url = wf.urlFull(attrs.containsKey(key) ? attrs[key] : null);
+    if (url == null) return null;
+
+    final index = _addSource(url);
+
+    return BuildOp(
+      isBlockElement: false,
+      onPieces: (meta, pieces) {
+        if (meta.isBlockElement) return pieces;
+
+        for (final piece in pieces) {
+          if (piece.text == null) continue;
+          for (final bit in piece.text.bits) {
+            if (bit is TextWidget) {
+              bit.child.wrapWith((c, w) => buildGestureDetector(c, w, index));
+            }
+          }
+        }
+
+        return pieces;
+      },
+      onWidgets: (meta, widgets) {
+        final column = wf.buildColumnPlaceholder(meta, widgets)
+          ..wrapWith((c, w) => buildGestureDetector(c, w, index));
+        return column != null ? [column] : widgets;
+      },
+      priority: 9999,
+    );
+  }
+
   BuildOp get fullOp {
     _fullOp = BuildOp(
       onChild: (meta) {
