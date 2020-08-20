@@ -102,17 +102,16 @@ class _RegisterState extends State<RegisterForm> {
   void _register() {
     if (_isRegistering) return;
 
+    setState(() {
+      usernameError = null;
+      emailError = null;
+    });
+
     final form = formKey.currentState;
     if (form?.validate() != true) return;
     form.save();
 
-    setState(() {
-      usernameError = null;
-      emailError = null;
-
-      _isRegistering = true;
-    });
-
+    setState(() => _isRegistering = true);
     final apiAuth = ApiAuth.of(context, listen: false);
     final api = apiAuth.api;
     api
