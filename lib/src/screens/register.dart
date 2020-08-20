@@ -3,6 +3,7 @@ import 'package:the_api/api.dart';
 import 'package:the_api/oauth_token.dart';
 import 'package:the_app/src/api.dart';
 import 'package:the_app/src/intl.dart';
+import 'package:the_app/src/screens/login.dart';
 
 class RegisterScreen extends StatelessWidget {
   @override
@@ -41,9 +42,24 @@ class _RegisterState extends State<RegisterForm> {
         _buildInputPadding(_buildUsername()),
         _buildInputPadding(_buildUserEmail()),
         _buildInputPadding(_buildPassword()),
-        RaisedButton(
-          child: Text(l(context).register),
-          onPressed: _isRegistering ? null : _register,
+        Row(
+          children: <Widget>[
+            Expanded(
+              child: FlatButton(
+                child: Text(l(context).login),
+                onPressed: _isRegistering
+                    ? null
+                    : () => Navigator.of(context)
+                        .pushReplacement(LoginScreenRoute()),
+              ),
+            ),
+            Expanded(
+              child: RaisedButton(
+                child: Text(l(context).register),
+                onPressed: _isRegistering ? null : _register,
+              ),
+            ),
+          ],
         ),
       ];
 
