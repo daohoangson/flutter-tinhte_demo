@@ -42,13 +42,14 @@ class MenuScreen extends StatelessWidget {
             )
           : const SizedBox.shrink();
 
-  Widget _buildMyFeed(BuildContext context, User user) => user.userId > 0
-      ? ListTile(
-          title: Text(l(context).myFeed),
-          onTap: () => Navigator.of(context)
-              .push(MaterialPageRoute(builder: (_) => MyFeedScreen())),
-        )
-      : const SizedBox.shrink();
+  Widget _buildMyFeed(BuildContext context, User user) =>
+      config.myFeed == true && user.userId > 0
+          ? ListTile(
+              title: Text(l(context).myFeed),
+              onTap: () => Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (_) => MyFeedScreen())),
+            )
+          : const SizedBox.shrink();
 
   Widget _buildNotifications(BuildContext context, User user) => user.userId > 0
       ? ListTile(
