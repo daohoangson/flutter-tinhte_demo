@@ -63,7 +63,7 @@ Future _verifyResponseAndJsonForError(Response response, j) {
       }
 
       if (j['errors'] is Map) {
-        final errors = Map<String, String>.from(j['errors'].values);
+        final errors = Map<String, String>.from(j['errors']);
         return Future.error(ApiErrorMapped(errors));
       }
     }
