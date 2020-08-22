@@ -246,6 +246,36 @@ class L10n {
   String get privacyPolicy =>
       Intl.message('Privacy Policy', locale: localeName, name: 'privacyPolicy');
 
+  String get register =>
+      Intl.message('Register', locale: localeName, name: 'register');
+
+  String registerAgreeCheckboxHtml({String terms, String privacyPolicy}) =>
+      Intl.message(
+          'I agree to the <a href="$terms">terms</a> and <a href="$privacyPolicy">privacy policy</a>.',
+          args: [terms, privacyPolicy],
+          locale: localeName,
+          name: 'registerAgreeCheckboxHtml');
+
+  String get registerEmail => Intl.message('Email',
+      desc: 'Label text for email field',
+      locale: localeName,
+      name: 'registerEmail');
+
+  String get registerErrorEmailIsEmpty =>
+      Intl.message('Email cannot be empty', name: 'registerErrorEmailIsEmpty');
+
+  String get registerErrorNoAccessToken =>
+      Intl.message('Cannot register new user account.',
+          locale: localeName, name: 'registerErrorNoAccessToken');
+
+  String get registerErrorPasswordIsEmpty =>
+      Intl.message('Password cannot be empty',
+          name: 'registerErrorPasswordIsEmpty');
+
+  String get registerErrorUsernameIsEmpty =>
+      Intl.message('Username cannot be empty',
+          name: 'registerErrorUsernameIsEmpty');
+
   String get search =>
       Intl.message('Search', locale: localeName, name: 'search');
 
