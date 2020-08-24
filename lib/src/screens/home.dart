@@ -34,6 +34,7 @@ class HomeScreen extends StatelessWidget {
           ),
         ),
         bottomNavigationBar: HomeBottomBar(),
+        extendBody: true,
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: FloatingActionButton(
           onPressed: () => Navigator.of(context)
