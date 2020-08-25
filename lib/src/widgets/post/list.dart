@@ -207,7 +207,7 @@ class PostsState extends State<PostsWidget> {
     if (json.containsKey('thread')) {
       final thread = Thread.fromJson(json['thread']);
       setState(() {
-        ThreadImageWidget.syncThreadImages(_thread, thread);
+        ThreadImageWidget.syncImages(_thread, thread);
         _thread = thread;
 
         if (fc.id == FetchContextId.FetchInitial &&
