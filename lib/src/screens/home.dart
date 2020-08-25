@@ -74,13 +74,6 @@ class HomeScreen extends StatelessWidget {
       var srt = config.homeParser(threadsJson[i]);
       if (srt == null || srt.content == null) continue;
 
-      if (srt.content?.threadImage != null) {
-        // force display mode for edge case: when thread has custom home image
-        // thread view will have an annoying jump effect (no cover -> has cover)
-        // we know home thread always has cover image so it's safe to do this
-        srt.content.threadImage.displayMode = 'cover';
-      }
-
       if (top5 != null && top5.length < 5) {
         top5.add(srt);
       } else {

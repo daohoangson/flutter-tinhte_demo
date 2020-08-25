@@ -6,6 +6,7 @@ class _FirstPostWidget extends StatelessWidget {
     final post = context.watch<Post>();
     final thread = context.watch<Thread>();
 
+    final _threadImage = thread.threadPrimaryImage ?? thread.threadImage;
     final _isBackgroundPost = isBackgroundPost(post);
     final _isTinhteFact = isTinhteFact(thread);
     final _isCustomPost = _isBackgroundPost || _isTinhteFact;
@@ -46,7 +47,7 @@ class _FirstPostWidget extends StatelessWidget {
               ? PollWidget(thread.links.poll)
               : widget0,
           _buildTags(context, thread) ?? widget0,
-          _isCustomPost || thread.threadImage?.displayMode == 'cover'
+          _isCustomPost || _threadImage?.displayMode == 'cover'
               ? widget0
               : _PostAttachmentsWidget.forPost(post) ?? widget0,
           _PostActionsWidget(showPostCreateDate: false),
@@ -54,11 +55,11 @@ class _FirstPostWidget extends StatelessWidget {
       ),
     );
 
-    if (!_isCustomPost && thread.threadImage?.displayMode == 'cover') {
+    if (!_isCustomPost && _threadImage?.displayMode == 'cover') {
       widget = Column(
         children: <Widget>[
           ThreadImageWidget(
-            image: thread.threadImage,
+            image: _threadImage,
             threadId: thread.threadId,
           ),
           widget,
