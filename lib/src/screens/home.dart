@@ -40,8 +40,8 @@ class HomeScreen extends StatelessWidget {
         ),
         bottomNavigationBar: HomeBottomBar(
           onHomeTap: () => superList.currentState?.scrollTo(0),
-        extendBody: true,
         ),
+        extendBody: true,
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: FloatingActionButton(
           onPressed: () => Navigator.of(context)
