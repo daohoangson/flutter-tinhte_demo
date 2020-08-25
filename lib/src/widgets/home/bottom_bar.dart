@@ -6,6 +6,10 @@ import 'package:the_app/src/screens/menu.dart';
 import 'package:the_app/src/screens/search/thread.dart';
 
 class HomeBottomBar extends StatelessWidget {
+  final VoidCallback onHomeTap;
+
+  const HomeBottomBar({Key key, this.onHomeTap}) : super(key: key);
+
   @override
   Widget build(BuildContext context) => BottomAppBar(
         child: Row(
@@ -13,7 +17,7 @@ class HomeBottomBar extends StatelessWidget {
             Expanded(
               child: _BottomBarItem(
                 icon: Icon(FontAwesomeIcons.home),
-                onTap: () {},
+                onTap: onHomeTap,
                 tooltip: l(context).home,
               ),
             ),
