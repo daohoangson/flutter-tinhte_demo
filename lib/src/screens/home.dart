@@ -10,6 +10,8 @@ import 'package:the_app/src/config.dart';
 import 'package:the_app/src/intl.dart';
 
 class HomeScreen extends StatelessWidget {
+  final superList = GlobalKey<SuperListState>();
+
   @override
   Widget build(BuildContext context) => Scaffold(
         body: SafeArea(
@@ -31,9 +33,12 @@ class HomeScreen extends StatelessWidget {
               return null;
             },
             itemMaxWidth: 800,
+            key: superList,
           ),
         ),
-        bottomNavigationBar: HomeBottomBar(),
+        bottomNavigationBar: HomeBottomBar(
+          onHomeTap: () => superList.currentState?.scrollTo(0),
+        ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: FloatingActionButton(
           onPressed: () => Navigator.of(context)
