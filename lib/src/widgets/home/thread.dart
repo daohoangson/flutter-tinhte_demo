@@ -66,10 +66,8 @@ class HomeThreadWidget extends StatelessWidget {
   Widget _buildImage(double imageScale) => ClipRRect(
         borderRadius: BorderRadius.circular(3),
         child: SizedBox(
-          child: ThreadImageWidget(
-            image: thread.threadThumbnail ?? getThreadImage(thread),
-            threadId: thread.threadId,
-          ),
+          child: ThreadImageWidget.small(
+              thread, thread.threadThumbnail ?? getThreadImage(thread)),
           width: kThreadThumbnailWidth * imageScale,
         ),
       );

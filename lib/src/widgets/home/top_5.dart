@@ -123,10 +123,8 @@ class _HomeTop5WidgetThread extends StatelessWidget {
   Widget _buildImage() => ClipRRect(
         borderRadius: BorderRadius.circular(3),
         child: LayoutBuilder(
-          builder: (context, box) => ThreadImageWidget(
-            image: _chooseImageForBox(thread, context, box),
-            threadId: thread.threadId,
-          ),
+          builder: (context, box) => ThreadImageWidget.small(
+              thread, _chooseImageForBox(thread, context, box)),
         ),
       );
 
