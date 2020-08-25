@@ -32,6 +32,8 @@ class HomeScreen extends StatelessWidget {
             },
             itemMaxWidth: 800,
           ),
+          top: false,
+          bottom: false,
         ),
         bottomNavigationBar: HomeBottomBar(),
         extendBody: true,
