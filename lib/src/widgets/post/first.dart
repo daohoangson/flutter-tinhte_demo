@@ -58,10 +58,7 @@ class _FirstPostWidget extends StatelessWidget {
     if (!_isCustomPost && _threadImage?.displayMode == 'cover') {
       widget = Column(
         children: <Widget>[
-          ThreadImageWidget(
-            image: _threadImage,
-            threadId: thread.threadId,
-          ),
+          ThreadImageWidget.big(thread, _threadImage),
           widget,
         ],
       );

@@ -106,11 +106,7 @@ class ThreadWidget extends StatelessWidget {
         image.height != null &&
         image.height > image.width) return null;
 
-    return ThreadImageWidget(
-      image: image,
-      threadId: thread.threadId,
-      useImageRatio: true,
-    );
+    return ThreadImageWidget.small(thread, image, useImageRatio: true);
   }
 
   Widget _buildInfo(BuildContext context) {

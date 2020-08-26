@@ -61,11 +61,7 @@ class TinhteFact extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
           ),
-          ThreadImageWidget(
-            image: thread.threadImage,
-            threadId: thread.threadId,
-            useImageRatio: true,
-          ),
+          ThreadImageWidget.big(thread, thread.threadImage),
           TinhteHtmlWidget(
             "<center>$postBodyHtml</center>",
             textStyle: theme.textTheme.bodyText2,
