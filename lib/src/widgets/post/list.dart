@@ -75,7 +75,7 @@ class PostsState extends State<PostsWidget> {
     }
 
     final postReply = item.postReply;
-    if (postReply != null) {
+    if (postReply?.postReplyCount != null) {
       final superListIndex = state.indexOf(item);
       assert(superListIndex > -1);
       return _PostReplyHiddenWidget(
@@ -84,7 +84,7 @@ class PostsState extends State<PostsWidget> {
       );
     }
 
-    return null;
+    return const SizedBox.shrink();
   }
 
   Widget _buildPageIndicator(
