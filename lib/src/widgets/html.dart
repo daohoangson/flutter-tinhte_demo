@@ -5,8 +5,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
-// ignore: implementation_imports
-import 'package:flutter_widget_from_html_core/src/internal/css_sizing.dart';
 import 'package:html_unescape/html_unescape.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 import 'package:the_app/src/config.dart';
@@ -153,7 +151,7 @@ class TinhteWidgetFactory extends WidgetFactory {
     _metaBbCodeOp ??= BuildOp(
       onChild: (meta) => (meta.element.localName == 'span' &&
               !meta.element.classes.contains('value'))
-          ? meta.isNotRenderable = true
+          ? meta['display'] = 'none'
           : null,
     );
     return _metaBbCodeOp;
@@ -161,19 +159,13 @@ class TinhteWidgetFactory extends WidgetFactory {
 
   BuildOp get smilieOp {
     _smilieOp ??= BuildOp(
-      onPieces: (meta, pieces) {
+      onTree: (meta, tree) {
         final a = meta.element.attributes;
-        if (!a.containsKey('data-title')) return pieces;
+        if (!a.containsKey('data-title')) return;
         final title = a['data-title'];
-        if (!_kSmilies.containsKey(title)) return pieces;
+        if (!_kSmilies.containsKey(title)) return;
 
-        final text = pieces.first.text;
-        for (final bit in List.unmodifiable(text.bits)) {
-          bit.detach();
-        }
-        text.addText(_kSmilies[title]);
-
-        return pieces;
+        tree.replaceWith(TextBit(tree, _kSmilies[title]));
       },
     );
     return _smilieOp;
@@ -210,16 +202,6 @@ class TinhteWidgetFactory extends WidgetFactory {
     Iterable<Widget> children, {
     bool trimMarginVertical = false,
   }) {
-    if (_isBuildingText > 0) {
-      if (_isBuildingText != 1) print('_isBuildingText=$_isBuildingText');
-      children = List.from(children.map((child) {
-        if (child is WidgetPlaceholder<TextBits>)
-          child.wrapWith((_, w) => _TextPadding(w, textPadding));
-
-        return child;
-      }));
-    }
-
     final built = super.buildColumnPlaceholder(meta, children,
         trimMarginVertical: trimMarginVertical);
 
@@ -231,7 +213,7 @@ class TinhteWidgetFactory extends WidgetFactory {
           child: child,
           padding: EdgeInsets.only(
             top: textPadding,
-            bottom: last is _TextPadding || last is WidgetPlaceholder<TextBits>
+            bottom: last is _TextPadding || last is WidgetPlaceholder<BuildTree>
                 ? textPadding
                 : 0.0,
           ),
@@ -261,12 +243,13 @@ class TinhteWidgetFactory extends WidgetFactory {
     return super.buildImage(meta, provider, image);
   }
 
-  var _isBuildingText = 0;
   @override
-  WidgetPlaceholder buildText(BuildMetadata meta, TextBits text) {
-    _isBuildingText++;
-    final built = super.buildText(meta, text);
-    _isBuildingText--;
+  Widget buildText(BuildMetadata meta, TextStyleHtml tsh, InlineSpan text) {
+    var built = super.buildText(meta, tsh, text);
+
+    if (built != null) {
+      built = _TextPadding(built, textPadding);
+    }
 
     return built;
   }

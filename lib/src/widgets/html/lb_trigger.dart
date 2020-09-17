@@ -53,18 +53,14 @@ class LbTrigger {
           ..['height'] = "${childHeight}px"
           ..['width'] = "${childWidth}px";
       },
-      onPieces: (meta, pieces) {
+      onTree: (meta, tree) {
         final index = _addSource(url);
 
-        for (final piece in pieces) {
-          if (piece.widgets != null) continue;
-          for (final bit in piece.text.bits) {
-            if (bit is TextWidget) {
-              bit.child.wrapWith((c, w) => buildGestureDetector(c, w, index));
-            }
+        for (final bit in tree.bits) {
+          if (bit is WidgetBit) {
+            bit.child.wrapWith((c, w) => buildGestureDetector(c, w, index));
           }
         }
-        return pieces;
       },
     );
   }

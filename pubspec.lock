@@ -737,11 +737,11 @@ packages:
     dependency: transitive
     description:
       path: "packages/webview_flutter"
-      ref: "275aea7"
-      resolved-ref: "275aea726e5b29fcdfaab6f457a2317671687302"
+      ref: "6ce70f1"
+      resolved-ref: "6ce70f1e018eac2ac84d3be57dc1d16a4c0196f1"
       url: "git://github.com/daohoangson/plugins.git"
     source: git
-    version: "0.3.20"
+    version: "0.3.22+2"
   xdg_directories:
     dependency: transitive
     description:
