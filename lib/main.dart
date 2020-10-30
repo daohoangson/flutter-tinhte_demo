@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -12,23 +13,22 @@ import 'package:the_app/src/api.dart';
 import 'package:the_app/src/push_notification.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
-void main() {
+void main() async {
   timeago.setLocaleMessages('vi', timeago.ViMessages());
 
-  FlutterError.onError = Crashlytics.instance.recordFlutterError;
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  configureFcm();
 
+  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
   runZonedGuarded<Future<void>>(() async {
-    WidgetsFlutterBinding.ensureInitialized();
-
-    configureFcm();
-
     final darkTheme = await DarkTheme.create();
     final fontScale = await FontScale.create();
     runApp(MyApp(
       darkTheme: darkTheme,
       fontScale: fontScale,
     ));
-  }, Crashlytics.instance.recordError);
+  }, FirebaseCrashlytics.instance.recordError);
 }
 
 class MyApp extends StatelessWidget {
