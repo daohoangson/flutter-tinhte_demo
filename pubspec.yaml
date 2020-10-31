@@ -3,17 +3,26 @@ description: Tinh tế mobile apps built with Flutter for evaluation purposes.
 version: 1.6.7+26
 
 environment:
-  flutter: 1.20.2
+  flutter: 1.22.2
   sdk: ">=2.3.0 <3.0.0"
 
 dependencies:
+  # firebase
+  firebase_core:
+  firebase_messaging: ^7.0.3
+  firebase_crashlytics: ^0.2.2
+
+  # ours
+  flutter_widget_from_html:
+    path: ./packages/flutter_widget_from_html/packages/enhanced
+  the_api:
+    path: ./packages/api
+  
   apple_sign_in: ^0.1.0
   convert: ^2.1.1
   crypto: any
   flutter:
     sdk: flutter
-  firebase_messaging: ^6.0.16
-  firebase_crashlytics: ^0.1.3+3
   flutter_auth_buttons: ^0.8.0
   flutter_cache_manager: any
   flutter_custom_tabs: ^0.6.0
@@ -21,8 +30,6 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   flutter_speed_dial: 1.2.5
-  flutter_widget_from_html:
-    path: ./packages/flutter_widget_from_html/packages/enhanced
   font_awesome_flutter: ^8.8.1
   google_sign_in: ^4.5.1
   html_unescape: ^1.0.1+3
@@ -36,8 +43,6 @@ dependencies:
   share: ^0.6.4+3
   shared_preferences: ^0.5.7+3
   scroll_to_index: ^1.0.3
-  the_api:
-    path: ./packages/api
   timeago: ^2.0.26
 
 dev_dependencies:

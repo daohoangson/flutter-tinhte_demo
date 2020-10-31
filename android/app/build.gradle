@@ -70,5 +70,5 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging:17.3.4'
 }
 
-apply plugin: 'io.fabric'
+apply plugin: 'com.google.firebase.crashlytics'
 apply plugin: 'com.google.gms.google-services'
