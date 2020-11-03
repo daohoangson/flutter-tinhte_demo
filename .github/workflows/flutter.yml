@@ -30,9 +30,9 @@ env:
     brew install yq
     _appVersion=$( yq read pubspec.yaml version )
     _appVersionWithoutNumber=$( echo "${_appVersion}" | sed 's/+.*$//' )
-    echo "::set-env name=BUILD_NAME::${_appVersionWithoutNumber}-${GITHUB_SHA:0:7}"
+    echo "BUILD_NAME=${_appVersionWithoutNumber}-${GITHUB_SHA:0:7}" >> $GITHUB_ENV
     _flutterVersion=$( yq read pubspec.yaml environment.flutter )
-    echo "::set-env name=FLUTTER_VERSION::${_flutterVersion}"
+    echo "FLUTTER_VERSION=${_flutterVersion}" >> $GITHUB_ENV
 
 jobs:
   build_apk:
