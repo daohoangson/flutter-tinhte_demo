@@ -13,7 +13,6 @@ env:
   GCS_PATH: gs://flutterttdemo/${{ github.sha }}
   GCS_URL: https://storage.googleapis.com/flutterttdemo/${{ github.sha }}
   GIT_CRYPT_KEY: ${{ secrets.GIT_CRYPT_KEY }}
-  JAVA_VERSION: 12.x
   SCRIPT_PREPARE_REPO: |
     set -e
 
@@ -42,10 +41,6 @@ jobs:
       - name: Prepare repo
         run: echo "${SCRIPT_PREPARE_REPO}" | bash -
 
-      - name: Setup Java
-        uses: actions/setup-java@v1
-        with:
-          java-version: ${{ env.JAVA_VERSION }}
       - name: Setup Flutter
         uses: subosito/flutter-action@v1
         with:
@@ -70,7 +65,6 @@ jobs:
             echo '```'; \
             echo "BUILD_NAME=${BUILD_NAME}"; \
             echo "FLUTTER_VERSION=${FLUTTER_VERSION}"; \
-            echo "JAVA_VERSION=${JAVA_VERSION}"; \
             echo '```'; \
             echo; \
             ls build/app/outputs/apk/release/*.apk \
