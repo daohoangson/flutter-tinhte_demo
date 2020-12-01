@@ -226,18 +226,15 @@ class TinhteWidgetFactory extends WidgetFactory {
 
   @override
   Widget buildImage(BuildMetadata meta, Object provider, ImageMetadata image) {
-    if (image.sources?.first?.width == null) {
-      final attrs = meta.element.attributes;
-      if (attrs.containsKey('data-height') && attrs.containsKey('data-width')) {
-        final resizedUrl = getResizedUrl(
-          apiUrl: image.sources.first.url,
-          boxWidth: devicePixelRatio * deviceWidth,
-          imageHeight: double.tryParse(attrs['data-height']),
-          imageWidth: double.tryParse(attrs['data-width']),
-        );
-        if (resizedUrl != null)
-          provider = imageProvider(ImageSource(resizedUrl));
-      }
+    final source = image.sources.first;
+    if (source.width != null && source.height != null) {
+      final resizedUrl = getResizedUrl(
+        apiUrl: image.sources.first.url,
+        boxWidth: devicePixelRatio * deviceWidth,
+        imageHeight: source.height,
+        imageWidth: source.width,
+      );
+      if (resizedUrl != null) provider = imageProvider(ImageSource(resizedUrl));
     }
 
     return super.buildImage(meta, provider, image);
@@ -289,10 +286,10 @@ class TinhteWidgetFactory extends WidgetFactory {
         break;
       case 'img':
         if (attrs.containsKey('data-height')) {
-          meta['height'] = '${attrs["data-height"]}px';
+          attrs['height'] = attrs['data-height'];
         }
         if (attrs.containsKey('data-width')) {
-          meta['width'] = '${attrs["data-width"]}px';
+          attrs['width'] = attrs['data-width'];
         }
         break;
       case 'ul':

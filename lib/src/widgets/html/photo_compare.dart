@@ -9,7 +9,7 @@ class PhotoCompare {
         defaultStyles: (_) => {'margin': '0.5em 0'},
         onChild: (childMeta) {
           if (childMeta.element.localName == 'img') {
-            childMeta.isBlockElement = true;
+            childMeta['display'] = 'block';
           }
         },
         onWidgets: (meta, widgets) {

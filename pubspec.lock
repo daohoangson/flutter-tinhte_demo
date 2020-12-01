@@ -255,17 +255,17 @@ packages:
   flutter_widget_from_html:
     dependency: "direct main"
     description:
-      path: "packages/flutter_widget_from_html/packages/enhanced"
-      relative: true
-    source: path
-    version: "0.5.0-rc.2020081901"
+      name: flutter_widget_from_html
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.5.1+5"
   flutter_widget_from_html_core:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
-      path: "packages/flutter_widget_from_html/packages/core"
-      relative: true
-    source: path
-    version: "0.5.0-rc.2020081901"
+      name: flutter_widget_from_html_core
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.5.1+4"
   font_awesome_flutter:
     dependency: "direct main"
     description:
@@ -771,12 +771,10 @@ packages:
   webview_flutter:
     dependency: transitive
     description:
-      path: "packages/webview_flutter"
-      ref: "6ce70f1"
-      resolved-ref: "6ce70f1e018eac2ac84d3be57dc1d16a4c0196f1"
-      url: "git://github.com/daohoangson/plugins.git"
-    source: git
-    version: "0.3.22+2"
+      name: webview_flutter
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.7"
   xdg_directories:
     dependency: transitive
     description:
