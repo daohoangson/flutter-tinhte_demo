@@ -12,8 +12,9 @@ export const firestoreFieldPingData = 'data';
 export const firestoreFieldPingDate = 'ping_date';
 export const firestoreFieldProcessStartDate = 'process_start_date';
 export const firestoreFieldSendDate = 'send_date';
-export const firestoreFieldSentPayload = 'payload';
 export const firestoreFieldSentOptions = 'options';
+export const firestoreFieldSentPayload = 'payload';
+export const firestoreFieldSentRegistrationTokens = 'registrationTokens';
 
 export const firestoreCollectionInvalids = 'invalids';
 export const firestoreFieldInvalidDate = 'invalid_date';

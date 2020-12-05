@@ -11,6 +11,7 @@ import {
   firestoreFieldProcessStartDate,
   firestoreFieldSendDate,
   firestoreFieldSentPayload,
+  firestoreFieldSentRegistrationTokens,
   firestoreCollectionInvalids,
   firestoreFieldInvalidDate,
   firestoreFieldInvalidError,
@@ -53,6 +54,7 @@ export default (_: Config) => functions.firestore
       snap.ref.update({
         [firestoreFieldSendDate]: admin.firestore.FieldValue.serverTimestamp(),
         [firestoreFieldSentPayload]: _prepareFirestorePayload(payload),
+        [firestoreFieldSentRegistrationTokens]: registrationTokens,
       }),
     ]);
 
