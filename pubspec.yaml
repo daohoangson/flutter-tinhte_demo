@@ -3,7 +3,7 @@ description: Tinh tế mobile apps built with Flutter for evaluation purposes.
 version: 1.6.7+26
 
 environment:
-  flutter: 1.22.2
+  flutter: 1.22.4
   sdk: ">=2.3.0 <3.0.0"
 
 dependencies:
@@ -13,8 +13,7 @@ dependencies:
   firebase_crashlytics: ^0.2.2
 
   # ours
-  flutter_widget_from_html:
-    path: ./packages/flutter_widget_from_html/packages/enhanced
+  flutter_widget_from_html: ^0.5.1+5
   the_api:
     path: ./packages/api
   
@@ -48,10 +47,6 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
-dependency_overrides:
-  flutter_widget_from_html_core:
-    path: ./packages/flutter_widget_from_html/packages/core
 
 flutter:
   assets:

@@ -40,7 +40,7 @@ class LinkExpander {
         }
         break;
       case 'img':
-        childMeta.isBlockElement = true;
+        childMeta['display'] = 'block';
         break;
       case 'span':
         if (e.classes.contains('host')) {
@@ -70,11 +70,8 @@ class LinkExpander {
         if (width != null) {
           built = CssSizing(
             child: built,
-            constraints: BoxConstraints(
-              maxWidth: width,
-              minWidth: width,
-            ),
-            size: Size.infinite,
+            maxWidth: CssSizingValue.value(width),
+            minWidth: CssSizingValue.value(width),
           );
         }
 
