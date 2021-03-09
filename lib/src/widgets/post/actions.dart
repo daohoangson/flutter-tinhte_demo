@@ -175,7 +175,7 @@ class _PostActionsWidgetState extends State<_PostActionsWidget> {
           ApiCaller.stateful(this),
           ap.post.links.report,
           bodyFields: {'message': message},
-          onSuccess: (_) => Scaffold.of(context).showSnackBar(
+          onSuccess: (_) => ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(l(context).postReportedThanks)),
           ),
         ),

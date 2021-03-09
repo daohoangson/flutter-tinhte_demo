@@ -208,7 +208,7 @@ class _RegisterState extends State<RegisterForm> {
     }
 
     if (content.isEmpty) return;
-    Scaffold.of(context).showSnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(backgroundColor: Colors.redAccent, content: Text(content)));
   }
 }

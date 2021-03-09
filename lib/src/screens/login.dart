@@ -390,7 +390,7 @@ class _LoginFormState extends State<LoginForm> {
     if (result.tfa != null) setState(() => _tfa = result.tfa);
   }
 
-  void _showError(error) => Scaffold.of(context).showSnackBar(SnackBar(
+  void _showError(error) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       backgroundColor: Colors.redAccent,
       content: Text(error is ApiError ? error.message : "$error")));
 

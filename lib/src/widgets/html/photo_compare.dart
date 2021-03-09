@@ -100,7 +100,7 @@ class _PhotoCompareState extends State<_PhotoCompareWidget> {
                 top: 0,
               ),
             ],
-            overflow: Overflow.visible,
+            clipBehavior: Clip.none,
           ),
           widthFactor: position,
         ),

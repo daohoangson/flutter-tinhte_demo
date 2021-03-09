@@ -118,9 +118,13 @@ void _setupApiCompleter<T>(
   }
 
   f = f.catchError((error) {
-    if (!caller.canReceiveCallback) return;
-    if (onError != null) return onError(error);
-    showApiErrorDialog(caller.context, error);
+    if (caller.canReceiveCallback) {
+      if (onError != null) {
+        onError(error);
+      } else {
+        showApiErrorDialog(caller.context, error);
+      }
+    }
   });
 
   if (onComplete != null) {
