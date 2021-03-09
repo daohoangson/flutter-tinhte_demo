@@ -14,7 +14,8 @@ dependencies:
   firebase_crashlytics: ^0.2.2
 
   # ours
-  flutter_widget_from_html: ^0.5.1+5
+  flutter_widget_from_html: ^0.6.0-0
+  fwfh_webview: any
   the_api:
     path: ./packages/api
   
@@ -51,6 +52,9 @@ dev_dependencies:
 
 dependency_overrides:
   intl: ^0.17.0
+  petitparser: ^4.0.0
+  url_launcher: ^6.0.0
+  xml: ^5.0.0
 
 flutter:
   assets:

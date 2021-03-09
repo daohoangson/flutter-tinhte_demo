@@ -44,7 +44,7 @@ class LinkExpander {
         break;
       case 'span':
         if (e.classes.contains('host')) {
-          childMeta.tsb((p, _) =>
+          childMeta.tsb.enqueue((p, _) =>
               p.copyWith(style: p.style.copyWith(color: Colors.grey)));
         }
         break;
