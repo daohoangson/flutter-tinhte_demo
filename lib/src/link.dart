@@ -60,6 +60,7 @@ Future<bool> parsePath(
   assert(path != null);
   assert((context == null) != (rootNavigator == null));
   final navigator = rootNavigator ?? Navigator.of(context);
+  if (context == null) context = navigator.context;
   var cancelled = false;
 
   navigator.push(_DialogRoute((_) => AlertDialog(
@@ -83,7 +84,7 @@ Future<bool> parsePath(
   };
 
   return buildWidget(
-    ApiCaller.stateless(context ?? rootNavigator.context),
+    ApiCaller.stateless(context),
     path,
     defaultWidget: defaultWidget,
   ).then<bool>(
