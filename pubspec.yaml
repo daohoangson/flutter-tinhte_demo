@@ -9,7 +9,7 @@ environment:
 
 dependencies:
   # firebase
-  firebase_core:
+  firebase_core: 1.0.0
   firebase_messaging: ^9.0.0
   firebase_crashlytics: ^1.0.0
 
