@@ -49,7 +49,7 @@ class _RegisterState extends State<RegisterForm> {
         Row(
           children: <Widget>[
             Expanded(
-              child: FlatButton(
+              child: TextButton(
                 child: Text(l(context).login),
                 onPressed: _isRegistering
                     ? null

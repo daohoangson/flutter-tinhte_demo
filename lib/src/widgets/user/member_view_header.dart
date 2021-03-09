@@ -121,11 +121,15 @@ class _FollowButtonState extends State<_FollowButton> {
   @override
   Widget build(BuildContext context) =>
       widget.user.links?.followers?.isNotEmpty == true
-          ? FlatButton(
+          ? TextButton(
               child: Text(
                   isFollowed ? l(context).userUnfollow : l(context).userFollow),
               onPressed: widget.user.permissions?.follow == true
-                  ? (_isRequesting ? null : isFollowed ? _unfollow : _follow)
+                  ? (_isRequesting
+                      ? null
+                      : isFollowed
+                          ? _unfollow
+                          : _follow)
                   : null,
             )
           : Container();
@@ -172,11 +176,15 @@ class _IgnoreButtonState extends State<_IgnoreButton> {
   @override
   Widget build(BuildContext context) => widget.user.links?.ignore?.isNotEmpty ==
           true
-      ? FlatButton(
+      ? TextButton(
           child:
               Text(isIgnored ? l(context).userUnignore : l(context).userIgnore),
           onPressed: widget.user.permissions?.ignore == true
-              ? (_isRequesting ? null : isIgnored ? _unignore : _ignore)
+              ? (_isRequesting
+                  ? null
+                  : isIgnored
+                      ? _unignore
+                      : _ignore)
               : null,
         )
       : Container();

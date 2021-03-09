@@ -85,7 +85,7 @@ class _LoginFormState extends State<LoginForm> {
         Row(
           children: <Widget>[
             Expanded(
-              child: FlatButton(
+              child: TextButton(
                 child: Text(lm(context).cancelButtonLabel),
                 onPressed: _isLoggingIn
                     ? null
@@ -108,7 +108,7 @@ class _LoginFormState extends State<LoginForm> {
         Row(
           children: <Widget>[
             Expanded(
-              child: FlatButton(
+              child: TextButton(
                 child: Text(l(context).register),
                 onPressed: _isLoggingIn
                     ? null
@@ -174,7 +174,7 @@ class _LoginFormState extends State<LoginForm> {
             ? Row(
                 children: <Widget>[
                   Expanded(
-                    child: FlatButton(
+                    child: TextButton(
                       child: Text(lm(context).cancelButtonLabel),
                       onPressed: _isLoggingIn
                           ? null
@@ -189,7 +189,7 @@ class _LoginFormState extends State<LoginForm> {
                   ),
                 ],
               )
-            : FlatButton(
+            : TextButton(
                 child: Text(lm(context).cancelButtonLabel),
                 onPressed:
                     _isLoggingIn ? null : () => setState(() => _tfa = null),

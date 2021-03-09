@@ -36,12 +36,14 @@ class FeaturePagesWidget extends StatelessWidget {
               padding: const EdgeInsets.all(kTagWidgetPadding),
             ),
             Center(
-              child: FlatButton(
+              child: TextButton(
                 child: Text('Xem tất cả'),
-                textColor: Theme.of(context).accentColor,
                 onPressed: () => showSearch(
                   context: context,
                   delegate: FpSearchDelegate(pages),
+                ),
+                style: TextButton.styleFrom(
+                  primary: Theme.of(context).accentColor,
                 ),
               ),
             )

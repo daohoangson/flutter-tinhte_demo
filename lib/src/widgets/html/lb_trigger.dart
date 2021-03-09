@@ -187,10 +187,10 @@ class _ScreenState extends State<_Screen> {
                       .caption
                       .copyWith(color: kCaptionColor),
                 ),
-          FlatButton(
+          TextButton(
             child: Text(lm(context).okButtonLabel),
-            colorBrightness: Brightness.dark,
             onPressed: () => Navigator.of(context).pop(),
+            style: TextButton.styleFrom(primary: kCaptionColor),
           )
         ],
         mainAxisSize: MainAxisSize.min,

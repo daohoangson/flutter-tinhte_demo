@@ -16,14 +16,12 @@ Widget buildPostButton(
 }) {
   final theme = Theme.of(context);
 
-  Widget button = FlatButton(
+  Widget button = TextButton(
     child: Text(
       (count > 0 ? "$count • " : '') + text,
       style: TextStyle(fontSize: theme.textTheme.button.fontSize - 2),
     ),
     onPressed: onTap,
-    padding: const EdgeInsets.all(kPaddingHorizontal / 2),
-    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
   );
 
   button = ButtonTheme.fromButtonThemeData(

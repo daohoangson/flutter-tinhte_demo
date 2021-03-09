@@ -65,7 +65,7 @@ Future<bool> parsePath(
   navigator.push(_DialogRoute((_) => AlertDialog(
         content: Text(l(context).justAMomentEllipsis),
         actions: <Widget>[
-          FlatButton(
+          TextButton(
             child: Text(lm(context).cancelButtonLabel),
             onPressed: () {
               cancelled = true;

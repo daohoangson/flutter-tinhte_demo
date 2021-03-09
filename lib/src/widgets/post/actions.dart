@@ -207,11 +207,11 @@ class _PostActionsDialogReason extends StatelessWidget {
   @override
   Widget build(BuildContext context) => AlertDialog(
         actions: <Widget>[
-          FlatButton(
+          TextButton(
             child: Text(lm(context).cancelButtonLabel),
             onPressed: () => Navigator.of(context).pop(),
           ),
-          FlatButton(
+          TextButton(
             child: Text(button),
             onPressed: () => Navigator.of(context).pop(_controller.text),
           ),
