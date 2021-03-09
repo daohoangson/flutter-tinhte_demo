@@ -239,7 +239,7 @@ class _ApiAppState extends State<ApiApp> {
   void _enqueue(VoidCallback callback, {bool scheduleDequeue = true}) {
     if (scheduleDequeue) Timer.run(_dequeue);
 
-    _queue ??= List();
+    _queue ??= [];
     _queue.add(callback);
   }
 

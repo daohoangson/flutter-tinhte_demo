@@ -40,7 +40,7 @@ Widget buildPostRow(
   List<Widget> box,
   List<Widget> footer,
 }) {
-  final List<Widget> children = List();
+  final children = <Widget>[];
 
   if (box != null) {
     children.add(Padding(

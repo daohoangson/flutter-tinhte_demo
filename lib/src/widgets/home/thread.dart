@@ -73,7 +73,7 @@ class HomeThreadWidget extends StatelessWidget {
       );
 
   Widget _buildInfo(BuildContext context, ThemeData theme) {
-    final List<TextSpan> spans = List();
+    final spans = <TextSpan>[];
 
     spans.add(TextSpan(
       style: TextStyle(color: theme.accentColor),

@@ -28,7 +28,7 @@ class AttachmentEditorWidget extends StatefulWidget {
 }
 
 class AttachmentEditorState extends State<AttachmentEditorWidget> {
-  final List<_Attachment> _attachments = List();
+  final _attachments = <_Attachment>[];
   final _imagePicker = ImagePicker();
 
   String _apiPostPath;
