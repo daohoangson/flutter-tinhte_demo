@@ -22,11 +22,16 @@ void main() async {
 
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
   runZonedGuarded<Future<void>>(() async {
-    final darkTheme = await DarkTheme.create();
-    final fontScale = await FontScale.create();
+    final values = await Future.wait([
+      DarkTheme.create(),
+      FontScale.create(),
+      onLaunchMessageWidgetOr(HomeScreen()),
+    ]);
+
     runApp(MyApp(
-      darkTheme: darkTheme,
-      fontScale: fontScale,
+      darkTheme: values[0],
+      fontScale: values[1],
+      home: values[2],
     ));
   }, FirebaseCrashlytics.instance.recordError);
 }
@@ -34,10 +39,12 @@ void main() async {
 class MyApp extends StatelessWidget {
   final DarkTheme darkTheme;
   final FontScale fontScale;
+  final Widget home;
 
   MyApp({
     this.darkTheme,
     this.fontScale,
+    this.home,
   });
 
   @override
@@ -54,7 +61,7 @@ class MyApp extends StatelessWidget {
           child: DismissKeyboard(
             MaterialApp(
               darkTheme: _theme(_themeDark),
-              home: onLaunchMessageWidgetOr(HomeScreen()),
+              home: home,
               localizationsDelegates: [
                 const L10nDelegate(),
                 GlobalCupertinoLocalizations.delegate,

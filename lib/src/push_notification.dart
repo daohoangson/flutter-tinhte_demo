@@ -14,25 +14,23 @@ const _kUnreadIconBoxSize = 50.0;
 
 final primaryNavKey = GlobalKey<NavigatorState>();
 
-final _firebaseMessaging = FirebaseMessaging();
+final _firebaseMessaging = FirebaseMessaging.instance;
 final _key = GlobalKey<_PushNotificationAppState>();
 final StreamController<int> _notifController = StreamController.broadcast();
 
-Map<String, dynamic> _onLaunchMessage;
-
-void configureFcm() => _firebaseMessaging.configure(
-      onLaunch: _onLaunch,
-      onMessage: _onMessage,
-      onResume: _onResume,
-    );
+void configureFcm() {
+  FirebaseMessaging.onMessage.listen(_onMessage);
+  FirebaseMessaging.onMessageOpenedApp.listen(_onMessageOpenedApp);
+}
 
 StreamSubscription<int> listenToNotification(void onData(int notificationId)) =>
     _notifController.stream.listen(onData);
 
-Widget onLaunchMessageWidgetOr(Widget fallback) {
-  if (_onLaunchMessage == null) return fallback;
+Future<Widget> onLaunchMessageWidgetOr(Widget fallback) async {
+  final message = await _firebaseMessaging.getInitialMessage();
+  if (message == null) return fallback;
 
-  final path = _getContentLink(_onLaunchMessage);
+  final path = _getContentLink(message.data);
   if (path == null) return fallback;
 
   return _OnLaunchMessageWidget(path, fallback: fallback);
@@ -55,15 +53,10 @@ void _notifControllerAddFromFcmMessage(Map data) {
   if (notificationId != null) _notifController.sink.add(notificationId);
 }
 
-Future<bool> _onLaunch(Map<String, dynamic> message) async {
-  debugPrint("FCM._onLaunch: $message");
-  _onLaunchMessage = message;
-  return true;
-}
-
-Future<bool> _onMessage(Map<String, dynamic> message) async {
+Future<bool> _onMessage(RemoteMessage message) async {
   debugPrint("FCM.onMessage: $message");
-  final Map data = message.containsKey('data') ? message['data'] : message;
+  final Map data =
+      message.data.containsKey('data') ? message.data['data'] : message.data;
   _notifControllerAddFromFcmMessage(data);
 
   final pnas = _key.currentState;
@@ -76,9 +69,9 @@ Future<bool> _onMessage(Map<String, dynamic> message) async {
   return pnas._setUnread(value);
 }
 
-Future<bool> _onResume(Map<String, dynamic> message) async {
+Future<bool> _onMessageOpenedApp(RemoteMessage message) async {
   debugPrint("FCM._onResume: $message");
-  final path = _getContentLink(message);
+  final path = _getContentLink(message.data);
   final navigator = primaryNavKey.currentState;
   if (navigator == null || path == null) return false;
 
@@ -189,7 +182,7 @@ class _PushNotificationAppState extends State<PushNotificationApp> {
 
     final url = "${config.pushServer}/unregister";
     final response = await http.post(
-      url,
+      Uri.parse(url),
       body: {'registration_token': _fcmToken},
     );
 
@@ -210,7 +203,7 @@ class PushNotificationToken extends ChangeNotifier {
   String get value {
     if (_value != null) return _value;
 
-    _firebaseMessaging.requestNotificationPermissions();
+    _firebaseMessaging.requestPermission();
 
     _firebaseMessaging.getToken().then((token) {
       _value = token;
