@@ -70,7 +70,7 @@ class _FollowState extends State<FollowButton> {
   Widget _buildButtonFollowing() => Row(
         children: <Widget>[
           Expanded(
-            child: RaisedButton(
+            child: ElevatedButton(
               child: Text(l(context).tagFollowing),
               onPressed: _isRequesting ? null : _unfollow,
             ),
@@ -120,7 +120,7 @@ class _FollowState extends State<FollowButton> {
             child: Text(lm(context).cancelButtonLabel),
             onPressed: () => Navigator.of(context).pop(),
           ),
-          RaisedButton(
+          ElevatedButton(
             child: Text(lm(context).okButtonLabel),
             onPressed: () => Navigator.of(context).pop(true),
           ),
@@ -209,7 +209,7 @@ class _FollowOptionsState extends State<_FollowOptionsDialog> {
             child: Text(lm(context).cancelButtonLabel),
             onPressed: () => Navigator.of(context).pop(),
           ),
-          RaisedButton(
+          ElevatedButton(
             child: Text(lm(context).continueButtonLabel),
             onPressed: () => Navigator.of(context).pop(_FollowOptions(
               alert: _alert,

@@ -50,7 +50,7 @@ class _PollState extends State<PollWidget> {
           canVote
               ? Align(
                   alignment: Alignment.centerRight,
-                  child: RaisedButton(
+                  child: ElevatedButton(
                     child: Text(l(context).pollVote),
                     onPressed: _isVoting ? null : () => _vote(data),
                   ),

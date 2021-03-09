@@ -93,7 +93,7 @@ class _LoginFormState extends State<LoginForm> {
               ),
             ),
             Expanded(
-              child: RaisedButton(
+              child: ElevatedButton(
                 child: Text(l(context).loginAssociate),
                 onPressed: _isLoggingIn ? null : _associate,
               ),
@@ -117,7 +117,7 @@ class _LoginFormState extends State<LoginForm> {
               ),
             ),
             Expanded(
-              child: RaisedButton(
+              child: ElevatedButton(
                 child: Text(l(context).login),
                 onPressed: _isLoggingIn ? null : _login,
               ),
@@ -150,7 +150,7 @@ class _LoginFormState extends State<LoginForm> {
         Text(l(context).loginTfaMethodPleaseChooseOne),
       ]
         ..addAll(_tfa.providers
-            .map((provider) => RaisedButton.icon(
+            .map((provider) => ElevatedButton.icon(
                   icon: !_isLoggingIn && _tfa.triggeredProvider == provider
                       ? Icon(
                           FontAwesomeIcons.check,
@@ -182,7 +182,7 @@ class _LoginFormState extends State<LoginForm> {
                     ),
                   ),
                   Expanded(
-                    child: RaisedButton(
+                    child: ElevatedButton(
                       child: Text(l(context).loginTfaVerify),
                       onPressed: _isLoggingIn ? null : _tfaVerify,
                     ),

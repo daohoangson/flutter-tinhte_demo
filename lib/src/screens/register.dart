@@ -58,7 +58,7 @@ class _RegisterState extends State<RegisterForm> {
               ),
             ),
             Expanded(
-              child: RaisedButton(
+              child: ElevatedButton(
                 child: Text(l(context).register),
                 onPressed: !agreed || _isRegistering ? null : _register,
               ),
