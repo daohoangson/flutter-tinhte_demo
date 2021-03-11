@@ -160,7 +160,7 @@ class _NotificationsState extends State<NotificationsWidget> {
     final url = "${config.pushServer}/subscribe";
     final hubTopic = "user_notification_${user.userId}";
     final response = await http.post(
-      url,
+      Uri.parse(url),
       body: {
         'extra_params[oauth_token]': token.accessToken,
         'hub.topic': hubTopic,

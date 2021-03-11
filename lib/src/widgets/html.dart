@@ -5,6 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
+import 'package:fwfh_webview/fwfh_webview.dart';
 import 'package:html_unescape/html_unescape.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 import 'package:the_app/src/config.dart';
@@ -69,7 +70,6 @@ class TinhteHtmlWidget extends StatelessWidget {
           hyperlinkColor: hyperlinkColor,
           onTapUrl: (url) => launchLink(c, url),
           textStyle: textStyle,
-          unsupportedWebViewWorkaroundForIssue37: true,
           webView: true,
         ),
       );
@@ -224,21 +224,34 @@ class TinhteWidgetFactory extends WidgetFactory {
     return built;
   }
 
+  static final _resizedUrl = Expando<String>();
+
   @override
-  Widget buildImage(BuildMetadata meta, Object provider, ImageMetadata image) {
-    final source = image.sources.first;
+  Widget buildImage(BuildMetadata meta, ImageMetadata data) {
+    final source = data.sources.first;
     if (source.width != null && source.height != null) {
       final resizedUrl = getResizedUrl(
-        apiUrl: image.sources.first.url,
+        apiUrl: source.url,
         boxWidth: devicePixelRatio * deviceWidth,
         imageHeight: source.height,
         imageWidth: source.width,
       );
-      if (resizedUrl != null) provider = imageProvider(ImageSource(resizedUrl));
+      if (resizedUrl != null) _resizedUrl[meta] = resizedUrl;
     }
 
-    return super.buildImage(meta, provider, image);
+    return super.buildImage(meta, data);
   }
+
+  Widget buildImageWidget(
+    BuildMetadata meta, {
+    String semanticLabel,
+    @required String url,
+  }) =>
+      super.buildImageWidget(
+        meta,
+        semanticLabel: semanticLabel,
+        url: _resizedUrl[meta] ?? url,
+      );
 
   @override
   Widget buildText(BuildMetadata meta, TextStyleHtml tsh, InlineSpan text) {

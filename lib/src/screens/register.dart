@@ -49,7 +49,7 @@ class _RegisterState extends State<RegisterForm> {
         Row(
           children: <Widget>[
             Expanded(
-              child: FlatButton(
+              child: TextButton(
                 child: Text(l(context).login),
                 onPressed: _isRegistering
                     ? null
@@ -58,7 +58,7 @@ class _RegisterState extends State<RegisterForm> {
               ),
             ),
             Expanded(
-              child: RaisedButton(
+              child: ElevatedButton(
                 child: Text(l(context).register),
                 onPressed: !agreed || _isRegistering ? null : _register,
               ),
@@ -208,7 +208,7 @@ class _RegisterState extends State<RegisterForm> {
     }
 
     if (content.isEmpty) return;
-    Scaffold.of(context).showSnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(backgroundColor: Colors.redAccent, content: Text(content)));
   }
 }

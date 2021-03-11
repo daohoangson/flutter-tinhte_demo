@@ -85,7 +85,7 @@ class _LoginFormState extends State<LoginForm> {
         Row(
           children: <Widget>[
             Expanded(
-              child: FlatButton(
+              child: TextButton(
                 child: Text(lm(context).cancelButtonLabel),
                 onPressed: _isLoggingIn
                     ? null
@@ -93,7 +93,7 @@ class _LoginFormState extends State<LoginForm> {
               ),
             ),
             Expanded(
-              child: RaisedButton(
+              child: ElevatedButton(
                 child: Text(l(context).loginAssociate),
                 onPressed: _isLoggingIn ? null : _associate,
               ),
@@ -108,7 +108,7 @@ class _LoginFormState extends State<LoginForm> {
         Row(
           children: <Widget>[
             Expanded(
-              child: FlatButton(
+              child: TextButton(
                 child: Text(l(context).register),
                 onPressed: _isLoggingIn
                     ? null
@@ -117,7 +117,7 @@ class _LoginFormState extends State<LoginForm> {
               ),
             ),
             Expanded(
-              child: RaisedButton(
+              child: ElevatedButton(
                 child: Text(l(context).login),
                 onPressed: _isLoggingIn ? null : _login,
               ),
@@ -150,7 +150,7 @@ class _LoginFormState extends State<LoginForm> {
         Text(l(context).loginTfaMethodPleaseChooseOne),
       ]
         ..addAll(_tfa.providers
-            .map((provider) => RaisedButton.icon(
+            .map((provider) => ElevatedButton.icon(
                   icon: !_isLoggingIn && _tfa.triggeredProvider == provider
                       ? Icon(
                           FontAwesomeIcons.check,
@@ -174,7 +174,7 @@ class _LoginFormState extends State<LoginForm> {
             ? Row(
                 children: <Widget>[
                   Expanded(
-                    child: FlatButton(
+                    child: TextButton(
                       child: Text(lm(context).cancelButtonLabel),
                       onPressed: _isLoggingIn
                           ? null
@@ -182,14 +182,14 @@ class _LoginFormState extends State<LoginForm> {
                     ),
                   ),
                   Expanded(
-                    child: RaisedButton(
+                    child: ElevatedButton(
                       child: Text(l(context).loginTfaVerify),
                       onPressed: _isLoggingIn ? null : _tfaVerify,
                     ),
                   ),
                 ],
               )
-            : FlatButton(
+            : TextButton(
                 child: Text(lm(context).cancelButtonLabel),
                 onPressed:
                     _isLoggingIn ? null : () => setState(() => _tfa = null),
@@ -390,7 +390,7 @@ class _LoginFormState extends State<LoginForm> {
     if (result.tfa != null) setState(() => _tfa = result.tfa);
   }
 
-  void _showError(error) => Scaffold.of(context).showSnackBar(SnackBar(
+  void _showError(error) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       backgroundColor: Colors.redAccent,
       content: Text(error is ApiError ? error.message : "$error")));
 

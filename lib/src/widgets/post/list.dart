@@ -219,7 +219,7 @@ class PostsState extends State<PostsWidget> {
   }
 
   void _showSnackBarUnread(SuperListState<_PostListItem> sls) =>
-      Scaffold.of(context).showSnackBar(SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         action: SnackBarAction(
           label: l(context).postGoUnreadYes,
           onPressed: () => sls.fetch(

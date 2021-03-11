@@ -83,7 +83,7 @@ class _GalleriaItem {
         break;
       case 'Tinhte_Gallery_Description':
         _descriptionOp ??= BuildOp(onWidgets: (meta, widgets) {
-          meta.tsb((p, _) => p.copyWith(
+          meta.tsb.enqueue((p, _) => p.copyWith(
               style: p
                   .getDependency<ThemeData>()
                   .textTheme

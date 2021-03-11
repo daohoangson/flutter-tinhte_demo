@@ -60,9 +60,11 @@ class _FollowState extends State<FollowButton> {
   @override
   Widget build(BuildContext context) => !f.hasFollowersLink()
       ? const SizedBox.shrink()
-      : f.isFollowed != true ? _buildButtonFollow() : _buildButtonFollowing();
+      : f.isFollowed != true
+          ? _buildButtonFollow()
+          : _buildButtonFollowing();
 
-  Widget _buildButtonFollow() => FlatButton(
+  Widget _buildButtonFollow() => TextButton(
         child: Text(l(context).tagFollow),
         onPressed: _isRequesting ? null : _follow,
       );
@@ -70,7 +72,7 @@ class _FollowState extends State<FollowButton> {
   Widget _buildButtonFollowing() => Row(
         children: <Widget>[
           Expanded(
-            child: RaisedButton(
+            child: ElevatedButton(
               child: Text(l(context).tagFollowing),
               onPressed: _isRequesting ? null : _unfollow,
             ),
@@ -116,11 +118,11 @@ class _FollowState extends State<FollowButton> {
       builder: (context) => AlertDialog(
         content: Text(l(context).tagUnfollowXQuestion(f.name)),
         actions: <Widget>[
-          FlatButton(
+          TextButton(
             child: Text(lm(context).cancelButtonLabel),
             onPressed: () => Navigator.of(context).pop(),
           ),
-          RaisedButton(
+          ElevatedButton(
             child: Text(lm(context).okButtonLabel),
             onPressed: () => Navigator.of(context).pop(true),
           ),
@@ -205,11 +207,11 @@ class _FollowOptionsState extends State<_FollowOptionsDialog> {
           mainAxisSize: MainAxisSize.min,
         ),
         actions: <Widget>[
-          FlatButton(
+          TextButton(
             child: Text(lm(context).cancelButtonLabel),
             onPressed: () => Navigator.of(context).pop(),
           ),
-          RaisedButton(
+          ElevatedButton(
             child: Text(lm(context).continueButtonLabel),
             onPressed: () => Navigator.of(context).pop(_FollowOptions(
               alert: _alert,

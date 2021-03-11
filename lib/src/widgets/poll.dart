@@ -50,7 +50,7 @@ class _PollState extends State<PollWidget> {
           canVote
               ? Align(
                   alignment: Alignment.centerRight,
-                  child: RaisedButton(
+                  child: ElevatedButton(
                     child: Text(l(context).pollVote),
                     onPressed: _isVoting ? null : () => _vote(data),
                   ),
@@ -212,7 +212,7 @@ class _PollResponsesState extends State<_PollResponsesWidget> {
     if (!tmp.add(responseId)) return;
 
     if (widget.maxVotes > 0 && tmp.length > widget.maxVotes) {
-      Scaffold.of(context).showSnackBar(SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(l(context).pollErrorTooManyVotes(widget.maxVotes)),
       ));
       return;

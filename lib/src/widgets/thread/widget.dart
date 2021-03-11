@@ -235,7 +235,7 @@ class _ThreadWidgetActionsState extends State<_ThreadWidgetActions> {
             children: <Widget>[
               Expanded(child: _buildButtonLike()),
               Expanded(
-                child: FlatButton.icon(
+                child: TextButton.icon(
                   icon: Icon(FontAwesomeIcons.commentAlt),
                   label: Text(l(context).postReply),
                   onPressed: () => Navigator.of(context).push(
@@ -249,7 +249,7 @@ class _ThreadWidgetActionsState extends State<_ThreadWidgetActions> {
                 ),
               ),
               Expanded(
-                child: FlatButton.icon(
+                child: TextButton.icon(
                   icon: Icon(FontAwesomeIcons.shareAlt),
                   label: Text(l(context).share),
                   onPressed: linkPermalink?.isNotEmpty == true
@@ -262,7 +262,7 @@ class _ThreadWidgetActionsState extends State<_ThreadWidgetActions> {
         ),
       ]);
 
-  Widget _buildButtonLike() => FlatButton.icon(
+  Widget _buildButtonLike() => TextButton.icon(
         icon: postIsLiked
             ? const Icon(FontAwesomeIcons.solidHeart)
             : const Icon(FontAwesomeIcons.heart),
@@ -273,7 +273,9 @@ class _ThreadWidgetActionsState extends State<_ThreadWidgetActions> {
             ? null
             : linkLikes?.isNotEmpty != true
                 ? null
-                : postIsLiked ? _unlikePost : _likePost,
+                : postIsLiked
+                    ? _unlikePost
+                    : _likePost,
       );
 
   Widget _buildCounterLike(TextStyle textStyle) {

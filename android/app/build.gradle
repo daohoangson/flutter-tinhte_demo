@@ -26,7 +26,7 @@ apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 30
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
@@ -39,7 +39,7 @@ android {
     defaultConfig {
         applicationId "com.daohoangson.flutter_ttdemo"
         minSdkVersion 21
-        targetSdkVersion 29
+        targetSdkVersion 30
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
@@ -60,6 +60,7 @@ android {
         }
 
         release {
+            minifyEnabled false
             shrinkResources false
             signingConfig signingConfigs.release
         }
@@ -71,8 +72,9 @@ flutter {
 }
 
 dependencies {
-    implementation 'com.google.firebase:firebase-core:16.0.4'
-    implementation 'com.google.firebase:firebase-messaging:17.3.4'
+    implementation platform('com.google.firebase:firebase-bom:26.2.0')
+    implementation 'com.google.firebase:firebase-messaging'
+
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 

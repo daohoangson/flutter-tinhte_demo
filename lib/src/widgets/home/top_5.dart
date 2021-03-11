@@ -130,7 +130,7 @@ class _HomeTop5WidgetThread extends StatelessWidget {
 
   Widget _buildInfo(BuildContext context) {
     final theme = Theme.of(context);
-    final List<TextSpan> spans = List();
+    final spans = <TextSpan>[];
 
     spans.add(TextSpan(
       style: TextStyle(color: theme.accentColor),
