@@ -1,62 +1,64 @@
-import 'package:json_annotation/json_annotation.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
+part 'poll.freezed.dart';
 part 'poll.g.dart';
 
-@JsonSerializable()
-class Poll {
-  final int pollId;
-  String pollQuestion;
-  int pollVoteCount;
-  int pollMaxVotes;
-  bool pollIsOpen;
-  bool pollIsVoted;
+@freezed
+class Poll with _$Poll {
+  const factory Poll(
+    int pollId, {
+    String? pollQuestion,
+    int? pollVoteCount,
+    int? pollMaxVotes,
+    bool? pollIsOpen,
+    bool? pollIsVoted,
+    PollLinks? links,
+    PollPermissions? permissions,
+    @Default(const []) List<PollResponse> responses,
+  }) = _Poll;
 
-  PollLinks links;
-  PollPermissions permissions;
-  List<PollResponse> responses;
-
-  Poll(this.pollId);
   factory Poll.fromJson(Map<String, dynamic> json) => _$PollFromJson(json);
 }
 
-@JsonSerializable()
-class PollLinks {
-  String vote;
+@freezed
+class PollLinks with _$PollLinks {
+  const factory PollLinks({
+    String? vote,
+  }) = _PollLinks;
 
-  PollLinks();
   factory PollLinks.fromJson(Map<String, dynamic> json) =>
       _$PollLinksFromJson(json);
 }
 
-@JsonSerializable()
-class PollPermissions {
-  bool vote;
-  bool result;
+@freezed
+class PollPermissions with _$PollPermissions {
+  const factory PollPermissions({
+    bool? vote,
+    bool? result,
+  }) = _PollPermissions;
 
-  PollPermissions();
   factory PollPermissions.fromJson(Map<String, dynamic> json) =>
       _$PollPermissionsFromJson(json);
 }
 
-@JsonSerializable()
-class PollResponse {
-  final int responseId;
-  String responseAnswer;
-  bool responseIsVoted;
-  int responseVoteCount;
-  List<PollVoter> voters;
+@freezed
+class PollResponse with _$PollResponse {
+  const factory PollResponse(
+    int responseId, {
+    String? responseAnswer,
+    bool? responseIsVoted,
+    int? responseVoteCount,
+    @Default(const []) List<PollVoter> voters,
+  }) = _PollResponse;
 
-  PollResponse(this.responseId);
   factory PollResponse.fromJson(Map<String, dynamic> json) =>
       _$PollResponseFromJson(json);
 }
 
-@JsonSerializable()
-class PollVoter {
-  final int userId;
-  final String username;
+@freezed
+class PollVoter with _$PollVoter {
+  const factory PollVoter(int userId, String username) = _PollVoter;
 
-  PollVoter(this.userId, this.username);
   factory PollVoter.fromJson(Map<String, dynamic> json) =>
       _$PollVoterFromJson(json);
 }

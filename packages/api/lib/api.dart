@@ -5,6 +5,7 @@ import 'package:http/http.dart';
 import 'package:path/path.dart';
 
 import 'batch_controller.dart';
+import 'login_result.dart';
 import 'oauth_token.dart';
 import 'src/batch.dart';
 import 'src/crypto.dart';
@@ -14,19 +15,19 @@ part 'src/api_login.dart';
 
 class Api {
   final Client httpClient = Client();
-  final Map<String, String> httpHeaders = Map();
+  final httpHeaders = <String, String>{};
 
   final String _apiRoot;
   final String _clientId;
   final String _clientSecret;
 
-  Batch _batch;
+  Batch? _batch;
 
   String get apiRoot => _apiRoot;
   String get clientId => _clientId;
   String get clientSecret => _clientSecret;
   bool get inBatch => _batch != null;
-  Response get latestResponse => _latestResponse;
+  Response? get latestResponse => _latestResponse;
   int get requestCount => _requestCount;
 
   Api(String apiRoot, this._clientId, this._clientSecret)
@@ -65,28 +66,28 @@ class Api {
     }
 
     return BatchController(
-        _batch,
-        () => _batch.future.then(
+        _batch!,
+        () => _batch!.future.then(
               (j) => Future.value(true),
               onError: (e) => Future.value(false),
             ));
   }
 
-  Future<OauthToken> refreshToken(OauthToken token) async {
-    final refreshToken = token?.refreshToken;
+  Future<OauthToken?> refreshToken(OauthToken token) async {
+    final refreshToken = token.refreshToken;
     if (refreshToken?.isNotEmpty != true) return null;
 
     final json = await postJson('oauth/token', bodyFields: {
       "grant_type": "refresh_token",
       "client_id": _clientId,
       "client_secret": _clientSecret,
-      "refresh_token": refreshToken,
+      "refresh_token": refreshToken!,
     });
 
-    return OauthToken.fromJson(json)..obtainMethod = token.obtainMethod;
+    return OauthToken.fromJson(json, obtainMethod: token.obtainMethod);
   }
 
-  Future<dynamic> deleteJson(String path, {Map<String, String> bodyFields}) {
+  Future<dynamic> deleteJson(String path, {Map<String, String>? bodyFields}) {
     return sendRequest('DELETE', path, bodyFields: bodyFields, parseJson: true);
   }
 
@@ -95,12 +96,12 @@ class Api {
   }
 
   Future<dynamic> postJson(String path,
-      {Map<String, String> bodyFields, Map<String, File> fileFields}) {
+      {Map<String, String>? bodyFields, Map<String, File>? fileFields}) {
     return sendRequest('POST', path,
         bodyFields: bodyFields, fileFields: fileFields, parseJson: true);
   }
 
-  Future<dynamic> putJson(String path, {Map<String, String> bodyFields}) {
+  Future<dynamic> putJson(String path, {Map<String, String>? bodyFields}) {
     return sendRequest('PUT', path, bodyFields: bodyFields, parseJson: true);
   }
 
@@ -118,12 +119,12 @@ class Api {
   }
 
   Future sendRequest(String method, String path,
-      {Map<String, String> bodyFields,
-      String bodyJson,
-      Map<String, File> fileFields,
+      {Map<String, String>? bodyFields,
+      String? bodyJson,
+      Map<String, File>? fileFields,
       parseJson: false}) {
     if (inBatch && bodyJson == null && fileFields == null && parseJson) {
-      return _batch.newJob(method, path, bodyFields);
+      return _batch!.newJob(method, path, params: bodyFields);
     }
 
     return _sendRequest(httpClient, method, buildUrl(path),

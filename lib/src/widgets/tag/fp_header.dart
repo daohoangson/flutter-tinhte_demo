@@ -64,7 +64,7 @@ class FpHeader extends StatelessWidget {
 }
 
 class _FollowableFp extends Followable {
-  final FeaturePage fp;
+  FeaturePage fp;
 
   _FollowableFp(this.fp);
 
@@ -78,5 +78,5 @@ class _FollowableFp extends Followable {
   String get name => fp.fullName;
 
   @override
-  set isFollowed(bool v) => fp.isFollowed = v;
+  set isFollowed(bool v) => fp = fp.copyWith(isFollowed: v);
 }

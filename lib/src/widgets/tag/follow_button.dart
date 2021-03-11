@@ -65,7 +65,7 @@ class _FollowState extends State<FollowButton> {
           : _buildButtonFollowing();
 
   Widget _buildButtonFollow() => TextButton(
-        child: Text(l(context).tagFollow),
+        child: Text(f.labelFollow(context)),
         onPressed: _isRequesting ? null : _follow,
       );
 
@@ -73,7 +73,7 @@ class _FollowState extends State<FollowButton> {
         children: <Widget>[
           Expanded(
             child: ElevatedButton(
-              child: Text(l(context).tagFollowing),
+              child: Text(f.labelFollowing(context)),
               onPressed: _isRequesting ? null : _unfollow,
             ),
           ),
@@ -116,7 +116,7 @@ class _FollowState extends State<FollowButton> {
     final confirmed = await showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        content: Text(l(context).tagUnfollowXQuestion(f.name)),
+        content: Text(f.labelUnfollowXQuestion(context)),
         actions: <Widget>[
           TextButton(
             child: Text(lm(context).cancelButtonLabel),
@@ -145,10 +145,8 @@ class _FollowState extends State<FollowButton> {
   void _changeOptions() async {
     final options = await showDialog<_FollowOptions>(
       context: context,
-      builder: (context) => _FollowOptionsDialog(
-        f.name,
-        _FollowOptions(alert: _alert, email: _email),
-      ),
+      builder: (_) =>
+          _FollowOptionsDialog(f, _FollowOptions(alert: _alert, email: _email)),
     );
 
     if (options == null) return;
@@ -164,13 +162,33 @@ abstract class Followable {
   set isFollowed(bool v);
 
   bool hasFollowersLink() => followersLink?.isNotEmpty == true;
+
+  String labelFollow(BuildContext context) => l(context).tagFollow;
+
+  String labelFollowing(BuildContext context) => l(context).tagFollowing;
+
+  String labelNotificationChannels(BuildContext context) =>
+      l(context).tagNotificationChannels;
+
+  String labelNotificationChannelAlert(BuildContext context) =>
+      l(context).tagNotificationChannelAlert;
+
+  String labelNotificationChannelEmail(BuildContext context) =>
+      l(context).tagNotificationChannelEmail;
+
+  String labelNotificationChannelExplainForX(BuildContext context) =>
+      l(context).tagNotificationChannelExplainForX(name);
+
+  String labelUnfollowXQuestion(BuildContext context) =>
+      l(context).tagUnfollowXQuestion(name);
 }
 
 class _FollowOptionsDialog extends StatefulWidget {
   final _FollowOptions fo;
-  final String name;
+  final Followable followable;
 
-  const _FollowOptionsDialog(this.name, this.fo, {Key key}) : super(key: key);
+  const _FollowOptionsDialog(this.followable, this.fo, {Key key})
+      : super(key: key);
 
   @override
   State<_FollowOptionsDialog> createState() => _FollowOptionsState();
@@ -179,6 +197,8 @@ class _FollowOptionsDialog extends StatefulWidget {
 class _FollowOptionsState extends State<_FollowOptionsDialog> {
   var _alert = false;
   var _email = false;
+
+  Followable get f => widget.followable;
 
   @override
   void initState() {
@@ -189,18 +209,18 @@ class _FollowOptionsState extends State<_FollowOptionsDialog> {
 
   @override
   Widget build(BuildContext context) => AlertDialog(
-        title: Text(l(context).tagNotificationChannels),
+        title: Text(f.labelNotificationChannels(context)),
         content: Column(
           children: <Widget>[
-            Text(l(context).tagNotificationChannelExplainForX(widget.name)),
+            Text(f.labelNotificationChannelExplainForX(context)),
             CheckboxListTile(
               onChanged: (v) => setState(() => _alert = v),
-              title: Text(l(context).tagNotificationChannelAlert),
+              title: Text(f.labelNotificationChannelAlert(context)),
               value: _alert,
             ),
             CheckboxListTile(
               onChanged: (v) => setState(() => _email = v),
-              title: Text(l(context).tagNotificationChannelEmail),
+              title: Text(f.labelNotificationChannelEmail(context)),
               value: _email,
             ),
           ],

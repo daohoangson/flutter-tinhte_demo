@@ -1,72 +1,73 @@
-import 'package:json_annotation/json_annotation.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
+part 'user.freezed.dart';
 part 'user.g.dart';
 
-@JsonSerializable()
-class User {
-  int userId;
-  bool userHasVerifiedBadge;
-  bool userIsFollowed;
-  bool userIsIgnored;
-  bool userIsValid;
-  bool userIsVerified;
-  bool userIsVisitor;
-  int userLastSeenDate;
-  int userLikeCount;
-  int userMessageCount;
-  int userRegisterDate;
-  String userTitle;
-  int userUnreadNotificationCount;
-  String username;
+@freezed
+class User with _$User {
+  const factory User(
+    int userId, {
+    bool? userHasVerifiedBadge,
+    bool? userIsFollowed,
+    bool? userIsIgnored,
+    bool? userIsValid,
+    bool? userIsVerified,
+    bool? userIsVisitor,
+    int? userLastSeenDate,
+    int? userLikeCount,
+    int? userMessageCount,
+    int? userRegisterDate,
+    String? userTitle,
+    int? userUnreadNotificationCount,
+    String? username,
+    UserLinks? links,
+    UserPermissions? permissions,
+    UserRank? rank,
+  }) = _User;
 
-  UserLinks links;
-
-  UserPermissions permissions;
-
-  UserRank rank;
-
-  User(this.userId);
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 }
 
-@JsonSerializable()
-class UserLinks {
-  String avatar;
-  String avatarBig;
-  String avatarSmall;
-  String detail;
-  String followers;
-  String followings;
-  String ignore;
-  String permalink;
-  String timeline;
+@freezed
+class UserLinks with _$UserLinks {
+  const factory UserLinks({
+    String? avatar,
+    String? avatarBig,
+    String? avatarSmall,
+    String? detail,
+    String? followers,
+    String? followings,
+    String? ignore,
+    String? permalink,
+    String? timeline,
+  }) = _UserLinks;
 
-  UserLinks();
   factory UserLinks.fromJson(Map<String, dynamic> json) =>
       _$UserLinksFromJson(json);
 }
 
-@JsonSerializable()
-class UserPermissions {
-  bool edit;
-  bool follow;
-  bool ignore;
-  bool profilePost;
+@freezed
+class UserPermissions with _$UserPermissions {
+  const factory UserPermissions({
+    bool? edit,
+    bool? follow,
+    bool? ignore,
+    bool? profilePost,
+  }) = _UserPermissions;
 
-  UserPermissions();
   factory UserPermissions.fromJson(Map<String, dynamic> json) =>
       _$UserPermissionsFromJson(json);
 }
 
-@JsonSerializable()
-class UserRank {
-  int rankGroupId;
-  int rankLevel;
-  String rankName;
+@freezed
+class UserRank with _$UserRank {
+  const factory UserRank({
+    int? rankGroupId,
+    int? rankLevel,
+    String? rankName,
+    // TODO: handle rank_points, it could be String or int (-1)
+  }) = _UserRank;
 
-  // TODO: handle rank_points, it could be String or int (-1)
-
-  UserRank();
   factory UserRank.fromJson(Map<String, dynamic> json) =>
       _$UserRankFromJson(json);
 }

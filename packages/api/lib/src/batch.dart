@@ -24,16 +24,16 @@ class Batch {
   int get length => _jobs.length;
   Future get future => _completer.future;
 
-  Batch({this.path});
+  Batch({required this.path});
 
-  Future newJob(String method, String uri, Map<String, String> params) {
+  Future newJob(String method, String uri, {Map<String, String>? params}) {
     final String id = 'job' + (_jobs.length + 1).toString();
     final String paramsAsString = json.encode(params);
     final String signature = "$method$uri$paramsAsString";
     final String hash = md5(signature);
 
-    if (_uniqueJobs.containsKey(hash)) {
-      final prevJob = _uniqueJobs[hash];
+    final prevJob = _uniqueJobs[hash];
+    if (prevJob != null) {
       final duplicateJob = BatchJob(prevJob.id, method, uri, params);
       _jobs.add(duplicateJob);
 

@@ -17,13 +17,20 @@ class ThreadBookmarkWidget extends StatefulWidget {
 }
 
 class _ThreadBookmarkState extends State<ThreadBookmarkWidget> {
+  bool _isBookmark;
   bool _isBookmarking = false;
 
-  bool get isBookmark => widget.thread.threadIsBookmark;
+  bool get isBookmark => _isBookmark;
 
   set isBookmark(bool v) {
-    widget.thread.threadIsBookmark = v;
-    setState(() {});
+    if (_isBookmark == v) return;
+    setState(() => _isBookmark = v);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _isBookmark = widget.thread.threadIsBookmark;
   }
 
   @override
@@ -33,8 +40,11 @@ class _ThreadBookmarkState extends State<ThreadBookmarkWidget> {
               icon: Icon(isBookmark
                   ? FontAwesomeIcons.solidBookmark
                   : FontAwesomeIcons.bookmark),
-              onPressed:
-                  _isBookmarking ? null : isBookmark ? _unbookmark : _bookmark,
+              onPressed: _isBookmarking
+                  ? null
+                  : isBookmark
+                      ? _unbookmark
+                      : _bookmark,
               tooltip: isBookmark
                   ? l(context).threadBookmarkUndo
                   : l(context).threadBookmark,

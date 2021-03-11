@@ -207,20 +207,26 @@ class _ApiAppState extends State<ApiApp> {
       final clientId = prefs.getString(kPrefKeyTokenClientId);
       if (clientId != api.clientId) return _setToken(null, savePref: false);
 
-      final t = prefs.getString(kPrefKeyTokenAccessToken);
+      final accessToken = prefs.getString(kPrefKeyTokenAccessToken);
       final expiresAtKey = kPrefKeyTokenExpiresAtMillisecondsSinceEpoch;
       final expiresAt = prefs.getInt(expiresAtKey) ?? 0;
-      final rt = prefs.getString(kPrefKeyTokenRefreshToken);
+      final refreshToken = prefs.getString(kPrefKeyTokenRefreshToken);
       final scope = prefs.getString(kPrefKeyTokenScope);
       final userId = prefs.getInt(kPrefKeyTokenUserId);
-      if (t?.isNotEmpty != true || expiresAt < 1) {
+      if (accessToken?.isNotEmpty != true || expiresAt < 1) {
         return _setToken(null, savePref: false);
       }
 
-      final now = DateTime.now().millisecondsSinceEpoch;
-      final ei = ((expiresAt - now) / 1000).floor();
-      debugPrint("Restored token $t, expires in $ei, refresh token $rt");
-      _setToken(OauthToken(t, ei, rt, scope, userId), savePref: false);
+      _setToken(
+        OauthToken.fromStorage(
+          accessToken: accessToken,
+          refreshToken: refreshToken,
+          scope: scope,
+          userId: userId,
+          expiresAt: expiresAt,
+        ),
+        savePref: false,
+      );
     });
   }
 
@@ -249,7 +255,7 @@ class _ApiAppState extends State<ApiApp> {
 
   void _dequeue() {
     if (!_tokenHasBeenSet) return;
-    if (_token?.hasExpired == true) return _refreshToken();
+    if (_token == null || tokenHasExpired(_token)) return _refreshToken();
 
     final __callbacks = _queue;
     _queue = null;
@@ -301,13 +307,13 @@ class _ApiAppState extends State<ApiApp> {
 
       prefs.setString(kPrefKeyTokenAccessToken, value?.accessToken);
       prefs.setString(kPrefKeyTokenClientId, api.clientId);
-      prefs.setInt(kPrefKeyTokenExpiresAtMillisecondsSinceEpoch,
-          value?.expiresAt?.millisecondsSinceEpoch);
+      final expiresAt = value != null ? tokenExpireAt(value) : null;
+      prefs.setInt(kPrefKeyTokenExpiresAtMillisecondsSinceEpoch, expiresAt);
       prefs.setString(kPrefKeyTokenRefreshToken, value?.refreshToken);
       prefs.setString(kPrefKeyTokenScope, value?.scope);
       prefs.setInt(kPrefKeyTokenUserId, value?.userId);
       debugPrint("Saved token ${value?.accessToken}, "
-          "expires at ${value?.expiresAt}, "
+          "expires at $expiresAt, "
           "refresh token ${value?.refreshToken}");
     }
 

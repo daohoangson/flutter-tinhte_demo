@@ -3,7 +3,7 @@ import 'package:the_api/api.dart';
 
 void main() {
   group('oauth/token', () {
-    Api api;
+    late Api api;
     const apiRoot = 'https://xfrocks.com/api/index.php';
     const clientId = 'gljf4391k3';
     const clientSecret = 'zw3lj0zox6be4z2';
@@ -17,12 +17,16 @@ void main() {
     group('grant_type=password', () {
       test('works with username/password', () async {
         final result = await login(api, username, password);
-        expect(result.token?.userId, equals(userId));
+        final resultUserId =
+            result.maybeMap(token: (x) => x.token.userId, orElse: () => 0);
+        expect(resultUserId, equals(userId));
       });
 
       test('works with email/password', () async {
         final result = await login(api, email, password);
-        expect(result.token?.userId, equals(userId));
+        final resultUserId =
+            result.maybeMap(token: (x) => x.token.userId, orElse: () => 0);
+        expect(resultUserId, equals(userId));
       });
 
       test('fails with wrong password', () {
@@ -33,9 +37,10 @@ void main() {
     group('grant_type=refresh_token', () {
       test('works', () async {
         final loginResult = await login(api, username, password);
-        expect(loginResult.token, isNotNull);
-        final refreshedToken = await api.refreshToken(loginResult.token);
-        expect(refreshedToken.userId, equals(userId));
+        final token =
+            loginResult.maybeMap(token: (x) => x.token, orElse: () => null);
+        final refreshedToken = await api.refreshToken(token!);
+        expect(refreshedToken?.userId, equals(userId));
       });
     });
   });

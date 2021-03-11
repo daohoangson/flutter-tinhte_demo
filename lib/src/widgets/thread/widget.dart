@@ -205,13 +205,28 @@ class _ThreadWidgetActionsState extends State<_ThreadWidgetActions> {
   String get linkLikes => post?.links?.likes;
   String get linkPermalink => thread.links?.permalink;
   Post get post => thread.firstPost;
-  bool get postIsLiked => post?.postIsLiked == true;
-  int get postLikeCount => post?.postLikeCount ?? 0;
   Thread get thread => widget.thread;
   int get threadReplyCount => (thread.threadPostCount ?? 1) - 1;
 
-  set postIsLiked(bool value) => post?.postIsLiked = value;
-  set postLikeCount(int value) => post?.postLikeCount = value;
+  bool _postIsLiked;
+  int _postLikeCount;
+  set postIsLiked(bool v) {
+    if (v == _postIsLiked) return;
+
+    if (_postIsLiked = v) {
+      _postLikeCount++;
+    } else if (_postLikeCount > 0) {
+      _postLikeCount--;
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    _postIsLiked = post?.postIsLiked == true;
+    _postLikeCount = post?.postLikeCount ?? 0;
+  }
 
   @override
   Widget build(BuildContext context) => Column(children: <Widget>[
@@ -263,35 +278,35 @@ class _ThreadWidgetActionsState extends State<_ThreadWidgetActions> {
       ]);
 
   Widget _buildButtonLike() => TextButton.icon(
-        icon: postIsLiked
+        icon: _postIsLiked
             ? const Icon(FontAwesomeIcons.solidHeart)
             : const Icon(FontAwesomeIcons.heart),
-        label: postIsLiked
+        label: _postIsLiked
             ? Text(l(context).postUnlike)
             : Text(l(context).postLike),
         onPressed: _isLiking
             ? null
             : linkLikes?.isNotEmpty != true
                 ? null
-                : postIsLiked
+                : _postIsLiked
                     ? _unlikePost
                     : _likePost,
       );
 
   Widget _buildCounterLike(TextStyle textStyle) {
-    if (postLikeCount == 0) return null;
+    if (_postLikeCount == 0) return null;
 
     final inlineSpans = <InlineSpan>[
       WidgetSpan(
         alignment: PlaceholderAlignment.middle,
         child: Icon(
-          postIsLiked ? FontAwesomeIcons.solidHeart : FontAwesomeIcons.heart,
+          _postIsLiked ? FontAwesomeIcons.solidHeart : FontAwesomeIcons.heart,
           color: textStyle.color,
           size: textStyle.fontSize,
         ),
       ),
       TextSpan(
-        text: " ${formatNumber(postLikeCount)}",
+        text: " ${formatNumber(_postLikeCount)}",
         style: textStyle,
       ),
     ];
@@ -336,10 +351,7 @@ class _ThreadWidgetActionsState extends State<_ThreadWidgetActions> {
         apiPost(
           ApiCaller.stateful(this),
           linkLikes,
-          onSuccess: (_) => setState(() {
-            postIsLiked = true;
-            postLikeCount++;
-          }),
+          onSuccess: (_) => setState(() => postIsLiked = true),
           onComplete: () => setState(() => _isLiking = false),
         );
       });
@@ -351,10 +363,7 @@ class _ThreadWidgetActionsState extends State<_ThreadWidgetActions> {
         apiDelete(
           ApiCaller.stateful(this),
           linkLikes,
-          onSuccess: (_) => setState(() {
-            postIsLiked = false;
-            if (postLikeCount > 0) postLikeCount--;
-          }),
+          onSuccess: (_) => setState(() => postIsLiked = false),
           onComplete: () => setState(() => _isLiking = false),
         );
       });

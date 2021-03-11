@@ -38,7 +38,7 @@ class TagViewHeader extends StatelessWidget {
 }
 
 class _FollowableTag extends Followable {
-  final Tag tag;
+  Tag tag;
 
   _FollowableTag(this.tag);
 
@@ -52,5 +52,5 @@ class _FollowableTag extends Followable {
   String get name => "#${tag.tagText}";
 
   @override
-  set isFollowed(bool v) => tag.tagIsFollowed = v;
+  set isFollowed(bool v) => tag = tag.copyWith(tagIsFollowed: v);
 }

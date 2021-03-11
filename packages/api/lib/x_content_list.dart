@@ -1,15 +1,17 @@
-import 'package:json_annotation/json_annotation.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
+part 'x_content_list.freezed.dart';
 part 'x_content_list.g.dart';
 
-@JsonSerializable()
-class ContentListItem {
-  final int itemId;
-  String itemTitle;
-  int itemDate;
-  int userId;
+@freezed
+class ContentListItem with _$ContentListItem {
+  const factory ContentListItem(
+    int itemId, {
+    String? itemTitle,
+    int? itemDate,
+    int? userId,
+  }) = _ContentListItem;
 
-  ContentListItem(this.itemId);
   factory ContentListItem.fromJson(Map<String, dynamic> json) =>
       _$ContentListItemFromJson(json);
 }

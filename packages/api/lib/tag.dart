@@ -1,38 +1,40 @@
-import 'package:json_annotation/json_annotation.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
+part 'tag.freezed.dart';
 part 'tag.g.dart';
 
-@JsonSerializable()
-class Tag {
-  final int tagId;
-  bool tagIsFollowed;
-  String tagText;
-  int tagUseCount;
+@freezed
+class Tag with _$Tag {
+  const factory Tag(
+    int tagId, {
+    bool? tagIsFollowed,
+    String? tagText,
+    int? tagUseCount,
+    TagLinks? links,
+    TagPermissions? permissions,
+  }) = _Tag;
 
-  TagLinks links;
-
-  TagPermissions permissions;
-
-  Tag(this.tagId);
   factory Tag.fromJson(Map<String, dynamic> json) => _$TagFromJson(json);
 }
 
-@JsonSerializable()
-class TagLinks {
-  String detail;
-  String followers;
-  String permalink;
+@freezed
+class TagLinks with _$TagLinks {
+  const factory TagLinks({
+    String? detail,
+    String? followers,
+    String? permalink,
+  }) = _TagLinks;
 
-  TagLinks();
   factory TagLinks.fromJson(Map<String, dynamic> json) =>
       _$TagLinksFromJson(json);
 }
 
-@JsonSerializable()
-class TagPermissions {
-  bool follow;
+@freezed
+class TagPermissions with _$TagPermissions {
+  const factory TagPermissions({
+    bool? follow,
+  }) = _TagPermissions;
 
-  TagPermissions();
   factory TagPermissions.fromJson(Map<String, dynamic> json) =>
       _$TagPermissionsFromJson(json);
 }

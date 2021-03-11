@@ -23,6 +23,8 @@ import 'package:the_app/src/intl.dart';
 import 'package:the_app/src/link.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'post/actionable_post.dart';
+
 part 'post/actions.dart';
 part 'post/attachments.dart';
 part 'post/body.dart';
@@ -67,3 +69,11 @@ List<_PostListItem> decodePostsAndTheirReplies(List jsonPosts) {
 
   return items;
 }
+
+MultiProvider _buildActionablePostProvider(Post post, Widget child) =>
+    MultiProvider(providers: [
+      Provider<Post>.value(value: post),
+      ChangeNotifierProvider<ActionablePost>.value(
+        value: ActionablePost(post),
+      ),
+    ], child: child);

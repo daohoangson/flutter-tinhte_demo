@@ -10,7 +10,7 @@ Future<Post> _getPostById(Api api, int postId) async {
 
 void main() {
   group('batch', () {
-    Api api;
+    late Api api;
     setUp(() => api = new Api('https://xfrocks.com/api/index.php', '', ''));
     tearDown(() => api.close());
 

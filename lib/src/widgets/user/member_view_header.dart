@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:the_api/user.dart';
 import 'package:the_app/src/api.dart';
 import 'package:the_app/src/intl.dart';
+import 'package:the_app/src/widgets/tag/follow_button.dart';
 
 class MemberViewHeader extends StatelessWidget {
   final User user;
@@ -23,7 +24,7 @@ class MemberViewHeader extends StatelessWidget {
             Divider(),
             Row(
               children: <Widget>[
-                Expanded(child: _FollowButton(user)),
+                Expanded(child: FollowButton(_FollowableUser(user))),
                 Expanded(child: _IgnoreButton(user)),
               ],
             ),
@@ -104,59 +105,28 @@ class MemberViewHeader extends StatelessWidget {
   }
 }
 
-class _FollowButton extends StatefulWidget {
-  final User user;
+class _FollowableUser extends Followable {
+  User user;
 
-  _FollowButton(this.user) : assert(user != null);
-
-  @override
-  State<StatefulWidget> createState() => _FollowButtonState();
-}
-
-class _FollowButtonState extends State<_FollowButton> {
-  var _isRequesting = false;
-
-  bool get isFollowed => widget.user.userIsFollowed == true;
+  _FollowableUser(this.user);
 
   @override
-  Widget build(BuildContext context) =>
-      widget.user.links?.followers?.isNotEmpty == true
-          ? TextButton(
-              child: Text(
-                  isFollowed ? l(context).userUnfollow : l(context).userFollow),
-              onPressed: widget.user.permissions?.follow == true
-                  ? (_isRequesting
-                      ? null
-                      : isFollowed
-                          ? _unfollow
-                          : _follow)
-                  : null,
-            )
-          : Container();
+  bool get isFollowed => user.userIsFollowed;
 
-  void _follow() => prepareForApiAction(context, () {
-        if (_isRequesting) return;
-        setState(() => _isRequesting = true);
+  @override
+  String get followersLink => user.links?.followers;
 
-        apiPost(
-          ApiCaller.stateful(this),
-          widget.user.links.followers,
-          onSuccess: (_) => setState(() => widget.user.userIsFollowed = true),
-          onComplete: () => setState(() => _isRequesting = false),
-        );
-      });
+  @override
+  String get name => user.username;
 
-  void _unfollow() => prepareForApiAction(context, () {
-        if (_isRequesting) return;
-        setState(() => _isRequesting = true);
+  @override
+  set isFollowed(bool v) => user = user.copyWith(userIsFollowed: v);
 
-        apiDelete(
-          ApiCaller.stateful(this),
-          widget.user.links.followers,
-          onSuccess: (_) => setState(() => widget.user.userIsFollowed = false),
-          onComplete: () => setState(() => _isRequesting = false),
-        );
-      });
+  @override
+  String labelFollow(BuildContext context) => l(context).userFollow;
+
+  @override
+  String labelFollowing(BuildContext context) => l(context).userUnfollow;
 }
 
 class _IgnoreButton extends StatefulWidget {
@@ -169,25 +139,30 @@ class _IgnoreButton extends StatefulWidget {
 }
 
 class _IgnoreButtonState extends State<_IgnoreButton> {
+  bool _isIgnored;
   var _isRequesting = false;
 
-  bool get isIgnored => widget.user.userIsIgnored == true;
+  @override
+  void initState() {
+    super.initState();
+    _isIgnored = widget.user.userIsIgnored == true;
+  }
 
   @override
-  Widget build(BuildContext context) => widget.user.links?.ignore?.isNotEmpty ==
-          true
-      ? TextButton(
-          child:
-              Text(isIgnored ? l(context).userUnignore : l(context).userIgnore),
-          onPressed: widget.user.permissions?.ignore == true
-              ? (_isRequesting
-                  ? null
-                  : isIgnored
-                      ? _unignore
-                      : _ignore)
-              : null,
-        )
-      : Container();
+  Widget build(BuildContext context) =>
+      widget.user.links?.ignore?.isNotEmpty == true
+          ? TextButton(
+              child: Text(
+                  _isIgnored ? l(context).userUnignore : l(context).userIgnore),
+              onPressed: widget.user.permissions?.ignore == true
+                  ? (_isRequesting
+                      ? null
+                      : _isIgnored
+                          ? _unignore
+                          : _ignore)
+                  : null,
+            )
+          : Container();
 
   void _ignore() => prepareForApiAction(context, () {
         if (_isRequesting) return;
@@ -196,7 +171,7 @@ class _IgnoreButtonState extends State<_IgnoreButton> {
         apiPost(
           ApiCaller.stateful(this),
           widget.user.links.ignore,
-          onSuccess: (_) => setState(() => widget.user.userIsIgnored = true),
+          onSuccess: (_) => setState(() => _isIgnored = true),
           onComplete: () => setState(() => _isRequesting = false),
         );
       });
@@ -208,7 +183,7 @@ class _IgnoreButtonState extends State<_IgnoreButton> {
         apiDelete(
           ApiCaller.stateful(this),
           widget.user.links.ignore,
-          onSuccess: (_) => setState(() => widget.user.userIsIgnored = false),
+          onSuccess: (_) => setState(() => _isIgnored = false),
           onComplete: () => setState(() => _isRequesting = false),
         );
       });

@@ -3,7 +3,7 @@ import 'package:the_api/api.dart';
 
 void main() {
   group('http', () {
-    Api api;
+    late Api api;
     setUp(() => api = new Api('', '', ''));
     tearDown(() => api.close());
 

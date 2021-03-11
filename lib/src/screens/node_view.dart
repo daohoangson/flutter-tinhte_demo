@@ -1,17 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:the_api/navigation.dart' as navigation;
+import 'package:the_api/node.dart';
 import 'package:the_app/src/widgets/navigation.dart';
 
 class NodeViewScreen extends StatelessWidget {
-  final navigation.Element element;
+  final Node node;
 
-  NodeViewScreen(this.element, {Key key}) : super(key: key);
+  NodeViewScreen(this.node, {Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
-          title: Text(element.node.title),
+          title: Text(node.map(
+            (value) => '#${value.navigationId}',
+            category: (category) => category.categoryTitle,
+            forum: (forum) => forum.forumTitle,
+            linkforum: (link) => link.linkTitle,
+          )),
         ),
-        body: NavigationWidget(path: element.links.subElements),
+        body: NavigationWidget(
+          path: node.map(
+            (_) => _.links.subElements,
+            category: (_) => _.links.subElements,
+            forum: (_) => _.links.subElements,
+            linkforum: (_) => _.links.subElements,
+          ),
+        ),
       );
 }

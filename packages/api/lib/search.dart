@@ -1,37 +1,47 @@
-import 'package:json_annotation/json_annotation.dart';
-
 import 'thread.dart';
 import 'x_content_list.dart';
 import 'x_user_feed.dart';
 
-part 'search.g.dart';
-
-@JsonSerializable()
 class SearchResult<T> {
   final String contentType;
   final int contentId;
 
-  UserFeedData feedData;
-  ContentListItem listItem;
+  final T? content;
+  final UserFeedData? feedData;
+  final ContentListItem? listItem;
 
-  @JsonKey(ignore: true)
-  T content;
+  SearchResult(
+    this.contentType,
+    this.contentId, {
+    this.content,
+    this.feedData,
+    this.listItem,
+  });
 
-  SearchResult(this.contentType, this.contentId);
   factory SearchResult.fromJson(Map<String, dynamic> json) {
-    final result = _$SearchResultFromJson<T>(json);
+    final contentType = json['content_type']! as String;
+    final contentId = json['content_id']! as int;
+    T? content;
 
-    switch (result.contentType) {
+    switch (contentType) {
       case 'thread':
         final thread = Thread.fromJson(json);
         if (thread is T) {
-          result.content = thread as T;
-        } else {
-          return null;
+          content = thread as T;
         }
         break;
     }
 
-    return result;
+    return SearchResult(
+      contentType,
+      contentId,
+      content: content,
+      feedData: json.containsKey('feed_data')
+          ? UserFeedData.fromJson(json['feed_data'])
+          : null,
+      listItem: json.containsKey('list_item')
+          ? ContentListItem.fromJson(json['list_item'])
+          : null,
+    );
   }
 }

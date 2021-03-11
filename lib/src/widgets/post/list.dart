@@ -68,7 +68,7 @@ class PostsState extends State<PostsWidget> {
 
     final post = item.post;
     if (post != null) {
-      return ActionablePost.buildMultiProvider(
+      return _buildActionablePostProvider(
         post,
         post.postIsFirstPost ? _FirstPostWidget() : _PostWidget(),
       );

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:the_api/api.dart';
+import 'package:the_api/login_result.dart';
 import 'package:the_api/oauth_token.dart';
 import 'package:the_app/src/api.dart';
 import 'package:the_app/src/config.dart';
@@ -377,17 +378,15 @@ class _LoginFormState extends State<LoginForm> {
   void _onResult(LoginResult result) {
     if (!mounted || result == null) return;
 
-    if (result.token != null) {
-      final apiAuth = ApiAuth.of(context, listen: false);
-      apiAuth.setToken(result.token);
-      Navigator.pop(context, true);
-      return;
-    }
-
-    if (result.associatable != null)
-      setState(() => _associatable = result.associatable);
-
-    if (result.tfa != null) setState(() => _tfa = result.tfa);
+    result.when(
+      associatable: (v) => setState(() => _associatable = v),
+      tfa: (v) => setState(() => _tfa = v),
+      token: (v) {
+        final apiAuth = ApiAuth.of(context, listen: false);
+        apiAuth.setToken(v);
+        Navigator.pop(context, true);
+      },
+    );
   }
 
   void _showError(error) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(

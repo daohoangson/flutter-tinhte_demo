@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
-import 'package:the_api/navigation.dart' as navigation;
 import 'package:the_api/node.dart';
 import 'package:the_api/post.dart';
 import 'package:the_api/thread.dart';
@@ -60,10 +59,12 @@ class ThreadsWidget extends StatelessWidget {
       final thread = Thread.fromJson(j);
       if (thread.threadId == null || thread.firstPost == null) continue;
 
-      if (thread.forum == null && thread.forumId == forum?.forumId)
-        thread.forum = forum;
+      final threadWithForum =
+          (thread.forum == null && thread.forumId == forum?.forumId)
+              ? thread.copyWith(forum: forum)
+              : thread;
 
-      fc.items.add(thread);
+      fc.items.add(threadWithForum);
     }
   }
 }

@@ -10,31 +10,30 @@ class ThreadNavigationWidget extends StatelessWidget {
   ThreadNavigationWidget(this.thread) : assert(thread != null);
 
   void _initData(BuildContext context, _ThreadNavigationData data) {
-    data.elements = [];
-    if (thread.forum != null) {
-      final forum = thread.forum;
-      data.elements.add(navigation.Element(
-        forum.forumId,
-        navigation.NavigationTypeForum,
-      )..node = forum);
+    data.nodes = [];
+
+    final forum = thread.forum;
+    if (forum != null) {
+      data.nodes.add(forum);
     }
+
     _fetch(context, data);
   }
 
   @override
   Widget build(BuildContext _) =>
       Consumer<_ThreadNavigationData>(builder: (context, data, _) {
-        if (data.elements == null) _initData(context, data);
-        return _buildBox(data.elements);
+        if (data.nodes == null) _initData(context, data);
+        return _buildBox(data.nodes);
       });
 
-  Widget _buildBox(List<navigation.Element> elements) => SizedBox(
+  Widget _buildBox(List<Node> nodes) => SizedBox(
         child: Padding(
           child: ListView.separated(
-            itemBuilder: (context, i) => i < elements.length
-                ? _buildElement(context, elements[i])
+            itemBuilder: (context, i) => i < nodes.length
+                ? _buildNode(context, nodes[i])
                 : _buildText(context, ''),
-            itemCount: elements.isEmpty ? 1 : elements.length,
+            itemCount: nodes.isEmpty ? 1 : nodes.length,
             scrollDirection: Axis.horizontal,
             separatorBuilder: (context, _) => _buildSeparator(context),
           ),
@@ -54,31 +53,22 @@ class ThreadNavigationWidget extends StatelessWidget {
             horizontal: _kThreadNavigationSeparatorPadding),
       );
 
-  Widget _buildElement(BuildContext context, navigation.Element e) => InkWell(
-        child: _buildText(context, e.node.title),
-        onTap: () {
-          if (e.node is Forum) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (_) => ForumViewScreen(e.node),
-              ),
-            );
-            return;
-          }
-
-          if (e.links?.subElements?.isNotEmpty == true) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => NodeViewScreen(e)),
-            );
-            return;
-          }
-
-          if (e.links?.permalink?.isNotEmpty == true) {
-            launchLink(context, e.links.permalink);
-          }
-        },
+  Widget _buildNode(BuildContext context, Node node) => node.map(
+        (node) => _buildText(context, '#${node.navigationId}'),
+        category: (category) => InkWell(
+          child: _buildText(context, category.categoryTitle),
+          onTap: () => Navigator.push(context,
+              MaterialPageRoute(builder: (_) => NodeViewScreen(category))),
+        ),
+        forum: (forum) => InkWell(
+          child: _buildText(context, forum.forumTitle),
+          onTap: () => Navigator.push(context,
+              MaterialPageRoute(builder: (_) => ForumViewScreen(forum))),
+        ),
+        linkforum: (link) => InkWell(
+          child: _buildText(context, link.linkTitle),
+          onTap: () => launchLink(context, link.links.target),
+        ),
       );
 
   Widget _buildText(BuildContext context, String data) => Padding(
@@ -100,7 +90,7 @@ class ThreadNavigationWidget extends StatelessWidget {
         onSuccess: (jsonMap) {
           if (!jsonMap.containsKey('elements')) return;
           final list = jsonMap['elements'] as List;
-          final elements = list.map((map) => navigation.Element.fromJson(map));
+          final elements = list.map((map) => Node.fromJson(map));
           if (elements.isNotEmpty) data.update(elements);
         },
       );
@@ -111,11 +101,11 @@ class ThreadNavigationWidget extends StatelessWidget {
 }
 
 class _ThreadNavigationData extends ChangeNotifier {
-  List<navigation.Element> elements;
+  List<Node> nodes;
 
-  void update(Iterable<navigation.Element> newElements) {
-    elements.clear();
-    elements.addAll(newElements);
+  void update(Iterable<Node> newNodes) {
+    nodes.clear();
+    nodes.addAll(newNodes);
     notifyListeners();
   }
 }

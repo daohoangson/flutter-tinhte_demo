@@ -56,7 +56,7 @@ class ThreadSearchDelegate extends SearchDelegate {
     }
 
     if (forum != null) {
-      sb.write(l(context).searchThreadInForum(forum.title));
+      sb.write(l(context).searchThreadInForum(forum.forumTitle));
     }
     if (user != null) {
       sb.write(l(context).searchThreadByUser(user.username));
