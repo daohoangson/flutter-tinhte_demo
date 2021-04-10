@@ -21,7 +21,7 @@ packages:
       name: archive
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.13"
+    version: "3.1.2"
   args:
     dependency: transitive
     description:
@@ -49,7 +49,7 @@ packages:
       name: cached_network_image
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.5.1"
+    version: "3.0.0"
   characters:
     dependency: transitive
     description:
@@ -98,7 +98,7 @@ packages:
       name: crypto
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.4"
+    version: "3.0.1"
   csslib:
     dependency: transitive
     description:
@@ -215,14 +215,14 @@ packages:
       name: flutter_blurhash
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.5.0"
+    version: "0.6.0"
   flutter_cache_manager:
     dependency: "direct main"
     description:
       name: flutter_cache_manager
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.2"
+    version: "3.0.1"
   flutter_custom_tabs:
     dependency: "direct main"
     description:
@@ -262,7 +262,7 @@ packages:
       name: flutter_svg
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.21.0-nullsafety.0"
+    version: "0.21.0+1"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -279,14 +279,14 @@ packages:
       name: flutter_widget_from_html
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.6.0-rc.2021030202"
+    version: "0.6.0"
   flutter_widget_from_html_core:
     dependency: transitive
     description:
       name: flutter_widget_from_html_core
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.6.0-rc.2021030401"
+    version: "0.6.0"
   font_awesome_flutter:
     dependency: "direct main"
     description:
@@ -301,34 +301,41 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.15"
+  fwfh_cached_network_image:
+    dependency: transitive
+    description:
+      name: fwfh_cached_network_image
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.6.0"
   fwfh_chewie:
     dependency: transitive
     description:
       name: fwfh_chewie
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.6.0-rc.2021030202"
+    version: "0.6.0"
   fwfh_svg:
     dependency: transitive
     description:
       name: fwfh_svg
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.6.0-rc.2021022601"
+    version: "0.6.0"
   fwfh_url_launcher:
     dependency: transitive
     description:
       name: fwfh_url_launcher
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.6.0-rc.2021022601"
+    version: "0.6.0"
   fwfh_webview:
     dependency: "direct main"
     description:
       name: fwfh_webview
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.6.0-rc.2021030202"
+    version: "0.6.0"
   glob:
     dependency: transitive
     description:
@@ -358,7 +365,7 @@ packages:
     source: hosted
     version: "0.9.1+1"
   html:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       name: html
       url: "https://pub.dartlang.org"
@@ -391,7 +398,7 @@ packages:
       name: image
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.19"
+    version: "3.0.2"
   image_picker:
     dependency: "direct main"
     description:
@@ -482,7 +489,7 @@ packages:
       name: octo_image
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.3.0"
+    version: "1.0.0+1"
   package_config:
     dependency: transitive
     description:
@@ -510,14 +517,14 @@ packages:
       name: path_drawing
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.5.0-nullsafety.0"
+    version: "0.5.0"
   path_parsing:
     dependency: transitive
     description:
       name: path_parsing
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.0-nullsafety.0"
+    version: "0.2.0"
   path_provider:
     dependency: transitive
     description:
@@ -622,7 +629,7 @@ packages:
       name: rxdart
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.24.1"
+    version: "0.26.0"
   scroll_to_index:
     dependency: "direct main"
     description:
@@ -683,7 +690,7 @@ packages:
       name: sqflite
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.0+2"
+    version: "2.0.0+3"
   sqflite_common:
     dependency: transitive
     description:
@@ -802,7 +809,7 @@ packages:
       name: uuid
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.0"
+    version: "3.0.4"
   vector_math:
     dependency: transitive
     description:
@@ -816,14 +823,14 @@ packages:
       name: video_player
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.0"
+    version: "2.1.1"
   video_player_platform_interface:
     dependency: transitive
     description:
       name: video_player_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.0.0"
+    version: "4.1.0"
   video_player_web:
     dependency: transitive
     description:
@@ -872,7 +879,7 @@ packages:
       name: webview_flutter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.2"
+    version: "2.0.4"
   win32:
     dependency: transitive
     description:
@@ -903,4 +910,4 @@ packages:
     version: "2.2.1"
 sdks:
   dart: ">=2.12.0 <3.0.0"
-  flutter: ">=2.0.1"
+  flutter: ">=2.0.3"

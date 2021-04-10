@@ -296,6 +296,10 @@ class TinhteWidgetFactory extends WidgetFactory {
           meta.register(LinkExpander.getOembedOp());
           return;
         }
+        if (classes.contains('bdPostTree_ParentQuote')) {
+          meta['display'] = 'none';
+          return;
+        }
         break;
       case 'img':
         if (attrs.containsKey('data-height')) {
