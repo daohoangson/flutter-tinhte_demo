@@ -37,6 +37,7 @@ env:
 
 jobs:
   build_apk:
+    if: {{ false }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -87,6 +88,7 @@ jobs:
           fingerprint: <!-- ${{ github.sha }} -->
 
   build_ipa:
+    if: {{ false }}
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
