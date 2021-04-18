@@ -20,7 +20,7 @@ dependencies:
     path: ./packages/api
   
   apple_sign_in: ^0.1.0
-  convert: ^2.1.1
+  convert: any
   crypto: any
   flutter:
     sdk: flutter
@@ -49,13 +49,17 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  msix: ^1.0.6
 
 dependency_overrides:
+  analyzer: ^1.4.0
+  args: ^2.0.0
   crypto: ^3.0.1
   html: ^0.15.0
   intl: ^0.17.0
   petitparser: ^4.0.0
   url_launcher: ^6.0.0
+  yaml: ^3.1.0
   xml: ^5.0.0
 
 flutter:
