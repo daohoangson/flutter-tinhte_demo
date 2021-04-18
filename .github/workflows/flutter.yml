@@ -162,7 +162,7 @@ jobs:
         with:
           channel: beta
       - run: flutter pub get
-      - run: flutter build windows "--build-name=${BUILD_NAME}"
+      - run: flutter build windows
       - run: flutter pub run msix:create
 
       - name: Setup gcloud
