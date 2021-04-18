@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:the_api/user.dart';
+import 'package:the_app/src/abstracts/push_notification.dart' as abstraction;
 import 'package:the_app/src/screens/notification_list.dart';
 import 'package:the_app/src/api.dart';
 import 'package:the_app/src/config.dart';
@@ -14,23 +14,21 @@ const _kUnreadIconBoxSize = 50.0;
 
 final primaryNavKey = GlobalKey<NavigatorState>();
 
-final _firebaseMessaging = FirebaseMessaging.instance;
 final _key = GlobalKey<_PushNotificationAppState>();
 final StreamController<int> _notifController = StreamController.broadcast();
 
-void configureFcm() {
-  FirebaseMessaging.onMessage.listen(_onMessage);
-  FirebaseMessaging.onMessageOpenedApp.listen(_onMessageOpenedApp);
+void configurePushNotification() {
+  abstraction.addListeners(_onMessage, _onMessageOpenedApp);
 }
 
 StreamSubscription<int> listenToNotification(void onData(int notificationId)) =>
     _notifController.stream.listen(onData);
 
 Future<Widget> onLaunchMessageWidgetOr(Widget fallback) async {
-  final message = await _firebaseMessaging.getInitialMessage();
-  if (message == null) return fallback;
+  final data = await abstraction.getInitialMessage();
+  if (data == null) return fallback;
 
-  final path = _getContentLink(message.data);
+  final path = _getContentLink(data);
   if (path == null) return fallback;
 
   return _OnLaunchMessageWidget(path, fallback: fallback);
@@ -53,10 +51,8 @@ void _notifControllerAddFromFcmMessage(Map data) {
   if (notificationId != null) _notifController.sink.add(notificationId);
 }
 
-Future<bool> _onMessage(RemoteMessage message) async {
-  debugPrint("FCM.onMessage: $message");
-  final Map data =
-      message.data.containsKey('data') ? message.data['data'] : message.data;
+Future<bool> _onMessage(Map<String, dynamic> message) async {
+  final Map data = message.containsKey('data') ? message['data'] : message;
   _notifControllerAddFromFcmMessage(data);
 
   final pnas = _key.currentState;
@@ -69,9 +65,8 @@ Future<bool> _onMessage(RemoteMessage message) async {
   return pnas._setUnread(value);
 }
 
-Future<bool> _onMessageOpenedApp(RemoteMessage message) async {
-  debugPrint("FCM._onResume: $message");
-  final path = _getContentLink(message.data);
+Future<bool> _onMessageOpenedApp(Map<String, dynamic> message) async {
+  final path = _getContentLink(message);
   final navigator = primaryNavKey.currentState;
   if (navigator == null || path == null) return false;
 
@@ -203,12 +198,10 @@ class PushNotificationToken extends ChangeNotifier {
   String get value {
     if (_value != null) return _value;
 
-    _firebaseMessaging.requestPermission();
-
-    _firebaseMessaging.getToken().then((token) {
+    abstraction.getToken().then((token) {
       _value = token;
       notifyListeners();
-    });
+    }, onError: (_, __) {/* ignore */});
 
     return null;
   }

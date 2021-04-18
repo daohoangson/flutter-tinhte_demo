@@ -31,12 +31,14 @@ env:
     # Extract config from pubspec.yaml
     _appVersion=$( yq e '.version' pubspec.yaml )
     _appVersionWithoutNumber=$( echo "${_appVersion}" | sed 's/+.*$//' )
-    echo "BUILD_NAME=${_appVersionWithoutNumber}-${GITHUB_SHA:0:7}" >> $GITHUB_ENV
+    echo "BUILD_NAME=${_appVersionWithoutNumber}-${GITHUB_SHA:0:7}" | tee -a $GITHUB_ENV
+  
     _flutterVersion=$( yq e '.environment.flutter' pubspec.yaml )
-    echo "FLUTTER_VERSION=${_flutterVersion}" >> $GITHUB_ENV
+    echo "FLUTTER_VERSION=${_flutterVersion}" | tee -a $GITHUB_ENV
 
 jobs:
   build_apk:
+    if: ${{ false }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -87,6 +89,7 @@ jobs:
           fingerprint: <!-- ${{ github.sha }} -->
 
   build_ipa:
+    if: ${{ false }}
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
@@ -138,6 +141,56 @@ jobs:
           _message="${_message//'%'/%25}"
           _message="${_message//$'\n'/%0A}"
           _message="${_message//$'\r'/%0D}"
+          echo "::set-output name=MESSAGE::${_message}"
+      - name: Post GitHub comment
+        uses: daohoangson/comment-on-github@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          body: ${{ steps.markdown.outputs.MESSAGE }}
+          fingerprint: <!-- ${{ github.sha }} -->
+
+  build_windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Prepare repo
+        run: echo "${SCRIPT_PREPARE_REPO}" | bash -
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v1
+        with:
+          channel: beta
+      - run: flutter config --enable-windows-desktop
+      - run: flutter pub get
+      - run: flutter build windows
+      - run: flutter pub run msix:create
+
+      - name: Setup gcloud
+        uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        with:
+          service_account_key: ${{ secrets.GCP_UPLOADER_SA_KEY }}
+      - name: Run gsutil cp
+        run: gsutil cp build\windows\runner\Release\the_app.msix "${GCS_PATH}/windows"
+
+      - name: Prepare markdown
+        id: markdown
+        run: |
+          set -e
+
+          _message=$( \
+            echo '### Windows build'; \
+            echo '```'; \
+            echo "BUILD_NAME=${BUILD_NAME}"; \
+            echo "FLUTTER_VERSION=${FLUTTER_VERSION}"; \
+            echo '```'; \
+            echo; \
+            printf '[the_app.msix](%s)' "${GCS_URL}/windows/the_app.msix"; \
+          )
+
+          _message="${_message//'%'/'%25'}"
+          _message="${_message//$'\n'/'%0A'}"
+          _message="${_message//$'\r'/'%0D'}"
           echo "::set-output name=MESSAGE::${_message}"
       - name: Post GitHub comment
         uses: daohoangson/comment-on-github@v2
