@@ -75,7 +75,7 @@ class PostsState extends State<PostsWidget> {
     }
 
     final postReply = item.postReply;
-    if (postReply != null) {
+    if (postReply?.postReplyCount != null) {
       final superListIndex = state.indexOf(item);
       assert(superListIndex > -1);
       return _PostReplyHiddenWidget(
@@ -84,7 +84,7 @@ class PostsState extends State<PostsWidget> {
       );
     }
 
-    return null;
+    return const SizedBox.shrink();
   }
 
   Widget _buildPageIndicator(
@@ -207,6 +207,7 @@ class PostsState extends State<PostsWidget> {
     if (json.containsKey('thread')) {
       final thread = Thread.fromJson(json['thread']);
       setState(() {
+        ThreadImageWidget.syncImages(_thread, thread);
         _thread = thread;
 
         if (fc.id == FetchContextId.FetchInitial &&
@@ -218,7 +219,7 @@ class PostsState extends State<PostsWidget> {
   }
 
   void _showSnackBarUnread(SuperListState<_PostListItem> sls) =>
-      Scaffold.of(context).showSnackBar(SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         action: SnackBarAction(
           label: l(context).postGoUnreadYes,
           onPressed: () => sls.fetch(

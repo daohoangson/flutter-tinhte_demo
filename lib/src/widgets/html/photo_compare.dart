@@ -5,43 +5,44 @@ class PhotoCompare {
 
   PhotoCompare(this.wf);
 
-  BuildOp get buildOp {
-    final images = <String>[];
-    return BuildOp(
-      defaultStyles: (_, __) => ['margin', '0.5em 0'],
-      onChild: (meta, e) {
-        if (e.localName != 'img') return meta;
-        if (!e.attributes.containsKey('src')) return meta;
-        final src = wf.constructFullUrl(e.attributes['src']);
-        if (src != null) images.add(src);
+  BuildOp get buildOp => BuildOp(
+        defaultStyles: (_) => {'margin': '0.5em 0'},
+        onChild: (childMeta) {
+          if (childMeta.element.localName == 'img') {
+            childMeta['display'] = 'block';
+          }
+        },
+        onWidgets: (meta, widgets) {
+          final images = <Widget>[];
+          for (final widget in widgets) {
+            if (widget is WidgetPlaceholder<ImageMetadata>) {
+              images.add(widget);
+            }
+          }
 
-        return meta;
-      },
-      onWidgets: (meta, widgets) {
-        if (images.length != 2) return widgets;
+          if (images.length != 2) return widgets;
 
-        final a = meta.domElement.attributes;
-        if (!a.containsKey('data-config')) return widgets;
+          final a = meta.element.attributes;
+          if (!a.containsKey('data-config')) return widgets;
 
-        final Map config = json.decode(a['data-config']);
-        if (!config.containsKey('width') ||
-            !(config['width'] is num) ||
-            !config.containsKey('height') ||
-            !(config['height'] is num)) return widgets;
+          final Map config = json.decode(a['data-config']);
+          if (!config.containsKey('width') ||
+              (config['width'] is! num) ||
+              !config.containsKey('height') ||
+              (config['height'] is! num)) return widgets;
 
-        final width = (config['width'] as num).toDouble();
-        final height = (config['height'] as num).toDouble();
+          final width = (config['width'] as num).toDouble();
+          final height = (config['height'] as num).toDouble();
 
-        return [
-          _PhotoCompareWidget(
-            aspectRatio: width / height,
-            image0: wf.buildImage(images.first, height: height, width: width),
-            image1: wf.buildImage(images.last, height: height, width: width),
-          ),
-        ];
-      },
-    );
-  }
+          return [
+            _PhotoCompareWidget(
+              aspectRatio: width / height,
+              image0: images[0],
+              image1: images[1],
+            ),
+          ];
+        },
+      );
 }
 
 class _PhotoCompareWidget extends StatefulWidget {
@@ -93,12 +94,13 @@ class _PhotoCompareState extends State<_PhotoCompareWidget> {
               ),
               Positioned(
                 bottom: 0,
-                child: _PhotoCompareHandler(),
+                child: _PhotoCompareHandler(
+                    animate: position == _PhotoCompareHandler.positionZero),
                 right: _PhotoCompareHandler.boxSize / -2,
                 top: 0,
               ),
             ],
-            overflow: Overflow.visible,
+            clipBehavior: Clip.none,
           ),
           widthFactor: position,
         ),
@@ -106,8 +108,8 @@ class _PhotoCompareState extends State<_PhotoCompareWidget> {
     ];
 
     return GestureDetector(
-      onHorizontalDragDown: (details) =>
-          _updatePosition(context, details.localPosition),
+      // onHorizontalDragDown: (details) =>
+      //     _updatePosition(context, details.localPosition),
       onHorizontalDragUpdate: (details) =>
           _updatePosition(context, details.localPosition),
       child: Stack(children: widgets),
@@ -128,6 +130,10 @@ class _PhotoCompareHandler extends StatefulWidget {
   static const iconSize = 30.0;
   static const color = Colors.white70;
   static const positionZero = .5;
+
+  final bool animate;
+
+  const _PhotoCompareHandler({Key key, this.animate}) : super(key: key);
 
   @override
   _PhotoCompareHandlerState createState() => _PhotoCompareHandlerState();
@@ -151,6 +157,14 @@ class _PhotoCompareHandlerState extends State<_PhotoCompareHandler>
   void dispose() {
     _controller.dispose();
     super.dispose();
+  }
+
+  void didUpdateWidget(_PhotoCompareHandler old) {
+    super.didUpdateWidget(old);
+
+    if (widget.animate != old.animate && !widget.animate) {
+      _controller.stop();
+    }
   }
 
   @override

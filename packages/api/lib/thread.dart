@@ -76,6 +76,7 @@ class Thread {
   ThreadLinks links;
   ThreadPermissions permissions;
   ThreadImage threadImage;
+  ThreadImage threadPrimaryImage;
   List<ThreadPrefix> threadPrefixes;
   ThreadImage threadThumbnail;
 

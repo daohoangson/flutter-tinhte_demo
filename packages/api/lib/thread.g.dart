@@ -44,6 +44,10 @@ Thread _$ThreadFromJson(Map<String, dynamic> json) {
     ..threadImage = json['thread_image'] == null
         ? null
         : ThreadImage.fromJson(json['thread_image'] as Map<String, dynamic>)
+    ..threadPrimaryImage = json['thread_primary_image'] == null
+        ? null
+        : ThreadImage.fromJson(
+            json['thread_primary_image'] as Map<String, dynamic>)
     ..threadPrefixes = (json['thread_prefixes'] as List)
         ?.map((e) =>
             e == null ? null : ThreadPrefix.fromJson(e as Map<String, dynamic>))

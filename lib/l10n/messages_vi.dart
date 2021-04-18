@@ -111,6 +111,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "postReportedThanks" : MessageLookupByLibrary.simpleMessage("Cảm ơn bạn đã báo cáo nội dung xấu!"),
     "postUnlike" : MessageLookupByLibrary.simpleMessage("Bỏ thích"),
     "privacyPolicy" : MessageLookupByLibrary.simpleMessage("Chính sách quyền riêng tư"),
+    "search" : MessageLookupByLibrary.simpleMessage("Tìm kiếm"),
     "searchEnterSomething" : MessageLookupByLibrary.simpleMessage("Nhập nội dung cần tìm kiếm"),
     "searchSubmitToContinue" : m9,
     "searchThisForum" : MessageLookupByLibrary.simpleMessage("Tìm trong khu vực này"),

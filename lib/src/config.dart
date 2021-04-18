@@ -9,6 +9,8 @@ abstract class ConfigBase {
   String get apiBookmarkPath => null;
   String get clientId;
   String get clientSecret;
+  String get linkPrivacyPolicy;
+  String get linkTos;
   String get siteRoot;
 
   String get pushServer => null;
@@ -32,6 +34,8 @@ abstract class ConfigBase {
   bool get loginWithApple => false;
   bool get loginWithFacebook => false;
   bool get loginWithGoogle => false;
+
+  bool get myFeed => false;
 
   bool get threadWidgetShowCoverImageOnly => true;
 }

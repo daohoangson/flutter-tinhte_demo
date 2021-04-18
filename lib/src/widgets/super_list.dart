@@ -66,7 +66,7 @@ class FetchContext<T> {
     this.id = FetchContextId.FetchCustom,
     this.path,
     @required this.state,
-  })  : assert(state != null);
+  }) : assert(state != null);
 }
 
 enum FetchContextId { FetchCustom, FetchInitial, FetchNext, FetchPrev }
@@ -96,7 +96,8 @@ class SuperListState<T> extends State<SuperListView<T>> {
   int _fetchedPageMin;
   Map _initialJson;
   GlobalKey<RefreshIndicatorState> _refreshIndicatorKey;
-  AutoScrollController _scrollController;
+  ScrollController _scrollController;
+  AutoScrollController _scrollControllerAuto;
 
   bool get canFetchNext => _fetchPathNext != null;
   bool get canFetchPrev => _fetchPathPrev != null;
@@ -121,7 +122,9 @@ class SuperListState<T> extends State<SuperListView<T>> {
       _refreshIndicatorKey = GlobalKey();
     }
 
-    if (widget.enableScrollToIndex) _scrollController = AutoScrollController();
+    if (widget.enableScrollToIndex)
+      _scrollControllerAuto = AutoScrollController();
+    _scrollController = _scrollControllerAuto ?? ScrollController();
 
     widget.complexItems?.forEach((register) {
       final registration = register();
@@ -146,10 +149,10 @@ class SuperListState<T> extends State<SuperListView<T>> {
           );
         }
 
-        if (_scrollController != null) {
+        if (_scrollControllerAuto != null) {
           built = AutoScrollTag(
             child: built,
-            controller: _scrollController,
+            controller: _scrollControllerAuto,
             highlightColor: Theme.of(context).accentColor.withOpacity(.1),
             index: i,
             key: ValueKey(i),
@@ -177,7 +180,7 @@ class SuperListState<T> extends State<SuperListView<T>> {
         child: built,
         onNotification: (scrollInfo) {
           if (_isFetching) return false;
-          if (_scrollController?.isAutoScrolling == true) return false;
+          if (_scrollControllerAuto?.isAutoScrolling == true) return false;
           if (!(scrollInfo is UserScrollNotification)) return false;
 
           final m = scrollInfo.metrics;
@@ -285,17 +288,23 @@ class SuperListState<T> extends State<SuperListView<T>> {
     });
   }
 
+  void scrollTo(double offset,
+          {Duration duration: scrollAnimationDuration,
+          Curve curve: Curves.easeIn}) =>
+      _scrollController?.animateTo(offset, duration: duration, curve: curve);
+
   void scrollToIndex(int index,
       {Duration duration: scrollAnimationDuration,
       AutoScrollPosition preferPosition}) {
-    if (_scrollController == null) return;
+    if (_scrollControllerAuto == null) return;
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final i = itemCountBefore + index;
       final d = duration;
       final p = preferPosition;
-      await _scrollController.scrollToIndex(i, duration: d, preferPosition: p);
-      _scrollController.highlight(i);
+      await _scrollControllerAuto.scrollToIndex(i,
+          duration: d, preferPosition: p);
+      _scrollControllerAuto.highlight(i);
     });
   }
 

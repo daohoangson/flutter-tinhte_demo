@@ -5,7 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
-import 'package:html/dom.dart' as dom;
+import 'package:fwfh_webview/fwfh_webview.dart';
 import 'package:html_unescape/html_unescape.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 import 'package:the_app/src/config.dart';
@@ -36,18 +36,16 @@ const _kSmilies = {
   'Er... what?': '😳',
 };
 
-const _kTextPadding = const EdgeInsets.symmetric(horizontal: kPostBodyPadding);
-
 class TinhteHtmlWidget extends StatelessWidget {
   final String html;
   final Color hyperlinkColor;
-  final bool needBottomMargin;
+  final double textPadding;
   final TextStyle textStyle;
 
   TinhteHtmlWidget(
     this.html, {
     this.hyperlinkColor,
-    this.needBottomMargin,
+    this.textPadding = kPostBodyPadding,
     this.textStyle,
   });
 
@@ -67,12 +65,11 @@ class TinhteHtmlWidget extends StatelessWidget {
           factoryBuilder: () => TinhteWidgetFactory(
             devicePixelRatio: MediaQuery.of(c).devicePixelRatio,
             deviceWidth: bc.biggest.width,
-            needBottomMargin: needBottomMargin,
+            textPadding: textPadding,
           ),
           hyperlinkColor: hyperlinkColor,
           onTapUrl: (url) => launchLink(c, url),
           textStyle: textStyle,
-          unsupportedWebViewWorkaroundForIssue37: true,
           webView: true,
         ),
       );
@@ -81,7 +78,7 @@ class TinhteHtmlWidget extends StatelessWidget {
 class TinhteWidgetFactory extends WidgetFactory {
   final double devicePixelRatio;
   final double deviceWidth;
-  final bool needBottomMargin;
+  final double textPadding;
 
   BuildOp _blockquoteOp;
   BuildOp _chrOp;
@@ -89,36 +86,35 @@ class TinhteWidgetFactory extends WidgetFactory {
   BuildOp _smilieOp;
   BuildOp _webViewDataUriOp;
 
-  Galleria _galleria;
   LbTrigger _lbTrigger;
-  LinkExpander _linkExpander;
   PhotoCompare _photoCompare;
 
   TinhteWidgetFactory({
     this.devicePixelRatio,
     this.deviceWidth,
-    this.needBottomMargin,
+    this.textPadding,
   });
 
   BuildOp get blockquoteOp {
     _blockquoteOp ??= BuildOp(
-      onWidgets: (_, ws) => [
-        Padding(
-          child: Builder(
-            builder: (context) => DecoratedBox(
-              child: buildBody(ws),
-              decoration: BoxDecoration(
-                border: Border(
-                  left: BorderSide(
-                    color: Theme.of(context).dividerColor,
-                    width: 3,
+      onWidgets: (meta, widgets) => [
+        buildColumnPlaceholder(meta, widgets)
+          ..wrapWith(
+            (context, child) => Padding(
+              child: DecoratedBox(
+                child: child,
+                decoration: BoxDecoration(
+                  border: Border(
+                    left: BorderSide(
+                      color: Theme.of(context).dividerColor,
+                      width: 3,
+                    ),
                   ),
                 ),
               ),
+              padding: EdgeInsets.all(textPadding),
             ),
           ),
-          padding: const EdgeInsets.all(kPostBodyPadding),
-        ),
       ],
     );
     return _blockquoteOp;
@@ -126,10 +122,10 @@ class TinhteWidgetFactory extends WidgetFactory {
 
   BuildOp get chrOp {
     _chrOp ??= BuildOp(
-      defaultStyles: (_, __) => ['margin', '0.5em 0'],
+      defaultStyles: (_) => {'margin': '0.5em 0'},
       onWidgets: (meta, __) {
-        final a = meta.domElement.attributes;
-        final url = constructFullUrl(a['href']);
+        final a = meta.element.attributes;
+        final url = urlFull(a['href']);
         if (url?.isEmpty != false) return null;
 
         final youtubeId = !Platform.isIOS && a.containsKey('data-chr-thumbnail')
@@ -143,7 +139,7 @@ class TinhteWidgetFactory extends WidgetFactory {
                 youtubeId,
                 lowresThumbnailUrl: a['data-chr-thumbnail'],
               )
-            : buildWebView(url);
+            : buildWebView(meta, url);
 
         return [contents];
       },
@@ -153,29 +149,23 @@ class TinhteWidgetFactory extends WidgetFactory {
 
   BuildOp get metaBbCodeOp {
     _metaBbCodeOp ??= BuildOp(
-      onChild: (meta, e) =>
-          (e.localName == 'span' && !e.classes.contains('value'))
-              ? meta.isNotRenderable = true
-              : null,
+      onChild: (meta) => (meta.element.localName == 'span' &&
+              !meta.element.classes.contains('value'))
+          ? meta['display'] = 'none'
+          : null,
     );
     return _metaBbCodeOp;
   }
 
   BuildOp get smilieOp {
     _smilieOp ??= BuildOp(
-      onPieces: (meta, pieces) {
-        final a = meta.domElement.attributes;
-        if (!a.containsKey('data-title')) return pieces;
+      onTree: (meta, tree) {
+        final a = meta.element.attributes;
+        if (!a.containsKey('data-title')) return;
         final title = a['data-title'];
-        if (!_kSmilies.containsKey(title)) return pieces;
+        if (!_kSmilies.containsKey(title)) return;
 
-        final text = pieces.first.text;
-        for (final bit in List.unmodifiable(text.bits)) {
-          bit.detach();
-        }
-        text.addText(_kSmilies[title]);
-
-        return pieces;
+        tree.replaceWith(TextBit(tree, _kSmilies[title]));
       },
     );
     return _smilieOp;
@@ -184,29 +174,21 @@ class TinhteWidgetFactory extends WidgetFactory {
   BuildOp get webViewDataUriOp {
     _webViewDataUriOp ??= BuildOp(
       onWidgets: (meta, _) => [
-        buildWebView(Uri.dataFromString(
-          """<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"></head><body>${meta.domElement.outerHtml}</body></html>""",
-          encoding: Encoding.getByName('utf-8'),
-          mimeType: 'text/html',
-        ).toString())
+        buildWebView(
+            meta,
+            Uri.dataFromString(
+              """<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"></head><body>${meta.element.outerHtml}</body></html>""",
+              encoding: Encoding.getByName('utf-8'),
+              mimeType: 'text/html',
+            ).toString())
       ],
     );
     return _webViewDataUriOp;
   }
 
-  Galleria get galleria {
-    _galleria ??= Galleria(this);
-    return _galleria;
-  }
-
   LbTrigger get lbTrigger {
     _lbTrigger ??= LbTrigger(wf: this);
     return _lbTrigger;
-  }
-
-  LinkExpander get linkExpander {
-    _linkExpander ??= LinkExpander(this);
-    return _linkExpander;
   }
 
   PhotoCompare get photoCompare {
@@ -215,111 +197,175 @@ class TinhteWidgetFactory extends WidgetFactory {
   }
 
   @override
-  Widget buildBody(Iterable<Widget> children) {
-    final WidgetPlaceholder placeholder = super.buildBody(children);
-    placeholder.wrapWith(_buildTextPadding);
-    return placeholder;
+  WidgetPlaceholder buildColumnPlaceholder(
+    BuildMetadata meta,
+    Iterable<Widget> children, {
+    bool trimMarginVertical = false,
+  }) {
+    final built = super.buildColumnPlaceholder(meta, children,
+        trimMarginVertical: trimMarginVertical);
+
+    if (trimMarginVertical) {
+      built.wrapWith((_, child) {
+        final last = _lastOf(child);
+
+        return Padding(
+          child: child,
+          padding: EdgeInsets.only(
+            top: textPadding,
+            bottom: last is _TextPadding || last is WidgetPlaceholder<BuildTree>
+                ? textPadding
+                : 0.0,
+          ),
+        );
+      });
+    }
+
+    return built;
+  }
+
+  static final _resizedUrl = Expando<String>();
+
+  @override
+  Widget buildImage(BuildMetadata meta, ImageMetadata data) {
+    final source = data.sources.first;
+    if (source.width != null && source.height != null) {
+      final resizedUrl = getResizedUrl(
+        apiUrl: source.url,
+        boxWidth: devicePixelRatio * deviceWidth,
+        imageHeight: source.height,
+        imageWidth: source.width,
+      );
+      if (resizedUrl != null) _resizedUrl[meta] = resizedUrl;
+    }
+
+    return super.buildImage(meta, data);
+  }
+
+  Widget buildImageWidget(
+    BuildMetadata meta, {
+    String semanticLabel,
+    @required String url,
+  }) =>
+      super.buildImageWidget(
+        meta,
+        semanticLabel: semanticLabel,
+        url: _resizedUrl[meta] ?? url,
+      );
+
+  @override
+  Widget buildText(BuildMetadata meta, TextStyleHtml tsh, InlineSpan text) {
+    var built = super.buildText(meta, tsh, text);
+
+    if (built != null) {
+      built = _TextPadding(built, textPadding);
+    }
+
+    return built;
   }
 
   @override
-  Widget buildImage(String url, {double height, String text, double width}) {
-    final resizedUrl = getResizedUrl(
-      apiUrl: url,
-      boxWidth: devicePixelRatio * deviceWidth,
-      imageHeight: height,
-      imageWidth: width,
-    );
-
-    return super.buildImage(resizedUrl ?? url,
-        height: height, text: text, width: width);
-  }
-
-  @override
-  void parseTag(NodeMetadata meta, String tag, Map<dynamic, String> attrs) {
-    final clazz = attrs.containsKey('class') ? attrs['class'] : '';
-    switch (tag) {
+  void parse(BuildMetadata meta) {
+    final attrs = meta.element.attributes;
+    final classes = meta.element.classes;
+    switch (meta.element.localName) {
       case 'a':
         if (attrs.containsKey('data-chr') && attrs.containsKey('href')) {
-          meta.op = chrOp;
+          meta.register(chrOp);
           return;
         }
 
-        if (clazz.contains('LinkExpander') && clazz.contains('expanded')) {
-          meta.op = linkExpander.buildOp;
+        if (classes.contains('LinkExpander') && classes.contains('expanded')) {
+          meta.register(LinkExpander(this, meta).op);
           return;
         }
 
-        if (clazz.contains('LbTrigger') &&
+        if (classes.contains('LbTrigger') &&
             attrs.containsKey('data-height') &&
             attrs.containsKey('data-permalink') &&
             attrs.containsKey('data-width')) {
-          meta.op = lbTrigger.prepareThumbnailOp(attrs);
+          meta.register(lbTrigger.prepareThumbnailOp(attrs));
           return;
         }
         break;
       case 'blockquote':
-        meta.op = blockquoteOp;
+        meta.register(blockquoteOp);
         return;
       case 'div':
-        if (clazz.contains('LinkExpander') && clazz.contains('is-oembed')) {
-          meta.op = linkExpander.oembedOp;
+        if (classes.contains('LinkExpander') && classes.contains('is-oembed')) {
+          meta.register(LinkExpander.getOembedOp());
           return;
         }
         break;
+      case 'img':
+        if (attrs.containsKey('data-height')) {
+          attrs['height'] = attrs['data-height'];
+        }
+        if (attrs.containsKey('data-width')) {
+          attrs['width'] = attrs['data-width'];
+        }
+        break;
       case 'ul':
-        if (clazz.contains('Tinhte_Galleria')) {
-          meta.op = galleria.buildOp;
+        if (classes.contains('Tinhte_Galleria')) {
+          meta.register(Galleria(this, meta).op);
           return;
         }
         break;
       case 'script':
         if (attrs.containsKey('src') &&
             attrs['src'] == 'https://e.infogr.am/js/embed.js') {
-          meta.op = webViewDataUriOp;
+          meta.register(webViewDataUriOp);
           return;
         }
         break;
       case 'span':
-        if (clazz.contains('bdImage_attachImage')) {
-          meta.op = lbTrigger.fullOp;
+        if (classes.contains('bdImage_attachImage')) {
+          meta.register(lbTrigger.fullOp);
           return;
         }
-        if (clazz.contains('metaBbCode')) {
-          meta.op = metaBbCodeOp;
-          return;
-        }
-
-        if (clazz.contains('Tinhte_PhotoCompare')) {
-          meta.op = photoCompare.buildOp;
+        if (classes.contains('metaBbCode')) {
+          meta.register(metaBbCodeOp);
           return;
         }
 
-        if (clazz.contains('smilie')) {
-          meta.op = smilieOp;
+        if (classes.contains('Tinhte_PhotoCompare')) {
+          meta.register(photoCompare.buildOp);
+          return;
+        }
+
+        if (classes.contains('smilie')) {
+          meta.register(smilieOp);
           return;
         }
         break;
     }
 
-    return super.parseTag(meta, tag, attrs);
+    return super.parse(meta);
   }
 
-  Iterable<Widget> _buildTextPadding(BuildContext _, Iterable<Widget> ws, __) {
-    final output = <Widget>[SizedBox(height: kPostBodyPadding)];
+  @override
+  void reset(State state) {
+    this._lbTrigger = null;
 
-    final last = ws.last;
-    for (final widget in ws) {
-      final isText = widget is RichText ||
-          (widget is ImageLayout &&
-              widget.width != null &&
-              widget.width < deviceWidth);
-      output.add(isText ? buildPadding(widget, _kTextPadding) : widget);
-
-      if (widget == last && (isText || needBottomMargin == true)) {
-        output.add(SizedBox(height: kPostBodyPadding));
-      }
-    }
-
-    return output;
+    super.reset(state);
   }
+}
+
+class _TextPadding extends StatelessWidget {
+  final Widget child;
+  final double padding;
+
+  const _TextPadding(this.child, this.padding, {Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext _) =>
+      Padding(child: child, padding: EdgeInsets.symmetric(horizontal: padding));
+}
+
+Widget _lastOf(Widget widget) {
+  if (widget is Column) {
+    return _lastOf(widget.children.last);
+  }
+
+  return widget;
 }

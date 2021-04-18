@@ -175,7 +175,7 @@ class _PostActionsWidgetState extends State<_PostActionsWidget> {
           ApiCaller.stateful(this),
           ap.post.links.report,
           bodyFields: {'message': message},
-          onSuccess: (_) => Scaffold.of(context).showSnackBar(
+          onSuccess: (_) => ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(l(context).postReportedThanks)),
           ),
         ),
@@ -207,11 +207,11 @@ class _PostActionsDialogReason extends StatelessWidget {
   @override
   Widget build(BuildContext context) => AlertDialog(
         actions: <Widget>[
-          FlatButton(
+          TextButton(
             child: Text(lm(context).cancelButtonLabel),
             onPressed: () => Navigator.of(context).pop(),
           ),
-          FlatButton(
+          TextButton(
             child: Text(button),
             onPressed: () => Navigator.of(context).pop(_controller.text),
           ),

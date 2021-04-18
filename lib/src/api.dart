@@ -91,7 +91,8 @@ Future showApiErrorDialog(
             ? error.isHtml
                 ? HtmlWidget(error.message)
                 : Text(
-                    error is ApiErrorUnexpectedStatusCode
+                    (error is ApiErrorUnexpectedResponse ||
+                            error is ApiErrorUnexpectedStatusCode)
                         ? l(context).apiUnexpectedResponse
                         : error.message,
                   )
@@ -117,9 +118,13 @@ void _setupApiCompleter<T>(
   }
 
   f = f.catchError((error) {
-    if (!caller.canReceiveCallback) return;
-    if (onError != null) return onError(error);
-    showApiErrorDialog(caller.context, error);
+    if (caller.canReceiveCallback) {
+      if (onError != null) {
+        onError(error);
+      } else {
+        showApiErrorDialog(caller.context, error);
+      }
+    }
   });
 
   if (onComplete != null) {
@@ -147,8 +152,7 @@ void _setupApiJsonHandlers(
     completer,
     onSuccess != null
         ? (json) {
-            if (json is! Map)
-              throw new ApiErrorSingle(l(caller.context).apiUnexpectedResponse);
+            if (json is! Map) throw new ApiErrorUnexpectedResponse(json);
             return onSuccess(json);
           }
         : null,
@@ -239,7 +243,7 @@ class _ApiAppState extends State<ApiApp> {
   void _enqueue(VoidCallback callback, {bool scheduleDequeue = true}) {
     if (scheduleDequeue) Timer.run(_dequeue);
 
-    _queue ??= List();
+    _queue ??= [];
     _queue.add(callback);
   }
 

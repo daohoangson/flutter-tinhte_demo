@@ -1,10 +1,18 @@
-on: push
 name: Flutter
+on:
+  push:
+    paths: 
+      - .github/workflows/flutter.yml
+      - 'android/**'
+      - 'ios/**'
+      - 'lib/**'
+      - 'packages/**'
+      - pubspec.yaml
+
 env:
   GCS_PATH: gs://flutterttdemo/${{ github.sha }}
   GCS_URL: https://storage.googleapis.com/flutterttdemo/${{ github.sha }}
   GIT_CRYPT_KEY: ${{ secrets.GIT_CRYPT_KEY }}
-  JAVA_VERSION: 12.x
   SCRIPT_PREPARE_REPO: |
     set -e
 
@@ -19,11 +27,11 @@ env:
 
     # Extract config from pubspec.yaml
     brew install yq
-    _appVersion=$( yq read pubspec.yaml version )
+    _appVersion=$( yq e '.version' pubspec.yaml )
     _appVersionWithoutNumber=$( echo "${_appVersion}" | sed 's/+.*$//' )
-    echo "::set-env name=BUILD_NAME::${_appVersionWithoutNumber}-${GITHUB_SHA:0:7}"
-    _flutterVersion=$( yq read pubspec.yaml environment.flutter )
-    echo "::set-env name=FLUTTER_VERSION::${_flutterVersion}"
+    echo "BUILD_NAME=${_appVersionWithoutNumber}-${GITHUB_SHA:0:7}" >> $GITHUB_ENV
+    _flutterVersion=$( yq e '.environment.flutter' pubspec.yaml )
+    echo "FLUTTER_VERSION=${_flutterVersion}" >> $GITHUB_ENV
 
 jobs:
   build_apk:
@@ -34,10 +42,6 @@ jobs:
       - name: Prepare repo
         run: echo "${SCRIPT_PREPARE_REPO}" | bash -
 
-      - name: Setup Java
-        uses: actions/setup-java@v1
-        with:
-          java-version: ${{ env.JAVA_VERSION }}
       - name: Setup Flutter
         uses: subosito/flutter-action@v1
         with:
@@ -62,7 +66,6 @@ jobs:
             echo '```'; \
             echo "BUILD_NAME=${BUILD_NAME}"; \
             echo "FLUTTER_VERSION=${FLUTTER_VERSION}"; \
-            echo "JAVA_VERSION=${JAVA_VERSION}"; \
             echo '```'; \
             echo; \
             ls build/app/outputs/apk/release/*.apk \
@@ -83,7 +86,6 @@ jobs:
           fingerprint: <!-- ${{ github.sha }} -->
 
   build_ipa:
-    if: startsWith(github.ref, 'refs/heads/ios') || github.ref == 'refs/heads/master'
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2

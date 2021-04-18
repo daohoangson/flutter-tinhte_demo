@@ -9,7 +9,7 @@ class Batch {
   final String path;
   final Completer _completer = Completer();
 
-  final List<BatchJob> _jobs = List();
+  final _jobs = <BatchJob>[];
   final Map<String, BatchJob> _uniqueJobs = Map();
 
   String get bodyJson {

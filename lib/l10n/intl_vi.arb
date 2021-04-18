@@ -330,6 +330,11 @@
     "type": "text",
     "placeholders": {}
   },
+  "search": "Tìm kiếm",
+  "@search": {
+    "type": "text",
+    "placeholders": {}
+  },
   "searchEnterSomething": "Nhập nội dung cần tìm kiếm",
   "@searchEnterSomething": {
     "type": "text",

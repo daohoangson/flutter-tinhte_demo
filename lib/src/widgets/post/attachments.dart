@@ -16,7 +16,7 @@ class _PostAttachmentsWidget extends StatelessWidget {
       child: SizedBox(
         height: 100,
         child: ListView.separated(
-          itemBuilder: (c, i) => lbTrigger.buildGestureDetectorWithContext(
+          itemBuilder: (c, i) => lbTrigger.buildGestureDetector(
               c, _buildAttachment(attachments[i]), i),
           itemCount: attachments.length,
           scrollDirection: Axis.horizontal,
@@ -40,6 +40,9 @@ class _PostAttachmentsWidget extends StatelessWidget {
       if (attachment.attachmentIsInserted) return false;
       if (thread?.threadImage?.displayMode == 'cover' &&
           thread?.threadImage?.link == attachment.links.permalink) return false;
+      if (thread?.threadPrimaryImage?.displayMode == 'cover' &&
+          thread?.threadPrimaryImage?.link == attachment.links.permalink)
+        return false;
       if (attachment.attachmentWidth == null ||
           attachment.attachmentWidth < 1 ||
           attachment.attachmentHeight == null ||

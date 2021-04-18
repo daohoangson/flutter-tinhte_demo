@@ -1,5 +1,7 @@
 part of '../html.dart';
 
+const kCaptionColor = Colors.white70;
+
 class LbTrigger {
   final captions = Map<int, Widget>();
   final hashCodes = <int>[0];
@@ -10,10 +12,7 @@ class LbTrigger {
 
   LbTrigger({this.wf});
 
-  Widget buildGestureDetector(int index, Widget child) =>
-      Builder(builder: (c) => buildGestureDetectorWithContext(c, child, index));
-
-  Widget buildGestureDetectorWithContext(BuildContext c, Widget child, int i) =>
+  Widget buildGestureDetector(BuildContext c, Widget child, int i) =>
       GestureDetector(
         child: child,
         onTap: () => Navigator.push(
@@ -30,7 +29,7 @@ class LbTrigger {
         !a.containsKey('href')) return null;
 
     final href = a['href'];
-    final url = wf.constructFullUrl(href);
+    final url = wf.urlFull(href);
     if (url == null) return null;
 
     final height = double.tryParse(a['data-height']);
@@ -47,64 +46,51 @@ class LbTrigger {
     }
 
     return BuildOp(
-      onChild: (meta, e) {
-        if (e.localName != 'img') return;
+      onChild: (meta) {
+        if (meta.element.localName != 'img') return;
 
-        meta.styles = [
-          'height',
-          "${childHeight.toString()}px",
-          'width',
-          "${childWidth.toString()}px",
-        ];
+        meta
+          ..['height'] = "${childHeight}px"
+          ..['width'] = "${childWidth}px";
       },
-      onPieces: (meta, pieces) {
-        final index = _addSource(meta.domElement, url);
+      onTree: (meta, tree) {
+        final index = _addSource(url);
 
-        for (final piece in pieces) {
-          if (piece.hasWidgets) continue;
-          for (final bit in piece.text.bits) {
-            if (bit is TextWidget) {
-              bit.widget.wrapWith(
-                  (context, widgets, index) => widgets.map((widget) =>
-                      buildGestureDetectorWithContext(context, widget, index)),
-                  index);
-            }
+        for (final bit in tree.bits) {
+          if (bit is WidgetBit) {
+            bit.child.wrapWith((c, w) => buildGestureDetector(c, w, index));
           }
         }
-        return pieces;
       },
     );
   }
 
   BuildOp get fullOp {
     _fullOp = BuildOp(
-      onChild: (meta, e) {
-        if (e.localName != 'img') return;
+      onChild: (meta) {
+        if (meta.element.localName != 'img') return;
 
-        final a = e.attributes;
+        final a = meta.element.attributes;
         final href = a['src'];
-        final url = wf.constructFullUrl(href);
+        final url = wf.urlFull(href);
         if (url == null) return;
 
-        final index = _addSource(e, url);
+        final index = _addSource(url);
         meta
-          ..op = BuildOp(
-            onWidgets: (_, widgets) =>
-                widgets.map((widget) => buildGestureDetector(index, widget)),
-          )
-          ..styles = ['margin', '0.5em 0'];
+          ..['margin'] = '0.5em 0'
+          ..register(BuildOp(onWidgets: (_, widgets) {
+            for (final widget in widgets) {
+              widget.wrapWith((c, w) => buildGestureDetector(c, w, index));
+            }
+            return widgets;
+          }));
       },
     );
 
     return _fullOp;
   }
 
-  int _addSource(dom.Element e, String source) {
-    final rootElement = _rootElement(e);
-    if (hashCodes.last != rootElement.hashCode) {
-      hashCodes.add(rootElement.hashCode);
-      sources.clear();
-    }
+  int _addSource(String source) {
     final index = sources.length;
     sources.add(source);
 
@@ -192,16 +178,19 @@ class _ScreenState extends State<_Screen> {
 
   Widget _buildCaption(BuildContext context, int index) => Column(
         children: <Widget>[
-          DefaultTextStyle(
-            style: TextStyle(color: Colors.white70),
-            child: widget.captions.containsKey(index)
-                ? widget.captions[index]
-                : Text(l(context).navXOfY(index + 1, widget.sources.length)),
-          ),
-          FlatButton(
+          widget.captions.containsKey(index)
+              ? widget.captions[index]
+              : Text(
+                  l(context).navXOfY(index + 1, widget.sources.length),
+                  style: Theme.of(context)
+                      .textTheme
+                      .caption
+                      .copyWith(color: kCaptionColor),
+                ),
+          TextButton(
             child: Text(lm(context).okButtonLabel),
-            colorBrightness: Brightness.dark,
             onPressed: () => Navigator.of(context).pop(),
+            style: TextButton.styleFrom(primary: kCaptionColor),
           )
         ],
         mainAxisSize: MainAxisSize.min,
@@ -211,10 +200,4 @@ class _ScreenState extends State<_Screen> {
       PhotoViewGalleryPageOptions(
         imageProvider: NetworkImage(widget.sources[index]),
       );
-}
-
-dom.Element _rootElement(dom.Element e) {
-  var x = e;
-  while (x.parent != null) x = x.parent;
-  return x;
 }

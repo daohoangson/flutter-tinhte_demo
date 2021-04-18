@@ -31,8 +31,7 @@ part 'post/first.dart';
 part 'post/list.dart';
 part 'post/replies.dart';
 
-List<_PostListItem> decodePostsAndTheirReplies(List jsonPosts,
-    {int parentPostId}) {
+List<_PostListItem> decodePostsAndTheirReplies(List jsonPosts) {
   final items = <_PostListItem>[];
   final postReplyItemById = Map<int, _PostListItem>();
 
@@ -45,14 +44,9 @@ List<_PostListItem> decodePostsAndTheirReplies(List jsonPosts,
       return item;
     });
 
-    if (post.postReplyTo == parentPostId) {
+    if (post.postReplyTo == null) {
       items.add(_PostListItem.post(post));
       if (postReplies != null) items.addAll(postReplies);
-      return;
-    }
-
-    if (post.postReplyTo == null) {
-      print("Unexpected root post #${post.postId}");
       return;
     }
 

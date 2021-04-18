@@ -116,6 +116,19 @@ class L10n {
       locale: localeName,
       name: 'loginUsernameHint');
 
+  String get loginTfaErrorCodeIsEmpty => 'Please enter your verification code';
+
+  String get loginTfaMethodBackup => 'Backup codes';
+
+  String get loginTfaMethodEmail => 'Email confirmation';
+
+  String get loginTfaMethodPleaseChooseOne =>
+      'Two-factor authorization code is required, please select a method to verify:';
+
+  String get loginTfaMethodTotp => 'Verification code via app';
+
+  String get loginTfaVerify => 'Verify';
+
   String get loginUsernameOrEmail => Intl.message('Username / email',
       desc: 'Label text for username / email field',
       locale: localeName,
@@ -233,6 +246,39 @@ class L10n {
   String get privacyPolicy =>
       Intl.message('Privacy Policy', locale: localeName, name: 'privacyPolicy');
 
+  String get register =>
+      Intl.message('Register', locale: localeName, name: 'register');
+
+  String registerAgreeCheckboxHtml({String terms, String privacyPolicy}) =>
+      Intl.message(
+          'I agree to the <a href="$terms">terms</a> and <a href="$privacyPolicy">privacy policy</a>.',
+          args: [terms, privacyPolicy],
+          locale: localeName,
+          name: 'registerAgreeCheckboxHtml');
+
+  String get registerEmail => Intl.message('Email',
+      desc: 'Label text for email field',
+      locale: localeName,
+      name: 'registerEmail');
+
+  String get registerErrorEmailIsEmpty =>
+      Intl.message('Email cannot be empty', name: 'registerErrorEmailIsEmpty');
+
+  String get registerErrorNoAccessToken =>
+      Intl.message('Cannot register new user account.',
+          locale: localeName, name: 'registerErrorNoAccessToken');
+
+  String get registerErrorPasswordIsEmpty =>
+      Intl.message('Password cannot be empty',
+          name: 'registerErrorPasswordIsEmpty');
+
+  String get registerErrorUsernameIsEmpty =>
+      Intl.message('Username cannot be empty',
+          name: 'registerErrorUsernameIsEmpty');
+
+  String get search =>
+      Intl.message('Search', locale: localeName, name: 'search');
+
   String get searchEnterSomething => Intl.message('Enter something to search',
       locale: localeName, name: 'searchEnterSomething');
 
@@ -315,8 +361,8 @@ class L10n {
       locale: localeName,
       name: 'threadBookmarkList');
 
-  String get threadBookmarkUndo =>
-      Intl.message('Unbookmark', locale: localeName, name: 'threadBookmarkUndo');
+  String get threadBookmarkUndo => Intl.message('Unbookmark',
+      locale: localeName, name: 'threadBookmarkUndo');
 
   String get threadCreateBody =>
       Intl.message('Post body', locale: localeName, name: 'threadCreateBody');

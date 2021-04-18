@@ -2,12 +2,14 @@ import 'package:apple_sign_in/apple_sign_in.dart' as apple;
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:the_api/api.dart';
 import 'package:the_api/oauth_token.dart';
 import 'package:the_app/src/api.dart';
 import 'package:the_app/src/config.dart';
 import 'package:the_app/src/intl.dart';
+import 'package:the_app/src/screens/register.dart';
 
 final _facebookLogin = FacebookLogin();
 
@@ -38,14 +40,16 @@ class LoginForm extends StatefulWidget {
 class _LoginFormState extends State<LoginForm> {
   final formKey = GlobalKey<FormState>();
 
-  _LoginAssociatable _associatable;
+  LoginAssociatable _associatable;
+  LoginTfa _tfa;
   bool _canLoginApple = false;
   bool _isLoggingIn = false;
 
   String username;
   String password;
+  String tfaCode;
 
-  _LoginFormState({this.username = '', this.password = ''});
+  _LoginFormState();
 
   @override
   void initState() {
@@ -57,21 +61,16 @@ class _LoginFormState extends State<LoginForm> {
   }
 
   @override
-  Widget build(BuildContext context) => LayoutBuilder(
-        builder: (_, box) => Form(
-          key: formKey,
-          child: _buildBox(
-            box,
-            _associatable != null
-                ? _buildFieldsAssociate()
-                : _buildFieldsLogin(),
-          ),
+  Widget build(BuildContext context) => Form(
+        key: formKey,
+        child: ListView(
+          children: _tfa != null
+              ? _buildFieldsTfa()
+              : _associatable != null
+                  ? _buildFieldsAssociate()
+                  : _buildFieldsLogin(),
+          padding: const EdgeInsets.all(20.0),
         ),
-      );
-
-  Widget _buildBox(BoxConstraints box, List<Widget> children) => ListView(
-        padding: const EdgeInsets.all(20.0),
-        children: children,
       );
 
   List<Widget> _buildFieldsAssociate() => [
@@ -86,15 +85,15 @@ class _LoginFormState extends State<LoginForm> {
         Row(
           children: <Widget>[
             Expanded(
-              child: FlatButton(
+              child: TextButton(
                 child: Text(lm(context).cancelButtonLabel),
                 onPressed: _isLoggingIn
                     ? null
-                    : () => setState(() => this._associatable = null),
+                    : () => setState(() => _associatable = null),
               ),
             ),
             Expanded(
-              child: RaisedButton(
+              child: ElevatedButton(
                 child: Text(l(context).loginAssociate),
                 onPressed: _isLoggingIn ? null : _associate,
               ),
@@ -106,9 +105,24 @@ class _LoginFormState extends State<LoginForm> {
   List<Widget> _buildFieldsLogin() => [
         _buildInputPadding(_buildUsername()),
         _buildInputPadding(_buildPassword()),
-        RaisedButton(
-          child: Text(lm(context).continueButtonLabel),
-          onPressed: _isLoggingIn ? null : _login,
+        Row(
+          children: <Widget>[
+            Expanded(
+              child: TextButton(
+                child: Text(l(context).register),
+                onPressed: _isLoggingIn
+                    ? null
+                    : () => Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(builder: (_) => RegisterScreen())),
+              ),
+            ),
+            Expanded(
+              child: ElevatedButton(
+                child: Text(l(context).login),
+                onPressed: _isLoggingIn ? null : _login,
+              ),
+            ),
+          ],
         ),
         config.loginWithFacebook
             ? FacebookSignInButton(
@@ -131,6 +145,55 @@ class _LoginFormState extends State<LoginForm> {
               )
             : const SizedBox.shrink(),
       ];
+
+  List<Widget> _buildFieldsTfa() => [
+        Text(l(context).loginTfaMethodPleaseChooseOne),
+      ]
+        ..addAll(_tfa.providers
+            .map((provider) => ElevatedButton.icon(
+                  icon: !_isLoggingIn && _tfa.triggeredProvider == provider
+                      ? Icon(
+                          FontAwesomeIcons.check,
+                          color: Theme.of(context).indicatorColor,
+                        )
+                      : const SizedBox.shrink(),
+                  label: Text(provider == 'backup'
+                      ? l(context).loginTfaMethodBackup
+                      : provider == 'email'
+                          ? l(context).loginTfaMethodEmail
+                          : provider == 'totp'
+                              ? l(context).loginTfaMethodTotp
+                              : provider),
+                  onPressed: _isLoggingIn ? null : () => _tfaTrigger(provider),
+                ))
+            .toList(growable: false))
+        ..add(_tfa.triggeredProvider != null
+            ? _buildInputPadding(_buildTfaCode())
+            : const SizedBox.shrink())
+        ..add(_tfa.triggeredProvider != null
+            ? Row(
+                children: <Widget>[
+                  Expanded(
+                    child: TextButton(
+                      child: Text(lm(context).cancelButtonLabel),
+                      onPressed: _isLoggingIn
+                          ? null
+                          : () => setState(() => _tfa = null),
+                    ),
+                  ),
+                  Expanded(
+                    child: ElevatedButton(
+                      child: Text(l(context).loginTfaVerify),
+                      onPressed: _isLoggingIn ? null : _tfaVerify,
+                    ),
+                  ),
+                ],
+              )
+            : TextButton(
+                child: Text(lm(context).cancelButtonLabel),
+                onPressed:
+                    _isLoggingIn ? null : () => setState(() => _tfa = null),
+              ));
 
   Widget _buildInputPadding(Widget child) => Padding(
         padding: const EdgeInsets.symmetric(vertical: 5.0),
@@ -172,6 +235,18 @@ class _LoginFormState extends State<LoginForm> {
         return null;
       });
 
+  Widget _buildTfaCode() => TextFormField(
+      autofocus: true,
+      keyboardType: TextInputType.number,
+      onSaved: (value) => tfaCode = value,
+      validator: (tfaCode) {
+        if (tfaCode.isEmpty) {
+          return l(context).loginTfaErrorCodeIsEmpty;
+        }
+
+        return null;
+      });
+
   void _associate() {
     if (_isLoggingIn) return;
 
@@ -181,20 +256,10 @@ class _LoginFormState extends State<LoginForm> {
 
     setState(() => _isLoggingIn = true);
 
-    final apiAuth = ApiAuth.of(context, listen: false);
-    final api = apiAuth.api;
-
-    api
-        .postJson('oauth/token/associate',
-            bodyFields: Map.from(_associatable.bodyFields)
-              ..addAll({
-                'client_id': api.clientId,
-                'client_secret': api.clientSecret,
-                'password': password,
-              }))
-        .then((json) => _onExternalJson(api, _associatable.obtainMethod, json))
-        .then((result) => _onResult(apiAuth, result))
-        .catchError((e) => _showError(context, e))
+    final api = ApiAuth.of(context, listen: false).api;
+    loginAssociate(api, _associatable, password)
+        .then(_onResult)
+        .catchError(_showError)
         .whenComplete(() => setState(() => _isLoggingIn = false));
   }
 
@@ -207,11 +272,10 @@ class _LoginFormState extends State<LoginForm> {
 
     setState(() => _isLoggingIn = true);
 
-    final apiAuth = ApiAuth.of(context, listen: false);
-    apiAuth.api
-        .login(username, password)
-        .then((token) => _onResult(apiAuth, _LoginResult(token: token)))
-        .catchError((e) => _showError(context, e))
+    final api = ApiAuth.of(context, listen: false).api;
+    login(api, username, password)
+        .then(_onResult)
+        .catchError(_showError)
         .whenComplete(() => setState(() => _isLoggingIn = false));
   }
 
@@ -219,8 +283,7 @@ class _LoginFormState extends State<LoginForm> {
     if (_isLoggingIn) return;
     setState(() => _isLoggingIn = true);
 
-    final apiAuth = ApiAuth.of(context, listen: false);
-    final api = apiAuth.api;
+    final api = ApiAuth.of(context, listen: false).api;
     final req = apple.AppleIdRequest(requestedScopes: [apple.Scope.email]);
 
     apple.AppleSignIn.performRequests([req])
@@ -237,16 +300,14 @@ class _LoginFormState extends State<LoginForm> {
 
           return Future.error(result.status.toString());
         })
-        .then((appleIdCredential) =>
-            api.postJson('oauth/token/apple', bodyFields: {
+        .then((appleIdCredential) => loginExternal(api, ObtainMethod.Apple, {
               'client_id': api.clientId,
               'client_secret': api.clientSecret,
               'apple_token':
                   String.fromCharCodes(appleIdCredential.identityToken),
             }))
-        .then((json) => _onExternalJson(api, ObtainMethod.Apple, json))
-        .then((result) => _onResult(apiAuth, result))
-        .catchError((e) => _showError(context, e))
+        .then(_onResult)
+        .catchError(_showError)
         .whenComplete(() => setState(() => _isLoggingIn = false));
   }
 
@@ -254,9 +315,7 @@ class _LoginFormState extends State<LoginForm> {
     if (_isLoggingIn) return;
     setState(() => _isLoggingIn = true);
 
-    final apiAuth = ApiAuth.of(context, listen: false);
-    final api = apiAuth.api;
-
+    final api = ApiAuth.of(context, listen: false).api;
     _facebookLogin
         .logIn(['email'])
         .then<String>((result) {
@@ -272,15 +331,13 @@ class _LoginFormState extends State<LoginForm> {
 
           return Future.error(result.status.toString());
         })
-        .then((facebookToken) =>
-            api.postJson('oauth/token/facebook', bodyFields: {
+        .then((facebookToken) => loginExternal(api, ObtainMethod.Facebook, {
               'client_id': api.clientId,
               'client_secret': api.clientSecret,
               'facebook_token': facebookToken,
             }))
-        .then((json) => _onExternalJson(api, ObtainMethod.Facebook, json))
-        .then((result) => _onResult(apiAuth, result))
-        .catchError((e) => _showError(context, e))
+        .then(_onResult)
+        .catchError(_showError)
         .whenComplete(() => setState(() => _isLoggingIn = false));
   }
 
@@ -288,9 +345,7 @@ class _LoginFormState extends State<LoginForm> {
     if (_isLoggingIn) return;
     setState(() => _isLoggingIn = true);
 
-    final apiAuth = ApiAuth.of(context, listen: false);
-    final api = apiAuth.api;
-
+    final api = ApiAuth.of(context, listen: false).api;
     _googleSignIn
         .signIn()
         .then<GoogleSignInAuthentication>((account) {
@@ -309,112 +364,62 @@ class _LoginFormState extends State<LoginForm> {
 
           return googleToken;
         })
-        .then((googleToken) => api.postJson('oauth/token/google', bodyFields: {
+        .then((googleToken) => loginExternal(api, ObtainMethod.Google, {
               'client_id': api.clientId,
               'client_secret': api.clientSecret,
               'google_token': googleToken,
             }))
-        .then((json) => _onExternalJson(api, ObtainMethod.Google, json))
-        .then((result) => _onResult(apiAuth, result))
-        .catchError((e) => _showError(context, e))
+        .then(_onResult)
+        .catchError(_showError)
         .whenComplete(() => setState(() => _isLoggingIn = false));
   }
 
-  Future<_LoginResult> _onExternalJson(Api api, ObtainMethod om, json) async {
-    if (!mounted) return null;
-
-    if (json is! Map) {
-      return Future.error(l(context).apiUnexpectedResponse);
-    }
-    final jsonMap = json as Map;
-
-    if (jsonMap.containsKey('message')) {
-      if (jsonMap.containsKey('user_data')) {
-        final Map<String, dynamic> userData = jsonMap['user_data'];
-        if (userData.containsKey('associatable')) {
-          final associatable = _LoginAssociatable.fromJson(om, userData);
-          if (associatable != null)
-            return _LoginResult(associatable: associatable);
-        }
-
-        final token = await _tryAutoRegister(api, om, userData);
-        if (token != null) return _LoginResult(token: token);
-      }
-
-      return Future.error(jsonMap['message']);
-    }
-
-    if (jsonMap.containsKey('errors')) {
-      return Future.error((jsonMap['errors'] as List<String>).join(', '));
-    }
-
-    if (!jsonMap.containsKey('access_token')) {
-      return Future.error(l(context).loginErrorNoAccessToken('$om'));
-    }
-
-    return _LoginResult(token: OauthToken.fromJson(jsonMap)..obtainMethod = om);
-  }
-
-  _onResult(ApiAuth apiAuth, _LoginResult result) {
+  void _onResult(LoginResult result) {
     if (!mounted || result == null) return;
 
     if (result.token != null) {
+      final apiAuth = ApiAuth.of(context, listen: false);
       apiAuth.setToken(result.token);
       Navigator.pop(context, true);
+      return;
     }
 
     if (result.associatable != null)
       setState(() => _associatable = result.associatable);
+
+    if (result.tfa != null) setState(() => _tfa = result.tfa);
   }
 
-  Future<OauthToken> _tryAutoRegister(
-    Api api,
-    ObtainMethod obtainMethod,
-    Map<String, dynamic> userData,
-  ) async {
-    assert(obtainMethod != null);
-    assert(userData != null);
+  void _showError(error) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      backgroundColor: Colors.redAccent,
+      content: Text(error is ApiError ? error.message : "$error")));
 
-    if (!userData.containsKey('extra_data') ||
-        !userData.containsKey('extra_timestamp') ||
-        !userData.containsKey('user_email')) {
-      return null;
-    }
+  void _tfaTrigger(String provider) {
+    if (_isLoggingIn) return;
+    setState(() => _isLoggingIn = true);
 
-    final bodyFields = {
-      'client_id': api.clientId,
-      'client_secret': api.clientSecret,
-    };
-    for (final e in userData.entries) {
-      try {
-        bodyFields[e.key] = e.value.toString();
-      } catch (e) {
-        print(e);
-      }
-    }
-
-    if (!bodyFields.containsKey('username')) {
-      final email = userData['user_email'] as String;
-      final emailName = email.replaceAll(RegExp(r'@.+$'), '');
-      final timestamp = (DateTime.now().millisecondsSinceEpoch / 1000).floor();
-      bodyFields['username'] = "${emailName}_$timestamp";
-    }
-
-    final json = await api.postJson('users', bodyFields: bodyFields);
-
-    if (json is! Map) return Future.error(l(context).apiUnexpectedResponse);
-
-    final jsonMap = json as Map;
-    if (!jsonMap.containsKey('token'))
-      return Future.error(l(context).loginErrorNoAccessTokenAutoRegister);
-
-    return OauthToken.fromJson(jsonMap['token'])..obtainMethod = obtainMethod;
+    final api = ApiAuth.of(context, listen: false).api;
+    loginTfa(api, _tfa, provider, trigger: true)
+        .then(_onResult)
+        .catchError(_showError)
+        .whenComplete(() => setState(() => _isLoggingIn = false));
   }
 
-  void _showError(BuildContext context, error) =>
-      Scaffold.of(context).showSnackBar(SnackBar(
-          backgroundColor: Colors.redAccent,
-          content: Text(error is ApiError ? error.message : "$error")));
+  void _tfaVerify() {
+    if (_isLoggingIn) return;
+
+    final form = formKey.currentState;
+    if (form?.validate() != true) return;
+    form.save();
+
+    setState(() => _isLoggingIn = true);
+
+    final api = ApiAuth.of(context, listen: false).api;
+    loginTfa(api, _tfa, _tfa.triggeredProvider, code: tfaCode)
+        .then(_onResult)
+        .catchError(_showError)
+        .whenComplete(() => setState(() => _isLoggingIn = false));
+  }
 }
 
 class LoginScreenRoute extends MaterialPageRoute {
@@ -425,57 +430,4 @@ class LoginScreenRoute extends MaterialPageRoute {
             body: LoginForm(),
           ),
         );
-}
-
-class _LoginResult {
-  final OauthToken token;
-
-  final _LoginAssociatable associatable;
-
-  _LoginResult({
-    this.associatable,
-    this.token,
-  }) : assert((associatable == null) != (token == null));
-}
-
-class _LoginAssociatable {
-  final Map<String, String> bodyFields;
-  final ObtainMethod obtainMethod;
-  final String username;
-
-  _LoginAssociatable({
-    @required this.bodyFields,
-    @required this.obtainMethod,
-    @required this.username,
-  })  : assert(bodyFields != null),
-        assert(obtainMethod != null),
-        assert(username != null);
-
-  factory _LoginAssociatable.fromJson(
-    ObtainMethod obtainMethod,
-    Map<String, dynamic> userData,
-  ) {
-    if (!userData.containsKey('associatable') ||
-        !userData.containsKey('extra_data') ||
-        !userData.containsKey('extra_timestamp')) return null;
-
-    _LoginAssociatable result;
-    final entries = (userData['associatable'] as Map<String, dynamic>).entries;
-    for (final entry in entries) {
-      final Map<String, dynamic> value = entry.value;
-      if (!value.containsKey('username')) continue;
-
-      result = _LoginAssociatable(
-        bodyFields: Map.unmodifiable({
-          'user_id': entry.key,
-          'extra_data': userData['extra_data'],
-          'extra_timestamp': userData['extra_timestamp'].toString(),
-        }),
-        obtainMethod: obtainMethod,
-        username: value['username'],
-      );
-    }
-
-    return result;
-  }
 }

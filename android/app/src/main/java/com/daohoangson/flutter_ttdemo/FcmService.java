@@ -1,20 +1,24 @@
 package com.daohoangson.flutter_ttdemo;
 
+import android.annotation.SuppressLint;
 import android.app.NotificationManager;
 import android.service.notification.StatusBarNotification;
 import android.util.Log;
 
 import com.google.firebase.messaging.RemoteMessage;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Map;
 
-import io.flutter.plugins.firebasemessaging.FlutterFirebaseMessagingService;
+import io.flutter.plugins.firebase.messaging.FlutterFirebaseMessagingService;
 
+@SuppressLint("MissingFirebaseInstanceTokenRefresh")
 public class FcmService extends FlutterFirebaseMessagingService {
     public static final String TAG = "FcmService";
 
     @Override
-    public void onMessageReceived(RemoteMessage remoteMessage) {
+    public void onMessageReceived(@NotNull RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
 
         final Map<String, String> data = remoteMessage.getData();
