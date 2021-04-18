@@ -161,6 +161,7 @@ jobs:
         uses: subosito/flutter-action@v1
         with:
           channel: beta
+      - run: flutter config --enable-windows-desktop
       - run: flutter pub get
       - run: flutter build windows
       - run: flutter pub run msix:create
