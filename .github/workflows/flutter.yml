@@ -31,9 +31,10 @@ env:
     # Extract config from pubspec.yaml
     _appVersion=$( yq e '.version' pubspec.yaml )
     _appVersionWithoutNumber=$( echo "${_appVersion}" | sed 's/+.*$//' )
-    echo "BUILD_NAME=${_appVersionWithoutNumber}-${GITHUB_SHA:0:7}" >> $GITHUB_ENV
+    echo "BUILD_NAME=${_appVersionWithoutNumber}-${GITHUB_SHA:0:7}" | tee -a $GITHUB_ENV
+  
     _flutterVersion=$( yq e '.environment.flutter' pubspec.yaml )
-    echo "FLUTTER_VERSION=${_flutterVersion}" >> $GITHUB_ENV
+    echo "FLUTTER_VERSION=${_flutterVersion}" | tee -a $GITHUB_ENV
 
 jobs:
   build_apk:
