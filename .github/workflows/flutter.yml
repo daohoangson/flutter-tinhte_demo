@@ -36,7 +36,7 @@ env:
 jobs:
   build_apk:
     runs-on: ubuntu-latest
-    if: "!startsWith(github.ref, 'refs/heads/macos')"
+    if: ${{ false }}
     steps:
       - uses: actions/checkout@v2
       - name: Prepare repo
@@ -86,6 +86,7 @@ jobs:
           fingerprint: <!-- ${{ github.sha }} -->
 
   build_ipa:
+    if: ${{ false }}
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
@@ -147,7 +148,6 @@ jobs:
           fingerprint: <!-- ${{ github.sha }} -->
 
   build_macos:
-    if: startsWith(github.ref, 'refs/heads/macos') || github.ref == 'refs/heads/master'
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
@@ -157,8 +157,7 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v1
         with:
-          channel: dev
-          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: beta
       - run: flutter config --enable-macos-desktop
       - run: flutter pub get
       - name: Run flutter build macos
