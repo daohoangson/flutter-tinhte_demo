@@ -79,24 +79,26 @@ class MyApp extends StatelessWidget {
 
   Widget _buildApp() => ApiApp(
         child: push_notification.PushNotificationApp(
-          child: DismissKeyboard(
-            MaterialApp(
-              darkTheme: _theme(_themeDark),
-              home: home,
-              localizationsDelegates: [
-                const L10nDelegate(),
-                GlobalCupertinoLocalizations.delegate,
-                GlobalMaterialLocalizations.delegate,
-                GlobalWidgetsLocalizations.delegate,
-              ],
-              navigatorKey: push_notification.primaryNavKey,
-              navigatorObservers: [FontControlWidget.routeObserver],
-              onGenerateTitle: (context) => l(context).appTitle,
-              supportedLocales: [
-                const Locale('en', ''),
-                const Locale('vi', ''),
-              ],
-              theme: _theme(_themeLight),
+          child: uni_links.UniLinksApp(
+            child: DismissKeyboard(
+              MaterialApp(
+                darkTheme: _theme(_themeDark),
+                home: home,
+                localizationsDelegates: [
+                  const L10nDelegate(),
+                  GlobalCupertinoLocalizations.delegate,
+                  GlobalMaterialLocalizations.delegate,
+                  GlobalWidgetsLocalizations.delegate,
+                ],
+                navigatorKey: push_notification.primaryNavKey,
+                navigatorObservers: [FontControlWidget.routeObserver],
+                onGenerateTitle: (context) => l(context).appTitle,
+                supportedLocales: [
+                  const Locale('en', ''),
+                  const Locale('vi', ''),
+                ],
+                theme: _theme(_themeLight),
+              ),
             ),
           ),
         ),
