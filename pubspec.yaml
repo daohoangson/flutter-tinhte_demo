@@ -9,9 +9,9 @@ environment:
 
 dependencies:
   # firebase
-  firebase_core: 1.0.0
+  firebase_core: 1.1.0
   firebase_messaging: ^9.0.0
-  firebase_crashlytics: ^1.0.0
+  firebase_crashlytics: ^2.0.0
 
   # ours
   flutter_widget_from_html: ^0.6.0
