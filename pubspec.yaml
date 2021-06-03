@@ -45,6 +45,7 @@ dependencies:
   shared_preferences: ^0.5.7+3
   scroll_to_index: ^1.0.3
   timeago: ^2.0.26
+  uni_links: ^0.5.1
 
 dev_dependencies:
   flutter_test:

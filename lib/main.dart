@@ -6,11 +6,14 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:the_app/src/intl.dart';
 import 'package:the_app/src/screens/home.dart';
+import 'package:the_app/src/screens/notification_list.dart';
 import 'package:the_app/src/widgets/font_control.dart';
 import 'package:the_app/src/widgets/menu/dark_theme.dart';
 import 'package:the_app/src/widgets/dismiss_keyboard.dart';
 import 'package:the_app/src/api.dart';
-import 'package:the_app/src/push_notification.dart';
+import 'package:the_app/src/push_notification.dart' as push_notification;
+import 'package:the_app/src/uni_links.dart' as uni_links;
+import 'package:the_app/src/widgets/on_launch_widget.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 void main() async {
@@ -18,20 +21,38 @@ void main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  configureFcm();
+  push_notification.configureFcm();
 
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
   runZonedGuarded<Future<void>>(() async {
     final values = await Future.wait([
       DarkTheme.create(),
       FontScale.create(),
-      onLaunchMessageWidgetOr(HomeScreen()),
+      push_notification.getInitialPath(),
+      uni_links.getInitialPath(),
     ]);
+
+    String initialPath;
+    bool isPushNotificationLaunch = false;
+    if (values[2] != null) {
+      initialPath = values[2];
+      isPushNotificationLaunch = true;
+    } else if (values[3] != null) {
+      initialPath = values[3];
+    }
+    final home = HomeScreen();
 
     runApp(MyApp(
       darkTheme: values[0],
       fontScale: values[1],
-      home: values[2],
+      home: initialPath != null
+          ? OnLaunchWidget(
+              initialPath,
+              defaultWidget:
+                  isPushNotificationLaunch ? NotificationListScreen() : home,
+              fallbackWidget: home,
+            )
+          : home,
     ));
   }, FirebaseCrashlytics.instance.recordError);
 }
@@ -57,7 +78,7 @@ class MyApp extends StatelessWidget {
       );
 
   Widget _buildApp() => ApiApp(
-        child: PushNotificationApp(
+        child: push_notification.PushNotificationApp(
           child: DismissKeyboard(
             MaterialApp(
               darkTheme: _theme(_themeDark),
@@ -68,7 +89,7 @@ class MyApp extends StatelessWidget {
                 GlobalMaterialLocalizations.delegate,
                 GlobalWidgetsLocalizations.delegate,
               ],
-              navigatorKey: primaryNavKey,
+              navigatorKey: push_notification.primaryNavKey,
               navigatorObservers: [FontControlWidget.routeObserver],
               onGenerateTitle: (context) => l(context).appTitle,
               supportedLocales: [
