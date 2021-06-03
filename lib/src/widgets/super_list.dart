@@ -332,7 +332,11 @@ class SuperListState<T> extends State<SuperListView<T>> {
       widget.progressIndicator != false && !_isRefreshing && visible
           ? Padding(
               padding: const EdgeInsets.all(8.0),
-              child: const Center(child: CircularProgressIndicator()),
+              child: const SafeArea(
+                child: Center(
+                  child: CircularProgressIndicator(),
+                ),
+              ),
             )
           : SizedBox.shrink();
 
