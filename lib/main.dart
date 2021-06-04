@@ -77,32 +77,33 @@ class MyApp extends StatelessWidget {
         ],
       );
 
-  Widget _buildApp() => ApiApp(
-        child: push_notification.PushNotificationApp(
-          child: uni_links.UniLinksApp(
-            child: DismissKeyboard(
-              MaterialApp(
-                darkTheme: _theme(_themeDark),
-                home: home,
-                localizationsDelegates: [
-                  const L10nDelegate(),
-                  GlobalCupertinoLocalizations.delegate,
-                  GlobalMaterialLocalizations.delegate,
-                  GlobalWidgetsLocalizations.delegate,
-                ],
-                navigatorKey: push_notification.primaryNavKey,
-                navigatorObservers: [FontControlWidget.routeObserver],
-                onGenerateTitle: (context) => l(context).appTitle,
-                supportedLocales: [
-                  const Locale('en', ''),
-                  const Locale('vi', ''),
-                ],
-                theme: _theme(_themeLight),
-              ),
-            ),
-          ),
-        ),
-      );
+  Widget _buildApp() {
+    Widget app = MaterialApp(
+      darkTheme: _theme(_themeDark),
+      home: home,
+      localizationsDelegates: [
+        const L10nDelegate(),
+        GlobalCupertinoLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      navigatorKey: push_notification.primaryNavKey,
+      navigatorObservers: [FontControlWidget.routeObserver],
+      onGenerateTitle: (context) => l(context).appTitle,
+      supportedLocales: [
+        const Locale('en', ''),
+        const Locale('vi', ''),
+      ],
+      theme: _theme(_themeLight),
+    );
+
+    app = DismissKeyboard(app);
+    app = uni_links.UniLinksApp(child: app);
+    app = push_notification.PushNotificationApp(child: app);
+    app = ApiApp(child: app);
+
+    return app;
+  }
 
   ThemeData _theme(ThemeData fallback()) {
     switch (darkTheme.value) {
