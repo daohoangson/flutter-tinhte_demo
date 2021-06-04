@@ -69,8 +69,6 @@ PODS:
     - GoogleUtilities/Reachability (~> 7.0)
     - GoogleUtilities/UserDefaults (~> 7.0)
   - Flutter (1.0.0)
-  - flutter_custom_tabs (0.0.1):
-    - Flutter
   - flutter_facebook_login (0.0.1):
     - FBSDKCoreKit (~> 5.5)
     - FBSDKLoginKit (~> 5.5)
@@ -146,7 +144,6 @@ DEPENDENCIES:
   - firebase_crashlytics (from `.symlinks/plugins/firebase_crashlytics/ios`)
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
   - Flutter (from `Flutter`)
-  - flutter_custom_tabs (from `.symlinks/plugins/flutter_custom_tabs/ios`)
   - flutter_facebook_login (from `.symlinks/plugins/flutter_facebook_login/ios`)
   - google_sign_in (from `.symlinks/plugins/google_sign_in/ios`)
   - image_picker (from `.symlinks/plugins/image_picker/ios`)
@@ -193,8 +190,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/firebase_messaging/ios"
   Flutter:
     :path: Flutter
-  flutter_custom_tabs:
-    :path: ".symlinks/plugins/flutter_custom_tabs/ios"
   flutter_facebook_login:
     :path: ".symlinks/plugins/flutter_facebook_login/ios"
   google_sign_in:
@@ -238,7 +233,6 @@ SPEC CHECKSUMS:
   FirebaseInstanceID: ad5135045a498d7775903efd39762d2cdfa1be27
   FirebaseMessaging: 163435fb6db065e3b6228f1e577b10ed2cc506d2
   Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
-  flutter_custom_tabs: 9f7596dc1593f2e0d0562ce888dde6447751e97c
   flutter_facebook_login: cfb5659f686b1c575ef205c6b6fd20db9679d3c4
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   google_sign_in: 6bd214b9c154f881422f5fe27b66aaa7bbd580cc

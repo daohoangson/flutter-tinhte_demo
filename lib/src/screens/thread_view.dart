@@ -84,7 +84,7 @@ class _ThreadViewState extends State<ThreadViewScreen> {
               launchLink(
                 context,
                 thread.links?.permalink,
-                shouldParsePath: false,
+                forceWebView: true,
               );
               break;
             case _kPopupActionShare:
