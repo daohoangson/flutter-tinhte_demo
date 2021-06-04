@@ -206,7 +206,7 @@ class TinhteWidgetFactory extends WidgetFactory {
         trimMarginVertical: trimMarginVertical);
 
     if (trimMarginVertical) {
-      built.wrapWith((_, child) {
+      built?.wrapWith((_, child) {
         final last = _lastOf(child);
 
         return Padding(
