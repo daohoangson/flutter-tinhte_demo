@@ -33,10 +33,10 @@ void main() async {
     ]);
 
     String initialPath;
-    Widget defaultWidget;
+    bool isPushNotificationLaunch = false;
     if (values[2] != null) {
       initialPath = values[2];
-      defaultWidget = NotificationListScreen();
+      isPushNotificationLaunch = true;
     } else if (values[3] != null) {
       initialPath = values[3];
     }
@@ -48,7 +48,8 @@ void main() async {
       home: initialPath != null
           ? OnLaunchWidget(
               initialPath,
-              defaultWidget: defaultWidget,
+              defaultWidget:
+                  isPushNotificationLaunch ? NotificationListScreen() : home,
               fallbackWidget: home,
             )
           : home,
