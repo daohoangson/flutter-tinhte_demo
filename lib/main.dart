@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:the_app/src/intl.dart';
+import 'package:the_app/src/link.dart';
 import 'package:the_app/src/screens/home.dart';
+import 'package:the_app/src/screens/initial_path.dart';
 import 'package:the_app/src/screens/notification_list.dart';
 import 'package:the_app/src/widgets/font_control.dart';
 import 'package:the_app/src/widgets/menu/dark_theme.dart';
@@ -13,7 +15,6 @@ import 'package:the_app/src/widgets/dismiss_keyboard.dart';
 import 'package:the_app/src/api.dart';
 import 'package:the_app/src/push_notification.dart' as push_notification;
 import 'package:the_app/src/uni_links.dart' as uni_links;
-import 'package:the_app/src/widgets/on_launch_widget.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 void main() async {
@@ -29,30 +30,30 @@ void main() async {
       DarkTheme.create(),
       FontScale.create(),
       push_notification.getInitialPath(),
-      uni_links.getInitialPath(),
+      uni_links.getInitialLink(),
     ]);
 
     String initialPath;
-    bool isPushNotificationLaunch = false;
+    Widget defaultWidget;
+    String fallbackLink;
     if (values[2] != null) {
       initialPath = values[2];
-      isPushNotificationLaunch = true;
+      defaultWidget = NotificationListScreen();
     } else if (values[3] != null) {
-      initialPath = values[3];
+      initialPath = buildToolsParseLinkPath(values[3]);
+      fallbackLink = values[3];
     }
-    final home = HomeScreen();
 
     runApp(MyApp(
       darkTheme: values[0],
       fontScale: values[1],
       home: initialPath != null
-          ? OnLaunchWidget(
+          ? InitialPathScreen(
               initialPath,
-              defaultWidget:
-                  isPushNotificationLaunch ? NotificationListScreen() : home,
-              fallbackWidget: home,
+              defaultWidget: defaultWidget,
+              fallbackLink: fallbackLink,
             )
-          : home,
+          : HomeScreen(),
     ));
   }, FirebaseCrashlytics.instance.recordError);
 }

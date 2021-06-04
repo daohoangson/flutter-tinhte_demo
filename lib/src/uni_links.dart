@@ -5,15 +5,13 @@ import 'package:the_app/src/link.dart';
 import 'package:the_app/src/push_notification.dart';
 import 'package:uni_links/uni_links.dart' as lib;
 
-Future<String> getInitialPath() async {
+Future<String> getInitialLink() async {
   try {
     final initialLink = await lib.getInitialLink();
     if (initialLink == null) return null;
 
-    final path = buildToolsParseLinkPath(initialLink);
-    debugPrint('uni_links getInitialPath() -> $path');
-
-    return path;
+    debugPrint('uni_links getInitialLink() -> $initialLink');
+    return initialLink;
   } catch (e) {
     print(e);
   }
