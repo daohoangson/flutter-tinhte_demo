@@ -10,7 +10,6 @@ import 'package:the_app/src/widgets/posts.dart';
 import 'package:the_app/src/intl.dart';
 import 'package:the_app/src/link.dart';
 import 'package:the_app/src/widgets/thread/thread_bookmark.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 const _kPopupActionOpenInBrowser = 'openInBrowser';
 const _kPopupActionShare = 'share';
@@ -82,7 +81,7 @@ class _ThreadViewState extends State<ThreadViewScreen> {
         onSelected: (value) {
           switch (value) {
             case _kPopupActionOpenInBrowser:
-              launch(thread.links?.permalink);
+              launchLink(context, thread.links?.permalink);
               break;
             case _kPopupActionShare:
               Share.share(thread.links?.permalink);
