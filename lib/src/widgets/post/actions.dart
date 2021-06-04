@@ -105,7 +105,7 @@ class _PostActionsWidgetState extends State<_PostActionsWidget> {
             if (reason != null) _deletePost(ap, reason);
             break;
           case _kPopupActionOpenInBrowser:
-            launchLink(context, post.links?.permalink);
+            launchLink(context, post.links?.permalink, shouldParsePath: false);
             break;
           case _kPopupActionReport:
             final message = await showDialog(

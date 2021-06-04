@@ -81,7 +81,11 @@ class _ThreadViewState extends State<ThreadViewScreen> {
         onSelected: (value) {
           switch (value) {
             case _kPopupActionOpenInBrowser:
-              launchLink(context, thread.links?.permalink);
+              launchLink(
+                context,
+                thread.links?.permalink,
+                shouldParsePath: false,
+              );
               break;
             case _kPopupActionShare:
               Share.share(thread.links?.permalink);

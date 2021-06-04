@@ -18,15 +18,21 @@ import 'package:url_launcher/url_launcher.dart';
 String buildToolsParseLinkPath(String link) =>
     "tools/parse-link?link=${Uri.encodeQueryComponent(link)}";
 
-void launchLink(BuildContext context, String link) async {
+void launchLink(
+  BuildContext context,
+  String link, {
+  bool shouldParsePath = true,
+}) async {
   // automatically cancel launching for CHR links
   // TODO: reconsider when https://github.com/daohoangson/flutter_widget_from_html/pull/116 is merged
   if (link.contains('misc/api-chr')) return;
 
   if (link.startsWith(config.siteRoot)) {
     final path = buildToolsParseLinkPath(link);
-    final parsed = await parsePath(path, context: context);
-    if (parsed) return;
+    if (shouldParsePath) {
+      final parsed = await parsePath(path, context: context);
+      if (parsed) return;
+    }
 
     final apiAuth = ApiAuth.of(context, listen: false);
     if (apiAuth.hasToken) {
