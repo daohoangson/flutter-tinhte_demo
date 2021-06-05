@@ -61,7 +61,7 @@ class ThreadsWidget extends StatelessWidget {
 
       final threadWithForum =
           (thread.forum == null && thread.forumId == forum?.forumId)
-              ? thread.copyWith(forum: forum)
+              ? thread.copyWith(node: forum)
               : thread;
 
       fc.items.add(threadWithForum);

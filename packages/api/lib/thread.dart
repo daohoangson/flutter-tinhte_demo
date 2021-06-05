@@ -78,7 +78,7 @@ class Thread with _$Thread {
     int? threadUpdateDate,
     int? threadViewCount,
     bool? userIsIgnored,
-    @JsonKey(fromJson: _forumFromJson) Forum? forum,
+    @JsonKey(fromJson: _forumFromJson, name: 'forum') Node? node,
     ThreadLinks? links,
     ThreadPermissions? permissions,
     ThreadImage? threadImage,
@@ -88,6 +88,13 @@ class Thread with _$Thread {
   }) = _Thread;
 
   factory Thread.fromJson(Map<String, dynamic> json) => _$ThreadFromJson(json);
+
+  const Thread._();
+
+  Forum? get forum {
+    final forum = node;
+    return forum is Forum ? forum : null;
+  }
 }
 
 @freezed
@@ -164,11 +171,12 @@ Map<String, String>? _threadTagsFromJson(json) {
 
 Forum? _forumFromJson(json) {
   if (json is Map) {
-    return Node.fromJson({
+    final node = Node.fromJson({
       ...json,
       'navigation_id': json['forum_id'],
       'navigation_type': 'forum',
-    }) as Forum;
+    });
+    if (node is Forum) return node;
   }
 
   return null;

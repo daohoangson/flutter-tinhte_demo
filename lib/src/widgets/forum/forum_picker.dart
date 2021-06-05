@@ -37,24 +37,28 @@ class _ForumPickerBody extends StatelessWidget {
   Widget _buildRow(BuildContext context, Node node) {
     Widget built = ListTile(
       title: Text(
-        node.maybeMap(
+        node.map(
           (node) => '#${node.navigationId}',
           category: (_) => _.categoryTitle,
           forum: (_) => _.forumTitle,
+          linkforum: (_) => _.linkTitle,
         ),
         style: node.maybeMap(
-          (node) => null,
+          (_) => null,
           forum: (_) => TextStyle(color: Theme.of(context).disabledColor),
+          orElse: () => null,
         ),
       ),
       subtitle: node.maybeMap(
-        (node) => null,
+        (_) => null,
         category: (_) => _buildSubtitle(_.categoryDescription),
         forum: (_) => _buildSubtitle(_.forumDescription),
+        orElse: () => null,
       ),
       onTap: node.maybeMap(
-        (node) => null,
+        (_) => null,
         forum: (_) => () => Navigator.pop(context, _),
+        orElse: () => null,
       ),
     );
 
