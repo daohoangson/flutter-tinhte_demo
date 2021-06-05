@@ -7,8 +7,9 @@ int tokenExpireAt(OauthToken token) {
   final internal = token as _InternalOauthToken;
   final millisecondsSinceEpoch = internal.millisecondsSinceEpoch;
   final expiresInSeconds = internal.expiresIn;
-  if (millisecondsSinceEpoch == null || expiresInSeconds == null)
+  if (millisecondsSinceEpoch == null || expiresInSeconds == null) {
     return DateTime.now().millisecondsSinceEpoch;
+  }
 
   return millisecondsSinceEpoch + expiresInSeconds * 1000;
 }
@@ -54,7 +55,7 @@ abstract class OauthToken {
       userId: userId,
       expiresIn: expiresIn,
       millisecondsSinceEpoch: millisecondsSinceEpoch,
-      obtainMethod: ObtainMethod._Storage,
+      obtainMethod: ObtainMethod._storage,
     );
   }
 }
@@ -76,9 +77,9 @@ class _InternalOauthToken with _$_InternalOauthToken implements OauthToken {
 }
 
 enum ObtainMethod {
-  UsernamePassword,
-  Apple,
-  Facebook,
-  Google,
-  _Storage,
+  usernamePassword,
+  apple,
+  facebook,
+  google,
+  _storage,
 }

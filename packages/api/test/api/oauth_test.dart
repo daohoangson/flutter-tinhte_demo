@@ -11,7 +11,7 @@ void main() {
     const email = 'api-tester@xfrocks.com';
     const password = '@pi-T3st3r';
     const userId = 2394;
-    setUp(() => api = new Api(apiRoot, clientId, clientSecret));
+    setUp(() => api = Api(apiRoot, clientId, clientSecret));
     tearDown(() => api.close());
 
     group('grant_type=password', () {
@@ -30,7 +30,8 @@ void main() {
       });
 
       test('fails with wrong password', () {
-        expect(login(api, username, 'xxx'), throwsA(TypeMatcher<ApiError>()));
+        expect(login(api, username, 'xxx'),
+            throwsA(const TypeMatcher<ApiError>()));
       });
     });
 

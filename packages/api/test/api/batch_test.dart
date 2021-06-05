@@ -11,7 +11,7 @@ Future<Post> _getPostById(Api api, int postId) async {
 void main() {
   group('batch', () {
     late Api api;
-    setUp(() => api = new Api('https://xfrocks.com/api/index.php', '', ''));
+    setUp(() => api = Api('https://xfrocks.com/api/index.php', '', ''));
     tearDown(() => api.close());
 
     test('does nothing if no fetches', () async {

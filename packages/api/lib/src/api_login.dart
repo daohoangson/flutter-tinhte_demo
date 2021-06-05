@@ -14,11 +14,12 @@ Future<LoginResult> _postOauthToken(
       return Future.error(ApiErrorUnexpectedResponse(json));
     }
 
-    if (!json.containsKey('access_token'))
+    if (!json.containsKey('access_token')) {
       return Future.error(ApiErrorUnexpectedResponse(json));
+    }
 
     return LoginResult.token(OauthToken.fromJson(json, obtainMethod: om));
-  } on ApiError catch (e) {
+  } on ApiError {
     final headers = api.latestResponse?.headers ?? const {};
     final providersString = headers[_kHeaderTfaProviders];
     if (providersString != null) {
@@ -26,15 +27,17 @@ Future<LoginResult> _postOauthToken(
           .split(',')
           .map((e) => e.trim())
           .where((e) => e.isNotEmpty);
-      if (providers.isNotEmpty)
+      if (providers.isNotEmpty) {
         return LoginResult.tfa(LoginTfa(bodyFields, om, path, providers));
+      }
     }
-    throw e;
+
+    rethrow;
   }
 }
 
 Future<LoginResult> login(Api api, String username, String password) =>
-    _postOauthToken(api, ObtainMethod.UsernamePassword, 'oauth/token', {
+    _postOauthToken(api, ObtainMethod.usernamePassword, 'oauth/token', {
       "grant_type": "password",
       "client_id": api.clientId,
       "client_secret": api.clientSecret,
@@ -81,8 +84,9 @@ Future<LoginResult> loginExternal(
     return Future.error(ApiErrorSingle(json['message']));
   }
 
-  if (!json.containsKey('access_token'))
+  if (!json.containsKey('access_token')) {
     return Future.error(ApiErrorUnexpectedResponse(json));
+  }
 
   return LoginResult.token(OauthToken.fromJson(json, obtainMethod: om));
 }
@@ -105,12 +109,12 @@ Future<LoginResult> loginTfa(
             if (trigger == true) 'tfa_trigger': '1',
             if (code != null) 'code': code,
           }));
-  } on ApiErrorUnexpectedResponse catch (e) {
+  } on ApiErrorUnexpectedResponse {
     if (trigger == true && api.latestResponse?.statusCode == 200) {
       return LoginResult.tfa(tfa.copyWith(triggeredProvider: provider));
     }
 
-    throw e;
+    rethrow;
   }
 }
 

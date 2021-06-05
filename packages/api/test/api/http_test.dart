@@ -4,11 +4,11 @@ import 'package:the_api/api.dart';
 void main() {
   group('http', () {
     late Api api;
-    setUp(() => api = new Api('', '', ''));
+    setUp(() => api = Api('', '', ''));
     tearDown(() => api.close());
 
     test('deletes ok', () async {
-      final url = 'https://httpbin.org/delete';
+      const url = 'https://httpbin.org/delete';
       final json = await api.deleteJson(url);
       expect(json['url'], equals(url));
     });

@@ -43,7 +43,7 @@ class Node with _$Node {
     String? forumDescription,
     bool? forumIsFollowed,
     int? forumPostCount,
-    @Default(const []) List<ThreadPrefix> forumPrefixes,
+    @Default([]) List<ThreadPrefix> forumPrefixes,
     int? forumThreadCount,
     String? forumTitle,
     ForumLinks? links,

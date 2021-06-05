@@ -14,7 +14,7 @@ class Poll with _$Poll {
     bool? pollIsVoted,
     PollLinks? links,
     PollPermissions? permissions,
-    @Default(const []) List<PollResponse> responses,
+    @Default([]) List<PollResponse> responses,
   }) = _Poll;
 
   factory Poll.fromJson(Map<String, dynamic> json) => _$PollFromJson(json);
@@ -48,7 +48,7 @@ class PollResponse with _$PollResponse {
     String? responseAnswer,
     bool? responseIsVoted,
     int? responseVoteCount,
-    @Default(const []) List<PollVoter> voters,
+    @Default([]) List<PollVoter> voters,
   }) = _PollResponse;
 
   factory PollResponse.fromJson(Map<String, dynamic> json) =>

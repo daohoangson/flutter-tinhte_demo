@@ -26,7 +26,7 @@ void logout(BuildContext context) {
 
   apiData.setToken(null);
 
-  if (token?.obtainMethod == ObtainMethod.Google) {
+  if (token?.obtainMethod == ObtainMethod.google) {
     _googleSignIn.signOut();
   }
 }
@@ -301,7 +301,7 @@ class _LoginFormState extends State<LoginForm> {
 
           return Future.error(result.status.toString());
         })
-        .then((appleIdCredential) => loginExternal(api, ObtainMethod.Apple, {
+        .then((appleIdCredential) => loginExternal(api, ObtainMethod.apple, {
               'client_id': api.clientId,
               'client_secret': api.clientSecret,
               'apple_token':
@@ -332,7 +332,7 @@ class _LoginFormState extends State<LoginForm> {
 
           return Future.error(result.status.toString());
         })
-        .then((facebookToken) => loginExternal(api, ObtainMethod.Facebook, {
+        .then((facebookToken) => loginExternal(api, ObtainMethod.facebook, {
               'client_id': api.clientId,
               'client_secret': api.clientSecret,
               'facebook_token': facebookToken,
@@ -365,7 +365,7 @@ class _LoginFormState extends State<LoginForm> {
 
           return googleToken;
         })
-        .then((googleToken) => loginExternal(api, ObtainMethod.Google, {
+        .then((googleToken) => loginExternal(api, ObtainMethod.google, {
               'client_id': api.clientId,
               'client_secret': api.clientSecret,
               'google_token': googleToken,

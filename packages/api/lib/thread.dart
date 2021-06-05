@@ -83,7 +83,7 @@ class Thread with _$Thread {
     ThreadPermissions? permissions,
     ThreadImage? threadImage,
     ThreadImage? threadPrimaryImage,
-    @Default(const []) List<ThreadPrefix> threadPrefixes,
+    @Default([]) List<ThreadPrefix> threadPrefixes,
     ThreadImage? threadThumbnail,
   }) = _Thread;
 

@@ -40,7 +40,7 @@ class Api {
 
     final safePath = path.replaceFirst('?', '&');
 
-    return "${this._apiRoot}?$safePath";
+    return "$_apiRoot?$safePath";
   }
 
   String buildOneTimeToken({
@@ -122,7 +122,7 @@ class Api {
       {Map<String, String>? bodyFields,
       String? bodyJson,
       Map<String, File>? fileFields,
-      parseJson: false}) {
+      parseJson = false}) {
     if (inBatch && bodyJson == null && fileFields == null && parseJson) {
       return _batch!.newJob(method, path, params: bodyFields);
     }
@@ -168,7 +168,7 @@ class ApiErrorSingle extends ApiError {
 }
 
 class ApiErrorUnexpectedResponse extends ApiError {
-  final body;
+  final dynamic body;
 
   ApiErrorUnexpectedResponse(this.body);
 
