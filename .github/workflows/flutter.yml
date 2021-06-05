@@ -47,6 +47,8 @@ jobs:
         uses: subosito/flutter-action@v1
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
+      - name: Prepare packages/api
+        run: ./packages/api/tool/build.sh
       - run: flutter pub get
       - run: flutter build apk "--build-name=${BUILD_NAME}" --split-per-abi
 
@@ -97,6 +99,8 @@ jobs:
         uses: subosito/flutter-action@v1
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
+      - name: Prepare packages/api
+        run: ./packages/api/tool/build.sh
       - run: flutter pub get
       - name: Run flutter build ios
         run: |
