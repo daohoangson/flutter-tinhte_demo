@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:the_app/src/link.dart';
 import 'package:the_api/navigation.dart' as navigation;
 import 'package:the_app/src/screens/forum_view.dart';
 import 'package:the_app/src/screens/node_view.dart';
@@ -56,7 +56,7 @@ class NavigationWidget extends StatelessWidget {
             case navigation.NavigationTypeLinkForum:
               final linkForum = e.node as navigation.LinkForum;
               final url = linkForum.links.target;
-              canLaunch(url).then((ok) => ok ? launch(url) : null);
+              launchLink(context, url);
               break;
             default:
               Navigator.pushNamed(context, e.navigationType);

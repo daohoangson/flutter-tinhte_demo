@@ -26,7 +26,6 @@ dependencies:
     sdk: flutter
   flutter_auth_buttons: ^0.8.0
   flutter_cache_manager: any
-  flutter_custom_tabs: ^0.6.0
   flutter_facebook_login: ^3.0.0
   flutter_localizations:
     sdk: flutter
@@ -45,6 +44,7 @@ dependencies:
   shared_preferences: ^2.0.0
   scroll_to_index: ^1.0.3
   timeago: ^2.0.26
+  uni_links: ^0.5.1
 
 dev_dependencies:
   flutter_test:
