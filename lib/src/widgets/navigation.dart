@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:the_api/node.dart';
+import 'package:the_app/src/link.dart';
 import 'package:the_app/src/screens/forum_view.dart';
 import 'package:the_app/src/screens/node_view.dart';
 import 'package:the_app/src/widgets/super_list.dart';
@@ -51,12 +51,7 @@ class NavigationWidget extends StatelessWidget {
         ),
         linkforum: (link) => ListTile(
           title: Text(link.linkTitle),
-          onTap: () async {
-            final url = link.links.target;
-            if (await canLaunch(url)) {
-              launch(url);
-            }
-          },
+          onTap: () => launchLink(context, link.links.target),
         ),
       );
 
