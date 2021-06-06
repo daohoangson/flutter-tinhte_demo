@@ -144,7 +144,7 @@ Widget _parseTag(Map json) {
 
   if (json.containsKey('feature_page')) {
     final fp = FeaturePage.fromJson(json['feature_page']);
-    if (getFeaturePageId(fp) != null) return FpViewScreen(fp);
+    if (fp.id != null) return FpViewScreen(fp);
   }
 
   return TagViewScreen(tag, initialJson: json);

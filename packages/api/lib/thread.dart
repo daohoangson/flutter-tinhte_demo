@@ -2,6 +2,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 import 'node.dart';
 import 'post.dart';
+import 'thread_prefix.dart';
 
 part 'thread.freezed.dart';
 part 'thread.g.dart';
@@ -147,17 +148,6 @@ class ThreadPermissions with _$ThreadPermissions {
 
   factory ThreadPermissions.fromJson(Map<String, dynamic> json) =>
       _$ThreadPermissionsFromJson(json);
-}
-
-@freezed
-class ThreadPrefix with _$ThreadPrefix {
-  const factory ThreadPrefix(
-    int prefixId,
-    String prefixTitle,
-  ) = _ThreadPrefix;
-
-  factory ThreadPrefix.fromJson(Map<String, dynamic> json) =>
-      _$ThreadPrefixFromJson(json);
 }
 
 Map<String, String>? _threadTagsFromJson(json) {

@@ -255,7 +255,7 @@ class _ApiAppState extends State<ApiApp> {
 
   void _dequeue() {
     if (!_tokenHasBeenSet) return;
-    if (_token == null || tokenHasExpired(_token)) return _refreshToken();
+    if (_token?.hasExpired == true) return _refreshToken();
 
     final __callbacks = _queue;
     _queue = null;
@@ -307,13 +307,13 @@ class _ApiAppState extends State<ApiApp> {
 
       prefs.setString(kPrefKeyTokenAccessToken, value?.accessToken);
       prefs.setString(kPrefKeyTokenClientId, api.clientId);
-      final expiresAt = value != null ? tokenExpireAt(value) : null;
-      prefs.setInt(kPrefKeyTokenExpiresAtMillisecondsSinceEpoch, expiresAt);
+      prefs.setInt(
+          kPrefKeyTokenExpiresAtMillisecondsSinceEpoch, value?.expiresAt);
       prefs.setString(kPrefKeyTokenRefreshToken, value?.refreshToken);
       prefs.setString(kPrefKeyTokenScope, value?.scope);
       prefs.setInt(kPrefKeyTokenUserId, value?.userId);
       debugPrint("Saved token ${value?.accessToken}, "
-          "expires at $expiresAt, "
+          "expires at ${value?.expiresAt}, "
           "refresh token ${value?.refreshToken}");
     }
 

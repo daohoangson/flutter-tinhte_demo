@@ -3,20 +3,6 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'oauth_token.freezed.dart';
 part 'oauth_token.g.dart';
 
-int tokenExpireAt(OauthToken token) {
-  final internal = token as _InternalOauthToken;
-  final millisecondsSinceEpoch = internal.millisecondsSinceEpoch;
-  final expiresInSeconds = internal.expiresIn;
-  if (millisecondsSinceEpoch == null || expiresInSeconds == null) {
-    return DateTime.now().millisecondsSinceEpoch;
-  }
-
-  return millisecondsSinceEpoch + expiresInSeconds * 1000;
-}
-
-bool tokenHasExpired(OauthToken token) =>
-    tokenExpireAt(token) < DateTime.now().millisecondsSinceEpoch;
-
 abstract class OauthToken {
   String? get accessToken;
   String? get refreshToken;
@@ -58,6 +44,21 @@ abstract class OauthToken {
       obtainMethod: ObtainMethod._storage,
     );
   }
+}
+
+extension OauthTokenGetters on OauthToken {
+  int get expiresAt {
+    final internal = this as _InternalOauthToken;
+    final millisecondsSinceEpoch = internal.millisecondsSinceEpoch;
+    final expiresInSeconds = internal.expiresIn;
+    if (millisecondsSinceEpoch == null || expiresInSeconds == null) {
+      return DateTime.now().millisecondsSinceEpoch;
+    }
+
+    return millisecondsSinceEpoch + expiresInSeconds * 1000;
+  }
+
+  bool get hasExpired => expiresAt < DateTime.now().millisecondsSinceEpoch;
 }
 
 @freezed

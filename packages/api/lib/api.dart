@@ -26,7 +26,6 @@ class Api {
   String get apiRoot => _apiRoot;
   String get clientId => _clientId;
   String get clientSecret => _clientSecret;
-  bool get inBatch => _batch != null;
   Response? get latestResponse => _latestResponse;
   int get requestCount => _requestCount;
 
@@ -59,17 +58,18 @@ class Api {
   }
 
   BatchController newBatch({String path = 'batch'}) {
-    if (!inBatch) {
-      final batch = Batch(path: path);
-      _batch = batch;
-      return BatchController(batch, () => _fetchBatch(batch));
+    final batch = _batch;
+    if (batch == null) {
+      final newBatch = Batch(path: path);
+      _batch = newBatch;
+      return BatchController(newBatch, () => _fetchBatch(newBatch));
     }
 
     return BatchController(
-        _batch!,
-        () => _batch!.future.then(
-              (j) => Future.value(true),
-              onError: (e) => Future.value(false),
+        batch,
+        () => batch.future.then(
+              (_) => Future.value(true),
+              onError: (_) => Future.value(false),
             ));
   }
 
@@ -123,8 +123,9 @@ class Api {
       String? bodyJson,
       Map<String, File>? fileFields,
       parseJson = false}) {
-    if (inBatch && bodyJson == null && fileFields == null && parseJson) {
-      return _batch!.newJob(method, path, params: bodyFields);
+    final batch = _batch;
+    if (batch != null && bodyJson == null && fileFields == null && parseJson) {
+      return batch.newJob(method, path, params: bodyFields);
     }
 
     return _sendRequest(httpClient, method, buildUrl(path),

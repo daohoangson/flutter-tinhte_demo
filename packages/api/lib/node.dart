@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'thread.dart';
+import 'thread_prefix.dart';
 
 part 'node.freezed.dart';
 part 'node.g.dart';

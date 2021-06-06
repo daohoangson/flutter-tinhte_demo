@@ -5,13 +5,6 @@ part 'feature_page.g.dart';
 
 final _kIdRegExp = RegExp(r'/([\w-]+)/$');
 
-String? getFeaturePageId(FeaturePage page) {
-// TODO: use data from api when it's available
-  final match = _kIdRegExp.firstMatch(page.links?.permalink ?? '');
-  if (match == null) return null;
-  return match.group(1);
-}
-
 @freezed
 class FeaturePage with _$FeaturePage {
   @JsonSerializable(fieldRename: FieldRename.none)
@@ -27,6 +20,15 @@ class FeaturePage with _$FeaturePage {
 
   factory FeaturePage.fromJson(Map<String, dynamic> json) =>
       _$FeaturePageFromJson(json);
+
+  const FeaturePage._();
+
+  String? get id {
+    // TODO: use data from api when it's available
+    final match = _kIdRegExp.firstMatch(links?.permalink ?? '');
+    if (match == null) return null;
+    return match.group(1);
+  }
 }
 
 @freezed
