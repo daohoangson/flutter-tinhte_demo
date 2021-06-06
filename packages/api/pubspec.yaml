@@ -5,6 +5,8 @@ environment:
 
 dependencies:
   async:
+  flutter:
+    sdk: flutter
   freezed_annotation:
   http:
   json_annotation:

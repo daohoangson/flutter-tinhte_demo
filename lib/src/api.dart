@@ -191,11 +191,12 @@ class ApiApp extends StatefulWidget {
 }
 
 class _ApiAppState extends State<ApiApp> {
+  final visitor = User.zero();
+
   var _isRefreshingToken = false;
   List<VoidCallback> _queue;
   OauthToken _token;
   var _tokenHasBeenSet = false;
-  var _user = User(0);
 
   Api get api => widget.api;
 
@@ -234,7 +235,7 @@ class _ApiAppState extends State<ApiApp> {
   Widget build(BuildContext context) => MultiProvider(
         providers: [
           Provider<ApiAuth>.value(value: ApiAuth(this)),
-          Provider<User>.value(value: _user),
+          ChangeNotifierProvider<User>.value(value: visitor),
           Provider<_ApiAppState>.value(value: this),
         ],
         child: widget.child,
@@ -280,8 +281,7 @@ class _ApiAppState extends State<ApiApp> {
         try {
           final json = await api.getJson(_appendOauthToken('users/me'));
           if (json is Map && json.containsKey('user')) {
-            final user = User.fromJson(json['user']);
-            setState(() => _user = user);
+            visitor.update(json['user']);
           }
         } on ApiError catch (ae) {
           debugPrint("_fetchUser encountered an api error: ${ae.message}");
@@ -325,8 +325,8 @@ class _ApiAppState extends State<ApiApp> {
       return;
     }
 
-    if (_user.userId != 0) {
-      setState(() => _user = User(0));
+    if (visitor.userId != 0) {
+      visitor.reset();
     }
 
     _dequeue();

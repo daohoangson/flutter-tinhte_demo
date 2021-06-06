@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:the_api/followable.dart';
 import 'package:the_api/user.dart';
 import 'package:the_app/src/api.dart';
 import 'package:the_app/src/intl.dart';
@@ -22,11 +23,13 @@ class _FollowState extends State<FollowButton> {
 
   Followable get f => widget.followable;
 
+  bool get hasLink => f.followersLink?.isNotEmpty == true;
+
   @override
   void initState() {
     super.initState();
 
-    if (f.isFollowed != true || !f.hasFollowersLink()) return;
+    if (f.isFollowed != true || !hasLink) return;
     apiGet(
       ApiCaller.stateful(this),
       f.followersLink,
@@ -58,14 +61,14 @@ class _FollowState extends State<FollowButton> {
   }
 
   @override
-  Widget build(BuildContext context) => !f.hasFollowersLink()
+  Widget build(BuildContext context) => !hasLink
       ? const SizedBox.shrink()
       : f.isFollowed != true
           ? _buildButtonFollow()
           : _buildButtonFollowing();
 
   Widget _buildButtonFollow() => TextButton(
-        child: Text(f.labelFollow(context)),
+        child: Text(l(context).follow),
         onPressed: _isRequesting ? null : _follow,
       );
 
@@ -73,7 +76,7 @@ class _FollowState extends State<FollowButton> {
         children: <Widget>[
           Expanded(
             child: ElevatedButton(
-              child: Text(f.labelFollowing(context)),
+              child: Text(l(context).followFollowing),
               onPressed: _isRequesting ? null : _unfollow,
             ),
           ),
@@ -91,7 +94,7 @@ class _FollowState extends State<FollowButton> {
     final email = options?.email == true;
 
     prepareForApiAction(context, () {
-      if (_isRequesting || !f.hasFollowersLink()) return;
+      if (_isRequesting) return;
       setState(() => _isRequesting = true);
 
       apiPost(
@@ -116,7 +119,7 @@ class _FollowState extends State<FollowButton> {
     final confirmed = await showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        content: Text(f.labelUnfollowXQuestion(context)),
+        content: Text(l(context).followUnfollowXQuestion(f.name)),
         actions: <Widget>[
           TextButton(
             child: Text(lm(context).cancelButtonLabel),
@@ -131,7 +134,7 @@ class _FollowState extends State<FollowButton> {
     );
     if (confirmed != true) return;
 
-    if (_isRequesting || !f.hasFollowersLink()) return;
+    if (_isRequesting) return;
     setState(() => _isRequesting = true);
 
     apiDelete(
@@ -152,35 +155,6 @@ class _FollowState extends State<FollowButton> {
     if (options == null) return;
     _follow(options);
   }
-}
-
-abstract class Followable {
-  bool get isFollowed;
-  String get followersLink;
-  String get name;
-
-  set isFollowed(bool v);
-
-  bool hasFollowersLink() => followersLink?.isNotEmpty == true;
-
-  String labelFollow(BuildContext context) => l(context).tagFollow;
-
-  String labelFollowing(BuildContext context) => l(context).tagFollowing;
-
-  String labelNotificationChannels(BuildContext context) =>
-      l(context).tagNotificationChannels;
-
-  String labelNotificationChannelAlert(BuildContext context) =>
-      l(context).tagNotificationChannelAlert;
-
-  String labelNotificationChannelEmail(BuildContext context) =>
-      l(context).tagNotificationChannelEmail;
-
-  String labelNotificationChannelExplainForX(BuildContext context) =>
-      l(context).tagNotificationChannelExplainForX(name);
-
-  String labelUnfollowXQuestion(BuildContext context) =>
-      l(context).tagUnfollowXQuestion(name);
 }
 
 class _FollowOptionsDialog extends StatefulWidget {
@@ -209,18 +183,18 @@ class _FollowOptionsState extends State<_FollowOptionsDialog> {
 
   @override
   Widget build(BuildContext context) => AlertDialog(
-        title: Text(f.labelNotificationChannels(context)),
+        title: Text(l(context).followNotificationChannels),
         content: Column(
           children: <Widget>[
-            Text(f.labelNotificationChannelExplainForX(context)),
+            Text(l(context).followNotificationChannelExplainForX(f.name)),
             CheckboxListTile(
               onChanged: (v) => setState(() => _alert = v),
-              title: Text(f.labelNotificationChannelAlert(context)),
+              title: Text(l(context).followNotificationChannelAlert),
               value: _alert,
             ),
             CheckboxListTile(
               onChanged: (v) => setState(() => _email = v),
-              title: Text(f.labelNotificationChannelEmail(context)),
+              title: Text(l(context).followNotificationChannelEmail),
               value: _email,
             ),
           ],

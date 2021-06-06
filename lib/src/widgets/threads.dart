@@ -56,15 +56,10 @@ class ThreadsWidget extends StatelessWidget {
 
     final list = json[threadsKey] as List;
     for (final j in list) {
-      final thread = Thread.fromJson(j);
+      final thread = Thread.fromJson(j, forum: forum);
       if (thread.threadId == null || thread.firstPost == null) continue;
 
-      final threadWithForum =
-          (thread.forum == null && thread.forumId == forum?.forumId)
-              ? thread.copyWith(node: forum)
-              : thread;
-
-      fc.items.add(threadWithForum);
+      fc.items.add(thread);
     }
   }
 }

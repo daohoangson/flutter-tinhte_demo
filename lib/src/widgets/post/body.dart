@@ -10,9 +10,9 @@ TextStyle getPostBodyTextStyle(BuildContext context, bool isFirstPost) {
 
 class _PostBodyWidget extends StatelessWidget {
   @override
-  Widget build(BuildContext context) => Consumer<ActionablePost>(
+  Widget build(BuildContext context) => Consumer<Post>(
         builder: (context, post, _) {
-          if (post.isDeleted)
+          if (post.postIsDeleted)
             return Padding(
               child: Text(
                 l(context).postDeleted,
@@ -24,8 +24,8 @@ class _PostBodyWidget extends StatelessWidget {
             );
 
           return DefaultTextStyle(
-            child: TinhteHtmlWidget(post.bodyHtml),
-            style: getPostBodyTextStyle(context, post.isFirst),
+            child: TinhteHtmlWidget(post.postBodyHtml),
+            style: getPostBodyTextStyle(context, post.postIsFirstPost),
           );
         },
       );

@@ -1,7 +1,15 @@
+import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'poll.freezed.dart';
 part 'poll.g.dart';
+
+abstract class PollOwner extends ChangeNotifier {
+  Poll? get poll;
+  set poll(Poll? v);
+
+  String? get pollLink;
+}
 
 @freezed
 class Poll with _$Poll {

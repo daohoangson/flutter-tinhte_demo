@@ -33,7 +33,7 @@ class FpHeader extends StatelessWidget {
             ),
             Expanded(
               flex: 2,
-              child: FollowButton(_FollowableFp(fp)),
+              child: FollowButton(fp),
             ),
           ],
         )
@@ -61,22 +61,4 @@ class FpHeader extends StatelessWidget {
               ],
             )
           : null;
-}
-
-class _FollowableFp extends Followable {
-  FeaturePage fp;
-
-  _FollowableFp(this.fp);
-
-  @override
-  bool get isFollowed => fp.isFollowed;
-
-  @override
-  String get followersLink => fp.links?.follow;
-
-  @override
-  String get name => fp.fullName;
-
-  @override
-  set isFollowed(bool v) => fp = fp.copyWith(isFollowed: v);
 }

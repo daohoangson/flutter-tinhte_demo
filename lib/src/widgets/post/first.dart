@@ -44,7 +44,7 @@ class _FirstPostWidget extends StatelessWidget {
                 )
               : _PostBodyWidget(),
           thread.threadHasPoll == true && thread.links.poll != null
-              ? PollWidget(thread.links.poll)
+              ? PollWidget(thread)
               : widget0,
           _buildTags(context, thread) ?? widget0,
           _isCustomPost || _threadImage?.displayMode == 'cover'

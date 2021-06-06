@@ -22,20 +22,11 @@ class PostsWidget extends StatefulWidget {
 class PostsState extends State<PostsWidget> {
   final _slsKey = GlobalKey<SuperListState<_PostListItem>>();
 
-  Thread _thread;
-
-  @override
-  void initState() {
-    super.initState();
-    _thread = widget.thread;
-  }
-
   @override
   Widget build(BuildContext context) => MultiProvider(
         providers: [
-          Provider<Thread>.value(value: _thread),
+          ChangeNotifierProvider<Thread>.value(value: widget.thread),
           ThreadNavigationWidget.buildProvider(),
-          PollWidget.buildProvider(),
         ],
         child: SuperListView<_PostListItem>(
           enableScrollToIndex: true,
@@ -68,9 +59,9 @@ class PostsState extends State<PostsWidget> {
 
     final post = item.post;
     if (post != null) {
-      return _buildActionablePostProvider(
-        post,
-        post.postIsFirstPost ? _FirstPostWidget() : _PostWidget(),
+      return ChangeNotifierProvider<Post>.value(
+        child: post.postIsFirstPost ? _FirstPostWidget() : _PostWidget(),
+        value: post,
       );
     }
 
@@ -205,16 +196,12 @@ class PostsState extends State<PostsWidget> {
     }
 
     if (json.containsKey('thread')) {
-      final thread = Thread.fromJson(json['thread']);
-      setState(() {
-        ThreadImageWidget.syncImages(_thread, thread);
-        _thread = thread;
+      widget.thread.update(json['thread']);
 
-        if (fc.id == FetchContextId.FetchInitial &&
-            thread.links?.postsUnread != null)
-          WidgetsBinding.instance
-              .addPostFrameCallback((_) => _showSnackBarUnread(fc.state));
-      });
+      if (fc.id == FetchContextId.FetchInitial &&
+          widget.thread.links?.postsUnread != null)
+        WidgetsBinding.instance
+            .addPostFrameCallback((_) => _showSnackBarUnread(fc.state));
     }
   }
 
@@ -225,7 +212,7 @@ class PostsState extends State<PostsWidget> {
           onPressed: () => sls.fetch(
             clearItems: true,
             fc: FetchContext<_PostListItem>(
-              path: _thread.links.postsUnread,
+              path: widget.thread.links.postsUnread,
               state: sls,
             ),
           ),

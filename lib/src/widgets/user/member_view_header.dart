@@ -24,7 +24,7 @@ class MemberViewHeader extends StatelessWidget {
             Divider(),
             Row(
               children: <Widget>[
-                Expanded(child: FollowButton(_FollowableUser(user))),
+                Expanded(child: FollowButton(user)),
                 Expanded(child: _IgnoreButton(user)),
               ],
             ),
@@ -105,30 +105,6 @@ class MemberViewHeader extends StatelessWidget {
   }
 }
 
-class _FollowableUser extends Followable {
-  User user;
-
-  _FollowableUser(this.user);
-
-  @override
-  bool get isFollowed => user.userIsFollowed;
-
-  @override
-  String get followersLink => user.links?.followers;
-
-  @override
-  String get name => user.username;
-
-  @override
-  set isFollowed(bool v) => user = user.copyWith(userIsFollowed: v);
-
-  @override
-  String labelFollow(BuildContext context) => l(context).userFollow;
-
-  @override
-  String labelFollowing(BuildContext context) => l(context).userUnfollow;
-}
-
 class _IgnoreButton extends StatefulWidget {
   final User user;
 
@@ -139,30 +115,25 @@ class _IgnoreButton extends StatefulWidget {
 }
 
 class _IgnoreButtonState extends State<_IgnoreButton> {
-  bool _isIgnored;
   var _isRequesting = false;
 
-  @override
-  void initState() {
-    super.initState();
-    _isIgnored = widget.user.userIsIgnored == true;
-  }
+  User get user => widget.user;
 
   @override
-  Widget build(BuildContext context) =>
-      widget.user.links?.ignore?.isNotEmpty == true
-          ? TextButton(
-              child: Text(
-                  _isIgnored ? l(context).userUnignore : l(context).userIgnore),
-              onPressed: widget.user.permissions?.ignore == true
-                  ? (_isRequesting
-                      ? null
-                      : _isIgnored
-                          ? _unignore
-                          : _ignore)
-                  : null,
-            )
-          : Container();
+  Widget build(BuildContext context) => user.links?.ignore?.isNotEmpty == true
+      ? TextButton(
+          child: Text(user.userIsIgnored
+              ? l(context).userUnignore
+              : l(context).userIgnore),
+          onPressed: user.permissions?.ignore == true
+              ? (_isRequesting
+                  ? null
+                  : user.userIsIgnored
+                      ? _unignore
+                      : _ignore)
+              : null,
+        )
+      : const SizedBox.shrink();
 
   void _ignore() => prepareForApiAction(context, () {
         if (_isRequesting) return;
@@ -170,8 +141,8 @@ class _IgnoreButtonState extends State<_IgnoreButton> {
 
         apiPost(
           ApiCaller.stateful(this),
-          widget.user.links.ignore,
-          onSuccess: (_) => setState(() => _isIgnored = true),
+          user.links.ignore,
+          onSuccess: (_) => setState(() => user.userIsIgnored = true),
           onComplete: () => setState(() => _isRequesting = false),
         );
       });
@@ -182,8 +153,8 @@ class _IgnoreButtonState extends State<_IgnoreButton> {
 
         apiDelete(
           ApiCaller.stateful(this),
-          widget.user.links.ignore,
-          onSuccess: (_) => setState(() => _isIgnored = false),
+          user.links.ignore,
+          onSuccess: (_) => setState(() => user.userIsIgnored = false),
           onComplete: () => setState(() => _isRequesting = false),
         );
       });

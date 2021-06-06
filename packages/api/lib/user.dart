@@ -1,12 +1,118 @@
+import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+
+import 'followable.dart';
 
 part 'user.freezed.dart';
 part 'user.g.dart';
 
+final _internalZero = _UserInternal.fromJson({'user_id': 0});
+
+class User extends ChangeNotifier implements _User, Followable {
+  _UserInternal _;
+
+  User.fromJson(Map<String, dynamic> json) : _ = _UserInternal.fromJson(json);
+
+  User.zero() : _ = _internalZero;
+
+  void reset() => _update(_internalZero);
+
+  void update(Map<String, dynamic> json) =>
+      _update(_UserInternal.fromJson(json));
+
+  void _update(_UserInternal v) {
+    if (v == _) return;
+    _ = v;
+    notifyListeners();
+  }
+
+  @Deprecated("Use setters instead of copyWith")
+  @override
+  _$UserCopyWith<_User> get copyWith => throw UnimplementedError();
+
+  @override
+  String? get followersLink => links?.followers;
+
+  @override
+  bool get isFollowed => userIsFollowed ?? false;
+
+  @override
+  set isFollowed(bool v) {
+    if (v == isFollowed) return;
+
+    _ = _.copyWith(userIsFollowed: v);
+    notifyListeners();
+  }
+
+  @override
+  UserLinks? get links => _.links;
+
+  @override
+  String get name => username ?? '#$userId';
+
+  @override
+  UserPermissions? get permissions => _.permissions;
+
+  @override
+  UserRank? get rank => _.rank;
+
+  @override
+  Map<String, dynamic> toJson() => _.toJson();
+
+  @override
+  bool? get userHasVerifiedBadge => _.userHasVerifiedBadge;
+
+  @override
+  int get userId => _.userId;
+
+  @override
+  bool? get userIsFollowed => _.userIsFollowed ?? false;
+
+  @override
+  bool get userIsIgnored => _.userIsIgnored ?? false;
+
+  set userIsIgnored(bool v) {
+    if (v == userIsIgnored) return;
+
+    _ = _.copyWith(userIsIgnored: v);
+    notifyListeners();
+  }
+
+  @override
+  bool? get userIsValid => _.userIsValid;
+
+  @override
+  bool? get userIsVerified => _.userIsVerified;
+
+  @override
+  bool? get userIsVisitor => _.userIsVisitor;
+
+  @override
+  int? get userLastSeenDate => _.userLastSeenDate;
+
+  @override
+  int? get userLikeCount => _.userLikeCount;
+
+  @override
+  int? get userMessageCount => _.userMessageCount;
+
+  @override
+  int? get userRegisterDate => _.userRegisterDate;
+
+  @override
+  String? get userTitle => _.userTitle;
+
+  @override
+  int? get userUnreadNotificationCount => _.userUnreadNotificationCount;
+
+  @override
+  String? get username => _.username;
+}
+
 @freezed
-class User with _$User {
-  const factory User(
-    int userId, {
+class _UserInternal with _$_UserInternal {
+  const factory _UserInternal(
+    int userId,
     bool? userHasVerifiedBadge,
     bool? userIsFollowed,
     bool? userIsIgnored,
@@ -23,9 +129,10 @@ class User with _$User {
     UserLinks? links,
     UserPermissions? permissions,
     UserRank? rank,
-  }) = _User;
+  ) = _User;
 
-  factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
+  factory _UserInternal.fromJson(Map<String, dynamic> json) =>
+      _$_UserInternalFromJson(json);
 }
 
 @freezed

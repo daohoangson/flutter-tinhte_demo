@@ -97,8 +97,8 @@ class ThreadWidget extends StatelessWidget {
 
   Widget _buildImage() {
     final image = config.threadWidgetShowCoverImageOnly
-        ? thread.threadImage
-        : getThreadImage(thread);
+        ? thread.threadImageOriginal
+        : thread.threadImage;
     if (config.threadWidgetShowCoverImageOnly && image?.displayMode != 'cover')
       return null;
 

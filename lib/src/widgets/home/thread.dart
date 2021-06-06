@@ -67,7 +67,7 @@ class HomeThreadWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(3),
         child: SizedBox(
           child: ThreadImageWidget.small(
-              thread, thread.threadThumbnail ?? getThreadImage(thread)),
+              thread, thread.threadThumbnail ?? thread.threadImage),
           width: kThreadThumbnailWidth * imageScale,
         ),
       );
