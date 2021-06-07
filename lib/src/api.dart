@@ -305,13 +305,13 @@ class _ApiAppState extends State<ApiApp> {
     if (savePref) {
       final prefs = await SharedPreferences.getInstance();
 
-      prefs.setString(kPrefKeyTokenAccessToken, value?.accessToken);
-      prefs.setString(kPrefKeyTokenClientId, api.clientId);
+      prefs.setString(kPrefKeyTokenAccessToken, value?.accessToken ?? '');
+      prefs.setString(kPrefKeyTokenClientId, api.clientId ?? '');
       prefs.setInt(
-          kPrefKeyTokenExpiresAtMillisecondsSinceEpoch, value?.expiresAt);
-      prefs.setString(kPrefKeyTokenRefreshToken, value?.refreshToken);
-      prefs.setString(kPrefKeyTokenScope, value?.scope);
-      prefs.setInt(kPrefKeyTokenUserId, value?.userId);
+          kPrefKeyTokenExpiresAtMillisecondsSinceEpoch, value?.expiresAt ?? 0);
+      prefs.setString(kPrefKeyTokenRefreshToken, value?.refreshToken ?? '');
+      prefs.setString(kPrefKeyTokenScope, value?.scope ?? '');
+      prefs.setInt(kPrefKeyTokenUserId, value?.userId ?? 0);
       debugPrint("Saved token ${value?.accessToken}, "
           "expires at ${value?.expiresAt}, "
           "refresh token ${value?.refreshToken}");
