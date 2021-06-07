@@ -279,55 +279,61 @@ class _ThreadWidgetActionsState extends State<_ThreadWidgetActions> {
         ),
       );
 
-  Widget _buildCounterLike(TextStyle textStyle) => AnimatedBuilder(
-        animation: post,
-        builder: (_, __) {
-          if (post.postLikeCount == 0) return const SizedBox.shrink();
+  Widget _buildCounterLike(TextStyle textStyle) {
+    if (post.postLikeCount == 0) return null;
 
-          final inlineSpans = <InlineSpan>[
-            WidgetSpan(
-              alignment: PlaceholderAlignment.middle,
-              child: Icon(
-                post.postIsLiked
-                    ? FontAwesomeIcons.solidHeart
-                    : FontAwesomeIcons.heart,
-                color: textStyle.color,
-                size: textStyle.fontSize,
-              ),
-            ),
-            TextSpan(
-              text: " ${formatNumber(post.postLikeCount)}",
-              style: textStyle,
-            ),
-          ];
+    final inlineSpans = <InlineSpan>[
+      WidgetSpan(
+        alignment: PlaceholderAlignment.middle,
+        child: Icon(
+          post.postIsLiked
+              ? FontAwesomeIcons.solidHeart
+              : FontAwesomeIcons.heart,
+          color: textStyle.color,
+          size: textStyle.fontSize,
+        ),
+      ),
+      TextSpan(
+        text: " ${formatNumber(post.postLikeCount)}",
+        style: textStyle,
+      ),
+    ];
 
-          return RichText(
-            text: TextSpan(children: inlineSpans),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          );
-        },
-      );
+    return RichText(
+      text: TextSpan(children: inlineSpans),
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+    );
+  }
 
-  Widget _buildCounterReply(TextStyle textStyle) => AnimatedBuilder(
-        animation: post,
-        builder: (_, __) => threadReplyCount > 0
-            ? Text(
-                l(context).statsXReplies(threadReplyCount),
-                style: textStyle,
-                textScaleFactor: 1,
-              )
-            : const SizedBox.shrink(),
-      );
+  Widget _buildCounterReply(TextStyle textStyle) => threadReplyCount > 0
+      ? Text(
+          l(context).statsXReplies(threadReplyCount),
+          style: textStyle,
+          textScaleFactor: 1,
+        )
+      : null;
 
   Widget _buildCounters(BuildContext context) {
     final textStyle = Theme.of(context).textTheme.caption;
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        _buildCounterLike(textStyle),
-        _buildCounterReply(textStyle),
-      ],
+    return AnimatedBuilder(
+      animation: post,
+      builder: (_, __) {
+        final like = _buildCounterLike(textStyle);
+        final reply = _buildCounterReply(textStyle);
+        if (like == null && reply == null) {
+          return const SizedBox.shrink();
+        }
+
+        final children = <Widget>[];
+        if (like != null) children.add(like);
+        if (reply != null) children.add(reply);
+
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: children,
+        );
+      },
     );
   }
 
