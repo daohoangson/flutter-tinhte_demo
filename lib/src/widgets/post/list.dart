@@ -22,6 +22,14 @@ class PostsWidget extends StatefulWidget {
 class PostsState extends State<PostsWidget> {
   final _slsKey = GlobalKey<SuperListState<_PostListItem>>();
 
+  ScaffoldFeatureController<SnackBar, SnackBarClosedReason> _unreadController;
+
+  @override
+  void dispose() {
+    _unreadController?.close();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext _) => SuperListView<_PostListItem>(
         enableScrollToIndex: true,
@@ -200,7 +208,7 @@ class PostsState extends State<PostsWidget> {
 
   void _showSnackBarUnread(
           SuperListState<_PostListItem> sls, String postsUnread) =>
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      _unreadController = ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         action: SnackBarAction(
           label: l(context).postGoUnreadYes,
           onPressed: () => sls.fetch(
