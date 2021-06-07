@@ -5,12 +5,15 @@ const _kPopupActionOpenInBrowser = 'openInBrowser';
 const _kPopupActionReport = 'report';
 
 class _PostActionsWidget extends StatefulWidget {
+  final Post post;
   final bool showPostCreateDate;
 
   _PostActionsWidget({
     Key key,
+    @required this.post,
     this.showPostCreateDate = true,
-  }) : super(key: key);
+  })  : assert(post != null),
+        super(key: key);
 
   @override
   State<StatefulWidget> createState() => _PostActionsWidgetState();
@@ -19,9 +22,12 @@ class _PostActionsWidget extends StatefulWidget {
 class _PostActionsWidgetState extends State<_PostActionsWidget> {
   bool _isLiking = false;
 
+  Post get post => widget.post;
+
   @override
-  Widget build(BuildContext context) => Consumer<Post>(
-        builder: (context, post, _) {
+  Widget build(BuildContext context) => AnimatedBuilder(
+        animation: post,
+        builder: (context, _) {
           final buttons = <Widget>[];
 
           if (!post.postIsDeleted) {
@@ -43,7 +49,7 @@ class _PostActionsWidgetState extends State<_PostActionsWidget> {
               l(context).postReply,
               onTap: () => context.read<PostEditorData>().enable(
                     context,
-                    parentPost: context.read<Post>(),
+                    parentPost: post,
                   ),
             ));
           }

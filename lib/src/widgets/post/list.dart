@@ -25,7 +25,6 @@ class PostsState extends State<PostsWidget> {
   @override
   Widget build(BuildContext context) => MultiProvider(
         providers: [
-          ChangeNotifierProvider<Thread>.value(value: widget.thread),
           ThreadNavigationWidget.buildProvider(),
         ],
         child: SuperListView<_PostListItem>(
@@ -59,10 +58,9 @@ class PostsState extends State<PostsWidget> {
 
     final post = item.post;
     if (post != null) {
-      return ChangeNotifierProvider<Post>.value(
-        child: post.postIsFirstPost ? _FirstPostWidget() : _PostWidget(),
-        value: post,
-      );
+      return post.postIsFirstPost
+          ? _FirstPostWidget(post: post, thread: widget.thread)
+          : _PostWidget(post: post);
     }
 
     final postReply = item.postReply;
@@ -196,23 +194,24 @@ class PostsState extends State<PostsWidget> {
     }
 
     if (json.containsKey('thread')) {
-      widget.thread.update(json['thread']);
+      final freshThread = Thread.fromJson(json['thread']);
+      final postsUnread = freshThread.links?.postsUnread;
 
-      if (fc.id == FetchContextId.FetchInitial &&
-          widget.thread.links?.postsUnread != null)
-        WidgetsBinding.instance
-            .addPostFrameCallback((_) => _showSnackBarUnread(fc.state));
+      if (fc.id == FetchContextId.FetchInitial && postsUnread != null)
+        WidgetsBinding.instance.addPostFrameCallback(
+            (_) => _showSnackBarUnread(fc.state, postsUnread));
     }
   }
 
-  void _showSnackBarUnread(SuperListState<_PostListItem> sls) =>
+  void _showSnackBarUnread(
+          SuperListState<_PostListItem> sls, String postsUnread) =>
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         action: SnackBarAction(
           label: l(context).postGoUnreadYes,
           onPressed: () => sls.fetch(
             clearItems: true,
             fc: FetchContext<_PostListItem>(
-              path: widget.thread.links.postsUnread,
+              path: postsUnread,
               state: sls,
             ),
           ),

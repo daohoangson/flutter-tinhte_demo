@@ -1,11 +1,24 @@
 part of '../posts.dart';
 
 class _FirstPostWidget extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final post = context.watch<Post>();
-    final thread = context.watch<Thread>();
+  final Post post;
+  final Thread thread;
 
+  const _FirstPostWidget({Key key, @required this.post, @required this.thread})
+      : assert(post != null),
+        assert(thread != null),
+        super(key: key);
+
+  @override
+  Widget build(BuildContext _) => AnimatedBuilder(
+        animation: thread,
+        builder: (_, __) => AnimatedBuilder(
+          animation: post,
+          builder: _builder,
+        ),
+      );
+
+  Widget _builder(BuildContext context, Widget _) {
     final _threadImage = thread.threadPrimaryImage ?? thread.threadImage;
     final _isBackgroundPost = isBackgroundPost(post);
     final _isTinhteFact = isTinhteFact(thread);
@@ -42,7 +55,7 @@ class _FirstPostWidget extends StatelessWidget {
                     horizontal: kPaddingHorizontal,
                   ),
                 )
-              : _PostBodyWidget(),
+              : _PostBodyWidget(post: post),
           thread.threadHasPoll == true && thread.links.poll != null
               ? PollWidget(thread)
               : widget0,
@@ -50,7 +63,7 @@ class _FirstPostWidget extends StatelessWidget {
           _isCustomPost || _threadImage?.displayMode == 'cover'
               ? widget0
               : _PostAttachmentsWidget.forPost(post) ?? widget0,
-          _PostActionsWidget(showPostCreateDate: false),
+          _PostActionsWidget(post: post, showPostCreateDate: false),
         ],
       ),
     );

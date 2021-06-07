@@ -9,9 +9,16 @@ TextStyle getPostBodyTextStyle(BuildContext context, bool isFirstPost) {
 }
 
 class _PostBodyWidget extends StatelessWidget {
+  final Post post;
+
+  const _PostBodyWidget({Key key, @required this.post})
+      : assert(post != null),
+        super(key: key);
+
   @override
-  Widget build(BuildContext context) => Consumer<Post>(
-        builder: (context, post, _) {
+  Widget build(BuildContext context) => AnimatedBuilder(
+        animation: post,
+        builder: (context, _) {
           if (post.postIsDeleted)
             return Padding(
               child: Text(

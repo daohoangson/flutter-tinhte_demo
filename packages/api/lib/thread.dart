@@ -38,14 +38,6 @@ class Thread extends ChangeNotifier implements _Thread, PollOwner {
     }
   }
 
-  void update(Map<String, dynamic> json) {
-    final v = _ThreadInternal.fromJson(json);
-    if (v == _) return;
-
-    _ = v;
-    notifyListeners();
-  }
-
   @Deprecated("Use setters instead of copyWith")
   @override
   _$ThreadCopyWith<_Thread> get copyWith => throw UnimplementedError();

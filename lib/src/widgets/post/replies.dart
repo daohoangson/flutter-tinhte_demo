@@ -16,9 +16,14 @@ Widget _buildReplyToPadding(Widget child, int depth) =>
           );
 
 class _PostWidget extends StatelessWidget {
+  final Post post;
+
+  const _PostWidget({Key key, @required this.post})
+      : assert(post != null),
+        super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    final post = context.watch<Post>();
     if (post.userIsIgnored) return widget0;
 
     final isPostReply = post.postReplyTo != null;
@@ -38,13 +43,13 @@ class _PostWidget extends StatelessWidget {
           userHasVerifiedBadge: post.posterHasVerifiedBadge,
           userRank: post.posterRank?.rankName,
         ),
-        _PostBodyWidget(),
+        _PostBodyWidget(post: post),
         attachments ?? widget0,
       ],
       footer: <Widget>[
         Padding(
           padding: const EdgeInsets.only(left: kPaddingHorizontal),
-          child: _PostActionsWidget(),
+          child: _PostActionsWidget(post: post),
         ),
       ],
     );
