@@ -4,30 +4,30 @@ const _kThreadNavigationFontSize = 12.0;
 const _kThreadNavigationMargin = 10.0;
 const _kThreadNavigationSeparatorPadding = 2.0;
 
-class ThreadNavigationWidget extends StatelessWidget {
+class ThreadNavigationWidget extends StatefulWidget {
   final Thread thread;
 
   ThreadNavigationWidget(this.thread) : assert(thread != null);
 
-  void _initData(BuildContext context, _ThreadNavigationData data) {
-    data.nodes = [];
+  @override
+  State<ThreadNavigationWidget> createState() => _ThreadNavigationState();
+}
 
-    final forum = thread.forum;
-    if (forum != null) {
-      data.nodes.add(forum);
+class _ThreadNavigationState extends State<ThreadNavigationWidget> {
+  List<Node> get nodes =>
+      widget.thread.navigation ??
+      [if (widget.thread.node != null) widget.thread.node];
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.thread.navigation == null) {
+      _fetch();
     }
-
-    _fetch(context, data);
   }
 
   @override
-  Widget build(BuildContext _) =>
-      Consumer<_ThreadNavigationData>(builder: (context, data, _) {
-        if (data.nodes == null) _initData(context, data);
-        return _buildBox(data.nodes);
-      });
-
-  Widget _buildBox(List<Node> nodes) => SizedBox(
+  Widget build(BuildContext _) => SizedBox(
         child: Padding(
           child: ListView.separated(
             itemBuilder: (context, i) => i < nodes.length
@@ -84,28 +84,18 @@ class ThreadNavigationWidget extends StatelessWidget {
       ),
       padding: const EdgeInsets.symmetric(vertical: _kThreadNavigationMargin));
 
-  void _fetch(BuildContext context, _ThreadNavigationData data) => apiGet(
-        ApiCaller.stateless(context),
-        "threads/${thread.threadId}/navigation",
+  void _fetch() => apiGet(
+        ApiCaller.stateful(this),
+        "threads/${widget.thread.threadId}/navigation",
         onSuccess: (jsonMap) {
           if (!jsonMap.containsKey('elements')) return;
           final list = jsonMap['elements'] as List;
-          final elements = list.map((map) => Node.fromJson(map));
-          if (elements.isNotEmpty) data.update(elements);
+          final nodes = list
+              .map((nodeJson) => Node.fromJson(nodeJson))
+              .toList(growable: false);
+          if (nodes.isNotEmpty) {
+            widget.thread.navigation = nodes;
+          }
         },
       );
-
-  static InheritedProvider buildProvider() =>
-      ChangeNotifierProvider<_ThreadNavigationData>(
-          create: (_) => _ThreadNavigationData());
-}
-
-class _ThreadNavigationData extends ChangeNotifier {
-  List<Node> nodes;
-
-  void update(Iterable<Node> newNodes) {
-    nodes.clear();
-    nodes.addAll(newNodes);
-    notifyListeners();
-  }
 }

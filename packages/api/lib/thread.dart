@@ -68,6 +68,15 @@ class Thread extends ChangeNotifier implements _Thread, PollOwner {
   @override
   Node? get node => _.node;
 
+  List<Node>? _navigation;
+  List<Node>? get navigation => _navigation;
+  set navigation(List<Node>? v) {
+    if (listEquals(v, _navigation)) return;
+
+    _navigation = v;
+    notifyListeners();
+  }
+
   @override
   ThreadPermissions? get permissions => _.permissions;
 

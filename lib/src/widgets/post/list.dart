@@ -23,21 +23,16 @@ class PostsState extends State<PostsWidget> {
   final _slsKey = GlobalKey<SuperListState<_PostListItem>>();
 
   @override
-  Widget build(BuildContext context) => MultiProvider(
-        providers: [
-          ThreadNavigationWidget.buildProvider(),
-        ],
-        child: SuperListView<_PostListItem>(
-          enableScrollToIndex: true,
-          fetchPathInitial: widget.path,
-          fetchOnSuccess: _fetchOnSuccess,
-          initialItems: widget.thread.firstPost != null
-              ? [_PostListItem.post(widget.thread.firstPost)]
-              : null,
-          initialJson: widget.initialJson,
-          itemBuilder: _buildItem,
-          key: _slsKey,
-        ),
+  Widget build(BuildContext _) => SuperListView<_PostListItem>(
+        enableScrollToIndex: true,
+        fetchPathInitial: widget.path,
+        fetchOnSuccess: _fetchOnSuccess,
+        initialItems: widget.thread.firstPost != null
+            ? [_PostListItem.post(widget.thread.firstPost)]
+            : null,
+        initialJson: widget.initialJson,
+        itemBuilder: _buildItem,
+        key: _slsKey,
       );
 
   void insertNewPost(Post post) {
