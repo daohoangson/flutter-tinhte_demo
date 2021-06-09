@@ -8,6 +8,7 @@ import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:the_api/attachment.dart';
 import 'package:the_api/post.dart';
 import 'package:the_api/thread.dart';
+import 'package:the_api/x_post_sticker.dart';
 import 'package:the_app/src/widgets/font_control.dart';
 import 'package:the_app/src/widgets/tinhte/background_post.dart';
 import 'package:the_app/src/widgets/tinhte/tinhte_fact.dart';
@@ -29,6 +30,7 @@ part 'post/builders.dart';
 part 'post/first.dart';
 part 'post/list.dart';
 part 'post/replies.dart';
+part 'post/stickers.dart';
 
 List<_PostListItem> decodePostsAndTheirReplies(List jsonPosts) {
   final items = <_PostListItem>[];
