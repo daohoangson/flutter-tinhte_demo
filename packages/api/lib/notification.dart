@@ -1,33 +1,35 @@
-import 'package:json_annotation/json_annotation.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
+part 'notification.freezed.dart';
 part 'notification.g.dart';
 
-@JsonSerializable()
-class Notification {
-  String contentAction;
-  int contentId;
-  String contentType;
-  int creatorUserId;
-  String creatorUsername;
-  int notificationCreateDate;
-  String notificationHtml;
-  final int notificationId;
-  bool notificationIsUnread;
-  String notificationType;
+@freezed
+class Notification with _$Notification {
+  const factory Notification(
+    int notificationId, {
+    String? contentAction,
+    int? contentId,
+    String? contentType,
+    int? creatorUserId,
+    String? creatorUsername,
+    int? notificationCreateDate,
+    String? notificationHtml,
+    bool? notificationIsUnread,
+    String? notificationType,
+    NotificationLinks? links,
+  }) = _Notification;
 
-  NotificationLinks links;
-
-  Notification(this.notificationId);
   factory Notification.fromJson(Map<String, dynamic> json) =>
       _$NotificationFromJson(json);
 }
 
-@JsonSerializable()
-class NotificationLinks {
-  String content;
-  String creatorAvatar;
+@freezed
+class NotificationLinks with _$NotificationLinks {
+  const factory NotificationLinks({
+    String? content,
+    String? creatorAvatar,
+  }) = _NotificationLinks;
 
-  NotificationLinks();
   factory NotificationLinks.fromJson(Map<String, dynamic> json) =>
       _$NotificationLinksFromJson(json);
 }

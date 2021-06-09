@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-06-21T22:19:37.058839",
+  "@@last_modified": "2021-06-07T01:15:43.399248",
   "appTitle": "tinhte.vn Demo",
   "@appTitle": {
     "type": "text",
@@ -33,6 +33,45 @@
   "@apiUnexpectedResponse": {
     "type": "text",
     "placeholders": {}
+  },
+  "follow": "Follow",
+  "@follow": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "followFollowing": "Following",
+  "@followFollowing": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "followNotificationChannelAlert": "Alert",
+  "@followNotificationChannelAlert": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "followNotificationChannelEmail": "Email",
+  "@followNotificationChannelEmail": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "followNotificationChannelExplainForX": "Choose how you want to be notified when new contents are available in {tag}:",
+  "@followNotificationChannelExplainForX": {
+    "type": "text",
+    "placeholders": {
+      "tag": {}
+    }
+  },
+  "followNotificationChannels": "Notification channels",
+  "@followNotificationChannels": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "followUnfollowXQuestion": "Unfollow {tag}?",
+  "@followUnfollowXQuestion": {
+    "type": "text",
+    "placeholders": {
+      "tag": {}
+    }
   },
   "forums": "Forums",
   "@forums": {
@@ -392,16 +431,6 @@
       "formatted": {}
     }
   },
-  "tagFollow": "Follow",
-  "@tagFollow": {
-    "type": "text",
-    "placeholders": {}
-  },
-  "tagFollowing": "Following",
-  "@tagFollowing": {
-    "type": "text",
-    "placeholders": {}
-  },
   "tagLowercaseDiscussions": "discussions",
   "@tagLowercaseDiscussions": {
     "type": "text",
@@ -411,35 +440,6 @@
   "@tagLowercaseNews": {
     "type": "text",
     "placeholders": {}
-  },
-  "tagNotificationChannelAlert": "Alert",
-  "@tagNotificationChannelAlert": {
-    "type": "text",
-    "placeholders": {}
-  },
-  "tagNotificationChannelEmail": "Email",
-  "@tagNotificationChannelEmail": {
-    "type": "text",
-    "placeholders": {}
-  },
-  "tagNotificationChannelExplainForX": "Choose how you want to be notified when new contents are available in {tag}:",
-  "@tagNotificationChannelExplainForX": {
-    "type": "text",
-    "placeholders": {
-      "tag": {}
-    }
-  },
-  "tagNotificationChannels": "Notification channels",
-  "@tagNotificationChannels": {
-    "type": "text",
-    "placeholders": {}
-  },
-  "tagUnfollowXQuestion": "Unfollow {tag}?",
-  "@tagUnfollowXQuestion": {
-    "type": "text",
-    "placeholders": {
-      "tag": {}
-    }
   },
   "threadBookmark": "Bookmark",
   "@threadBookmark": {
@@ -522,18 +522,8 @@
     "type": "text",
     "placeholders": {}
   },
-  "userFollow": "Follow",
-  "@userFollow": {
-    "type": "text",
-    "placeholders": {}
-  },
   "userRegisterDate": "Joined",
   "@userRegisterDate": {
-    "type": "text",
-    "placeholders": {}
-  },
-  "userUnfollow": "Unfollow",
-  "@userUnfollow": {
     "type": "text",
     "placeholders": {}
   },

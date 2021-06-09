@@ -20,8 +20,8 @@ abstract class ConfigBase {
   SearchResult<Thread> Function(Map<dynamic, dynamic>) get homeParser => (j) {
         final thread = Thread.fromJson(j);
         if (thread.threadId != null) {
-          return SearchResult<Thread>('thread', thread.threadId)
-            ..content = thread;
+          return SearchResult<Thread>('thread', thread.threadId,
+              content: thread);
         }
         return null;
       };

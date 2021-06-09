@@ -154,7 +154,7 @@ class _HomeTop5WidgetThread extends StatelessWidget {
   Widget _buildTitle() => Text(thread.threadTitle);
 
   ThreadImage _chooseImageForBox(Thread t, BuildContext c, BoxConstraints bc) {
-    if (t.threadThumbnail == null) return getThreadImage(t);
+    if (t.threadThumbnail == null) return t.threadImage;
 
     final devicePixelRatio = MediaQuery.of(c).devicePixelRatio;
     final thumbnail = t.threadThumbnail;
@@ -167,6 +167,6 @@ class _HomeTop5WidgetThread extends StatelessWidget {
         break;
     }
 
-    return getThreadImage(t);
+    return t.threadImage;
   }
 }

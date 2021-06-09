@@ -19,23 +19,21 @@ class ThreadBookmarkWidget extends StatefulWidget {
 class _ThreadBookmarkState extends State<ThreadBookmarkWidget> {
   bool _isBookmarking = false;
 
-  bool get isBookmark => widget.thread.threadIsBookmark;
-
-  set isBookmark(bool v) {
-    widget.thread.threadIsBookmark = v;
-    setState(() {});
-  }
+  Thread get thread => widget.thread;
 
   @override
   Widget build(BuildContext context) =>
       config.apiBookmarkPath?.isNotEmpty == true
           ? IconButton(
-              icon: Icon(isBookmark
+              icon: Icon(thread.threadIsBookmark
                   ? FontAwesomeIcons.solidBookmark
                   : FontAwesomeIcons.bookmark),
-              onPressed:
-                  _isBookmarking ? null : isBookmark ? _unbookmark : _bookmark,
-              tooltip: isBookmark
+              onPressed: _isBookmarking
+                  ? null
+                  : thread.threadIsBookmark
+                      ? _unbookmark
+                      : _bookmark,
+              tooltip: thread.threadIsBookmark
                   ? l(context).threadBookmarkUndo
                   : l(context).threadBookmark,
             )
@@ -49,7 +47,7 @@ class _ThreadBookmarkState extends State<ThreadBookmarkWidget> {
           ApiCaller.stateful(this),
           config.apiBookmarkPath,
           bodyFields: {'thread_id': widget.thread.threadId.toString()},
-          onSuccess: (_) => isBookmark = true,
+          onSuccess: (_) => setState(() => thread.threadIsBookmark = true),
           onComplete: () => setState(() => _isBookmarking = false),
         );
       });
@@ -62,7 +60,7 @@ class _ThreadBookmarkState extends State<ThreadBookmarkWidget> {
           ApiCaller.stateful(this),
           config.apiBookmarkPath,
           bodyFields: {'thread_id': widget.thread.threadId.toString()},
-          onSuccess: (_) => isBookmark = false,
+          onSuccess: (_) => setState(() => thread.threadIsBookmark = false),
           onComplete: () => setState(() => _isBookmarking = false),
         );
       });
