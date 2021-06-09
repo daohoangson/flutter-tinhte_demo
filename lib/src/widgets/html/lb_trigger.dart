@@ -3,10 +3,11 @@ part of '../html.dart';
 const kCaptionColor = Colors.white70;
 
 class LbTrigger {
-  final captions = Map<int, Widget>();
   final hashCodes = <int>[0];
-  final sources = <String>[];
   final WidgetFactory wf;
+
+  final _captions = Map<int, Widget>();
+  final _sources = <String>[];
 
   BuildOp _fullOp;
 
@@ -18,7 +19,11 @@ class LbTrigger {
         onTap: () => Navigator.push(
           c,
           _ScaleRoute(
-            page: _Screen(captions: captions, initialPage: i, sources: sources),
+            page: _Screen(
+              captions: _captions,
+              initialPage: i,
+              sources: _sources,
+            ),
           ),
         ),
       );
@@ -54,7 +59,7 @@ class LbTrigger {
           ..['width'] = "${childWidth}px";
       },
       onTree: (meta, tree) {
-        final index = _addSource(url);
+        final index = addSource(url);
 
         for (final bit in tree.bits) {
           if (bit is WidgetBit) {
@@ -75,7 +80,7 @@ class LbTrigger {
         final url = wf.urlFull(href);
         if (url == null) return;
 
-        final index = _addSource(url);
+        final index = addSource(url);
         meta
           ..['margin'] = '0.5em 0'
           ..register(BuildOp(onWidgets: (_, widgets) {
@@ -90,9 +95,13 @@ class LbTrigger {
     return _fullOp;
   }
 
-  int _addSource(String source) {
-    final index = sources.length;
-    sources.add(source);
+  int addSource(String source, {Widget caption}) {
+    final index = _sources.length;
+    _sources.add(source);
+
+    if (caption != null) {
+      _captions[index] = caption;
+    }
 
     return index;
   }
@@ -179,7 +188,10 @@ class _ScreenState extends State<_Screen> {
   Widget _buildCaption(BuildContext context, int index) => Column(
         children: <Widget>[
           widget.captions.containsKey(index)
-              ? widget.captions[index]
+              ? DefaultTextStyle(
+                  child: widget.captions[index],
+                  style: TextStyle(color: kCaptionColor),
+                )
               : Text(
                   l(context).navXOfY(index + 1, widget.sources.length),
                   style: Theme.of(context)

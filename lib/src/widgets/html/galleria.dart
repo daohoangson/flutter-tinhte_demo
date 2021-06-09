@@ -102,11 +102,7 @@ class _GalleriaItem {
     if (_source == null) return widgets;
     if (_trigger == null) return widgets;
 
-    final index = galleria._lb._addSource(_source);
-    if (_description != null) {
-      galleria._lb.captions[index] = _description;
-    }
-
+    final index = galleria._lb.addSource(_source, caption: _description);
     _trigger.wrapWith((context, child) =>
         galleria._lb.buildGestureDetector(context, child, index));
 

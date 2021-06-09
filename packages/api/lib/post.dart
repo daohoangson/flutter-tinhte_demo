@@ -5,6 +5,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 import 'attachment.dart';
 import 'user.dart';
+import 'x_post_sticker.dart';
 
 part 'post.freezed.dart';
 part 'post.g.dart';
@@ -114,6 +115,9 @@ class Post extends ChangeNotifier implements _PostInternal {
   String? get signaturePlainText => _.signaturePlainText;
 
   @override
+  List<PostSticker>? get stickers => _.stickers;
+
+  @override
   int? get threadId => _.threadId;
 
   @override
@@ -154,6 +158,7 @@ class _PostInternal with _$_PostInternal {
     int? postReplyTo,
     int? postReplyDepth,
     UserRank? posterRank,
+    List<PostSticker>? stickers,
   ) = _Post;
 
   factory _PostInternal.fromJson(Map<String, dynamic> json) =>

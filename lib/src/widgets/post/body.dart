@@ -30,8 +30,13 @@ class _PostBodyWidget extends StatelessWidget {
               padding: const EdgeInsets.all(kPostBodyPadding),
             );
 
+          final html = post.postBodyHtml;
+          if (html.isEmpty) {
+            return const SizedBox(height: 10);
+          }
+
           return DefaultTextStyle(
-            child: TinhteHtmlWidget(post.postBodyHtml),
+            child: TinhteHtmlWidget(html),
             style: getPostBodyTextStyle(context, post.postIsFirstPost),
           );
         },

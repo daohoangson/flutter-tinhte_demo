@@ -28,6 +28,7 @@ class _PostWidget extends StatelessWidget {
 
     final isPostReply = post.postReplyTo != null;
     final attachments = _PostAttachmentsWidget.forPost(post);
+    final stickers = _PostStickersWidget.forPost(post);
 
     Widget built = buildPostRow(
       context,
@@ -44,7 +45,8 @@ class _PostWidget extends StatelessWidget {
           userRank: post.posterRank?.rankName,
         ),
         _PostBodyWidget(post: post),
-        attachments ?? widget0,
+        if (attachments != null) attachments,
+        if (stickers != null) stickers,
       ],
       footer: <Widget>[
         Padding(

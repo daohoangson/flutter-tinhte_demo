@@ -9,7 +9,10 @@ class _PostAttachmentsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final lbTrigger = LbTrigger();
     for (final attachment in attachments) {
-      lbTrigger.sources.add(attachment.links.data);
+      lbTrigger.addSource(
+        attachment.links.data,
+        caption: Text(attachment.filename),
+      );
     }
 
     return Padding(
