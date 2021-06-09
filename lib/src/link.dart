@@ -1,7 +1,5 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_custom_tabs/flutter_custom_tabs.dart'
-    as flutter_custom_tabs;
 import 'package:the_api/feature_page.dart';
 import 'package:the_api/tag.dart';
 import 'package:the_api/thread.dart';
@@ -15,15 +13,28 @@ import 'package:the_app/src/screens/tag_view.dart';
 import 'package:the_app/src/screens/thread_view.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-void launchLink(BuildContext context, String link) async {
+String buildToolsParseLinkPath(String link) =>
+    "tools/parse-link?link=${Uri.encodeQueryComponent(link)}";
+
+void launchLink(
+  BuildContext context,
+  String link, {
+  bool forceWebView = false,
+}) async {
   // automatically cancel launching for CHR links
   // TODO: reconsider when https://github.com/daohoangson/flutter_widget_from_html/pull/116 is merged
   if (link.contains('misc/api-chr')) return;
 
   if (link.startsWith(config.siteRoot)) {
-    final path = "tools/parse-link?link=${Uri.encodeQueryComponent(link)}";
-    final parsed = await parsePath(path, context: context);
-    if (parsed) return;
+    final path = buildToolsParseLinkPath(link);
+    if (!forceWebView) {
+      final parsed = await parsePath(path, context: context);
+      if (parsed) return;
+
+      // this is our link, we tried to parse it and failed
+      // let's open it via webview
+      forceWebView = true;
+    }
 
     final apiAuth = ApiAuth.of(context, listen: false);
     if (apiAuth.hasToken) {
@@ -35,17 +46,13 @@ void launchLink(BuildContext context, String link) async {
 
   if (!await canLaunch(link)) return;
 
-  if (link.startsWith('http')) {
-    flutter_custom_tabs.launch(link,
-        option: flutter_custom_tabs.CustomTabsOption(
-          toolbarColor: Theme.of(context).primaryColor,
-          enableUrlBarHiding: true,
-          showPageTitle: true,
-        ));
-    return;
-  }
-
-  launch(link);
+  launch(
+    link,
+    forceSafariVC: forceWebView,
+    forceWebView: forceWebView,
+    enableDomStorage: true,
+    enableJavaScript: true,
+  );
 }
 
 void launchMemberView(BuildContext context, int userId) =>

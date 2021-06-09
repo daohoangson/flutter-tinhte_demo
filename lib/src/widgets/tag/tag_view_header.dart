@@ -16,7 +16,7 @@ class TagViewHeader extends StatelessWidget {
                     l(context).tagLowercaseDiscussions) ??
                 const SizedBox.shrink(),
           ),
-          Expanded(child: FollowButton(_FollowableTag(tag))),
+          Expanded(child: FollowButton(tag)),
         ],
       );
 
@@ -35,22 +35,4 @@ class TagViewHeader extends StatelessWidget {
               textAlign: TextAlign.center,
             )
           : null;
-}
-
-class _FollowableTag extends Followable {
-  final Tag tag;
-
-  _FollowableTag(this.tag);
-
-  @override
-  bool get isFollowed => tag.tagIsFollowed;
-
-  @override
-  String get followersLink => tag.links?.followers;
-
-  @override
-  String get name => "#${tag.tagText}";
-
-  @override
-  set isFollowed(bool v) => tag.tagIsFollowed = v;
 }
