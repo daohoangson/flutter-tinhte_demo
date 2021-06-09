@@ -218,16 +218,19 @@ class _ApiAppState extends State<ApiApp> {
         return _setToken(null, savePref: false);
       }
 
-      _setToken(
-        OauthToken.fromStorage(
-          accessToken: accessToken,
-          refreshToken: refreshToken,
-          scope: scope,
-          userId: userId,
-          expiresAt: expiresAt,
-        ),
-        savePref: false,
+      final now = DateTime.now().millisecondsSinceEpoch;
+      final expiresIn = ((expiresAt - now) / 1000).floor();
+      final token = OauthToken(
+        accessToken: accessToken,
+        refreshToken: refreshToken,
+        scope: scope,
+        userId: userId,
+        expiresIn: expiresIn,
+        millisecondsSinceEpoch: now,
+        obtainMethod: ObtainMethod.storage,
       );
+
+      _setToken(token, savePref: false);
     });
   }
 

@@ -3,67 +3,9 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'oauth_token.freezed.dart';
 part 'oauth_token.g.dart';
 
-abstract class OauthToken {
-  String? get accessToken;
-  String? get refreshToken;
-  String? get scope;
-  int? get userId;
-  ObtainMethod? get obtainMethod;
-
-  factory OauthToken.fromJson(
-    Map<String, dynamic> json, {
-    ObtainMethod? obtainMethod,
-  }) {
-    final token = _InternalOauthToken.fromJson(json);
-    return token.copyWith(
-      millisecondsSinceEpoch:
-          token.millisecondsSinceEpoch ?? DateTime.now().millisecondsSinceEpoch,
-      obtainMethod: obtainMethod,
-    );
-  }
-
-  factory OauthToken.fromStorage({
-    String? accessToken,
-    String? refreshToken,
-    String? scope,
-    int? userId,
-    int? expiresAt,
-  }) {
-    final millisecondsSinceEpoch = DateTime.now().millisecondsSinceEpoch;
-    final expiresIn = expiresAt != null
-        ? ((expiresAt - millisecondsSinceEpoch) / 1000).floor()
-        : null;
-
-    return _InternalOauthToken(
-      accessToken: accessToken,
-      refreshToken: refreshToken,
-      scope: scope,
-      userId: userId,
-      expiresIn: expiresIn,
-      millisecondsSinceEpoch: millisecondsSinceEpoch,
-      obtainMethod: ObtainMethod._storage,
-    );
-  }
-}
-
-extension OauthTokenGetters on OauthToken {
-  int get expiresAt {
-    final internal = this as _InternalOauthToken;
-    final millisecondsSinceEpoch = internal.millisecondsSinceEpoch;
-    final expiresInSeconds = internal.expiresIn;
-    if (millisecondsSinceEpoch == null || expiresInSeconds == null) {
-      return DateTime.now().millisecondsSinceEpoch;
-    }
-
-    return millisecondsSinceEpoch + expiresInSeconds * 1000;
-  }
-
-  bool get hasExpired => expiresAt < DateTime.now().millisecondsSinceEpoch;
-}
-
 @freezed
-class _InternalOauthToken with _$_InternalOauthToken implements OauthToken {
-  const factory _InternalOauthToken({
+class OauthToken with _$OauthToken {
+  const factory OauthToken({
     String? accessToken,
     String? refreshToken,
     String? scope,
@@ -71,16 +13,28 @@ class _InternalOauthToken with _$_InternalOauthToken implements OauthToken {
     @JsonKey(fromJson: int.parse) int? expiresIn,
     int? millisecondsSinceEpoch,
     ObtainMethod? obtainMethod,
-  }) = __InternalOauthToken;
+  }) = _OauthToken;
 
-  factory _InternalOauthToken.fromJson(Map<String, dynamic> json) =>
-      _$_InternalOauthTokenFromJson(json);
+  factory OauthToken.fromJson(Map<String, dynamic> json) =>
+      _$OauthTokenFromJson(json);
+
+  const OauthToken._();
+
+  int get expiresAt {
+    if (millisecondsSinceEpoch == null || expiresIn == null) {
+      return DateTime.now().millisecondsSinceEpoch;
+    }
+
+    return millisecondsSinceEpoch! + expiresIn! * 1000;
+  }
+
+  bool get hasExpired => expiresAt < DateTime.now().millisecondsSinceEpoch;
 }
 
 enum ObtainMethod {
-  usernamePassword,
   apple,
   facebook,
   google,
-  _storage,
+  storage,
+  usernamePassword,
 }

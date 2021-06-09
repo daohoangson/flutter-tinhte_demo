@@ -84,7 +84,7 @@ class Api {
       "refresh_token": refreshToken!,
     });
 
-    return OauthToken.fromJson(json, obtainMethod: token.obtainMethod);
+    return OauthToken.fromJson(json).copyWith(obtainMethod: token.obtainMethod);
   }
 
   Future<dynamic> deleteJson(String path, {Map<String, String>? bodyFields}) {

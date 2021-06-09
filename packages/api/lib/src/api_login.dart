@@ -18,7 +18,8 @@ Future<LoginResult> _postOauthToken(
       return Future.error(ApiErrorUnexpectedResponse(json));
     }
 
-    return LoginResult.token(OauthToken.fromJson(json, obtainMethod: om));
+    return LoginResult.token(
+        OauthToken.fromJson(json).copyWith(obtainMethod: om));
   } on ApiError {
     final headers = api.latestResponse?.headers ?? const {};
     final providersString = headers[_kHeaderTfaProviders];
@@ -88,7 +89,8 @@ Future<LoginResult> loginExternal(
     return Future.error(ApiErrorUnexpectedResponse(json));
   }
 
-  return LoginResult.token(OauthToken.fromJson(json, obtainMethod: om));
+  return LoginResult.token(
+      OauthToken.fromJson(json).copyWith(obtainMethod: om));
 }
 
 Future<LoginResult> loginTfa(
@@ -152,5 +154,6 @@ Future<OauthToken?> _tryAutoRegister(
   if (json is! Map) return null;
 
   if (!json.containsKey('token')) return null;
-  return OauthToken.fromJson(json['token'], obtainMethod: obtainMethod);
+  return OauthToken.fromJson(json['token'])
+      .copyWith(obtainMethod: obtainMethod);
 }
