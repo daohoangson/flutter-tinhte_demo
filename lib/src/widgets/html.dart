@@ -207,13 +207,11 @@ class TinhteWidgetFactory extends WidgetFactory {
 
     if (trimMarginVertical) {
       built?.wrapWith((_, child) {
-        final last = _lastOf(child);
-
         return Padding(
           child: child,
           padding: EdgeInsets.only(
             top: textPadding,
-            bottom: last is _TextPadding || last is WidgetPlaceholder<BuildTree>
+            bottom: children.last is WidgetPlaceholder<BuildTree>
                 ? textPadding
                 : 0.0,
           ),
@@ -364,12 +362,4 @@ class _TextPadding extends StatelessWidget {
   @override
   Widget build(BuildContext _) =>
       Padding(child: child, padding: EdgeInsets.symmetric(horizontal: padding));
-}
-
-Widget _lastOf(Widget widget) {
-  if (widget is Column) {
-    return _lastOf(widget.children.last);
-  }
-
-  return widget;
 }
