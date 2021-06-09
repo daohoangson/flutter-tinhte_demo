@@ -13,7 +13,7 @@ class ForumPickerWidget extends StatelessWidget {
     return ListTile(
       leading: Icon(FontAwesomeIcons.globe),
       title: data.forum != null
-          ? Text(data.forum.forumTitle)
+          ? Text(data.forum.title)
           : Text(l(context).threadCreateChooseAForum),
       trailing: Icon(FontAwesomeIcons.caretDown),
       onTap: () async => data.forum = await showModalBottomSheet<Forum>(
@@ -35,31 +35,19 @@ class _ForumPickerBody extends StatelessWidget {
       );
 
   Widget _buildRow(BuildContext context, Node node) {
+    final description = node.description;
+    final forum = node is Forum ? node : null;
+    final canCreateThread = forum?.permissions?.createThread;
+
     Widget built = ListTile(
       title: Text(
-        node.map(
-          (node) => '#${node.navigationId}',
-          category: (_) => _.categoryTitle,
-          forum: (_) => _.forumTitle,
-          linkforum: (_) => _.linkTitle,
-        ),
-        style: node.maybeMap(
-          (_) => null,
-          forum: (_) => TextStyle(color: Theme.of(context).disabledColor),
-          orElse: () => null,
-        ),
+        node.title,
+        style: canCreateThread
+            ? null
+            : TextStyle(color: Theme.of(context).disabledColor),
       ),
-      subtitle: node.maybeMap(
-        (_) => null,
-        category: (_) => _buildSubtitle(_.categoryDescription),
-        forum: (_) => _buildSubtitle(_.forumDescription),
-        orElse: () => null,
-      ),
-      onTap: node.maybeMap(
-        (_) => null,
-        forum: (_) => () => Navigator.pop(context, _),
-        orElse: () => null,
-      ),
+      subtitle: description != null ? _buildSubtitle(description) : null,
+      onTap: canCreateThread ? () => Navigator.pop(context, forum) : null,
     );
 
     final depth = node.navigationDepth ?? 1;

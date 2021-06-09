@@ -67,10 +67,37 @@ class Node with _$Node {
   }) = LinkForum;
 
   factory Node.fromJson(Map<String, dynamic> json) => _$NodeFromJson(json);
+
+  const Node._();
+
+  String? get description => map(
+        (_) => null,
+        category: (_) => _.categoryDescription,
+        forum: (_) => _.forumDescription,
+        linkforum: (_) => _.linkDescription,
+      );
+
+  NodeLinks? get links => map(
+        (_) => _.links,
+        category: (_) => _.links,
+        forum: (_) => _.links,
+        linkforum: (_) => _.links,
+      );
+
+  String? get title => map(
+        (_) => '${_.navigationType}#${_.navigationId}',
+        category: (_) => _.categoryTitle,
+        forum: (_) => _.forumTitle,
+        linkforum: (_) => _.linkTitle,
+      );
+}
+
+abstract class NodeLinks {
+  String? get subElements;
 }
 
 @freezed
-class CategoryLinks with _$CategoryLinks {
+class CategoryLinks with _$CategoryLinks implements NodeLinks {
   const factory CategoryLinks({
     String? detail,
     String? permalink,
@@ -96,7 +123,7 @@ class CategoryPermissions with _$CategoryPermissions {
 }
 
 @freezed
-class ElementLinks with _$ElementLinks {
+class ElementLinks with _$ElementLinks implements NodeLinks {
   const factory ElementLinks({
     String? permalink,
     @JsonKey(name: 'sub-elements') String? subElements,
@@ -107,12 +134,13 @@ class ElementLinks with _$ElementLinks {
 }
 
 @freezed
-class ForumLinks with _$ForumLinks {
+class ForumLinks with _$ForumLinks implements NodeLinks {
   const factory ForumLinks({
     String? detail,
     String? followers,
     String? permalink,
     String? threads,
+
     // element links
     @JsonKey(name: 'sub-elements') String? subElements,
   }) = _ForumLinks;
@@ -138,7 +166,7 @@ class ForumPermissions with _$ForumPermissions {
 }
 
 @freezed
-class LinkForumLinks with _$LinkForumLinks {
+class LinkForumLinks with _$LinkForumLinks implements NodeLinks {
   const factory LinkForumLinks({
     String? target,
 

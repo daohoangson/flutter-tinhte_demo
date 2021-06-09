@@ -10,20 +10,10 @@ class NodeViewScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
-          title: Text(node.map(
-            (value) => '#${value.navigationId}',
-            category: (category) => category.categoryTitle,
-            forum: (forum) => forum.forumTitle,
-            linkforum: (link) => link.linkTitle,
-          )),
+          title: Text(node.title),
         ),
         body: NavigationWidget(
-          path: node.map(
-            (_) => _.links.subElements,
-            category: (_) => _.links.subElements,
-            forum: (_) => _.links.subElements,
-            linkforum: (_) => _.links.subElements,
-          ),
+          path: node.links.subElements,
         ),
       );
 }
