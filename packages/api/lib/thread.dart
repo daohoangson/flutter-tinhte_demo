@@ -13,19 +13,6 @@ final _kThreadTitleEllipsisRegEx = RegExp(r'^(.+)\.\.\.$');
 final _kThreadPostBodyImgBbCodeRegExp =
     RegExp(r'\[IMG\]([^[]+)\[/IMG\]', caseSensitive: false);
 
-bool isThreadTitleRedundant(Thread thread, [Post? firstPost]) {
-  final threadTitle = thread.threadTitle;
-  final firstPostBody = (firstPost ?? thread.firstPost)?.postBody;
-  if (threadTitle == null || firstPostBody == null) return false;
-
-  final ellipsis = _kThreadTitleEllipsisRegEx.firstMatch(threadTitle);
-  if (ellipsis != null) {
-    return firstPostBody.startsWith(ellipsis[1]!);
-  }
-
-  return firstPostBody.startsWith(threadTitle);
-}
-
 class Thread extends ChangeNotifier implements _Thread, PollOwner {
   _ThreadInternal _;
 
@@ -61,6 +48,19 @@ class Thread extends ChangeNotifier implements _Thread, PollOwner {
 
   @override
   int? get forumId => _.forumId;
+
+  bool get isThreadTitleRedundant {
+    final threadTitle = this.threadTitle;
+    final firstPostBody = firstPost?.postBody;
+    if (threadTitle == null || firstPostBody == null) return false;
+
+    final ellipsis = _kThreadTitleEllipsisRegEx.firstMatch(threadTitle);
+    if (ellipsis != null) {
+      return firstPostBody.startsWith(ellipsis[1]!);
+    }
+
+    return firstPostBody.startsWith(threadTitle);
+  }
 
   @override
   ThreadLinks? get links => _.links;

@@ -22,7 +22,7 @@ class ThreadWidget extends StatelessWidget {
     final _isTinhteFact = isTinhteFact(thread);
     final _isCustomPost = _isBackgroundPost || _isTinhteFact;
     final _isThreadTitleRedundant =
-        _isCustomPost || isThreadTitleRedundant(thread);
+        _isCustomPost || thread.isThreadTitleRedundant;
 
     final children = <Widget>[
       _kThreadWidgetSpacing,

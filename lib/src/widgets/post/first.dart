@@ -24,7 +24,7 @@ class _FirstPostWidget extends StatelessWidget {
     final _isTinhteFact = isTinhteFact(thread);
     final _isCustomPost = _isBackgroundPost || _isTinhteFact;
     final _isThreadTitleRedundant =
-        _isCustomPost || isThreadTitleRedundant(thread, post);
+        _isCustomPost || thread.isThreadTitleRedundant;
 
     Widget widget = Padding(
       padding: const EdgeInsets.only(bottom: 20.0),
