@@ -252,7 +252,7 @@ SPEC CHECKSUMS:
   uni_links: d97da20c7701486ba192624d99bffaaffcfc298a
   url_launcher: 6fef411d543ceb26efce54b05a0a40bfd74cbbef
   video_player: 9cc823b1d9da7e8427ee591e8438bfbcde500e6e
-  wakelock: b0843b2479edbf6504d8d262c2959446f35373aa
+  wakelock: d0fc7c864128eac40eba1617cb5264d9c940b46f
   webview_flutter: 9f491a9b5a66f2573946a389b2677987b0ff8c0b
 
 PODFILE CHECKSUM: eb1081994339b5de45dcc83dcf1d8105a65d62f2

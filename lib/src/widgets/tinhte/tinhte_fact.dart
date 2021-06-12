@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:the_api/attachment.dart';
 import 'package:the_api/post.dart';
 import 'package:the_api/thread.dart';
 import 'package:the_app/src/widgets/html.dart';
 import 'package:the_app/src/widgets/image.dart';
 import 'package:the_app/src/widgets/posts.dart';
+import 'package:the_app/src/widgets/video_player.dart';
 
 bool isTinhteFact(Thread thread) =>
     thread.threadImage != null &&
@@ -15,7 +17,7 @@ class TinhteFact extends StatelessWidget {
   final Thread thread;
   final Post post;
 
-  String get postBodyHtml => (post ?? thread.firstPost)?.postBodyHtml ?? '';
+  Post get firstPost => post ?? thread.firstPost;
 
   const TinhteFact(
     this.thread, {
@@ -38,7 +40,28 @@ class TinhteFact extends StatelessWidget {
               borderRadius: BorderRadius.circular(kPaddingHorizontal),
               color: theme.primaryColorDark,
             ),
-            child: _buildUserImage(theme),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.all(kPaddingHorizontal),
+                  child: Text(
+                    thread.threadTitle,
+                    maxLines: null,
+                    style: theme.textTheme.headline6.copyWith(
+                      color: theme.accentColor,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                _buildContents(),
+                TinhteHtmlWidget(
+                  "<center>${firstPost.postBodyHtml ?? ''}</center>",
+                  textStyle: theme.textTheme.bodyText2,
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -46,26 +69,25 @@ class TinhteFact extends StatelessWidget {
     );
   }
 
-  Widget _buildUserImage(ThemeData theme) => Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(kPaddingHorizontal),
-            child: Text(
-              thread.threadTitle,
-              maxLines: null,
-              style: theme.textTheme.headline6.copyWith(
-                color: theme.accentColor,
-                fontWeight: FontWeight.bold,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ),
-          ThreadImageWidget.big(thread, thread.threadImage),
-          TinhteHtmlWidget(
-            "<center>$postBodyHtml</center>",
-            textStyle: theme.textTheme.bodyText2,
-          ),
-        ],
+  Widget _buildContents() {
+    Attachment threadImageAttachment;
+    final threadImageLink = thread.threadImage.link;
+    for (final attachment in firstPost?.attachments ?? const []) {
+      print(attachment.links.permalink);
+      if (attachment.links.permalink == threadImageLink ||
+          attachment.links.thumbnail == threadImageLink) {
+        threadImageAttachment = attachment;
+      }
+    }
+
+    if (threadImageAttachment?.isVideo == true) {
+      final video = threadImageAttachment;
+      return VideoPlayer(
+        aspectRatio: video.aspectRatio,
+        url: video.links?.xVideoUrl,
       );
+    }
+
+    return ThreadImageWidget.big(thread, thread.threadImage);
+  }
 }
