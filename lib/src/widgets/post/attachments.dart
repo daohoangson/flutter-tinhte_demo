@@ -10,7 +10,12 @@ class _PostAttachmentsWidget extends StatelessWidget {
     final lbTrigger = LbTrigger();
     for (final attachment in attachments) {
       lbTrigger.addSource(
-        attachment.links.data,
+        attachment.isVideo
+            ? LbTriggerSource.video(
+                attachment.links.xVideoUrl,
+                aspectRatio: attachment.aspectRatio,
+              )
+            : LbTriggerSource.image(attachment.links.data),
         caption: Text(attachment.filename),
       );
     }
