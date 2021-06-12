@@ -113,10 +113,7 @@ class Thread extends ChangeNotifier implements _Thread, PollOwner {
     if (post.attachments.isNotEmpty) {
       for (final attachment in post.attachments) {
         final dataLink = attachment.links?.data;
-        if (dataLink == null) continue;
-
-        final thumbnailLink = attachment.links?.thumbnail ?? '';
-        if (thumbnailLink.isEmpty) continue;
+        if (!attachment.isImage || dataLink == null) continue;
 
         return ThreadImage(
           dataLink,

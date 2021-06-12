@@ -31,7 +31,7 @@ class _PostAttachmentsWidget extends StatelessWidget {
   }
 
   Widget _buildAttachment(Attachment attachment) => AspectRatio(
-        aspectRatio: attachment.attachmentWidth / attachment.attachmentHeight,
+        aspectRatio: attachment.aspectRatio,
         child: ClipRRect(
           borderRadius: BorderRadius.circular(3),
           child: buildCachedNetworkImage(attachment.links.thumbnail),
@@ -46,12 +46,8 @@ class _PostAttachmentsWidget extends StatelessWidget {
       if (thread?.threadPrimaryImage?.displayMode == 'cover' &&
           thread?.threadPrimaryImage?.link == attachment.links.permalink)
         return false;
-      if (attachment.attachmentWidth == null ||
-          attachment.attachmentWidth < 1 ||
-          attachment.attachmentHeight == null ||
-          attachment.attachmentHeight < 1) return false;
-
-      return true;
+      return attachment.aspectRatio != null &&
+          attachment.links?.thumbnail?.isNotEmpty == true;
     })?.toList();
 
     if (attachments?.isNotEmpty != true) return null;
