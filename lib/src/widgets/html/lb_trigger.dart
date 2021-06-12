@@ -238,7 +238,7 @@ class _ScreenState extends State<_Screen> {
     final source = widget.sources[index];
 
     if (source is _LbTriggerImage) {
-      PhotoViewGalleryPageOptions(
+      return PhotoViewGalleryPageOptions(
         imageProvider: NetworkImage(source.url),
       );
     }
