@@ -36,8 +36,6 @@ class _VideoState extends State<VideoPlayer> {
     if (!mounted) return;
     _chewieController = ChewieController(
       aspectRatio: widget.aspectRatio,
-      autoPlay: true,
-      looping: true,
       videoPlayerController: _videoPlayerController,
     );
     setState(() {});
