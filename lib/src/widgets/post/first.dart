@@ -49,7 +49,11 @@ class _FirstPostWidget extends StatelessWidget {
                   child: _isBackgroundPost
                       ? BackgroundPost(post)
                       : (_isTinhteFact
-                          ? TinhteFact(thread, post: post)
+                          ? TinhteFact(
+                              thread,
+                              autoPlayVideo: true,
+                              post: post,
+                            )
                           : widget0),
                   padding: const EdgeInsets.symmetric(
                     horizontal: kPaddingHorizontal,

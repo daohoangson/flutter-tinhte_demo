@@ -14,13 +14,15 @@ bool isTinhteFact(Thread thread) =>
         false);
 
 class TinhteFact extends StatelessWidget {
-  final Thread thread;
+  final bool autoPlayVideo;
   final Post post;
+  final Thread thread;
 
   Post get firstPost => post ?? thread.firstPost;
 
   const TinhteFact(
     this.thread, {
+    this.autoPlayVideo = false,
     Key key,
     this.post,
   })  : assert(thread != null),
@@ -84,6 +86,7 @@ class TinhteFact extends StatelessWidget {
       final video = threadImageAttachment;
       return VideoPlayer(
         aspectRatio: video.aspectRatio,
+        autoPlay: autoPlayVideo,
         url: video.links?.xVideoUrl,
       );
     }

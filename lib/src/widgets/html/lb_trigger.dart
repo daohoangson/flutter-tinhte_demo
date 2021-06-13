@@ -247,6 +247,7 @@ class _ScreenState extends State<_Screen> {
     if (source is _LbTriggerVideo) {
       child = VideoPlayer(
         aspectRatio: source.aspectRatio,
+        autoPlay: true,
         url: source.url,
       );
     }

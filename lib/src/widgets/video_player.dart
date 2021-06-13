@@ -4,10 +4,12 @@ import 'package:video_player/video_player.dart';
 
 class VideoPlayer extends StatefulWidget {
   final double aspectRatio;
+  final bool autoPlay;
   final String url;
 
   const VideoPlayer({
     @required this.aspectRatio,
+    @required this.autoPlay,
     Key key,
     @required this.url,
   })  : assert(aspectRatio != null),
@@ -36,6 +38,7 @@ class _VideoState extends State<VideoPlayer> {
     if (!mounted) return;
     _chewieController = ChewieController(
       aspectRatio: widget.aspectRatio,
+      autoPlay: widget.autoPlay,
       videoPlayerController: _videoPlayerController,
     );
     setState(() {});
