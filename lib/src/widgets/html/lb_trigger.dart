@@ -7,7 +7,7 @@ class LbTrigger {
   final WidgetFactory wf;
 
   final _captions = Map<int, Widget>();
-  final _sources = <String>[];
+  final _sources = <LbTriggerSource>[];
 
   BuildOp _fullOp;
 
@@ -59,7 +59,7 @@ class LbTrigger {
           ..['width'] = "${childWidth}px";
       },
       onTree: (meta, tree) {
-        final index = addSource(url);
+        final index = addSource(LbTriggerSource.image(url));
 
         for (final bit in tree.bits) {
           if (bit is WidgetBit) {
@@ -80,7 +80,7 @@ class LbTrigger {
         final url = wf.urlFull(href);
         if (url == null) return;
 
-        final index = addSource(url);
+        final index = addSource(LbTriggerSource.image(url));
         meta
           ..['margin'] = '0.5em 0'
           ..register(BuildOp(onWidgets: (_, widgets) {
@@ -95,7 +95,7 @@ class LbTrigger {
     return _fullOp;
   }
 
-  int addSource(String source, {Widget caption}) {
+  int addSource(LbTriggerSource source, {Widget caption}) {
     final index = _sources.length;
     _sources.add(source);
 
@@ -105,6 +105,32 @@ class LbTrigger {
 
     return index;
   }
+}
+
+abstract class LbTriggerSource {
+  String get url;
+
+  factory LbTriggerSource.image(String url) = _LbTriggerImage;
+  factory LbTriggerSource.video(String url, {double aspectRatio}) =
+      _LbTriggerVideo;
+
+  const LbTriggerSource._();
+}
+
+class _LbTriggerImage extends LbTriggerSource {
+  @override
+  final String url;
+
+  _LbTriggerImage(this.url) : super._();
+}
+
+class _LbTriggerVideo extends LbTriggerSource {
+  final double aspectRatio;
+
+  @override
+  final String url;
+
+  _LbTriggerVideo(this.url, {this.aspectRatio}) : super._();
 }
 
 class _ScaleRoute extends PageRouteBuilder {
@@ -129,7 +155,7 @@ class _Screen extends StatefulWidget {
   final Map<int, Widget> captions;
   final int initialPage;
   final PageController pageController;
-  final List<String> sources;
+  final List<LbTriggerSource> sources;
 
   _Screen({
     this.captions,
@@ -208,8 +234,24 @@ class _ScreenState extends State<_Screen> {
         mainAxisSize: MainAxisSize.min,
       );
 
-  PhotoViewGalleryPageOptions _buildItem(BuildContext context, int index) =>
-      PhotoViewGalleryPageOptions(
-        imageProvider: NetworkImage(widget.sources[index]),
+  PhotoViewGalleryPageOptions _buildItem(BuildContext context, int index) {
+    final source = widget.sources[index];
+
+    if (source is _LbTriggerImage) {
+      return PhotoViewGalleryPageOptions(
+        imageProvider: NetworkImage(source.url),
       );
+    }
+
+    Widget child = const SizedBox.shrink();
+    if (source is _LbTriggerVideo) {
+      child = VideoPlayer(
+        aspectRatio: source.aspectRatio,
+        autoPlay: true,
+        url: source.url,
+      );
+    }
+
+    return PhotoViewGalleryPageOptions.customChild(child: child);
+  }
 }

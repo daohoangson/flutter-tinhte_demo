@@ -14,10 +14,31 @@ class Attachment with _$Attachment {
     String? filename,
     AttachmentLinks? links,
     AttachmentPermissions? permissions,
+    @JsonKey(name: 'attachment_is_video') bool? xVideoIsVideo,
+    @JsonKey(name: 'attachment_video_is_processing') bool? xVideoIsProcessing,
+    @JsonKey(name: 'video_ratio') double? xVideoRatio,
   }) = _Attachment;
 
   factory Attachment.fromJson(Map<String, dynamic> json) =>
       _$AttachmentFromJson(json);
+
+  const Attachment._();
+
+  double? get aspectRatio {
+    if (isImage) {
+      return attachmentWidth! / attachmentHeight!;
+    } else if (isVideo) {
+      return xVideoRatio;
+    }
+  }
+
+  bool get isImage {
+    final width = attachmentWidth ?? 0.0;
+    final height = attachmentHeight ?? 0.0;
+    return width > 0 && height > 0;
+  }
+
+  bool get isVideo => xVideoIsVideo == true;
 }
 
 @freezed
@@ -26,6 +47,7 @@ class AttachmentLinks with _$AttachmentLinks {
     String? permalink,
     String? data,
     String? thumbnail,
+    @JsonKey(name: 'video_url') String? xVideoUrl,
   }) = _AttachmentLinks;
 
   factory AttachmentLinks.fromJson(Map<String, dynamic> json) =>

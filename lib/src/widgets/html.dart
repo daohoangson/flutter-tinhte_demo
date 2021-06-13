@@ -13,6 +13,7 @@ import 'package:the_app/src/constants.dart';
 import 'package:the_app/src/intl.dart';
 import 'package:the_app/src/link.dart';
 import 'package:the_app/src/widgets/image.dart';
+import 'package:the_app/src/widgets/video_player.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 part 'html/galleria.dart';

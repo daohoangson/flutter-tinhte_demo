@@ -10,7 +10,7 @@ class _PostStickersWidget extends StatelessWidget {
     final lbTrigger = LbTrigger();
     for (final sticker in stickers) {
       lbTrigger.addSource(
-        sticker.links.imageDataUrl,
+        LbTriggerSource.image(sticker.links.imageDataUrl),
         caption: Text(sticker.stickerName),
       );
     }

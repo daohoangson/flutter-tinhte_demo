@@ -102,7 +102,10 @@ class _GalleriaItem {
     if (_source == null) return widgets;
     if (_trigger == null) return widgets;
 
-    final index = galleria._lb.addSource(_source, caption: _description);
+    final index = galleria._lb.addSource(
+      LbTriggerSource.image(_source),
+      caption: _description,
+    );
     _trigger.wrapWith((context, child) =>
         galleria._lb.buildGestureDetector(context, child, index));
 
