@@ -17,6 +17,11 @@ platform :ios do
     )
   end
 
+  lane :devices do
+    register_devices(devices_file: "./fastlane/devices.txt")
+    match(type: "adhoc", force_for_new_devices: true)
+  end
+
   lane :ipa do
     desc "Build ad-hoc ipa (CI)"
 
