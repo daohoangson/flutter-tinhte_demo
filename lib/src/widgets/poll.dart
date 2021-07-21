@@ -1,20 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:the_api/poll.dart';
 import 'package:the_app/src/api.dart';
 import 'package:the_app/src/constants.dart';
 import 'package:the_app/src/intl.dart';
 
 class PollWidget extends StatefulWidget {
-  final String link;
+  final PollOwner owner;
 
-  PollWidget(this.link) : assert(link != null);
+  PollWidget(this.owner) : assert(owner != null);
 
   @override
   State<PollWidget> createState() => _PollState();
-
-  static InheritedProvider buildProvider() =>
-      ChangeNotifierProvider<_PollData>(create: (_) => _PollData());
 }
 
 class _PollState extends State<PollWidget> {
@@ -22,17 +18,23 @@ class _PollState extends State<PollWidget> {
 
   bool _isVoting = false;
 
-  @override
-  Widget build(BuildContext _) =>
-      Consumer<_PollData>(builder: (context, data, _) {
-        if (data.poll == null) _fetch(data);
-        return data.poll == null
-            ? const Center(child: CircularProgressIndicator())
-            : _buildPoll(context, data);
-      });
+  Poll get poll => widget.owner.poll;
 
-  Widget _buildPoll(BuildContext context, _PollData data) {
-    final poll = data.poll;
+  @override
+  void initState() {
+    super.initState();
+
+    if (poll == null) {
+      _fetch();
+    }
+  }
+
+  @override
+  Widget build(BuildContext _) {
+    if (poll == null) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
     final canVote = poll.permissions?.vote == true;
     final theme = Theme.of(context);
 
@@ -50,9 +52,9 @@ class _PollState extends State<PollWidget> {
           canVote
               ? Align(
                   alignment: Alignment.centerRight,
-                  child: RaisedButton(
+                  child: ElevatedButton(
                     child: Text(l(context).pollVote),
-                    onPressed: _isVoting ? null : () => _vote(data),
+                    onPressed: _isVoting ? null : _vote,
                   ),
                 )
               : const SizedBox.shrink(),
@@ -67,17 +69,16 @@ class _PollState extends State<PollWidget> {
     );
   }
 
-  void _fetch(_PollData data) => apiGet(
+  void _fetch() => apiGet(
         ApiCaller.stateful(this),
-        widget.link,
+        widget.owner.pollLink,
         onSuccess: (jsonMap) {
           if (!jsonMap.containsKey('poll')) return;
-          final poll = Poll.fromJson(jsonMap['poll']);
-          data.update(poll);
+          widget.owner.poll = Poll.fromJson(jsonMap['poll']);
         },
       );
 
-  void _vote(_PollData data) => prepareForApiAction(context, () {
+  void _vote() => prepareForApiAction(context, () {
         if (_isVoting) return;
         setState(() => _isVoting = true);
 
@@ -85,14 +86,14 @@ class _PollState extends State<PollWidget> {
 
         apiPost(
           apiCaller,
-          data.poll.links.vote,
+          poll.links.vote,
           bodyFields: Map.fromEntries(responses
               .currentState._selectedResponseIds
               .toList(growable: false)
               .asMap()
               .entries
               .map((e) => MapEntry("response_ids[${e.key}]", "${e.value}"))),
-          onSuccess: (_) => _fetch(data),
+          onSuccess: (_) => _fetch(),
           onComplete: () => setState(() => _isVoting = false),
         );
       });
@@ -212,21 +213,12 @@ class _PollResponsesState extends State<_PollResponsesWidget> {
     if (!tmp.add(responseId)) return;
 
     if (widget.maxVotes > 0 && tmp.length > widget.maxVotes) {
-      Scaffold.of(context).showSnackBar(SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(l(context).pollErrorTooManyVotes(widget.maxVotes)),
       ));
       return;
     }
 
     setState(() => _selectedResponseIds.add(responseId));
-  }
-}
-
-class _PollData extends ChangeNotifier {
-  Poll poll;
-
-  void update(Poll newPoll) {
-    poll = newPoll;
-    notifyListeners();
   }
 }

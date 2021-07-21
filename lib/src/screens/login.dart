@@ -5,10 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:the_api/api.dart';
+import 'package:the_api/login_result.dart';
 import 'package:the_api/oauth_token.dart';
 import 'package:the_app/src/api.dart';
 import 'package:the_app/src/config.dart';
 import 'package:the_app/src/intl.dart';
+import 'package:the_app/src/screens/register.dart';
 
 final _facebookLogin = FacebookLogin();
 
@@ -24,7 +26,7 @@ void logout(BuildContext context) {
 
   apiData.setToken(null);
 
-  if (token?.obtainMethod == ObtainMethod.Google) {
+  if (token?.obtainMethod == ObtainMethod.google) {
     _googleSignIn.signOut();
   }
 }
@@ -60,18 +62,16 @@ class _LoginFormState extends State<LoginForm> {
   }
 
   @override
-  Widget build(BuildContext context) => SafeArea(
-        child: Form(
-          key: formKey,
-          child: AutofillGroup(
-            child: ListView(
-              padding: const EdgeInsets.all(20.0),
-              children: _tfa != null
-                  ? _buildFieldsTfa()
-                  : _associatable != null
-                      ? _buildFieldsAssociate()
-                      : _buildFieldsLogin(),
-            ),
+  Widget build(BuildContext context) => Form(
+        key: formKey,
+        child: AutofillGroup(
+          child: ListView(
+            children: _tfa != null
+                ? _buildFieldsTfa()
+                : _associatable != null
+                    ? _buildFieldsAssociate()
+                    : _buildFieldsLogin(),
+            padding: const EdgeInsets.all(20.0),
           ),
         ),
       );
@@ -88,7 +88,7 @@ class _LoginFormState extends State<LoginForm> {
         Row(
           children: <Widget>[
             Expanded(
-              child: FlatButton(
+              child: TextButton(
                 child: Text(lm(context).cancelButtonLabel),
                 onPressed: _isLoggingIn
                     ? null
@@ -96,7 +96,7 @@ class _LoginFormState extends State<LoginForm> {
               ),
             ),
             Expanded(
-              child: RaisedButton(
+              child: ElevatedButton(
                 child: Text(l(context).loginAssociate),
                 onPressed: _isLoggingIn ? null : _associate,
               ),
@@ -108,9 +108,24 @@ class _LoginFormState extends State<LoginForm> {
   List<Widget> _buildFieldsLogin() => [
         _buildInputPadding(_buildUsername()),
         _buildInputPadding(_buildPassword()),
-        RaisedButton(
-          child: Text(lm(context).continueButtonLabel),
-          onPressed: _isLoggingIn ? null : _login,
+        Row(
+          children: <Widget>[
+            Expanded(
+              child: TextButton(
+                child: Text(l(context).register),
+                onPressed: _isLoggingIn
+                    ? null
+                    : () => Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(builder: (_) => RegisterScreen())),
+              ),
+            ),
+            Expanded(
+              child: ElevatedButton(
+                child: Text(l(context).login),
+                onPressed: _isLoggingIn ? null : _login,
+              ),
+            ),
+          ],
         ),
         config.loginWithFacebook
             ? FacebookSignInButton(
@@ -138,7 +153,7 @@ class _LoginFormState extends State<LoginForm> {
         Text(l(context).loginTfaMethodPleaseChooseOne),
       ]
         ..addAll(_tfa.providers
-            .map((provider) => RaisedButton.icon(
+            .map((provider) => ElevatedButton.icon(
                   icon: !_isLoggingIn && _tfa.triggeredProvider == provider
                       ? Icon(
                           FontAwesomeIcons.check,
@@ -162,7 +177,7 @@ class _LoginFormState extends State<LoginForm> {
             ? Row(
                 children: <Widget>[
                   Expanded(
-                    child: FlatButton(
+                    child: TextButton(
                       child: Text(lm(context).cancelButtonLabel),
                       onPressed: _isLoggingIn
                           ? null
@@ -170,14 +185,14 @@ class _LoginFormState extends State<LoginForm> {
                     ),
                   ),
                   Expanded(
-                    child: RaisedButton(
+                    child: ElevatedButton(
                       child: Text(l(context).loginTfaVerify),
                       onPressed: _isLoggingIn ? null : _tfaVerify,
                     ),
                   ),
                 ],
               )
-            : FlatButton(
+            : TextButton(
                 child: Text(lm(context).cancelButtonLabel),
                 onPressed:
                     _isLoggingIn ? null : () => setState(() => _tfa = null),
@@ -246,12 +261,10 @@ class _LoginFormState extends State<LoginForm> {
 
     setState(() => _isLoggingIn = true);
 
-    final apiAuth = ApiAuth.of(context, listen: false);
-    final api = apiAuth.api;
-
+    final api = ApiAuth.of(context, listen: false).api;
     loginAssociate(api, _associatable, password)
-        .then((result) => _onResult(apiAuth, result))
-        .catchError((e) => _showError(context, e))
+        .then(_onResult)
+        .catchError(_showError)
         .whenComplete(() => setState(() => _isLoggingIn = false));
   }
 
@@ -264,10 +277,10 @@ class _LoginFormState extends State<LoginForm> {
 
     setState(() => _isLoggingIn = true);
 
-    final apiAuth = ApiAuth.of(context, listen: false);
-    login(apiAuth.api, username, password)
-        .then((result) => _onResult(apiAuth, result))
-        .catchError((e) => _showError(context, e))
+    final api = ApiAuth.of(context, listen: false).api;
+    login(api, username, password)
+        .then(_onResult)
+        .catchError(_showError)
         .whenComplete(() => setState(() => _isLoggingIn = false));
   }
 
@@ -275,8 +288,7 @@ class _LoginFormState extends State<LoginForm> {
     if (_isLoggingIn) return;
     setState(() => _isLoggingIn = true);
 
-    final apiAuth = ApiAuth.of(context, listen: false);
-    final api = apiAuth.api;
+    final api = ApiAuth.of(context, listen: false).api;
     final req = apple.AppleIdRequest(requestedScopes: [apple.Scope.email]);
 
     apple.AppleSignIn.performRequests([req])
@@ -293,14 +305,14 @@ class _LoginFormState extends State<LoginForm> {
 
           return Future.error(result.status.toString());
         })
-        .then((appleIdCredential) => loginExternal(api, ObtainMethod.Apple, {
+        .then((appleIdCredential) => loginExternal(api, ObtainMethod.apple, {
               'client_id': api.clientId,
               'client_secret': api.clientSecret,
               'apple_token':
                   String.fromCharCodes(appleIdCredential.identityToken),
             }))
-        .then((result) => _onResult(apiAuth, result))
-        .catchError((e) => _showError(context, e))
+        .then(_onResult)
+        .catchError(_showError)
         .whenComplete(() => setState(() => _isLoggingIn = false));
   }
 
@@ -308,9 +320,7 @@ class _LoginFormState extends State<LoginForm> {
     if (_isLoggingIn) return;
     setState(() => _isLoggingIn = true);
 
-    final apiAuth = ApiAuth.of(context, listen: false);
-    final api = apiAuth.api;
-
+    final api = ApiAuth.of(context, listen: false).api;
     _facebookLogin
         .logIn(['email'])
         .then<String>((result) {
@@ -326,13 +336,13 @@ class _LoginFormState extends State<LoginForm> {
 
           return Future.error(result.status.toString());
         })
-        .then((facebookToken) => loginExternal(api, ObtainMethod.Facebook, {
+        .then((facebookToken) => loginExternal(api, ObtainMethod.facebook, {
               'client_id': api.clientId,
               'client_secret': api.clientSecret,
               'facebook_token': facebookToken,
             }))
-        .then((result) => _onResult(apiAuth, result))
-        .catchError((e) => _showError(context, e))
+        .then(_onResult)
+        .catchError(_showError)
         .whenComplete(() => setState(() => _isLoggingIn = false));
   }
 
@@ -340,9 +350,7 @@ class _LoginFormState extends State<LoginForm> {
     if (_isLoggingIn) return;
     setState(() => _isLoggingIn = true);
 
-    final apiAuth = ApiAuth.of(context, listen: false);
-    final api = apiAuth.api;
-
+    final api = ApiAuth.of(context, listen: false).api;
     _googleSignIn
         .signIn()
         .then<GoogleSignInAuthentication>((account) {
@@ -361,44 +369,42 @@ class _LoginFormState extends State<LoginForm> {
 
           return googleToken;
         })
-        .then((googleToken) => loginExternal(api, ObtainMethod.Google, {
+        .then((googleToken) => loginExternal(api, ObtainMethod.google, {
               'client_id': api.clientId,
               'client_secret': api.clientSecret,
               'google_token': googleToken,
             }))
-        .then((result) => _onResult(apiAuth, result))
-        .catchError((e) => _showError(context, e))
+        .then(_onResult)
+        .catchError(_showError)
         .whenComplete(() => setState(() => _isLoggingIn = false));
   }
 
-  void _onResult(ApiAuth apiAuth, LoginResult result) {
+  void _onResult(LoginResult result) {
     if (!mounted || result == null) return;
 
-    if (result.token != null) {
-      apiAuth.setToken(result.token);
-      Navigator.pop(context, true);
-      return;
-    }
-
-    if (result.associatable != null)
-      setState(() => _associatable = result.associatable);
-
-    if (result.tfa != null) setState(() => _tfa = result.tfa);
+    result.when(
+      associatable: (v) => setState(() => _associatable = v),
+      tfa: (v) => setState(() => _tfa = v),
+      token: (v) {
+        final apiAuth = ApiAuth.of(context, listen: false);
+        apiAuth.setToken(v);
+        Navigator.pop(context, true);
+      },
+    );
   }
 
-  void _showError(BuildContext context, error) =>
-      Scaffold.of(context).showSnackBar(SnackBar(
-          backgroundColor: Colors.redAccent,
-          content: Text(error is ApiError ? error.message : "$error")));
+  void _showError(error) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      backgroundColor: Colors.redAccent,
+      content: Text(error is ApiError ? error.message : "$error")));
 
   void _tfaTrigger(String provider) {
     if (_isLoggingIn) return;
     setState(() => _isLoggingIn = true);
 
-    final apiAuth = ApiAuth.of(context, listen: false);
-    loginTfa(apiAuth.api, _tfa, provider, trigger: true)
-        .then((result) => _onResult(apiAuth, result))
-        .catchError((e) => _showError(context, e))
+    final api = ApiAuth.of(context, listen: false).api;
+    loginTfa(api, _tfa, provider, trigger: true)
+        .then(_onResult)
+        .catchError(_showError)
         .whenComplete(() => setState(() => _isLoggingIn = false));
   }
 
@@ -411,10 +417,10 @@ class _LoginFormState extends State<LoginForm> {
 
     setState(() => _isLoggingIn = true);
 
-    final apiAuth = ApiAuth.of(context, listen: false);
-    loginTfa(apiAuth.api, _tfa, _tfa.triggeredProvider, code: tfaCode)
-        .then((result) => _onResult(apiAuth, result))
-        .catchError((e) => _showError(context, e))
+    final api = ApiAuth.of(context, listen: false).api;
+    loginTfa(api, _tfa, _tfa.triggeredProvider, code: tfaCode)
+        .then(_onResult)
+        .catchError(_showError)
         .whenComplete(() => setState(() => _isLoggingIn = false));
   }
 }

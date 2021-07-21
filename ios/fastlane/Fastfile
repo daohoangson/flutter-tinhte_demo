@@ -38,8 +38,8 @@ platform :ios do
         method: "ad-hoc",
         manifest: {
           appURL: "https://storage.googleapis.com/flutterttdemo/#{commit[:commit_hash]}/ipa/Runner.ipa",
-          displayImageURL: "https://github.com/daohoangson/flutter-tinhte_demo/raw/master/ios/fastlane/flutter_57.png",
-          fullSizeImageURL: "https://github.com/daohoangson/flutter-tinhte_demo/raw/master/ios/fastlane/flutter_512.png"
+          displayImageURL: "https://github.com/daohoangson/flutter-tinhte_demo/raw/master/ios/fastlane/logo_57.png",
+          fullSizeImageURL: "https://github.com/daohoangson/flutter-tinhte_demo/raw/master/ios/fastlane/logo_512.png"
         }
       },
       output_directory: "../build/app/outputs/ipa/release"

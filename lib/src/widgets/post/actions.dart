@@ -5,12 +5,15 @@ const _kPopupActionOpenInBrowser = 'openInBrowser';
 const _kPopupActionReport = 'report';
 
 class _PostActionsWidget extends StatefulWidget {
+  final Post post;
   final bool showPostCreateDate;
 
   _PostActionsWidget({
     Key key,
+    @required this.post,
     this.showPostCreateDate = true,
-  }) : super(key: key);
+  })  : assert(post != null),
+        super(key: key);
 
   @override
   State<StatefulWidget> createState() => _PostActionsWidgetState();
@@ -19,24 +22,25 @@ class _PostActionsWidget extends StatefulWidget {
 class _PostActionsWidgetState extends State<_PostActionsWidget> {
   bool _isLiking = false;
 
-  @override
-  Widget build(BuildContext context) => Consumer<ActionablePost>(
-        builder: (context, ap, _) {
-          final post = ap.post;
-          final postIsDeleted = post.postIsDeleted == true;
-          final postIsLiked = post.postIsLiked == true;
+  Post get post => widget.post;
 
+  @override
+  Widget build(BuildContext context) => AnimatedBuilder(
+        animation: post,
+        builder: (context, _) {
           final buttons = <Widget>[];
 
-          if (!postIsDeleted) {
+          if (!post.postIsDeleted) {
             if (post.links?.likes?.isNotEmpty == true) {
               buttons.add(buildPostButton(
                 context,
-                postIsLiked ? l(context).postUnlike : l(context).postLike,
+                post.postIsLiked ? l(context).postUnlike : l(context).postLike,
                 count: post.postLikeCount,
                 onTap: _isLiking
                     ? null
-                    : () => (postIsLiked ? _unlikePost(ap) : _likePost(ap)),
+                    : () => (post.postIsLiked
+                        ? _unlikePost(post)
+                        : _likePost(post)),
               ));
             }
 
@@ -45,7 +49,7 @@ class _PostActionsWidgetState extends State<_PostActionsWidget> {
               l(context).postReply,
               onTap: () => context.read<PostEditorData>().enable(
                     context,
-                    parentPost: context.read<Post>(),
+                    parentPost: post,
                   ),
             ));
           }
@@ -61,7 +65,7 @@ class _PostActionsWidgetState extends State<_PostActionsWidget> {
             Expanded(
               child: Align(
                 alignment: Alignment.centerRight,
-                child: _buildPopupMenu(context, ap),
+                child: _buildPopupMenu(context, post),
               ),
             ),
           );
@@ -78,7 +82,7 @@ class _PostActionsWidgetState extends State<_PostActionsWidget> {
         },
       );
 
-  Widget _buildPopupMenu(BuildContext context, ActionablePost ap) {
+  Widget _buildPopupMenu(BuildContext context, Post post) {
     return PopupMenuButton<String>(
       child: Padding(
         padding: const EdgeInsets.all(kPaddingHorizontal),
@@ -90,9 +94,8 @@ class _PostActionsWidgetState extends State<_PostActionsWidget> {
           ),
         ),
       ),
-      itemBuilder: (_) => _buildPopupMenuItems(ap),
+      itemBuilder: (_) => _buildPopupMenuItems(post),
       onSelected: (action) async {
-        final post = ap.post;
         switch (action) {
           case _kPopupActionDelete:
             final reason = await showDialog(
@@ -102,10 +105,10 @@ class _PostActionsWidgetState extends State<_PostActionsWidget> {
                 hint: l(context).postDeleteReasonHint,
               ),
             );
-            if (reason != null) _deletePost(ap, reason);
+            if (reason != null) _deletePost(post, reason);
             break;
           case _kPopupActionOpenInBrowser:
-            launch(post.links?.permalink);
+            launchLink(context, post.links?.permalink, forceWebView: true);
             break;
           case _kPopupActionReport:
             final message = await showDialog(
@@ -115,16 +118,14 @@ class _PostActionsWidgetState extends State<_PostActionsWidget> {
                 hint: l(context).postReportReasonHint,
               ),
             );
-            if (message != null) _reportPost(ap, message);
+            if (message != null) _reportPost(post, message);
             break;
         }
       },
     );
   }
 
-  List<PopupMenuEntry<String>> _buildPopupMenuItems(ActionablePost ap) {
-    final post = ap.post;
-
+  List<PopupMenuEntry<String>> _buildPopupMenuItems(Post post) {
     final entries = <PopupMenuEntry<String>>[
       PopupMenuItem(
         child: Text(l(context).openInBrowser),
@@ -150,45 +151,45 @@ class _PostActionsWidgetState extends State<_PostActionsWidget> {
     return entries;
   }
 
-  void _deletePost(ActionablePost ap, String reason) => apiDelete(
+  void _deletePost(Post post, String reason) => apiDelete(
         ApiCaller.stateful(this),
-        ap.post.links.detail,
+        post.links.detail,
         bodyFields: {'reason': reason},
-        onSuccess: (_) => ap.setIsDeleted(),
+        onSuccess: (_) => post.postIsDeleted = true,
       );
 
-  void _likePost(ActionablePost ap) => prepareForApiAction(context, () {
+  void _likePost(Post post) => prepareForApiAction(context, () {
         if (_isLiking) return;
         setState(() => _isLiking = true);
 
         apiPost(
           ApiCaller.stateful(this),
-          ap.post.links.likes,
-          onSuccess: (_) => ap.setIsLiked(true),
+          post.links.likes,
+          onSuccess: (_) => post.postIsLiked = true,
           onComplete: () => setState(() => _isLiking = false),
         );
       });
 
-  void _reportPost(ActionablePost ap, String message) => prepareForApiAction(
+  void _reportPost(Post post, String message) => prepareForApiAction(
         context,
         () => apiPost(
           ApiCaller.stateful(this),
-          ap.post.links.report,
+          post.links.report,
           bodyFields: {'message': message},
-          onSuccess: (_) => Scaffold.of(context).showSnackBar(
+          onSuccess: (_) => ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(l(context).postReportedThanks)),
           ),
         ),
       );
 
-  void _unlikePost(ActionablePost ap) => prepareForApiAction(context, () {
+  void _unlikePost(Post post) => prepareForApiAction(context, () {
         if (_isLiking) return;
         setState(() => _isLiking = true);
 
         apiDelete(
           ApiCaller.stateful(this),
-          ap.post.links.likes,
-          onSuccess: (_) => ap.setIsLiked(false),
+          post.links.likes,
+          onSuccess: (_) => post.postIsLiked = false,
           onComplete: () => setState(() => _isLiking = false),
         );
       });
@@ -207,11 +208,11 @@ class _PostActionsDialogReason extends StatelessWidget {
   @override
   Widget build(BuildContext context) => AlertDialog(
         actions: <Widget>[
-          FlatButton(
+          TextButton(
             child: Text(lm(context).cancelButtonLabel),
             onPressed: () => Navigator.of(context).pop(),
           ),
-          FlatButton(
+          TextButton(
             child: Text(button),
             onPressed: () => Navigator.of(context).pop(_controller.text),
           ),
@@ -224,37 +225,4 @@ class _PostActionsDialogReason extends StatelessWidget {
           ),
         ),
       );
-}
-
-class ActionablePost extends ChangeNotifier {
-  final Post post;
-
-  ActionablePost(this.post);
-
-  void setIsDeleted() {
-    post.postIsDeleted = true;
-    post.permissions = null;
-    notifyListeners();
-  }
-
-  void setIsLiked(bool value) {
-    post.postIsLiked = value;
-    post.postLikeCount ??= 0;
-
-    if (value) {
-      post.postLikeCount++;
-    } else if (post.postLikeCount > 0) {
-      post.postLikeCount--;
-    }
-
-    notifyListeners();
-  }
-
-  static MultiProvider buildMultiProvider(Post post, Widget child) =>
-      MultiProvider(providers: [
-        Provider<Post>.value(value: post),
-        ChangeNotifierProvider<ActionablePost>.value(
-          value: ActionablePost(post),
-        ),
-      ], child: child);
 }

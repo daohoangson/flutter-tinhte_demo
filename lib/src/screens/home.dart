@@ -10,6 +10,8 @@ import 'package:the_app/src/config.dart';
 import 'package:the_app/src/intl.dart';
 
 class HomeScreen extends StatelessWidget {
+  final superList = GlobalKey<SuperListState>();
+
   @override
   Widget build(BuildContext context) => Scaffold(
         body: SafeArea(
@@ -31,9 +33,15 @@ class HomeScreen extends StatelessWidget {
               return null;
             },
             itemMaxWidth: 800,
+            key: superList,
           ),
+          top: false,
+          bottom: false,
         ),
-        bottomNavigationBar: HomeBottomBar(),
+        bottomNavigationBar: HomeBottomBar(
+          onHomeTap: () => superList.currentState?.scrollTo(0),
+        ),
+        extendBody: true,
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: FloatingActionButton(
           onPressed: () => Navigator.of(context)
@@ -65,13 +73,6 @@ class HomeScreen extends StatelessWidget {
     for (int i = 0; i < l; i++) {
       var srt = config.homeParser(threadsJson[i]);
       if (srt == null || srt.content == null) continue;
-
-      if (srt.content?.threadImage != null) {
-        // force display mode for edge case: when thread has custom home image
-        // thread view will have an annoying jump effect (no cover -> has cover)
-        // we know home thread always has cover image so it's safe to do this
-        srt.content.threadImage.displayMode = 'cover';
-      }
 
       if (top5 != null && top5.length < 5) {
         top5.add(srt);

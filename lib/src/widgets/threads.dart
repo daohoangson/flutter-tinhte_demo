@@ -1,9 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:provider/provider.dart';
 import 'package:share/share.dart';
-import 'package:the_api/navigation.dart' as navigation;
 import 'package:the_api/node.dart';
 import 'package:the_api/post.dart';
 import 'package:the_api/thread.dart';
@@ -57,11 +55,8 @@ class ThreadsWidget extends StatelessWidget {
 
     final list = json[threadsKey] as List;
     for (final j in list) {
-      final thread = Thread.fromJson(j);
+      final thread = Thread.fromJson(j, forum: forum);
       if (thread.threadId == null || thread.firstPost == null) continue;
-
-      if (thread.forum == null && thread.forumId == forum?.forumId)
-        thread.forum = forum;
 
       fc.items.add(thread);
     }

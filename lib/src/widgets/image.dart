@@ -43,14 +43,37 @@ String getResizedUrl({
 class ThreadImageWidget extends StatelessWidget {
   final int threadId;
   final ThreadImage image;
+  final ThreadImage placeholder;
   final bool useImageRatio;
 
-  ThreadImageWidget({
+  static final _smalls = Expando<ThreadImage>();
+
+  ThreadImageWidget._({
     @required this.image,
     Key key,
+    this.placeholder,
     @required this.threadId,
     this.useImageRatio = false,
   }) : super(key: key);
+
+  factory ThreadImageWidget.small(Thread thread, ThreadImage image,
+      {bool useImageRatio = false}) {
+    _smalls[thread] = image;
+
+    return ThreadImageWidget._(
+      image: image,
+      threadId: thread.threadId,
+      useImageRatio: useImageRatio,
+    );
+  }
+
+  factory ThreadImageWidget.big(Thread thread, ThreadImage image) =>
+      ThreadImageWidget._(
+        image: image,
+        placeholder: _smalls[thread],
+        threadId: thread.threadId,
+        useImageRatio: true,
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -63,9 +86,19 @@ class ThreadImageWidget extends StatelessWidget {
       );
     }
 
-    final img = Image(
-      image: CachedNetworkImageProvider(link),
-      fit: BoxFit.cover,
+    final placeholder =
+        this.placeholder != null && this.placeholder.link != link
+            ? _buildImage(this.placeholder.link)
+            : null;
+
+    final img = _buildImage(
+      link,
+      frameBuilder: placeholder != null
+          ? (_, child, frame, wasSynchronouslyLoaded) {
+              if (wasSynchronouslyLoaded) return child;
+              return frame != null ? child : placeholder;
+            }
+          : null,
     );
 
     return AspectRatio(
@@ -80,4 +113,11 @@ class ThreadImageWidget extends StatelessWidget {
           : img,
     );
   }
+
+  static Widget _buildImage(String url, {ImageFrameBuilder frameBuilder}) =>
+      Image(
+        frameBuilder: frameBuilder,
+        image: CachedNetworkImageProvider(url),
+        fit: BoxFit.cover,
+      );
 }

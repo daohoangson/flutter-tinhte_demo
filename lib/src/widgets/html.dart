@@ -5,8 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
-// ignore: implementation_imports
-import 'package:flutter_widget_from_html_core/src/internal/css_sizing.dart';
+import 'package:fwfh_webview/fwfh_webview.dart';
 import 'package:html_unescape/html_unescape.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 import 'package:the_app/src/config.dart';
@@ -14,6 +13,7 @@ import 'package:the_app/src/constants.dart';
 import 'package:the_app/src/intl.dart';
 import 'package:the_app/src/link.dart';
 import 'package:the_app/src/widgets/image.dart';
+import 'package:the_app/src/widgets/video_player.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 part 'html/galleria.dart';
@@ -37,16 +37,16 @@ const _kSmilies = {
   'Er... what?': '😳',
 };
 
-const _kTextPadding = const EdgeInsets.symmetric(horizontal: kPostBodyPadding);
-
 class TinhteHtmlWidget extends StatelessWidget {
   final String html;
   final Color hyperlinkColor;
+  final double textPadding;
   final TextStyle textStyle;
 
   TinhteHtmlWidget(
     this.html, {
     this.hyperlinkColor,
+    this.textPadding = kPostBodyPadding,
     this.textStyle,
   });
 
@@ -66,11 +66,11 @@ class TinhteHtmlWidget extends StatelessWidget {
           factoryBuilder: () => TinhteWidgetFactory(
             devicePixelRatio: MediaQuery.of(c).devicePixelRatio,
             deviceWidth: bc.biggest.width,
+            textPadding: textPadding,
           ),
           hyperlinkColor: hyperlinkColor,
           onTapUrl: (url) => launchLink(c, url),
           textStyle: textStyle,
-          unsupportedWebViewWorkaroundForIssue37: true,
           webView: true,
         ),
       );
@@ -79,6 +79,7 @@ class TinhteHtmlWidget extends StatelessWidget {
 class TinhteWidgetFactory extends WidgetFactory {
   final double devicePixelRatio;
   final double deviceWidth;
+  final double textPadding;
 
   BuildOp _blockquoteOp;
   BuildOp _chrOp;
@@ -92,6 +93,7 @@ class TinhteWidgetFactory extends WidgetFactory {
   TinhteWidgetFactory({
     this.devicePixelRatio,
     this.deviceWidth,
+    this.textPadding,
   });
 
   BuildOp get blockquoteOp {
@@ -111,7 +113,7 @@ class TinhteWidgetFactory extends WidgetFactory {
                   ),
                 ),
               ),
-              padding: const EdgeInsets.all(kPostBodyPadding),
+              padding: EdgeInsets.all(textPadding),
             ),
           ),
       ],
@@ -123,7 +125,7 @@ class TinhteWidgetFactory extends WidgetFactory {
     _chrOp ??= BuildOp(
       defaultStyles: (_) => {'margin': '0.5em 0'},
       onWidgets: (meta, __) {
-        final a = meta.domElement.attributes;
+        final a = meta.element.attributes;
         final url = urlFull(a['href']);
         if (url?.isEmpty != false) return null;
 
@@ -148,9 +150,9 @@ class TinhteWidgetFactory extends WidgetFactory {
 
   BuildOp get metaBbCodeOp {
     _metaBbCodeOp ??= BuildOp(
-      onChild: (meta) => (meta.domElement.localName == 'span' &&
-              !meta.domElement.classes.contains('value'))
-          ? meta.isNotRenderable = true
+      onChild: (meta) => (meta.element.localName == 'span' &&
+              !meta.element.classes.contains('value'))
+          ? meta['display'] = 'none'
           : null,
     );
     return _metaBbCodeOp;
@@ -158,19 +160,13 @@ class TinhteWidgetFactory extends WidgetFactory {
 
   BuildOp get smilieOp {
     _smilieOp ??= BuildOp(
-      onPieces: (meta, pieces) {
-        final a = meta.domElement.attributes;
-        if (!a.containsKey('data-title')) return pieces;
+      onTree: (meta, tree) {
+        final a = meta.element.attributes;
+        if (!a.containsKey('data-title')) return;
         final title = a['data-title'];
-        if (!_kSmilies.containsKey(title)) return pieces;
+        if (!_kSmilies.containsKey(title)) return;
 
-        final text = pieces.first.text;
-        for (final bit in List.unmodifiable(text.bits)) {
-          bit.detach();
-        }
-        text.addText(_kSmilies[title]);
-
-        return pieces;
+        tree.replaceWith(TextBit(tree, _kSmilies[title]));
       },
     );
     return _smilieOp;
@@ -182,7 +178,7 @@ class TinhteWidgetFactory extends WidgetFactory {
         buildWebView(
             meta,
             Uri.dataFromString(
-              """<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"></head><body>${meta.domElement.outerHtml}</body></html>""",
+              """<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"></head><body>${meta.element.outerHtml}</body></html>""",
               encoding: Encoding.getByName('utf-8'),
               mimeType: 'text/html',
             ).toString())
@@ -203,33 +199,21 @@ class TinhteWidgetFactory extends WidgetFactory {
 
   @override
   WidgetPlaceholder buildColumnPlaceholder(
-    NodeMetadata meta,
+    BuildMetadata meta,
     Iterable<Widget> children, {
     bool trimMarginVertical = false,
   }) {
-    if (_isBuildingText > 0) {
-      if (_isBuildingText != 1) print('_isBuildingText=$_isBuildingText');
-      children = List.from(children.map((child) {
-        if (child is WidgetPlaceholder<TextBits>)
-          child.wrapWith((_, w) => _TextPadding(w));
-
-        return child;
-      }));
-    }
-
     final built = super.buildColumnPlaceholder(meta, children,
         trimMarginVertical: trimMarginVertical);
 
     if (trimMarginVertical) {
-      built.wrapWith((_, child) {
-        final last = _lastOf(child);
-
+      built?.wrapWith((_, child) {
         return Padding(
           child: child,
           padding: EdgeInsets.only(
-            top: kPostBodyPadding,
-            bottom: last is _TextPadding || last is WidgetPlaceholder<TextBits>
-                ? kPostBodyPadding
+            top: textPadding,
+            bottom: children.last is WidgetPlaceholder<BuildTree>
+                ? textPadding
                 : 0.0,
           ),
         );
@@ -239,40 +223,51 @@ class TinhteWidgetFactory extends WidgetFactory {
     return built;
   }
 
+  static final _resizedUrl = Expando<String>();
+
   @override
-  Widget buildImage(NodeMetadata meta, Object provider, ImageMetadata image) {
-    if (image.sources?.first?.width == null) {
-      final attrs = meta.domElement.attributes;
-      if (attrs.containsKey('data-height') && attrs.containsKey('data-width')) {
-        final resizedUrl = getResizedUrl(
-          apiUrl: image.sources.first.url,
-          boxWidth: devicePixelRatio * deviceWidth,
-          imageHeight: double.tryParse(attrs['data-height']),
-          imageWidth: double.tryParse(attrs['data-width']),
-        );
-        if (resizedUrl != null)
-          provider = imageProvider(ImageSource(resizedUrl));
-      }
+  Widget buildImage(BuildMetadata meta, ImageMetadata data) {
+    final source = data.sources.first;
+    if (source.width != null && source.height != null) {
+      final resizedUrl = getResizedUrl(
+        apiUrl: source.url,
+        boxWidth: devicePixelRatio * deviceWidth,
+        imageHeight: source.height,
+        imageWidth: source.width,
+      );
+      if (resizedUrl != null) _resizedUrl[meta] = resizedUrl;
     }
 
-    return super.buildImage(meta, provider, image);
+    return super.buildImage(meta, data);
   }
 
-  var _isBuildingText = 0;
+  Widget buildImageWidget(
+    BuildMetadata meta, {
+    String semanticLabel,
+    @required String url,
+  }) =>
+      super.buildImageWidget(
+        meta,
+        semanticLabel: semanticLabel,
+        url: _resizedUrl[meta] ?? url,
+      );
+
   @override
-  WidgetPlaceholder buildText(NodeMetadata meta, TextBits text) {
-    _isBuildingText++;
-    final built = super.buildText(meta, text);
-    _isBuildingText--;
+  Widget buildText(BuildMetadata meta, TextStyleHtml tsh, InlineSpan text) {
+    var built = super.buildText(meta, tsh, text);
+
+    if (built != null) {
+      built = _TextPadding(built, textPadding);
+    }
 
     return built;
   }
 
   @override
-  void parse(NodeMetadata meta) {
-    final attrs = meta.domElement.attributes;
-    final classes = meta.domElement.classes;
-    switch (meta.domElement.localName) {
+  void parse(BuildMetadata meta) {
+    final attrs = meta.element.attributes;
+    final classes = meta.element.classes;
+    switch (meta.element.localName) {
       case 'a':
         if (attrs.containsKey('data-chr') && attrs.containsKey('href')) {
           meta.register(chrOp);
@@ -300,13 +295,17 @@ class TinhteWidgetFactory extends WidgetFactory {
           meta.register(LinkExpander.getOembedOp());
           return;
         }
+        if (classes.contains('bdPostTree_ParentQuote')) {
+          meta['display'] = 'none';
+          return;
+        }
         break;
       case 'img':
         if (attrs.containsKey('data-height')) {
-          meta['height'] = '${attrs["data-height"]}px';
+          attrs['height'] = attrs['data-height'];
         }
         if (attrs.containsKey('data-width')) {
-          meta['width'] = '${attrs["data-width"]}px';
+          attrs['width'] = attrs['data-width'];
         }
         break;
       case 'ul':
@@ -357,18 +356,11 @@ class TinhteWidgetFactory extends WidgetFactory {
 
 class _TextPadding extends StatelessWidget {
   final Widget child;
+  final double padding;
 
-  const _TextPadding(this.child, {Key key}) : super(key: key);
+  const _TextPadding(this.child, this.padding, {Key key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) =>
-      Padding(child: child, padding: _kTextPadding);
-}
-
-Widget _lastOf(Widget widget) {
-  if (widget is Column) {
-    return _lastOf(widget.children.last);
-  }
-
-  return widget;
+  Widget build(BuildContext _) =>
+      Padding(child: child, padding: EdgeInsets.symmetric(horizontal: padding));
 }

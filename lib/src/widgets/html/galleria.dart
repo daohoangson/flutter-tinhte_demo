@@ -4,7 +4,7 @@ const kColumns = 3;
 const kSpacing = 3.0;
 
 class Galleria {
-  final NodeMetadata galleryMeta;
+  final BuildMetadata galleryMeta;
   final TinhteWidgetFactory wf;
 
   final _lb = LbTrigger();
@@ -20,16 +20,16 @@ class Galleria {
     return _galleriaOp;
   }
 
-  void onChild(NodeMetadata childMeta) {
-    final e = childMeta.domElement;
-    if (e.parent != galleryMeta.domElement) return;
+  void onChild(BuildMetadata childMeta) {
+    final e = childMeta.element;
+    if (e.parent != galleryMeta.element) return;
     if (e.localName != 'li') return;
 
     childMeta.register(_GalleriaItem(wf, this, childMeta).op);
   }
 
   Iterable<Widget> onWidgets(
-          NodeMetadata _, Iterable<WidgetPlaceholder> widgets) =>
+          BuildMetadata _, Iterable<WidgetPlaceholder> widgets) =>
       [
         WidgetPlaceholder<Galleria>(this,
             child: _GalleriaGrid(widgets.toList(growable: false)))
@@ -37,7 +37,7 @@ class Galleria {
 }
 
 class _GalleriaItem {
-  final NodeMetadata itemMeta;
+  final BuildMetadata itemMeta;
   final Galleria galleria;
   final WidgetFactory wf;
 
@@ -58,9 +58,9 @@ class _GalleriaItem {
     return _itemOp;
   }
 
-  void onChild(NodeMetadata childMeta) {
-    final e = childMeta.domElement;
-    if (e.parent != itemMeta.domElement) return;
+  void onChild(BuildMetadata childMeta) {
+    final e = childMeta.element;
+    if (e.parent != itemMeta.element) return;
 
     switch (e.className) {
       case 'LbTrigger':
@@ -83,7 +83,7 @@ class _GalleriaItem {
         break;
       case 'Tinhte_Gallery_Description':
         _descriptionOp ??= BuildOp(onWidgets: (meta, widgets) {
-          meta.tsb((p, _) => p.copyWith(
+          meta.tsb.enqueue((p, _) => p.copyWith(
               style: p
                   .getDependency<ThemeData>()
                   .textTheme
@@ -98,15 +98,14 @@ class _GalleriaItem {
   }
 
   Iterable<Widget> onWidgets(
-      NodeMetadata _, Iterable<WidgetPlaceholder> widgets) {
+      BuildMetadata _, Iterable<WidgetPlaceholder> widgets) {
     if (_source == null) return widgets;
     if (_trigger == null) return widgets;
 
-    final index = galleria._lb._addSource(_source);
-    if (_description != null) {
-      galleria._lb.captions[index] = _description;
-    }
-
+    final index = galleria._lb.addSource(
+      LbTriggerSource.image(_source),
+      caption: _description,
+    );
     _trigger.wrapWith((context, child) =>
         galleria._lb.buildGestureDetector(context, child, index));
 

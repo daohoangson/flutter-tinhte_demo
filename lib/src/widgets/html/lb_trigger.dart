@@ -3,10 +3,11 @@ part of '../html.dart';
 const kCaptionColor = Colors.white70;
 
 class LbTrigger {
-  final captions = Map<int, Widget>();
   final hashCodes = <int>[0];
-  final sources = <String>[];
   final WidgetFactory wf;
+
+  final _captions = Map<int, Widget>();
+  final _sources = <LbTriggerSource>[];
 
   BuildOp _fullOp;
 
@@ -18,7 +19,11 @@ class LbTrigger {
         onTap: () => Navigator.push(
           c,
           _ScaleRoute(
-            page: _Screen(captions: captions, initialPage: i, sources: sources),
+            page: _Screen(
+              captions: _captions,
+              initialPage: i,
+              sources: _sources,
+            ),
           ),
         ),
       );
@@ -47,24 +52,20 @@ class LbTrigger {
 
     return BuildOp(
       onChild: (meta) {
-        if (meta.domElement.localName != 'img') return;
+        if (meta.element.localName != 'img') return;
 
         meta
           ..['height'] = "${childHeight}px"
           ..['width'] = "${childWidth}px";
       },
-      onPieces: (meta, pieces) {
-        final index = _addSource(url);
+      onTree: (meta, tree) {
+        final index = addSource(LbTriggerSource.image(url));
 
-        for (final piece in pieces) {
-          if (piece.widgets != null) continue;
-          for (final bit in piece.text.bits) {
-            if (bit is TextWidget) {
-              bit.child.wrapWith((c, w) => buildGestureDetector(c, w, index));
-            }
+        for (final bit in tree.bits) {
+          if (bit is WidgetBit) {
+            bit.child.wrapWith((c, w) => buildGestureDetector(c, w, index));
           }
         }
-        return pieces;
       },
     );
   }
@@ -72,14 +73,14 @@ class LbTrigger {
   BuildOp get fullOp {
     _fullOp = BuildOp(
       onChild: (meta) {
-        if (meta.domElement.localName != 'img') return;
+        if (meta.element.localName != 'img') return;
 
-        final a = meta.domElement.attributes;
+        final a = meta.element.attributes;
         final href = a['src'];
         final url = wf.urlFull(href);
         if (url == null) return;
 
-        final index = _addSource(url);
+        final index = addSource(LbTriggerSource.image(url));
         meta
           ..['margin'] = '0.5em 0'
           ..register(BuildOp(onWidgets: (_, widgets) {
@@ -94,12 +95,42 @@ class LbTrigger {
     return _fullOp;
   }
 
-  int _addSource(String source) {
-    final index = sources.length;
-    sources.add(source);
+  int addSource(LbTriggerSource source, {Widget caption}) {
+    final index = _sources.length;
+    _sources.add(source);
+
+    if (caption != null) {
+      _captions[index] = caption;
+    }
 
     return index;
   }
+}
+
+abstract class LbTriggerSource {
+  String get url;
+
+  factory LbTriggerSource.image(String url) = _LbTriggerImage;
+  factory LbTriggerSource.video(String url, {double aspectRatio}) =
+      _LbTriggerVideo;
+
+  const LbTriggerSource._();
+}
+
+class _LbTriggerImage extends LbTriggerSource {
+  @override
+  final String url;
+
+  _LbTriggerImage(this.url) : super._();
+}
+
+class _LbTriggerVideo extends LbTriggerSource {
+  final double aspectRatio;
+
+  @override
+  final String url;
+
+  _LbTriggerVideo(this.url, {this.aspectRatio}) : super._();
 }
 
 class _ScaleRoute extends PageRouteBuilder {
@@ -124,7 +155,7 @@ class _Screen extends StatefulWidget {
   final Map<int, Widget> captions;
   final int initialPage;
   final PageController pageController;
-  final List<String> sources;
+  final List<LbTriggerSource> sources;
 
   _Screen({
     this.captions,
@@ -183,7 +214,10 @@ class _ScreenState extends State<_Screen> {
   Widget _buildCaption(BuildContext context, int index) => Column(
         children: <Widget>[
           widget.captions.containsKey(index)
-              ? widget.captions[index]
+              ? DefaultTextStyle(
+                  child: widget.captions[index],
+                  style: TextStyle(color: kCaptionColor),
+                )
               : Text(
                   l(context).navXOfY(index + 1, widget.sources.length),
                   style: Theme.of(context)
@@ -191,17 +225,33 @@ class _ScreenState extends State<_Screen> {
                       .caption
                       .copyWith(color: kCaptionColor),
                 ),
-          FlatButton(
+          TextButton(
             child: Text(lm(context).okButtonLabel),
-            colorBrightness: Brightness.dark,
             onPressed: () => Navigator.of(context).pop(),
+            style: TextButton.styleFrom(primary: kCaptionColor),
           )
         ],
         mainAxisSize: MainAxisSize.min,
       );
 
-  PhotoViewGalleryPageOptions _buildItem(BuildContext context, int index) =>
-      PhotoViewGalleryPageOptions(
-        imageProvider: NetworkImage(widget.sources[index]),
+  PhotoViewGalleryPageOptions _buildItem(BuildContext context, int index) {
+    final source = widget.sources[index];
+
+    if (source is _LbTriggerImage) {
+      return PhotoViewGalleryPageOptions(
+        imageProvider: NetworkImage(source.url),
       );
+    }
+
+    Widget child = const SizedBox.shrink();
+    if (source is _LbTriggerVideo) {
+      child = VideoPlayer(
+        aspectRatio: source.aspectRatio,
+        autoPlay: true,
+        url: source.url,
+      );
+    }
+
+    return PhotoViewGalleryPageOptions.customChild(child: child);
+  }
 }

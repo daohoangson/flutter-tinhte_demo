@@ -16,13 +16,19 @@ Widget _buildReplyToPadding(Widget child, int depth) =>
           );
 
 class _PostWidget extends StatelessWidget {
+  final Post post;
+
+  const _PostWidget({Key key, @required this.post})
+      : assert(post != null),
+        super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    final post = context.watch<Post>();
     if (post.userIsIgnored) return widget0;
 
     final isPostReply = post.postReplyTo != null;
     final attachments = _PostAttachmentsWidget.forPost(post);
+    final stickers = _PostStickersWidget.forPost(post);
 
     Widget built = buildPostRow(
       context,
@@ -38,13 +44,14 @@ class _PostWidget extends StatelessWidget {
           userHasVerifiedBadge: post.posterHasVerifiedBadge,
           userRank: post.posterRank?.rankName,
         ),
-        _PostBodyWidget(),
-        attachments ?? widget0,
+        _PostBodyWidget(post: post),
+        if (attachments != null) attachments,
+        if (stickers != null) stickers,
       ],
       footer: <Widget>[
         Padding(
           padding: const EdgeInsets.only(left: kPaddingHorizontal),
-          child: _PostActionsWidget(),
+          child: _PostActionsWidget(post: post),
         ),
       ],
     );
@@ -112,13 +119,26 @@ class _PostReplyHiddenWidgetState extends State<_PostReplyHiddenWidget> {
       widget.postReply.link,
       onSuccess: (jsonMap) {
         final sls = context.read<SuperListState<_PostListItem>>();
-        final items = jsonMap.containsKey('replies')
-            ? decodePostsAndTheirReplies(
-                jsonMap['replies'],
-                parentPostId: widget.postReply.postReplyTo,
-              )
-            : <_PostListItem>[];
-        sls.itemsReplace(widget.superListIndex, items);
+        final jsonParentPost = jsonMap['parent_post'] as Map;
+        if (jsonParentPost != null &&
+            jsonParentPost['post_id'] == widget.postReply.postReplyTo &&
+            jsonMap.containsKey('replies')) {
+          final items = decodePostsAndTheirReplies(
+            [jsonParentPost, ...jsonMap['replies']],
+          )
+              .where((item) => item.postId != widget.postReply.postReplyTo)
+              .toList();
+
+          if (items.isNotEmpty &&
+              items.last.postReply?.postReplyCount != null) {
+            // ignore the last "load more"
+            items.removeLast();
+          }
+
+          sls.itemsReplace(widget.superListIndex, items);
+        } else {
+          sls.itemsReplace(widget.superListIndex, []);
+        }
       },
       onComplete: () => setState(() => _isFetching = false),
     );

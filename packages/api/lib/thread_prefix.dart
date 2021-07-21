@@ -1,13 +1,15 @@
-import 'package:json_annotation/json_annotation.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
+part 'thread_prefix.freezed.dart';
 part 'thread_prefix.g.dart';
 
-@JsonSerializable()
-class ThreadPrefix {
-  final int prefixId;
-  final String prefixTitle;
+@freezed
+class ThreadPrefix with _$ThreadPrefix {
+  const factory ThreadPrefix(
+    int prefixId,
+    String prefixTitle,
+  ) = _ThreadPrefix;
 
-  ThreadPrefix(this.prefixId, this.prefixTitle);
   factory ThreadPrefix.fromJson(Map<String, dynamic> json) =>
       _$ThreadPrefixFromJson(json);
 }

@@ -8,6 +8,7 @@ import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:the_api/attachment.dart';
 import 'package:the_api/post.dart';
 import 'package:the_api/thread.dart';
+import 'package:the_api/x_post_sticker.dart';
 import 'package:the_app/src/widgets/font_control.dart';
 import 'package:the_app/src/widgets/tinhte/background_post.dart';
 import 'package:the_app/src/widgets/tinhte/tinhte_fact.dart';
@@ -21,7 +22,6 @@ import 'package:the_app/src/api.dart';
 import 'package:the_app/src/constants.dart';
 import 'package:the_app/src/intl.dart';
 import 'package:the_app/src/link.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 part 'post/actions.dart';
 part 'post/attachments.dart';
@@ -30,9 +30,9 @@ part 'post/builders.dart';
 part 'post/first.dart';
 part 'post/list.dart';
 part 'post/replies.dart';
+part 'post/stickers.dart';
 
-List<_PostListItem> decodePostsAndTheirReplies(List jsonPosts,
-    {int parentPostId}) {
+List<_PostListItem> decodePostsAndTheirReplies(List jsonPosts) {
   final items = <_PostListItem>[];
   final postReplyItemById = Map<int, _PostListItem>();
 
@@ -45,14 +45,9 @@ List<_PostListItem> decodePostsAndTheirReplies(List jsonPosts,
       return item;
     });
 
-    if (post.postReplyTo == parentPostId) {
+    if (post.postReplyTo == null) {
       items.add(_PostListItem.post(post));
       if (postReplies != null) items.addAll(postReplies);
-      return;
-    }
-
-    if (post.postReplyTo == null) {
-      print("Unexpected root post #${post.postId}");
       return;
     }
 

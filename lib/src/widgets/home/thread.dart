@@ -66,16 +66,14 @@ class HomeThreadWidget extends StatelessWidget {
   Widget _buildImage(double imageScale) => ClipRRect(
         borderRadius: BorderRadius.circular(3),
         child: SizedBox(
-          child: ThreadImageWidget(
-            image: thread.threadThumbnail ?? getThreadImage(thread),
-            threadId: thread.threadId,
-          ),
+          child: ThreadImageWidget.small(
+              thread, thread.threadThumbnail ?? thread.threadImage),
           width: kThreadThumbnailWidth * imageScale,
         ),
       );
 
   Widget _buildInfo(BuildContext context, ThemeData theme) {
-    final List<TextSpan> spans = List();
+    final spans = <TextSpan>[];
 
     spans.add(TextSpan(
       style: TextStyle(color: theme.accentColor),

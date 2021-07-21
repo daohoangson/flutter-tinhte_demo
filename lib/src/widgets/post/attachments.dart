@@ -9,7 +9,15 @@ class _PostAttachmentsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final lbTrigger = LbTrigger();
     for (final attachment in attachments) {
-      lbTrigger.sources.add(attachment.links.data);
+      lbTrigger.addSource(
+        attachment.isVideo
+            ? LbTriggerSource.video(
+                attachment.links.xVideoUrl,
+                aspectRatio: attachment.aspectRatio,
+              )
+            : LbTriggerSource.image(attachment.links.data),
+        caption: Text(attachment.filename),
+      );
     }
 
     return Padding(
@@ -28,7 +36,7 @@ class _PostAttachmentsWidget extends StatelessWidget {
   }
 
   Widget _buildAttachment(Attachment attachment) => AspectRatio(
-        aspectRatio: attachment.attachmentWidth / attachment.attachmentHeight,
+        aspectRatio: attachment.aspectRatio,
         child: ClipRRect(
           borderRadius: BorderRadius.circular(3),
           child: buildCachedNetworkImage(attachment.links.thumbnail),
@@ -40,12 +48,11 @@ class _PostAttachmentsWidget extends StatelessWidget {
       if (attachment.attachmentIsInserted) return false;
       if (thread?.threadImage?.displayMode == 'cover' &&
           thread?.threadImage?.link == attachment.links.permalink) return false;
-      if (attachment.attachmentWidth == null ||
-          attachment.attachmentWidth < 1 ||
-          attachment.attachmentHeight == null ||
-          attachment.attachmentHeight < 1) return false;
-
-      return true;
+      if (thread?.threadPrimaryImage?.displayMode == 'cover' &&
+          thread?.threadPrimaryImage?.link == attachment.links.permalink)
+        return false;
+      return attachment.aspectRatio != null &&
+          attachment.links?.thumbnail?.isNotEmpty == true;
     })?.toList();
 
     if (attachments?.isNotEmpty != true) return null;

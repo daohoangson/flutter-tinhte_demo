@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'src/batch.dart';
 
-typedef Future<bool> FunctionFetch();
+typedef FunctionFetch = Future<bool> Function();
 
 class BatchController {
   final Batch _batch;

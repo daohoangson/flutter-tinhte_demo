@@ -22,32 +22,25 @@ class PostsWidget extends StatefulWidget {
 class PostsState extends State<PostsWidget> {
   final _slsKey = GlobalKey<SuperListState<_PostListItem>>();
 
-  Thread _thread;
+  ScaffoldFeatureController<SnackBar, SnackBarClosedReason> _unreadController;
 
   @override
-  void initState() {
-    super.initState();
-    _thread = widget.thread;
+  void dispose() {
+    _unreadController?.close();
+    super.dispose();
   }
 
   @override
-  Widget build(BuildContext context) => MultiProvider(
-        providers: [
-          Provider<Thread>.value(value: _thread),
-          ThreadNavigationWidget.buildProvider(),
-          PollWidget.buildProvider(),
-        ],
-        child: SuperListView<_PostListItem>(
-          enableScrollToIndex: true,
-          fetchPathInitial: widget.path,
-          fetchOnSuccess: _fetchOnSuccess,
-          initialItems: widget.thread.firstPost != null
-              ? [_PostListItem.post(widget.thread.firstPost)]
-              : null,
-          initialJson: widget.initialJson,
-          itemBuilder: _buildItem,
-          key: _slsKey,
-        ),
+  Widget build(BuildContext _) => SuperListView<_PostListItem>(
+        enableScrollToIndex: true,
+        fetchPathInitial: widget.path,
+        fetchOnSuccess: _fetchOnSuccess,
+        initialItems: widget.thread.firstPost != null
+            ? [_PostListItem.post(widget.thread.firstPost)]
+            : null,
+        initialJson: widget.initialJson,
+        itemBuilder: _buildItem,
+        key: _slsKey,
       );
 
   void insertNewPost(Post post) {
@@ -68,14 +61,13 @@ class PostsState extends State<PostsWidget> {
 
     final post = item.post;
     if (post != null) {
-      return ActionablePost.buildMultiProvider(
-        post,
-        post.postIsFirstPost ? _FirstPostWidget() : _PostWidget(),
-      );
+      return post.postIsFirstPost
+          ? _FirstPostWidget(post: post, thread: widget.thread)
+          : _PostWidget(post: post);
     }
 
     final postReply = item.postReply;
-    if (postReply != null) {
+    if (postReply?.postReplyCount != null) {
       final superListIndex = state.indexOf(item);
       assert(superListIndex > -1);
       return _PostReplyHiddenWidget(
@@ -84,7 +76,7 @@ class PostsState extends State<PostsWidget> {
       );
     }
 
-    return null;
+    return const SizedBox.shrink();
   }
 
   Widget _buildPageIndicator(
@@ -205,26 +197,24 @@ class PostsState extends State<PostsWidget> {
     }
 
     if (json.containsKey('thread')) {
-      final thread = Thread.fromJson(json['thread']);
-      setState(() {
-        _thread = thread;
+      final freshThread = Thread.fromJson(json['thread']);
+      final postsUnread = freshThread.links?.postsUnread;
 
-        if (fc.id == FetchContextId.FetchInitial &&
-            thread.links?.postsUnread != null)
-          WidgetsBinding.instance
-              .addPostFrameCallback((_) => _showSnackBarUnread(fc.state));
-      });
+      if (fc.id == FetchContextId.FetchInitial && postsUnread != null)
+        WidgetsBinding.instance.addPostFrameCallback(
+            (_) => _showSnackBarUnread(fc.state, postsUnread));
     }
   }
 
-  void _showSnackBarUnread(SuperListState<_PostListItem> sls) =>
-      Scaffold.of(context).showSnackBar(SnackBar(
+  void _showSnackBarUnread(
+          SuperListState<_PostListItem> sls, String postsUnread) =>
+      _unreadController = ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         action: SnackBarAction(
           label: l(context).postGoUnreadYes,
           onPressed: () => sls.fetch(
             clearItems: true,
             fc: FetchContext<_PostListItem>(
-              path: _thread.links.postsUnread,
+              path: postsUnread,
               state: sls,
             ),
           ),

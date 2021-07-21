@@ -9,8 +9,8 @@ class Batch {
   final String path;
   final Completer _completer = Completer();
 
-  final List<BatchJob> _jobs = List();
-  final Map<String, BatchJob> _uniqueJobs = Map();
+  final _jobs = <BatchJob>[];
+  final _uniqueJobs = <String, BatchJob>{};
 
   String get bodyJson {
     print('Batch has ${_jobs.length} jobs, ${_uniqueJobs.length} unique');
@@ -24,16 +24,16 @@ class Batch {
   int get length => _jobs.length;
   Future get future => _completer.future;
 
-  Batch({this.path});
+  Batch({required this.path});
 
-  Future newJob(String method, String uri, Map<String, String> params) {
+  Future newJob(String method, String uri, {Map<String, String>? params}) {
     final String id = 'job' + (_jobs.length + 1).toString();
     final String paramsAsString = json.encode(params);
     final String signature = "$method$uri$paramsAsString";
     final String hash = md5(signature);
 
-    if (_uniqueJobs.containsKey(hash)) {
-      final prevJob = _uniqueJobs[hash];
+    final prevJob = _uniqueJobs[hash];
+    if (prevJob != null) {
       final duplicateJob = BatchJob(prevJob.id, method, uri, params);
       _jobs.add(duplicateJob);
 
@@ -48,32 +48,28 @@ class Batch {
   }
 
   bool handleResponse(json) {
-    Map<String, dynamic> jsonAsMap =
-        json is Map<String, dynamic> ? json : Map();
-    Map<String, dynamic> jsonJobs =
-        jsonAsMap.containsKey('jobs') ? jsonAsMap['jobs'] : Map();
+    Map<String, dynamic> jsonAsMap = json is Map<String, dynamic> ? json : {};
+    Map<String, dynamic> jsonJobs = jsonAsMap['jobs'] ?? {};
 
-    _jobs.forEach((job) {
-      Map<String, dynamic> jsonJob =
-          jsonJobs.containsKey(job.id) ? jsonJobs[job.id] : Map();
+    for (final job in _jobs) {
+      Map<String, dynamic> jsonJob = jsonJobs[job.id] ?? {};
       String jobResult = jsonJob.containsKey('_job_result')
           ? jsonJob['_job_result']
           : "No job result (${job.method} ${job.uri.replaceAll(RegExp(r'\?.+$'), '')})";
 
       if (jobResult == 'ok') {
         job.completer.complete(jsonJob);
-        return;
+        continue;
       }
 
       if (jsonJob.containsKey('_job_error')) {
         job.completer
             .completeError(ApiErrorSingle(jsonJob['_job_error'], isHtml: true));
-        return;
+        continue;
       }
 
       job.completer.completeError(ApiErrorSingle(jobResult, isHtml: true));
-      return;
-    });
+    }
 
     _completer.complete(jsonAsMap);
     return true;

@@ -1,63 +1,110 @@
-import 'package:json_annotation/json_annotation.dart';
+import 'package:flutter/foundation.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
+import 'followable.dart';
+
+part 'feature_page.freezed.dart';
 part 'feature_page.g.dart';
 
 final _kIdRegExp = RegExp(r'/([\w-]+)/$');
 
-@JsonSerializable(fieldRename: FieldRename.none)
-class FeaturePage {
-  final int forumId;
-  final String fullName;
-  @JsonKey(name: 'is_followed')
-  bool isFollowed;
-  final int tagId;
-  final String tagText;
+class FeaturePage extends ChangeNotifier implements _FeaturePage, Followable {
+  _FeaturePageInternal _;
 
-  FeaturePageLinks links;
+  FeaturePage.fromJson(Map<String, dynamic> json)
+      : _ = _FeaturePageInternal.fromJson(json);
 
-  FeaturePageValues values;
+  @Deprecated("Use setters instead of copyWith")
+  @override
+  _$FeaturePageCopyWith<_FeaturePage> get copyWith =>
+      throw UnimplementedError();
 
-  FeaturePage(
-    this.forumId,
-    this.fullName,
-    this.isFollowed,
-    this.tagId,
-    this.tagText,
-  );
-  factory FeaturePage.fromJson(Map<String, dynamic> json) =>
-      _$FeaturePageFromJson(json);
+  @override
+  String? get followersLink => links?.follow;
 
-  // TODO: use data from api when it's available
-  String get id {
+  @override
+  int? get forumId => _.forumId;
+
+  @override
+  String? get fullName => _.fullName;
+
+  String? get id {
+    // TODO: use data from api when it's available
     final match = _kIdRegExp.firstMatch(links?.permalink ?? '');
     if (match == null) return null;
     return match.group(1);
   }
+
+  @override
+  bool get isFollowed => _.isFollowed ?? false;
+
+  @override
+  set isFollowed(bool v) {
+    if (v == isFollowed) return;
+
+    _ = _.copyWith(isFollowed: v);
+    notifyListeners();
+  }
+
+  @override
+  FeaturePageLinks? get links => _.links;
+
+  @override
+  String get name => fullName ?? 'N/A';
+
+  @override
+  int? get tagId => _.tagId;
+
+  @override
+  String? get tagText => _.tagText;
+
+  @override
+  Map<String, dynamic> toJson() => _.toJson();
+
+  @override
+  FeaturePageValues? get values => _.values;
 }
 
-@JsonSerializable()
-class FeaturePageLinks {
-  String follow;
-  String image;
-  String permalink;
-  String thumbnail;
+@freezed
+class _FeaturePageInternal with _$_FeaturePageInternal {
+  @JsonSerializable(fieldRename: FieldRename.none)
+  const factory _FeaturePageInternal(
+    int? forumId,
+    String? fullName,
+    @JsonKey(name: 'is_followed') bool? isFollowed,
+    int? tagId,
+    String? tagText,
+    FeaturePageLinks? links,
+    FeaturePageValues? values,
+  ) = _FeaturePage;
 
-  FeaturePageLinks();
+  factory _FeaturePageInternal.fromJson(Map<String, dynamic> json) =>
+      _$_FeaturePageInternalFromJson(json);
+}
+
+@freezed
+class FeaturePageLinks with _$FeaturePageLinks {
+  const factory FeaturePageLinks({
+    String? follow,
+    String? image,
+    String? permalink,
+    String? thumbnail,
+  }) = _FeaturePageLinks;
+
   factory FeaturePageLinks.fromJson(Map<String, dynamic> json) =>
       _$FeaturePageLinksFromJson(json);
 }
 
-@JsonSerializable()
-class FeaturePageValues {
-  int followerCount;
-  int newsCount;
-  int tagUseCount;
-  @JsonKey(name: '7_days_thread_count')
-  int xDaysThreadCount;
-  @JsonKey(name: '7_days_news_count')
-  int xDaysNewsCount;
+@freezed
+class FeaturePageValues with _$FeaturePageValues {
+  const factory FeaturePageValues({
+    int? followerCount,
+    int? newsCount,
+    int? tagUseCount,
+    @JsonKey(name: '7_days_thread_count') int? xDaysThreadCount,
+    @JsonKey(name: '7_days_news_count') int? xDaysNewsCount,
+  }) = _FeaturePageValues;
 
-  FeaturePageValues();
   factory FeaturePageValues.fromJson(Map<String, dynamic> json) =>
       _$FeaturePageValuesFromJson(json);
 }

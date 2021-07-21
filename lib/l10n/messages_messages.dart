@@ -25,27 +25,27 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m2(version, buildNumber) => "${version} (build number: ${buildNumber})";
 
-  static m3(method) => "${method} has been cancelled.";
+  static m3(tag) => "Choose how you want to be notified when new contents are available in ${tag}:";
 
-  static m4(method) => "Cannot login with ${method}.";
+  static m4(tag) => "Unfollow ${tag}?";
 
-  static m5(page) => "Page ${page}";
+  static m5(method) => "${method} has been cancelled.";
 
-  static m6(x, y) => "${x} of ${y}";
+  static m6(method) => "Cannot login with ${method}.";
 
-  static m7(howMany) => "${Intl.plural(howMany, one: 'You can only choose one.', other: 'You can only select up to ${howMany} choices.')}";
+  static m7(page) => "Page ${page}";
 
-  static m8(number) => "Tap to load ${number} hidden replies...";
+  static m8(x, y) => "${x} of ${y}";
 
-  static m9(query) => "Submit to search for \'${query}\'";
+  static m9(howMany) => "${Intl.plural(howMany, one: 'You can only choose one.', other: 'You can only select up to ${howMany} choices.')}";
 
-  static m10(username) => " by user \'${username}\'";
+  static m10(number) => "Tap to load ${number} hidden replies...";
 
-  static m11(forumTitle) => " in forum \'${forumTitle}\'";
+  static m11(query) => "Submit to search for \'${query}\'";
 
-  static m12(tag) => "Choose how you want to be notified when new contents are available in ${tag}:";
+  static m12(username) => " by user \'${username}\'";
 
-  static m13(tag) => "Unfollow ${tag}?";
+  static m13(forumTitle) => " in forum \'${forumTitle}\'";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
@@ -57,6 +57,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "appVersion" : MessageLookupByLibrary.simpleMessage("Version"),
     "appVersionInfo" : m2,
     "appVersionNotAvailable" : MessageLookupByLibrary.simpleMessage("N/A"),
+    "follow" : MessageLookupByLibrary.simpleMessage("Follow"),
+    "followFollowing" : MessageLookupByLibrary.simpleMessage("Following"),
+    "followNotificationChannelAlert" : MessageLookupByLibrary.simpleMessage("Alert"),
+    "followNotificationChannelEmail" : MessageLookupByLibrary.simpleMessage("Email"),
+    "followNotificationChannelExplainForX" : m3,
+    "followNotificationChannels" : MessageLookupByLibrary.simpleMessage("Notification channels"),
+    "followUnfollowXQuestion" : m4,
     "forums" : MessageLookupByLibrary.simpleMessage("Forums"),
     "home" : MessageLookupByLibrary.simpleMessage("Home"),
     "justAMomentEllipsis" : MessageLookupByLibrary.simpleMessage("Just a moment..."),
@@ -64,8 +71,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "login" : MessageLookupByLibrary.simpleMessage("Login"),
     "loginAssociate" : MessageLookupByLibrary.simpleMessage("Associate"),
     "loginAssociateEnterPassword" : MessageLookupByLibrary.simpleMessage("An existing account has been found, please enter your password to associate it for future logins."),
-    "loginErrorCancelled" : m3,
-    "loginErrorNoAccessToken" : m4,
+    "loginErrorCancelled" : m5,
+    "loginErrorNoAccessToken" : m6,
     "loginErrorNoAccessTokenAutoRegister" : MessageLookupByLibrary.simpleMessage("Cannot register new user account."),
     "loginErrorPasswordIsEmpty" : MessageLookupByLibrary.simpleMessage("Please enter your password to login"),
     "loginErrorUsernameIsEmpty" : MessageLookupByLibrary.simpleMessage("Please enter your username or email"),
@@ -88,12 +95,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "myFeed" : MessageLookupByLibrary.simpleMessage("My Feed"),
     "navLowercaseNext" : MessageLookupByLibrary.simpleMessage("next"),
     "navLowercasePrevious" : MessageLookupByLibrary.simpleMessage("previous"),
-    "navPageX" : m5,
-    "navXOfY" : m6,
+    "navPageX" : m7,
+    "navXOfY" : m8,
     "notifications" : MessageLookupByLibrary.simpleMessage("Notifications"),
     "openInBrowser" : MessageLookupByLibrary.simpleMessage("Open in browser"),
     "pickGallery" : MessageLookupByLibrary.simpleMessage("Select image to upload"),
-    "pollErrorTooManyVotes" : m7,
+    "pollErrorTooManyVotes" : m9,
     "pollVote" : MessageLookupByLibrary.simpleMessage("Vote"),
     "postDelete" : MessageLookupByLibrary.simpleMessage("Delete"),
     "postDeleteReasonHint" : MessageLookupByLibrary.simpleMessage("Reason to delete post."),
@@ -102,7 +109,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "postGoUnreadQuestion" : MessageLookupByLibrary.simpleMessage("Continue reading?"),
     "postGoUnreadYes" : MessageLookupByLibrary.simpleMessage("YES"),
     "postLike" : MessageLookupByLibrary.simpleMessage("Like"),
-    "postLoadXHidden" : m8,
+    "postLoadXHidden" : m10,
     "postReply" : MessageLookupByLibrary.simpleMessage("Reply"),
     "postReplyMessageHint" : MessageLookupByLibrary.simpleMessage("Enter your message to post"),
     "postReplyingToAt" : MessageLookupByLibrary.simpleMessage("Replying to @"),
@@ -111,22 +118,16 @@ class MessageLookup extends MessageLookupByLibrary {
     "postReportedThanks" : MessageLookupByLibrary.simpleMessage("Thank you for your report!"),
     "postUnlike" : MessageLookupByLibrary.simpleMessage("Unlike"),
     "privacyPolicy" : MessageLookupByLibrary.simpleMessage("Privacy Policy"),
+    "search" : MessageLookupByLibrary.simpleMessage("Search"),
     "searchEnterSomething" : MessageLookupByLibrary.simpleMessage("Enter something to search"),
-    "searchSubmitToContinue" : m9,
+    "searchSubmitToContinue" : m11,
     "searchThisForum" : MessageLookupByLibrary.simpleMessage("Search this forum"),
     "searchThisUser" : MessageLookupByLibrary.simpleMessage("Search for this user"),
-    "searchThreadByUser" : m10,
-    "searchThreadInForum" : m11,
+    "searchThreadByUser" : m12,
+    "searchThreadInForum" : m13,
     "share" : MessageLookupByLibrary.simpleMessage("Share"),
-    "tagFollow" : MessageLookupByLibrary.simpleMessage("Follow"),
-    "tagFollowing" : MessageLookupByLibrary.simpleMessage("Following"),
     "tagLowercaseDiscussions" : MessageLookupByLibrary.simpleMessage("discussions"),
     "tagLowercaseNews" : MessageLookupByLibrary.simpleMessage("news"),
-    "tagNotificationChannelAlert" : MessageLookupByLibrary.simpleMessage("Alert"),
-    "tagNotificationChannelEmail" : MessageLookupByLibrary.simpleMessage("Email"),
-    "tagNotificationChannelExplainForX" : m12,
-    "tagNotificationChannels" : MessageLookupByLibrary.simpleMessage("Notification channels"),
-    "tagUnfollowXQuestion" : m13,
     "threadBookmark" : MessageLookupByLibrary.simpleMessage("Bookmark"),
     "threadBookmarkList" : MessageLookupByLibrary.simpleMessage("Bookmarks"),
     "threadBookmarkUndo" : MessageLookupByLibrary.simpleMessage("Unbookmark"),
@@ -142,10 +143,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "threadCreateTitleHint" : MessageLookupByLibrary.simpleMessage("Something interesting"),
     "threadStickyBanner" : MessageLookupByLibrary.simpleMessage("Sticky"),
     "topThreads" : MessageLookupByLibrary.simpleMessage("Top Threads"),
-    "userFollow" : MessageLookupByLibrary.simpleMessage("Follow"),
     "userIgnore" : MessageLookupByLibrary.simpleMessage("Ignore"),
     "userRegisterDate" : MessageLookupByLibrary.simpleMessage("Joined"),
-    "userUnfollow" : MessageLookupByLibrary.simpleMessage("Unfollow"),
     "userUnignore" : MessageLookupByLibrary.simpleMessage("Unignore")
   };
 }

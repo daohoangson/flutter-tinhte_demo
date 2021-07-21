@@ -1,14 +1,16 @@
-import 'package:json_annotation/json_annotation.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
+part 'links.freezed.dart';
 part 'links.g.dart';
 
-@JsonSerializable()
-class Links {
-  final String next;
-  final int page;
-  final int pages;
-  final String prev;
+@freezed
+class Links with _$Links {
+  const factory Links({
+    String? next,
+    int? page,
+    int? pages,
+    String? prev,
+  }) = _Links;
 
-  Links(this.next, this.page, this.pages, this.prev);
   factory Links.fromJson(Map<String, dynamic> json) => _$LinksFromJson(json);
 }

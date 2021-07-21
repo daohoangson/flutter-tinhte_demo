@@ -118,9 +118,13 @@ void _setupApiCompleter<T>(
   }
 
   f = f.catchError((error) {
-    if (!caller.canReceiveCallback) return;
-    if (onError != null) return onError(error);
-    showApiErrorDialog(caller.context, error);
+    if (caller.canReceiveCallback) {
+      if (onError != null) {
+        onError(error);
+      } else {
+        showApiErrorDialog(caller.context, error);
+      }
+    }
   });
 
   if (onComplete != null) {
@@ -187,11 +191,12 @@ class ApiApp extends StatefulWidget {
 }
 
 class _ApiAppState extends State<ApiApp> {
+  final visitor = User.zero();
+
   var _isRefreshingToken = false;
   List<VoidCallback> _queue;
   OauthToken _token;
   var _tokenHasBeenSet = false;
-  var _user = User(0);
 
   Api get api => widget.api;
 
@@ -203,20 +208,29 @@ class _ApiAppState extends State<ApiApp> {
       final clientId = prefs.getString(kPrefKeyTokenClientId);
       if (clientId != api.clientId) return _setToken(null, savePref: false);
 
-      final t = prefs.getString(kPrefKeyTokenAccessToken);
+      final accessToken = prefs.getString(kPrefKeyTokenAccessToken);
       final expiresAtKey = kPrefKeyTokenExpiresAtMillisecondsSinceEpoch;
       final expiresAt = prefs.getInt(expiresAtKey) ?? 0;
-      final rt = prefs.getString(kPrefKeyTokenRefreshToken);
+      final refreshToken = prefs.getString(kPrefKeyTokenRefreshToken);
       final scope = prefs.getString(kPrefKeyTokenScope);
       final userId = prefs.getInt(kPrefKeyTokenUserId);
-      if (t?.isNotEmpty != true || expiresAt < 1) {
+      if (accessToken?.isNotEmpty != true || expiresAt < 1) {
         return _setToken(null, savePref: false);
       }
 
       final now = DateTime.now().millisecondsSinceEpoch;
-      final ei = ((expiresAt - now) / 1000).floor();
-      debugPrint("Restored token $t, expires in $ei, refresh token $rt");
-      _setToken(OauthToken(t, ei, rt, scope, userId), savePref: false);
+      final expiresIn = ((expiresAt - now) / 1000).floor();
+      final token = OauthToken(
+        accessToken: accessToken,
+        refreshToken: refreshToken,
+        scope: scope,
+        userId: userId,
+        expiresIn: expiresIn,
+        millisecondsSinceEpoch: now,
+        obtainMethod: ObtainMethod.storage,
+      );
+
+      _setToken(token, savePref: false);
     });
   }
 
@@ -224,7 +238,7 @@ class _ApiAppState extends State<ApiApp> {
   Widget build(BuildContext context) => MultiProvider(
         providers: [
           Provider<ApiAuth>.value(value: ApiAuth(this)),
-          Provider<User>.value(value: _user),
+          ChangeNotifierProvider<User>.value(value: visitor),
           Provider<_ApiAppState>.value(value: this),
         ],
         child: widget.child,
@@ -239,7 +253,7 @@ class _ApiAppState extends State<ApiApp> {
   void _enqueue(VoidCallback callback, {bool scheduleDequeue = true}) {
     if (scheduleDequeue) Timer.run(_dequeue);
 
-    _queue ??= List();
+    _queue ??= [];
     _queue.add(callback);
   }
 
@@ -270,8 +284,7 @@ class _ApiAppState extends State<ApiApp> {
         try {
           final json = await api.getJson(_appendOauthToken('users/me'));
           if (json is Map && json.containsKey('user')) {
-            final user = User.fromJson(json['user']);
-            setState(() => _user = user);
+            visitor.update(json['user']);
           }
         } on ApiError catch (ae) {
           debugPrint("_fetchUser encountered an api error: ${ae.message}");
@@ -295,13 +308,13 @@ class _ApiAppState extends State<ApiApp> {
     if (savePref) {
       final prefs = await SharedPreferences.getInstance();
 
-      prefs.setString(kPrefKeyTokenAccessToken, value?.accessToken);
-      prefs.setString(kPrefKeyTokenClientId, api.clientId);
-      prefs.setInt(kPrefKeyTokenExpiresAtMillisecondsSinceEpoch,
-          value?.expiresAt?.millisecondsSinceEpoch);
-      prefs.setString(kPrefKeyTokenRefreshToken, value?.refreshToken);
-      prefs.setString(kPrefKeyTokenScope, value?.scope);
-      prefs.setInt(kPrefKeyTokenUserId, value?.userId);
+      prefs.setString(kPrefKeyTokenAccessToken, value?.accessToken ?? '');
+      prefs.setString(kPrefKeyTokenClientId, api.clientId ?? '');
+      prefs.setInt(
+          kPrefKeyTokenExpiresAtMillisecondsSinceEpoch, value?.expiresAt ?? 0);
+      prefs.setString(kPrefKeyTokenRefreshToken, value?.refreshToken ?? '');
+      prefs.setString(kPrefKeyTokenScope, value?.scope ?? '');
+      prefs.setInt(kPrefKeyTokenUserId, value?.userId ?? 0);
       debugPrint("Saved token ${value?.accessToken}, "
           "expires at ${value?.expiresAt}, "
           "refresh token ${value?.refreshToken}");
@@ -315,8 +328,8 @@ class _ApiAppState extends State<ApiApp> {
       return;
     }
 
-    if (_user.userId != 0) {
-      setState(() => _user = User(0));
+    if (visitor.userId != 0) {
+      visitor.reset();
     }
 
     _dequeue();

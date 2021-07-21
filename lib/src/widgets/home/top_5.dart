@@ -123,16 +123,14 @@ class _HomeTop5WidgetThread extends StatelessWidget {
   Widget _buildImage() => ClipRRect(
         borderRadius: BorderRadius.circular(3),
         child: LayoutBuilder(
-          builder: (context, box) => ThreadImageWidget(
-            image: _chooseImageForBox(thread, context, box),
-            threadId: thread.threadId,
-          ),
+          builder: (context, box) => ThreadImageWidget.small(
+              thread, _chooseImageForBox(thread, context, box)),
         ),
       );
 
   Widget _buildInfo(BuildContext context) {
     final theme = Theme.of(context);
-    final List<TextSpan> spans = List();
+    final spans = <TextSpan>[];
 
     spans.add(TextSpan(
       style: TextStyle(color: theme.accentColor),
@@ -156,7 +154,7 @@ class _HomeTop5WidgetThread extends StatelessWidget {
   Widget _buildTitle() => Text(thread.threadTitle);
 
   ThreadImage _chooseImageForBox(Thread t, BuildContext c, BoxConstraints bc) {
-    if (t.threadThumbnail == null) return getThreadImage(t);
+    if (t.threadThumbnail == null) return t.threadImage;
 
     final devicePixelRatio = MediaQuery.of(c).devicePixelRatio;
     final thumbnail = t.threadThumbnail;
@@ -169,6 +167,6 @@ class _HomeTop5WidgetThread extends StatelessWidget {
         break;
     }
 
-    return getThreadImage(t);
+    return t.threadImage;
   }
 }
