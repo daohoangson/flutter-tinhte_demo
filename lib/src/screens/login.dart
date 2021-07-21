@@ -64,13 +64,15 @@ class _LoginFormState extends State<LoginForm> {
   @override
   Widget build(BuildContext context) => Form(
         key: formKey,
-        child: ListView(
-          children: _tfa != null
-              ? _buildFieldsTfa()
-              : _associatable != null
-                  ? _buildFieldsAssociate()
-                  : _buildFieldsLogin(),
-          padding: const EdgeInsets.all(20.0),
+        child: AutofillGroup(
+          child: ListView(
+            children: _tfa != null
+                ? _buildFieldsTfa()
+                : _associatable != null
+                    ? _buildFieldsAssociate()
+                    : _buildFieldsLogin(),
+            padding: const EdgeInsets.all(20.0),
+          ),
         ),
       );
 
@@ -202,6 +204,7 @@ class _LoginFormState extends State<LoginForm> {
       );
 
   Widget _buildPassword({bool autofocus = false}) => TextFormField(
+        autofillHints: [AutofillHints.password],
         autofocus: autofocus,
         decoration: InputDecoration(
           hintText: l(context).loginPasswordHint,
@@ -220,6 +223,7 @@ class _LoginFormState extends State<LoginForm> {
       );
 
   Widget _buildUsername() => TextFormField(
+      autofillHints: [AutofillHints.email, AutofillHints.username],
       autofocus: true,
       decoration: InputDecoration(
         hintText: l(context).loginUsernameHint,
