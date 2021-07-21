@@ -1,0 +1,3 @@
+Device ID	Device Name
+9de9b87b0c6f49ed7ad3085503828bb9dc97569c	iphone5s
+000080200006312A1188402E	ipad8
