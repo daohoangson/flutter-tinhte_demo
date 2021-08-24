@@ -1,15 +1,15 @@
 part of '../api.dart';
 
-Response _latestResponse;
+Response? _latestResponse;
 
 int _requestCount = 0;
 
 Future _sendRequest(Client client, String method, String url,
-    {Map<String, String> bodyFields,
-    String bodyJson,
-    Map<String, File> fileFields,
-    Map<String, String> headers,
-    bool parseJson}) async {
+    {Map<String, String>? bodyFields,
+    String? bodyJson,
+    Map<String, File>? fileFields,
+    Map<String, String>? headers,
+    bool parseJson = false}) async {
   _requestCount++;
   final uri = Uri.parse(url);
   final request =
@@ -38,20 +38,21 @@ Future _sendRequest(Client client, String method, String url,
     request.headers['Content-Type'] = 'application/json';
   }
 
-  _latestResponse = await Response.fromStream(await client.send(request));
+  final response =
+      _latestResponse = await Response.fromStream(await client.send(request));
 
-  print("$method $url -> ${_latestResponse.statusCode}");
+  print("$method $url -> ${response.statusCode}");
 
   if (parseJson) {
-    final decodedJson = json.decode(_latestResponse.body);
-    final error = _verifyResponseAndJsonForError(_latestResponse, decodedJson);
+    final decodedJson = json.decode(response.body);
+    final error = _verifyResponseAndJsonForError(response, decodedJson);
     return error ?? decodedJson;
   }
 
   return _latestResponse;
 }
 
-Future _verifyResponseAndJsonForError(Response response, j) {
+Future? _verifyResponseAndJsonForError(Response response, j) {
   if (j is Map) {
     if (j.containsKey('error_description')) {
       return Future.error(ApiErrorSingle(j['error_description']));

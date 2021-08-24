@@ -38,6 +38,31 @@ class L10n {
   String get apiUnexpectedResponse => Intl.message('Unexpected API response',
       locale: localeName, name: 'apiUnexpectedResponse');
 
+  String get follow =>
+      Intl.message('Follow', locale: localeName, name: 'follow');
+
+  String get followFollowing =>
+      Intl.message('Following', locale: localeName, name: 'followFollowing');
+
+  String get followNotificationChannelAlert => Intl.message('Alert',
+      locale: localeName, name: 'followNotificationChannelAlert');
+
+  String get followNotificationChannelEmail => Intl.message('Email',
+      locale: localeName, name: 'followNotificationChannelEmail');
+
+  String followNotificationChannelExplainForX(String tag) => Intl.message(
+      'Choose how you want to be notified when new contents '
+      'are available in $tag:',
+      args: [tag],
+      locale: localeName,
+      name: 'followNotificationChannelExplainForX');
+
+  String get followNotificationChannels => Intl.message('Notification channels',
+      locale: localeName, name: 'followNotificationChannels');
+
+  String followUnfollowXQuestion(String tag) => Intl.message('Unfollow $tag?',
+      args: [tag], locale: localeName, name: 'followUnfollowXQuestion');
+
   String get forums => Intl.message('Forums',
       desc: 'Forum list appbar title', locale: localeName, name: 'forums');
 
@@ -322,36 +347,11 @@ class L10n {
       locale: localeName,
       name: '_statsXViews');
 
-  String get tagFollow =>
-      Intl.message('Follow', locale: localeName, name: 'tagFollow');
-
-  String get tagFollowing =>
-      Intl.message('Following', locale: localeName, name: 'tagFollowing');
-
   String get tagLowercaseDiscussions => Intl.message('discussions',
       locale: localeName, name: 'tagLowercaseDiscussions');
 
   String get tagLowercaseNews =>
       Intl.message('news', locale: localeName, name: 'tagLowercaseNews');
-
-  String get tagNotificationChannelAlert => Intl.message('Alert',
-      locale: localeName, name: 'tagNotificationChannelAlert');
-
-  String get tagNotificationChannelEmail => Intl.message('Email',
-      locale: localeName, name: 'tagNotificationChannelEmail');
-
-  String tagNotificationChannelExplainForX(String tag) => Intl.message(
-      'Choose how you want to be notified when new contents '
-      'are available in $tag:',
-      args: [tag],
-      locale: localeName,
-      name: 'tagNotificationChannelExplainForX');
-
-  String get tagNotificationChannels => Intl.message('Notification channels',
-      locale: localeName, name: 'tagNotificationChannels');
-
-  String tagUnfollowXQuestion(String tag) => Intl.message('Unfollow $tag?',
-      args: [tag], locale: localeName, name: 'tagUnfollowXQuestion');
 
   String get threadBookmark =>
       Intl.message('Bookmark', locale: localeName, name: 'threadBookmark');
@@ -405,14 +405,8 @@ class L10n {
   String get userIgnore =>
       Intl.message('Ignore', locale: localeName, name: 'userIgnore');
 
-  String get userFollow =>
-      Intl.message('Follow', locale: localeName, name: 'userFollow');
-
   String get userRegisterDate =>
       Intl.message('Joined', locale: localeName, name: 'userRegisterDate');
-
-  String get userUnfollow =>
-      Intl.message('Unfollow', locale: localeName, name: 'userUnfollow');
 
   String get userUnignore =>
       Intl.message('Unignore', locale: localeName, name: 'userUnignore');

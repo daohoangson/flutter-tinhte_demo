@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">com.daohoangson.flutter_ttdemo</string>
+    <string name="app_name">ttdemo</string>
     <string name="facebook_app_id">566879507102666</string>
     <string name="fb_login_protocol_scheme">fb566879507102666</string>
 </resources>

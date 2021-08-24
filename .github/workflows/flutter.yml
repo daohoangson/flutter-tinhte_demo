@@ -25,8 +25,10 @@ env:
     git-crypt unlock ./git-crypt-key
     rm ./git-crypt-key
 
+    # Install yq with Homebrew (macOS) or snap (Ubuntu)
+    brew install yq || sudo snap install yq
+
     # Extract config from pubspec.yaml
-    brew install yq
     _appVersion=$( yq e '.version' pubspec.yaml )
     _appVersionWithoutNumber=$( echo "${_appVersion}" | sed 's/+.*$//' )
     echo "BUILD_NAME=${_appVersionWithoutNumber}-${GITHUB_SHA:0:7}" >> $GITHUB_ENV
@@ -46,6 +48,8 @@ jobs:
         uses: subosito/flutter-action@v1
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
+      - name: Prepare packages/api
+        run: ./packages/api/tool/build.sh
       - run: flutter pub get
       - run: flutter build apk "--build-name=${BUILD_NAME}" --split-per-abi
 
@@ -97,6 +101,8 @@ jobs:
         uses: subosito/flutter-action@v1
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
+      - name: Prepare packages/api
+        run: ./packages/api/tool/build.sh
       - run: flutter pub get
       - name: Run flutter build ios
         run: |

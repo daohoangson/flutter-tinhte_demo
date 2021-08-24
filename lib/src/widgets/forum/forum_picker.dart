@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:the_api/navigation.dart' as navigation;
-import 'package:the_api/node.dart' as node;
+import 'package:the_api/node.dart';
 import 'package:the_app/src/intl.dart';
 import 'package:the_app/src/widgets/super_list.dart';
 
@@ -17,7 +16,7 @@ class ForumPickerWidget extends StatelessWidget {
           ? Text(data.forum.title)
           : Text(l(context).threadCreateChooseAForum),
       trailing: Icon(FontAwesomeIcons.caretDown),
-      onTap: () async => data.forum = await showModalBottomSheet<node.Forum>(
+      onTap: () async => data.forum = await showModalBottomSheet<Forum>(
         builder: (context) => _ForumPickerBody(),
         context: context,
       ),
@@ -28,31 +27,30 @@ class ForumPickerWidget extends StatelessWidget {
 class _ForumPickerBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Scrollbar(
-        child: SuperListView<navigation.Element>(
+        child: SuperListView<Node>(
           fetchOnSuccess: _fetchOnSuccess,
           fetchPathInitial: 'navigation',
           itemBuilder: (context, __, element) => _buildRow(context, element),
         ),
       );
 
-  Widget _buildRow(BuildContext context, navigation.Element e) {
-    final node.Category category = e.node is node.Category ? e.node : null;
-    final node.Forum forum = e.node is node.Forum ? e.node : null;
+  Widget _buildRow(BuildContext context, Node node) {
+    final description = node.description;
+    final forum = node is Forum ? node : null;
+    final canCreateThread = forum?.permissions?.createThread;
 
     Widget built = ListTile(
       title: Text(
-        e.node?.title ?? '#${e.navigationId}',
-        style: forum != null
+        node.title,
+        style: canCreateThread
             ? null
             : TextStyle(color: Theme.of(context).disabledColor),
       ),
-      subtitle: category != null
-          ? _buildSubtitle(category.categoryDescription)
-          : forum != null ? _buildSubtitle(forum.forumDescription) : null,
-      onTap: forum != null ? () => Navigator.pop(context, forum) : null,
+      subtitle: description != null ? _buildSubtitle(description) : null,
+      onTap: canCreateThread ? () => Navigator.pop(context, forum) : null,
     );
 
-    final depth = e.navigationDepth ?? 1;
+    final depth = node.navigationDepth ?? 1;
     if (depth > 1) {
       built = Padding(
         child: built,
@@ -69,22 +67,22 @@ class _ForumPickerBody extends StatelessWidget {
         overflow: TextOverflow.ellipsis,
       );
 
-  void _fetchOnSuccess(Map json, FetchContext<navigation.Element> fc) {
+  void _fetchOnSuccess(Map json, FetchContext<Node> fc) {
     if (!json.containsKey('elements')) return;
 
     final list = json['elements'] as List;
-    fc.items.addAll(list.map((j) => navigation.Element.fromJson(j)));
+    fc.items.addAll(list.map((j) => Node.fromJson(j)));
   }
 }
 
 class ForumPickerData extends ChangeNotifier {
-  node.Forum _forum;
+  Forum _forum;
 
   ForumPickerData(this._forum);
 
-  node.Forum get forum => _forum;
+  Forum get forum => _forum;
 
-  set forum(node.Forum v) {
+  set forum(Forum v) {
     _forum = v;
     notifyListeners();
   }

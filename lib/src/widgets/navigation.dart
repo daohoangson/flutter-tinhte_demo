@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:the_api/navigation.dart' as navigation;
+import 'package:the_api/node.dart';
+import 'package:the_app/src/link.dart';
 import 'package:the_app/src/screens/forum_view.dart';
 import 'package:the_app/src/screens/node_view.dart';
 import 'package:the_app/src/widgets/super_list.dart';
@@ -8,7 +8,7 @@ import 'package:the_app/src/widgets/super_list.dart';
 class NavigationWidget extends StatelessWidget {
   final Widget footer;
   final Widget header;
-  final List<navigation.Element> initialElements;
+  final List<Node> initialElements;
   final String path;
   final bool progressIndicator;
   final bool shrinkWrap;
@@ -24,7 +24,7 @@ class NavigationWidget extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => SuperListView<navigation.Element>(
+  Widget build(BuildContext context) => SuperListView<Node>(
         fetchOnSuccess: _fetchOnSuccess,
         fetchPathInitial: path,
         footer: footer,
@@ -35,40 +35,31 @@ class NavigationWidget extends StatelessWidget {
         shrinkWrap: shrinkWrap,
       );
 
-  Widget _buildRow(BuildContext context, navigation.Element e) => ListTile(
-        title: Text(e.node?.title ?? "#${e.navigationId}"),
-        onTap: () {
-          switch (e.navigationType) {
-            case navigation.NavigationTypeCategory:
-              if (e.hasSubElements) {
-                Navigator.push(
-                  context,
-                  NavigationRoute((_) => NodeViewScreen(e)),
-                );
-              }
-              break;
-            case navigation.NavigationTypeForum:
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => ForumViewScreen(e.node)),
-              );
-              break;
-            case navigation.NavigationTypeLinkForum:
-              final linkForum = e.node as navigation.LinkForum;
-              final url = linkForum.links.target;
-              canLaunch(url).then((ok) => ok ? launch(url) : null);
-              break;
-            default:
-              Navigator.pushNamed(context, e.navigationType);
-          }
-        },
+  Widget _buildRow(BuildContext context, Node node) => node.map(
+        (node) => ListTile(
+          title: Text("#${node.navigationId}"),
+        ),
+        category: (category) => ListTile(
+          title: Text(category.categoryTitle),
+          onTap: () => Navigator.push(
+              context, NavigationRoute((_) => NodeViewScreen(category))),
+        ),
+        forum: (forum) => ListTile(
+          title: Text(forum.forumTitle),
+          onTap: () => Navigator.push(context,
+              MaterialPageRoute(builder: (_) => ForumViewScreen(forum))),
+        ),
+        linkforum: (link) => ListTile(
+          title: Text(link.linkTitle),
+          onTap: () => launchLink(context, link.links.target),
+        ),
       );
 
-  void _fetchOnSuccess(Map json, FetchContext<navigation.Element> fc) {
+  void _fetchOnSuccess(Map json, FetchContext<Node> fc) {
     if (!json.containsKey('elements')) return;
 
     final list = json['elements'] as List;
-    fc.items.addAll(list.map((j) => navigation.Element.fromJson(j)));
+    fc.items.addAll(list.map((j) => Node.fromJson(j)));
   }
 }
 

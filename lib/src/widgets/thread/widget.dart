@@ -22,7 +22,7 @@ class ThreadWidget extends StatelessWidget {
     final _isTinhteFact = isTinhteFact(thread);
     final _isCustomPost = _isBackgroundPost || _isTinhteFact;
     final _isThreadTitleRedundant =
-        _isCustomPost || isThreadTitleRedundant(thread);
+        _isCustomPost || thread.isThreadTitleRedundant;
 
     final children = <Widget>[
       _kThreadWidgetSpacing,
@@ -97,8 +97,8 @@ class ThreadWidget extends StatelessWidget {
 
   Widget _buildImage() {
     final image = config.threadWidgetShowCoverImageOnly
-        ? thread.threadImage
-        : getThreadImage(thread);
+        ? thread.threadImageOriginal
+        : thread.threadImage;
     if (config.threadWidgetShowCoverImageOnly && image?.displayMode != 'cover')
       return null;
 
@@ -205,16 +205,14 @@ class _ThreadWidgetActionsState extends State<_ThreadWidgetActions> {
   String get linkLikes => post?.links?.likes;
   String get linkPermalink => thread.links?.permalink;
   Post get post => thread.firstPost;
-  bool get postIsLiked => post?.postIsLiked == true;
-  int get postLikeCount => post?.postLikeCount ?? 0;
   Thread get thread => widget.thread;
   int get threadReplyCount => (thread.threadPostCount ?? 1) - 1;
 
-  set postIsLiked(bool value) => post?.postIsLiked = value;
-  set postLikeCount(int value) => post?.postLikeCount = value;
-
   @override
-  Widget build(BuildContext context) => Column(children: <Widget>[
+  Widget build(BuildContext _) =>
+      AnimatedBuilder(animation: thread, builder: _builder);
+
+  Widget _builder(BuildContext context, Widget _) => Column(children: <Widget>[
         InkWell(
           child: Padding(
             padding: const EdgeInsets.all(_kThreadWidgetPadding),
@@ -262,36 +260,41 @@ class _ThreadWidgetActionsState extends State<_ThreadWidgetActions> {
         ),
       ]);
 
-  Widget _buildButtonLike() => TextButton.icon(
-        icon: postIsLiked
-            ? const Icon(FontAwesomeIcons.solidHeart)
-            : const Icon(FontAwesomeIcons.heart),
-        label: postIsLiked
-            ? Text(l(context).postUnlike)
-            : Text(l(context).postLike),
-        onPressed: _isLiking
-            ? null
-            : linkLikes?.isNotEmpty != true
-                ? null
-                : postIsLiked
-                    ? _unlikePost
-                    : _likePost,
+  Widget _buildButtonLike() => AnimatedBuilder(
+        animation: post,
+        builder: (_, __) => TextButton.icon(
+          icon: post.postIsLiked
+              ? const Icon(FontAwesomeIcons.solidHeart)
+              : const Icon(FontAwesomeIcons.heart),
+          label: post.postIsLiked
+              ? Text(l(context).postUnlike)
+              : Text(l(context).postLike),
+          onPressed: _isLiking
+              ? null
+              : linkLikes?.isNotEmpty != true
+                  ? null
+                  : post.postIsLiked
+                      ? _unlikePost
+                      : _likePost,
+        ),
       );
 
   Widget _buildCounterLike(TextStyle textStyle) {
-    if (postLikeCount == 0) return null;
+    if (post.postLikeCount == 0) return null;
 
     final inlineSpans = <InlineSpan>[
       WidgetSpan(
         alignment: PlaceholderAlignment.middle,
         child: Icon(
-          postIsLiked ? FontAwesomeIcons.solidHeart : FontAwesomeIcons.heart,
+          post.postIsLiked
+              ? FontAwesomeIcons.solidHeart
+              : FontAwesomeIcons.heart,
           color: textStyle.color,
           size: textStyle.fontSize,
         ),
       ),
       TextSpan(
-        text: " ${formatNumber(postLikeCount)}",
+        text: " ${formatNumber(post.postLikeCount)}",
         style: textStyle,
       ),
     ];
@@ -313,19 +316,24 @@ class _ThreadWidgetActionsState extends State<_ThreadWidgetActions> {
 
   Widget _buildCounters(BuildContext context) {
     final textStyle = Theme.of(context).textTheme.caption;
-    final like = _buildCounterLike(textStyle);
-    final reply = _buildCounterReply(textStyle);
-    if (like == null && reply == null) {
-      return const SizedBox.shrink();
-    }
+    return AnimatedBuilder(
+      animation: post,
+      builder: (_, __) {
+        final like = _buildCounterLike(textStyle);
+        final reply = _buildCounterReply(textStyle);
+        if (like == null && reply == null) {
+          return const SizedBox.shrink();
+        }
 
-    final children = <Widget>[];
-    if (like != null) children.add(like);
-    if (reply != null) children.add(reply);
+        final children = <Widget>[];
+        if (like != null) children.add(like);
+        if (reply != null) children.add(reply);
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: children,
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: children,
+        );
+      },
     );
   }
 
@@ -336,10 +344,7 @@ class _ThreadWidgetActionsState extends State<_ThreadWidgetActions> {
         apiPost(
           ApiCaller.stateful(this),
           linkLikes,
-          onSuccess: (_) => setState(() {
-            postIsLiked = true;
-            postLikeCount++;
-          }),
+          onSuccess: (_) => post.postIsLiked = true,
           onComplete: () => setState(() => _isLiking = false),
         );
       });
@@ -351,10 +356,7 @@ class _ThreadWidgetActionsState extends State<_ThreadWidgetActions> {
         apiDelete(
           ApiCaller.stateful(this),
           linkLikes,
-          onSuccess: (_) => setState(() {
-            postIsLiked = false;
-            if (postLikeCount > 0) postLikeCount--;
-          }),
+          onSuccess: (_) => post.postIsLiked = false,
           onComplete: () => setState(() => _isLiking = false),
         );
       });

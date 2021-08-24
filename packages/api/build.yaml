@@ -3,8 +3,4 @@ targets:
     builders:
       json_serializable:
         options:
-          # https://pub.dev/packages/json_serializable
-          any_map: false
-          checked: false
-          create_to_json: false
           field_rename: 'snake'
