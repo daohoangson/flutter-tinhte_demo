@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-06-21T22:19:37.058839",
+  "@@last_modified": "2021-06-07T01:15:43.399248",
   "appTitle": "Tinh tế Demo",
   "@appTitle": {
     "type": "text",
@@ -33,6 +33,45 @@
   "@apiUnexpectedResponse": {
     "type": "text",
     "placeholders": {}
+  },
+  "follow": "Theo dõi",
+  "@follow": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "followFollowing": "Đang theo dõi",
+  "@followFollowing": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "followNotificationChannelAlert": "Thông báo",
+  "@followNotificationChannelAlert": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "followNotificationChannelEmail": "Email",
+  "@followNotificationChannelEmail": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "followNotificationChannelExplainForX": "Chọn cách bạn muốn nhận thông tin khi có bài mới trong mục {tag}:",
+  "@followNotificationChannelExplainForX": {
+    "type": "text",
+    "placeholders": {
+      "tag": {}
+    }
+  },
+  "followNotificationChannels": "Kênh thông tin",
+  "@followNotificationChannels": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "followUnfollowXQuestion": "Bỏ theo dõi {tag}?",
+  "@followUnfollowXQuestion": {
+    "type": "text",
+    "placeholders": {
+      "tag": {}
+    }
   },
   "forums": "Diễn đàn",
   "@forums": {
@@ -392,16 +431,6 @@
       "formatted": {}
     }
   },
-  "tagFollow": "Theo dõi",
-  "@tagFollow": {
-    "type": "text",
-    "placeholders": {}
-  },
-  "tagFollowing": "Đang theo dõi",
-  "@tagFollowing": {
-    "type": "text",
-    "placeholders": {}
-  },
   "tagLowercaseDiscussions": "thảo luận",
   "@tagLowercaseDiscussions": {
     "type": "text",
@@ -411,35 +440,6 @@
   "@tagLowercaseNews": {
     "type": "text",
     "placeholders": {}
-  },
-  "tagNotificationChannelAlert": "Thông báo",
-  "@tagNotificationChannelAlert": {
-    "type": "text",
-    "placeholders": {}
-  },
-  "tagNotificationChannelEmail": "Email",
-  "@tagNotificationChannelEmail": {
-    "type": "text",
-    "placeholders": {}
-  },
-  "tagNotificationChannelExplainForX": "Chọn cách bạn muốn nhận thông tin khi có bài mới trong mục {tag}:",
-  "@tagNotificationChannelExplainForX": {
-    "type": "text",
-    "placeholders": {
-      "tag": {}
-    }
-  },
-  "tagNotificationChannels": "Kênh thông tin",
-  "@tagNotificationChannels": {
-    "type": "text",
-    "placeholders": {}
-  },
-  "tagUnfollowXQuestion": "Bỏ theo dõi {tag}?",
-  "@tagUnfollowXQuestion": {
-    "type": "text",
-    "placeholders": {
-      "tag": {}
-    }
   },
   "threadBookmark": "Đánh dấu",
   "@threadBookmark": {
@@ -522,18 +522,8 @@
     "type": "text",
     "placeholders": {}
   },
-  "userFollow": "Theo dõi",
-  "@userFollow": {
-    "type": "text",
-    "placeholders": {}
-  },
   "userRegisterDate": "Gia nhập",
   "@userRegisterDate": {
-    "type": "text",
-    "placeholders": {}
-  },
-  "userUnfollow": "Bỏ theo dõi",
-  "@userUnfollow": {
     "type": "text",
     "placeholders": {}
   },

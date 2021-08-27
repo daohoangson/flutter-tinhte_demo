@@ -49,11 +49,13 @@ jobs:
         uses: subosito/flutter-action@v1
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
+      - name: Prepare packages/api
+        run: ./packages/api/tool/build.sh
       - run: flutter pub get
       - run: flutter build apk "--build-name=${BUILD_NAME}" --split-per-abi
 
       - name: Setup gcloud
-        uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        uses: google-github-actions/setup-gcloud@master
         with:
           service_account_key: ${{ secrets.GCP_UPLOADER_SA_KEY }}
       - name: Run gsutil cp
@@ -100,6 +102,8 @@ jobs:
         uses: subosito/flutter-action@v1
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
+      - name: Prepare packages/api
+        run: ./packages/api/tool/build.sh
       - run: flutter pub get
       - name: Run flutter build ios
         run: |
@@ -109,7 +113,7 @@ jobs:
           ( cd ios && fastlane ipa )
 
       - name: Setup gcloud
-        uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        uses: google-github-actions/setup-gcloud@master
         with:
           service_account_key: ${{ secrets.GCP_UPLOADER_SA_KEY }}
       - name: Run gsutil cp

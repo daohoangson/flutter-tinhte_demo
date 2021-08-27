@@ -1,6 +1,7 @@
-#!/bin/sh
+#!/bin/bash
 
-set -e
+set -eo pipefail
+cd "$( dirname "${BASH_SOURCE[0]}" )/.."
 
 flutter format .
 

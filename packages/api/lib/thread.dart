@@ -1,161 +1,302 @@
-import 'package:json_annotation/json_annotation.dart';
+import 'package:flutter/foundation.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
 import 'node.dart';
+import 'poll.dart';
 import 'post.dart';
 import 'thread_prefix.dart';
 
+part 'thread.freezed.dart';
 part 'thread.g.dart';
 
 final _kThreadTitleEllipsisRegEx = RegExp(r'^(.+)\.\.\.$');
 final _kThreadPostBodyImgBbCodeRegExp =
     RegExp(r'\[IMG\]([^[]+)\[/IMG\]', caseSensitive: false);
 
-bool isThreadTitleRedundant(Thread thread, [Post firstPost]) {
-  firstPost ??= thread?.firstPost;
-  if (thread == null || firstPost == null) return false;
+class Thread extends ChangeNotifier implements _Thread, PollOwner {
+  _ThreadInternal _;
 
-  final ellipsis = _kThreadTitleEllipsisRegEx.firstMatch(thread.threadTitle);
-  if (ellipsis != null) {
-    return firstPost.postBody?.startsWith(ellipsis.group(1)) == true;
-  }
+  Poll? _poll;
 
-  return firstPost.postBody?.startsWith(thread.threadTitle) == true;
-}
-
-ThreadImage getThreadImage(Thread thread) {
-  if (thread.threadImage != null) return thread.threadImage;
-
-  if (thread.firstPost == null) return null;
-  final post = thread.firstPost;
-
-  if (post.attachments?.isNotEmpty == true) {
-    for (final attachment in post.attachments) {
-      if (attachment.links?.thumbnail?.isNotEmpty == true) {
-        return ThreadImage(attachment.links.data)
-          ..width = attachment.attachmentWidth
-          ..height = attachment.attachmentHeight;
-      }
+  Thread.fromJson(Map<String, dynamic> json, {Forum? forum})
+      : _ = _ThreadInternal.fromJson(json) {
+    if (forum != null && _.node == null && forum.forumId == forumId) {
+      _ = _.copyWith(node: forum);
     }
   }
 
-  if (post.postBodyHtml?.isNotEmpty == true) {
-    final match = _kThreadPostBodyImgBbCodeRegExp.firstMatch(post.postBody);
-    if (match != null) return ThreadImage(match.group(1));
+  @Deprecated("Use setters instead of copyWith")
+  @override
+  _$ThreadCopyWith<_Thread> get copyWith => throw UnimplementedError();
+
+  @override
+  bool? get creatorHasVerifiedBadge => _.creatorHasVerifiedBadge;
+
+  @override
+  int? get creatorUserId => _.creatorUserId;
+
+  @override
+  String? get creatorUsername => _.creatorUsername;
+
+  @override
+  Post? get firstPost => _.firstPost;
+
+  Forum? get forum {
+    final forum = _.node;
+    return forum is Forum ? forum : null;
   }
 
-  return null;
+  @override
+  int? get forumId => _.forumId;
+
+  bool get isThreadTitleRedundant {
+    final threadTitle = this.threadTitle;
+    final firstPostBody = firstPost?.postBody;
+    if (threadTitle == null || firstPostBody == null) return false;
+
+    final ellipsis = _kThreadTitleEllipsisRegEx.firstMatch(threadTitle);
+    if (ellipsis != null) {
+      return firstPostBody.startsWith(ellipsis[1]!);
+    }
+
+    return firstPostBody.startsWith(threadTitle);
+  }
+
+  @override
+  ThreadLinks? get links => _.links;
+
+  @override
+  Node? get node => _.node;
+
+  List<Node>? _navigation;
+  List<Node>? get navigation => _navigation;
+  set navigation(List<Node>? v) {
+    if (listEquals(v, _navigation)) return;
+
+    _navigation = v;
+    notifyListeners();
+  }
+
+  @override
+  ThreadPermissions? get permissions => _.permissions;
+
+  @override
+  Poll? get poll => _poll;
+
+  @override
+  set poll(Poll? v) {
+    if (v == _poll) return;
+
+    _poll = v;
+    notifyListeners();
+  }
+
+  @override
+  String? get pollLink => links?.poll;
+
+  @override
+  int? get threadCreateDate => _.threadCreateDate;
+
+  @override
+  bool? get threadHasPoll => _.threadHasPoll;
+
+  @override
+  int get threadId => _.threadId;
+
+  @override
+  ThreadImage? get threadImage {
+    if (_.threadImage != null) return _.threadImage;
+
+    final post = _.firstPost;
+    if (post == null) return null;
+
+    if (post.attachments.isNotEmpty) {
+      for (final attachment in post.attachments) {
+        final dataLink = attachment.links?.data;
+        if (!attachment.isImage || dataLink == null) continue;
+
+        return ThreadImage(
+          dataLink,
+          width: attachment.attachmentWidth,
+          height: attachment.attachmentHeight,
+        );
+      }
+    }
+
+    final postBody = post.postBody ?? '';
+    if (postBody.isNotEmpty) {
+      final matchedUrl =
+          _kThreadPostBodyImgBbCodeRegExp.firstMatch(postBody)?.group(1);
+      if (matchedUrl != null) return ThreadImage(matchedUrl);
+    }
+
+    return null;
+  }
+
+  ThreadImage? get threadImageOriginal => _.threadImage;
+
+  @override
+  bool get threadIsBookmark => _.threadIsBookmark ?? false;
+
+  set threadIsBookmark(bool v) {
+    if (v == threadIsBookmark) return;
+
+    _ = _.copyWith(threadIsBookmark: v);
+    notifyListeners();
+  }
+
+  @override
+  bool? get threadIsDeleted => _.threadIsDeleted;
+
+  @override
+  bool? get threadIsFollowed => _.threadIsFollowed;
+
+  @override
+  bool? get threadIsNew => _.threadIsNew;
+
+  @override
+  bool? get threadIsPublished => _.threadIsPublished;
+
+  @override
+  bool? get threadIsSticky => _.threadIsSticky;
+
+  @override
+  int? get threadPostCount => _.threadPostCount;
+
+  @override
+  List<ThreadPrefix> get threadPrefixes => _.threadPrefixes ?? const [];
+
+  @override
+  ThreadImage? get threadPrimaryImage => _.threadPrimaryImage;
+
+  @override
+  Map<String, String>? get threadTags => _.threadTags;
+
+  @override
+  ThreadImage? get threadThumbnail => _.threadThumbnail;
+
+  @override
+  String? get threadTitle => _.threadTitle;
+
+  @override
+  int? get threadUpdateDate => _.threadUpdateDate;
+
+  @override
+  int? get threadViewCount => _.threadViewCount;
+
+  @override
+  Map<String, dynamic> toJson() => _.toJson();
+
+  @override
+  bool? get userIsIgnored => _.userIsIgnored;
 }
 
-@JsonSerializable()
-class Thread {
-  bool creatorHasVerifiedBadge;
-  int creatorUserId;
-  String creatorUsername;
-  int forumId;
-  Post firstPost;
-  int threadCreateDate;
-  bool threadHasPoll;
-  final int threadId;
-  bool threadIsBookmark;
-  bool threadIsDeleted;
-  bool threadIsFollowed;
-  bool threadIsNew;
-  bool threadIsPublished;
-  bool threadIsSticky;
-  int threadPostCount;
+@freezed
+class _ThreadInternal with _$_ThreadInternal {
+  const factory _ThreadInternal(
+    int threadId,
+    bool? creatorHasVerifiedBadge,
+    int? creatorUserId,
+    String? creatorUsername,
+    int? forumId,
+    Post? firstPost,
+    int? threadCreateDate,
+    bool? threadHasPoll,
+    bool? threadIsBookmark,
+    bool? threadIsDeleted,
+    bool? threadIsFollowed,
+    bool? threadIsNew,
+    bool? threadIsPublished,
+    bool? threadIsSticky,
+    int? threadPostCount,
+    @JsonKey(fromJson: _threadTagsFromJson) Map<String, String>? threadTags,
+    String? threadTitle,
+    int? threadUpdateDate,
+    int? threadViewCount,
+    bool? userIsIgnored,
+    @JsonKey(fromJson: _forumFromJson, name: 'forum') Node? node,
+    ThreadLinks? links,
+    ThreadPermissions? permissions,
+    ThreadImage? threadImage,
+    ThreadImage? threadPrimaryImage,
+    List<ThreadPrefix>? threadPrefixes,
+    ThreadImage? threadThumbnail,
+  ) = _Thread;
 
-  @JsonKey(fromJson: _threadTagsFromJson)
-  Map<String, String> threadTags;
-
-  String threadTitle;
-  int threadUpdateDate;
-  int threadViewCount;
-  bool userIsIgnored;
-
-  Forum forum;
-  ThreadLinks links;
-  ThreadPermissions permissions;
-  ThreadImage threadImage;
-  ThreadImage threadPrimaryImage;
-  List<ThreadPrefix> threadPrefixes;
-  ThreadImage threadThumbnail;
-
-  Thread(this.threadId);
-  factory Thread.fromJson(Map<String, dynamic> json) => _$ThreadFromJson(json);
+  factory _ThreadInternal.fromJson(Map<String, dynamic> json) =>
+      _$_ThreadInternalFromJson(json);
 }
 
-@JsonSerializable()
-class ThreadImage {
-  String displayMode;
+@freezed
+class ThreadImage with _$ThreadImage {
+  const factory ThreadImage(
+    String link, {
+    String? displayMode,
+    int? height,
+    String? mode,
+    int? size,
+    int? width,
+  }) = _ThreadImage;
 
-  int height;
-  final String link;
-  String mode;
-  int size;
-  int width;
-
-  ThreadImage(this.link);
   factory ThreadImage.fromJson(Map<String, dynamic> json) =>
       _$ThreadImageFromJson(json);
 }
 
-@JsonSerializable()
-class ThreadLinks {
-  String detail;
+@freezed
+class ThreadLinks with _$ThreadLinks {
+  const factory ThreadLinks({
+    String? detail,
+    String? firstPost,
+    String? firstPoster,
+    String? firstPosterAvatar,
+    String? followers,
+    String? forum,
+    String? image,
+    String? lastPost,
+    String? lastPoster,
+    String? permalink,
+    String? poll,
+    String? posts,
+    String? postsUnread,
+  }) = _ThreadLinks;
 
-  String firstPost;
-
-  String firstPoster;
-
-  String firstPosterAvatar;
-
-  String followers;
-
-  String forum;
-
-  String image;
-
-  String lastPost;
-
-  String lastPoster;
-
-  String permalink;
-
-  String poll;
-
-  String posts;
-
-  String postsUnread;
-
-  ThreadLinks();
   factory ThreadLinks.fromJson(Map<String, dynamic> json) =>
       _$ThreadLinksFromJson(json);
 }
 
-@JsonSerializable()
-class ThreadPermissions {
-  bool delete;
+@freezed
+class ThreadPermissions with _$ThreadPermissions {
+  const factory ThreadPermissions({
+    bool? delete,
+    bool? edit,
+    bool? follow,
+    bool? post,
+    bool? uploadAttachment,
+    bool? view,
+  }) = _ThreadPermissions;
 
-  bool edit;
-
-  bool follow;
-
-  bool post;
-
-  bool uploadAttachment;
-
-  bool view;
-
-  ThreadPermissions();
   factory ThreadPermissions.fromJson(Map<String, dynamic> json) =>
       _$ThreadPermissionsFromJson(json);
 }
 
-Map<String, String> _threadTagsFromJson(json) {
+Map<String, String>? _threadTagsFromJson(json) {
   if (json == null) return null;
 
   // php returns empty json array if thread has no tags...
   if (json is List) return null;
 
   return Map<String, String>.from(json);
+}
+
+Forum? _forumFromJson(json) {
+  if (json is Map) {
+    final node = Node.fromJson({
+      ...json,
+      'navigation_id': json['forum_id'],
+      'navigation_type': 'forum',
+    });
+    if (node is Forum) return node;
+  }
+
+  return null;
 }

@@ -13,6 +13,7 @@ import 'package:the_app/src/constants.dart';
 import 'package:the_app/src/intl.dart';
 import 'package:the_app/src/link.dart';
 import 'package:the_app/src/widgets/image.dart';
+import 'package:the_app/src/widgets/video_player.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 part 'html/galleria.dart';
@@ -206,14 +207,12 @@ class TinhteWidgetFactory extends WidgetFactory {
         trimMarginVertical: trimMarginVertical);
 
     if (trimMarginVertical) {
-      built.wrapWith((_, child) {
-        final last = _lastOf(child);
-
+      built?.wrapWith((_, child) {
         return Padding(
           child: child,
           padding: EdgeInsets.only(
             top: textPadding,
-            bottom: last is _TextPadding || last is WidgetPlaceholder<BuildTree>
+            bottom: children.last is WidgetPlaceholder<BuildTree>
                 ? textPadding
                 : 0.0,
           ),
@@ -364,12 +363,4 @@ class _TextPadding extends StatelessWidget {
   @override
   Widget build(BuildContext _) =>
       Padding(child: child, padding: EdgeInsets.symmetric(horizontal: padding));
-}
-
-Widget _lastOf(Widget widget) {
-  if (widget is Column) {
-    return _lastOf(widget.children.last);
-  }
-
-  return widget;
 }
