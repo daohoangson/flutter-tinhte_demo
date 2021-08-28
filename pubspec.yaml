@@ -68,3 +68,9 @@ flutter:
   assets:
     - assets/
   uses-material-design: true
+
+msix_config:
+  certificate_path: windows\certificate.pfx
+  certificate_password: release
+  identity_name: com.daohoangson.flutterttdemo
+  publisher: E=flutter_ttdemo@daohoangson.com, CN=Dao Hoang Son, OU=Developer, O=DAO HOANG SON, L=Vietnam, S=Ho Chi Minh City, C=VN
