@@ -151,7 +151,6 @@ jobs:
           _message=$( \
             echo '### iOS build'; \
             echo '```'; \
-            xcodebuild -version; \
             cat ios/Flutter/Generated.xcconfig | grep BUILD_NAME | sed s/FLUTTER_//; \
             echo "FLUTTER_VERSION=${FLUTTER_VERSION}"; \
             echo '```'; \
@@ -191,7 +190,7 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v1
         with:
-          channel: beta
+          flutter-version: ${{ env.FLUTTER_VERSION }}
       - run: flutter config --enable-windows-desktop
       - name: Prepare packages/api
         run: ./packages/api/tool/build.sh
@@ -202,6 +201,7 @@ jobs:
           set -e
           
           _packageVersion=$( echo $APP_VERSION | sed 's/+/./' )
+          echo "PACKAGE_VERSION=${_packageVersion}" | tee -a $GITHUB_ENV
 
           flutter pub run msix:create "--v=${_packageVersion}"
 
@@ -224,7 +224,8 @@ jobs:
           _message=$( \
             echo '### Windows build'; \
             echo '```'; \
-            flutter --version; \
+            echo "FLUTTER_VERSION=${FLUTTER_VERSION}"; \
+            echo "PACKAGE_VERSION=${PACKAGE_VERSION}"; \
             echo '```'; \
             echo; \
             printf '1. Install [ca.crt](%s) as a trusted root CA\n' "${GCS_URL}/windows/ca.crt"; \
