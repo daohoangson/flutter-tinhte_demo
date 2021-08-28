@@ -208,7 +208,11 @@ jobs:
         with:
           service_account_key: ${{ secrets.GCP_UPLOADER_SA_KEY }}
       - name: Run gsutil cp
-        run: gsutil cp build/windows/runner/Release/the_app.msix "${GCS_PATH}/windows/the_app.msix"
+        run: |
+          set -e
+
+          gsutil cp windows/ca.crt "${GCS_PATH}/windows/ca.crt"
+          gsutil cp build/windows/runner/Release/the_app.msix "${GCS_PATH}/windows/the_app.msix"
 
       - name: Prepare markdown
         id: markdown
@@ -221,6 +225,7 @@ jobs:
             flutter --version; \
             echo '```'; \
             echo; \
+            printf '[ca.crt](%s)' "${GCS_URL}/windows/ca.crt"; \
             printf '[the_app.msix](%s)' "${GCS_URL}/windows/the_app.msix"; \
           )
 
