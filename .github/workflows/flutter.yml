@@ -48,6 +48,7 @@ env:
       export "GITHUB_ENV=${_wslGithubEnv}"
     fi
 
+    echo "APP_VERSION=${_appVersion}" | tee -a $GITHUB_ENV
     echo "BUILD_NAME=${_appVersionWithoutNumber}-${_githubSha:0:7}" | tee -a $GITHUB_ENV
   
     _flutterVersion=$( yq e '.environment.flutter' pubspec.yaml )
@@ -200,7 +201,7 @@ jobs:
         run: |
           set -e
           
-          _packageVersion=$( echo $BUILD_NAME | sed s/-/./ | sed s/[^.0-9]//g )
+          _packageVersion=$( echo $APP_VERSION | sed 's/+/./' )
 
           flutter pub run msix:create "--v=${_packageVersion}"
 
