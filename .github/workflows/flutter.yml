@@ -227,8 +227,8 @@ jobs:
             flutter --version; \
             echo '```'; \
             echo; \
-            printf '[ca.crt](%s)' "${GCS_URL}/windows/ca.crt"; \
-            printf '[the_app.msix](%s)' "${GCS_URL}/windows/the_app.msix"; \
+            printf '1. Install [ca.crt](%s) as a trusted root CA\n' "${GCS_URL}/windows/ca.crt"; \
+            printf '1. Then run [the installer](%s)\n' "${GCS_URL}/windows/the_app.msix"; \
           )
 
           _message="${_message//'%'/'%25'}"
