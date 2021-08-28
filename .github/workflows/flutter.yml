@@ -7,6 +7,7 @@ on:
       - 'ios/**'
       - 'lib/**'
       - 'packages/**'
+      - 'windows/**'
       - pubspec.yaml
 
 env:
@@ -54,7 +55,6 @@ env:
 
 jobs:
   build_apk:
-    if: ${{ false }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -107,7 +107,7 @@ jobs:
           fingerprint: <!-- ${{ github.sha }} -->
 
   build_ipa:
-    if: ${{ false }}
+    if: ${{ github.ref == 'refs/heads/master' || contains(github.ref, 'ios') }}
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
@@ -171,6 +171,7 @@ jobs:
           fingerprint: <!-- ${{ github.sha }} -->
 
   build_windows:
+    if: ${{ github.ref == 'refs/heads/master' || contains(github.ref, 'windows') }}
     runs-on: windows-latest
     defaults:
       run:
