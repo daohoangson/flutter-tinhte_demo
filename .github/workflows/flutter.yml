@@ -39,6 +39,14 @@ env:
     _appVersion=$( yq e '.version' pubspec.yaml )
     _appVersionWithoutNumber=$( echo "${_appVersion}" | sed 's/+.*$//' )
     _githubSha=${{ github.sha }}
+
+    if ! command -v wslpath &>/dev/null; then
+      echo "GITHUB_ENV=$GITHUB_ENV"
+    else
+      _wslGithubEnv=$( wslpath -u "$GITHUB_ENV" )
+      export "GITHUB_ENV=${_wslGithubEnv}"
+    fi
+
     echo "BUILD_NAME=${_appVersionWithoutNumber}-${_githubSha:0:7}" | tee -a $GITHUB_ENV
   
     _flutterVersion=$( yq e '.environment.flutter' pubspec.yaml )
@@ -187,7 +195,13 @@ jobs:
         run: ./packages/api/tool/build.sh
       - run: flutter pub get
       - run: flutter build windows
-      - run: flutter pub run msix:create
+      - name: Run flutter pub run msix:create
+        run: |
+          set -e
+          
+          _packageVersion=$( echo $BUILD_NAME | sed s/-/./ | sed s/[^.0-9]//g )
+
+          flutter pub run msix:create "--v=${_packageVersion}"
 
       - name: Setup gcloud
         uses: google-github-actions/setup-gcloud@master

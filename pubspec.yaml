@@ -51,7 +51,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  msix: ^1.0.6
+  msix: ^2.0.0
 
 dependency_overrides:
   analyzer: ^1.4.0
