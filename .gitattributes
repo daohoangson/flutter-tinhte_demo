@@ -1,3 +1,5 @@
+* -crlf
+
 /android/app/google-services.json filter=git-crypt diff=git-crypt
 /android/fastlane/service-account.json filter=git-crypt diff=git-crypt
 /android/release.jks filter=git-crypt diff=git-crypt

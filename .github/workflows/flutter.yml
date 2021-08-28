@@ -12,26 +12,34 @@ on:
 env:
   GCS_PATH: gs://flutterttdemo/${{ github.sha }}
   GCS_URL: https://storage.googleapis.com/flutterttdemo/${{ github.sha }}
-  GIT_CRYPT_KEY: ${{ secrets.GIT_CRYPT_KEY }}
   SCRIPT_PREPARE_REPO: |
     set -e
 
     git submodule update --init --recursive
 
     # Unlock git-crypt
-    brew install git-crypt
+    if ! command -v git-crypt &>/dev/null; then
+      brew install git-crypt
+    fi
     # https://github.com/sliteteam/github-action-git-crypt-unlock/blob/master/entrypoint.sh
-    echo "${GIT_CRYPT_KEY}" | base64 --decode > ./git-crypt-key
+    echo "${{ secrets.GIT_CRYPT_KEY }}" | base64 --decode > ./git-crypt-key
     git-crypt unlock ./git-crypt-key
     rm ./git-crypt-key
 
-    # Install yq with Homebrew (macOS) or snap (Ubuntu)
-    brew install yq || sudo snap install yq
-
     # Extract config from pubspec.yaml
+    if ! command -v yq &>/dev/null; then
+      if ! command -v brew &>/dev/null; then
+        _os=$( uname -s | tr '[:upper:]' '[:lower:]' )
+        _arch=amd64
+        wget "https://github.com/mikefarah/yq/releases/download/v4.12.1/yq_${_os}_${_arch}" -O /usr/bin/yq && chmod +x /usr/bin/yq
+      else
+        brew install yq
+      fi
+    fi
     _appVersion=$( yq e '.version' pubspec.yaml )
     _appVersionWithoutNumber=$( echo "${_appVersion}" | sed 's/+.*$//' )
-    echo "BUILD_NAME=${_appVersionWithoutNumber}-${GITHUB_SHA:0:7}" | tee -a $GITHUB_ENV
+    _githubSha=${{ github.sha }}
+    echo "BUILD_NAME=${_appVersionWithoutNumber}-${_githubSha:0:7}" | tee -a $GITHUB_ENV
   
     _flutterVersion=$( yq e '.environment.flutter' pubspec.yaml )
     echo "FLUTTER_VERSION=${_flutterVersion}" | tee -a $GITHUB_ENV
@@ -156,26 +164,37 @@ jobs:
 
   build_windows:
     runs-on: windows-latest
+    defaults:
+      run:
+        shell: bash
     steps:
       - uses: actions/checkout@v2
+      - uses: Vampire/setup-wsl@v1
+        with:
+          additional-packages: ca-certificates git git-crypt gettext wget
       - name: Prepare repo
-        run: echo "${SCRIPT_PREPARE_REPO}" | bash -
+        run: ${{ env.SCRIPT_PREPARE_REPO }}
+        shell: wsl-bash {0}
+        env:
+          WSLENV: GITHUB_ENV
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v1
         with:
           channel: beta
       - run: flutter config --enable-windows-desktop
+      - name: Prepare packages/api
+        run: ./packages/api/tool/build.sh
       - run: flutter pub get
       - run: flutter build windows
       - run: flutter pub run msix:create
 
       - name: Setup gcloud
-        uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        uses: google-github-actions/setup-gcloud@master
         with:
           service_account_key: ${{ secrets.GCP_UPLOADER_SA_KEY }}
       - name: Run gsutil cp
-        run: gsutil cp build\windows\runner\Release\the_app.msix "${GCS_PATH}/windows"
+        run: gsutil cp build/windows/runner/Release/the_app.msix "${GCS_PATH}/windows/the_app.msix"
 
       - name: Prepare markdown
         id: markdown
@@ -185,8 +204,7 @@ jobs:
           _message=$( \
             echo '### Windows build'; \
             echo '```'; \
-            echo "BUILD_NAME=${BUILD_NAME}"; \
-            echo "FLUTTER_VERSION=${FLUTTER_VERSION}"; \
+            flutter --version; \
             echo '```'; \
             echo; \
             printf '[the_app.msix](%s)' "${GCS_URL}/windows/the_app.msix"; \
