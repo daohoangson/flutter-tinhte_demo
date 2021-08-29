@@ -191,16 +191,13 @@ jobs:
         run: |
           set -e
 
-          flutter build macos "--build-name=${BUILD_NAME}"
-          _appPath=$( ls -d build/macos/Build/Products/Release/*.app )
+          flutter build macos "--build-name=${BUILD_NAME}" || true
+          ( cd macos && fastlane app )
+
+          cd build/app/outputs/macos/release
+          _appPath=$( ls -d *.app )
           _appBasename=$( basename "${_appPath}" )
-
-          _releaseDir=build/app/outputs/macos/release
-          mkdir -p "${_releaseDir}"
-          date >"${_releaseDir}"/date
-
-          _releaseDirRealpath=$( cd "${_releaseDir}" && pwd )
-          ( cd `dirname "${_appPath}"` && zip -r "${_releaseDirRealpath}/${_appBasename}.zip" "${_appBasename}" )
+          zip -r "${_appBasename}.zip" "${_appBasename}"
 
       - name: Setup gcloud
         uses: google-github-actions/setup-gcloud@master

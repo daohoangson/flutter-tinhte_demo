@@ -6,6 +6,8 @@
 /ios/*.cer
 /ios/*.mobileprovision
 /ios/Runner.*
+/macos/fastlane/README.md
+/macos/fastlane/report.xml
 
 # Miscellaneous
 *.class
