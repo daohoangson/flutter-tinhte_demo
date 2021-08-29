@@ -4,7 +4,7 @@ version: 2.0.0+27
 publish_to: none
 
 environment:
-  flutter: 2.2.3
+  flutter: 2.2.1
   sdk: ">=2.3.0 <3.0.0"
 
 dependencies:
@@ -14,7 +14,7 @@ dependencies:
   firebase_crashlytics: ^2.0.0
 
   # ours
-  flutter_widget_from_html: ">=0.6.0 <0.6.2"
+  flutter_widget_from_html: ^0.6.0
   fwfh_webview: any
   the_api:
     path: ./packages/api
