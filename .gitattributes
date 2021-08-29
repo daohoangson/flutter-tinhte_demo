@@ -1,7 +1,11 @@
+* -crlf
+
 /android/app/google-services.json filter=git-crypt diff=git-crypt
 /android/fastlane/service-account.json filter=git-crypt diff=git-crypt
 /android/release.jks filter=git-crypt diff=git-crypt
 /ios/Runner/GoogleService-Info.plist filter=git-crypt diff=git-crypt
 /ios/gc_keys.json filter=git-crypt diff=git-crypt
 /macos/Runner/GoogleService-Info.plist filter=git-crypt diff=git-crypt
+/windows/ca.crt filter=git-crypt diff=git-crypt
+/windows/certificate.pfx filter=git-crypt diff=git-crypt
 *.encrypted.dart filter=git-crypt diff=git-crypt

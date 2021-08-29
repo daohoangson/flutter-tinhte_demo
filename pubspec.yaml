@@ -21,7 +21,7 @@ dependencies:
   
   apple_sign_in: ^0.1.0
   chewie: any
-  convert: ^2.1.1
+  convert: any
   crypto: any
   flutter:
     sdk: flutter
@@ -51,16 +51,26 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  msix: ^2.0.0
 
 dependency_overrides:
+  analyzer: ^1.4.0
+  args: ^2.0.0
   crypto: ^3.0.1
   html: ^0.15.0
   intl: ^0.17.0
   petitparser: ^4.0.0
   url_launcher: ^6.0.0
+  yaml: ^3.1.0
   xml: ^5.0.0
 
 flutter:
   assets:
     - assets/
   uses-material-design: true
+
+msix_config:
+  certificate_path: windows\certificate.pfx
+  certificate_password: release
+  identity_name: com.daohoangson.flutterttdemo
+  publisher: E=flutter_ttdemo@daohoangson.com, CN=Dao Hoang Son, OU=Developer, O=DAO HOANG SON, L=Vietnam, S=Ho Chi Minh City, C=VN

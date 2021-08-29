@@ -1,9 +1,9 @@
 import 'dart:async';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:the_app/src/abstracts/error_reporting.dart' as error_reporting;
+import 'package:the_app/src/abstracts/firebase.dart' as firebase;
 import 'package:the_app/src/intl.dart';
 import 'package:the_app/src/link.dart';
 import 'package:the_app/src/screens/home.dart';
@@ -21,11 +21,10 @@ void main() async {
   timeago.setLocaleMessages('vi', timeago.ViMessages());
 
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  push_notification.configureFcm();
+  await firebase.initializeApp();
+  push_notification.configurePushNotification();
 
-  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
-  runZonedGuarded<Future<void>>(() async {
+  error_reporting.runZoned<Future<void>>(() async {
     final values = await Future.wait([
       DarkTheme.create(),
       FontScale.create(),
@@ -55,7 +54,7 @@ void main() async {
             )
           : HomeScreen(),
     ));
-  }, FirebaseCrashlytics.instance.recordError);
+  });
 }
 
 class MyApp extends StatelessWidget {
