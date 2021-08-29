@@ -270,7 +270,9 @@ jobs:
           
           _packageVersion=$( echo $APP_VERSION | sed 's/+/./' )
           echo "PACKAGE_VERSION=${_packageVersion}" | tee -a $GITHUB_ENV
+
           flutter pub run msix:create "--v=${_packageVersion}"
+
       - name: Setup gcloud
         uses: google-github-actions/setup-gcloud@master
         with:
@@ -278,12 +280,15 @@ jobs:
       - name: Run gsutil cp
         run: |
           set -e
+
           gsutil cp windows/ca.crt "${GCS_PATH}/windows/ca.crt"
           gsutil cp build/windows/runner/Release/the_app.msix "${GCS_PATH}/windows/the_app.msix"
+
       - name: Prepare markdown
         id: markdown
         run: |
           set -e
+
           _message=$( \
             echo '### Windows build'; \
             echo '```'; \
@@ -294,6 +299,7 @@ jobs:
             printf '1. Install [ca.crt](%s) as a trusted root CA\n' "${GCS_URL}/windows/ca.crt"; \
             printf '1. Then run [the installer](%s)\n' "${GCS_URL}/windows/the_app.msix"; \
           )
+
           _message="${_message//'%'/'%25'}"
           _message="${_message//$'\n'/'%0A'}"
           _message="${_message//$'\r'/'%0D'}"
