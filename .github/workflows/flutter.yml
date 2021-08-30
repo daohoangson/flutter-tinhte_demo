@@ -6,6 +6,7 @@ on:
       - 'android/**'
       - 'ios/**'
       - 'lib/**'
+      - 'macos/**'
       - 'packages/**'
       - 'windows/**'
       - pubspec.yaml

@@ -24,5 +24,11 @@ platform :mac do
       export_method:  "developer-id",
       output_directory: "../build/app/outputs/macos/release"
     )
+
+    notarize(
+      package: "../build/app/outputs/macos/release/ttdemo.app",
+      api_key_path: "fastlane/4TV2PTBPVG.json",
+      verbose: true
+    )
   end
 end
