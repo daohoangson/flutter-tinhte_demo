@@ -198,7 +198,7 @@ jobs:
           cd build/app/outputs/macos/release
           _appPath=$( ls -d *.app )
           _appBasename=$( basename "${_appPath}" )
-          zip -r "${_appBasename}.zip" "${_appBasename}"
+          ditto -c -k --keepParent "${_appBasename}" "${_appBasename}.zip"
 
       - name: Setup gcloud
         uses: google-github-actions/setup-gcloud@master

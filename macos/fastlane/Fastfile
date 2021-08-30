@@ -27,8 +27,7 @@ platform :mac do
 
     notarize(
       package: "../build/app/outputs/macos/release/ttdemo.app",
-      api_key_path: "fastlane/4TV2PTBPVG.json",
-      verbose: true
+      api_key_path: "fastlane/4TV2PTBPVG.json"
     )
   end
 end
