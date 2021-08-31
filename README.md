@@ -8,9 +8,8 @@ Google Play Store: [Open Beta Testing](https://play.google.com/apps/testing/com.
 
 Apple App Store: [TestFlight](https://testflight.apple.com/join/4lGGYeSU)
 
-Or check the PR / commit comments, this repo has GitHub Actions setup to build for Android/iOS and Windows then
+Or check the PR / commit comments, this repo has GitHub Actions setup to build for Android/iOS/macOS and Windows then
 upload the apps to GCS (automatically deleted after 30 days).
-The comment includes link to download the apks and iTunes manifest to install on mobile devices.
 
 ## Features
 
