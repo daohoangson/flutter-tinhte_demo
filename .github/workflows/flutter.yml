@@ -172,6 +172,68 @@ jobs:
           body: ${{ steps.markdown.outputs.MESSAGE }}
           fingerprint: <!-- ${{ github.sha }} -->
 
+  build_linux:
+    if: ${{ github.ref == 'refs/heads/master' || contains(github.ref, 'linux') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Prepare repo
+        run: echo "${SCRIPT_PREPARE_REPO}" | bash -
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v1
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+      - run: flutter config --enable-linux-desktop
+      - name: Prepare packages/api
+        run: ./packages/api/tool/build.sh
+      - run: flutter pub get
+      - name: Run flutter build linux
+        run: |
+          set -e
+
+          sudo apt-get update -y
+          sudo apt-get install -y clang libgtk-3-dev ninja-build
+          flutter doctor
+
+          flutter build linux
+
+          cd build/linux/x64/release
+          zip -r bundle.zip bundle/*
+
+      - name: Setup gcloud
+        uses: google-github-actions/setup-gcloud@master
+        with:
+          service_account_key: ${{ secrets.GCP_UPLOADER_SA_KEY }}
+      - name: Run gsutil cp
+        run: gsutil cp build/linux/x64/release/bundle.zip "${GCS_PATH}/linux/bundle.zip"
+
+      - name: Prepare markdown
+        id: markdown
+        run: |
+          set -e
+
+          _message=$( \
+            echo '### Linux build'; \
+            echo '```'; \
+            echo "FLUTTER_VERSION=${FLUTTER_VERSION}"; \
+            echo '```'; \
+            echo; \
+            printf '[bundle.zip](%s)\n' "${GCS_URL}/linux/bundle.zip"; \
+          )
+
+          _message="${_message//'%'/'%25'}"
+          _message="${_message//$'\n'/'%0A'}"
+          _message="${_message//$'\r'/'%0D'}"
+          echo "::set-output name=MESSAGE::${_message}"
+      - name: Post GitHub comment
+        uses: daohoangson/comment-on-github@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          body: ${{ steps.markdown.outputs.MESSAGE }}
+          fingerprint: <!-- ${{ github.sha }} -->
+
   build_macos:
     if: ${{ github.ref == 'refs/heads/master' || contains(github.ref, 'macos') }}
     runs-on: macos-latest
