@@ -7,6 +7,7 @@ on:
 
 jobs:
   deploy:
+    if: ${{ github.ref == 'refs/heads/master' || contains(github.ref, 'gcf') }}
     runs-on: ubuntu-latest
     defaults:
       run:
