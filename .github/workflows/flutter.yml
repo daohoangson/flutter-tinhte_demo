@@ -58,7 +58,6 @@ env:
 jobs:
   build_apk:
     runs-on: ubuntu-latest
-    if: ${{ false }}
     steps:
       - uses: actions/checkout@v2
       - name: Prepare repo
