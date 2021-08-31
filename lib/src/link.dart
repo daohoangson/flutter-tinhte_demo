@@ -29,10 +29,10 @@ Future<bool> launchLink(
     final path = buildToolsParseLinkPath(link);
     if (!forceWebView) {
       final parsed = await parsePath(path, context: context);
-      if (parsed) return false;
+      if (parsed) return true;
 
       // this is our link, we tried to parse it and failed
-      // let's open it via webview
+      // force web view to avoid universal link loop
       forceWebView = true;
     }
 
