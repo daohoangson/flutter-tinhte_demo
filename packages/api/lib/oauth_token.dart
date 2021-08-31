@@ -16,7 +16,8 @@ class OauthToken with _$OauthToken {
   }) = _OauthToken;
 
   factory OauthToken.fromJson(Map<String, dynamic> json) =>
-      _$OauthTokenFromJson(json);
+      _$OauthTokenFromJson(json).copyWith(
+          millisecondsSinceEpoch: DateTime.now().millisecondsSinceEpoch);
 
   const OauthToken._();
 
