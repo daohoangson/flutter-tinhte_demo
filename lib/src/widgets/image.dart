@@ -114,15 +114,6 @@ class ThreadImageWidget extends StatelessWidget {
     );
   }
 
-  /// Copies saved image from old thread to the new one.
-  ///
-  /// This is needed because internally an `[Expando]` is used
-  /// to keep track of images without hogging memory.
-  ///
-  /// See [_smalls].
-  static void syncImages(Thread oldThread, Thread newThread) =>
-      _smalls[newThread] = _smalls[oldThread];
-
   static Widget _buildImage(String url, {ImageFrameBuilder frameBuilder}) =>
       Image(
         frameBuilder: frameBuilder,

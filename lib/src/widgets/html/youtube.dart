@@ -115,6 +115,7 @@ class _YouTubeState extends State<YouTubeWidget> {
       }
     }
 
+    if (!mounted) return;
     setState(() {
       _aspectRatio = aspectRatio;
       if (metaTags.containsKey(_kOgTitle)) _title = metaTags[_kOgTitle];
@@ -122,6 +123,7 @@ class _YouTubeState extends State<YouTubeWidget> {
 
     final thumbnailUrl = metaTags[_kOgImage];
     await precacheImage(CachedNetworkImageProvider(thumbnailUrl), context);
+    if (!mounted) return;
     setState(() => _thumbnailUrl = thumbnailUrl);
   }
 }

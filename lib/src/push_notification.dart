@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import 'package:the_api/user.dart';
 import 'package:the_app/src/abstracts/push_notification.dart' as abstraction;
 import 'package:the_app/src/screens/notification_list.dart';
-import 'package:the_app/src/api.dart';
 import 'package:the_app/src/config.dart';
 import 'package:the_app/src/link.dart';
 
@@ -24,14 +23,22 @@ void configurePushNotification() {
 StreamSubscription<int> listenToNotification(void onData(int notificationId)) =>
     _notifController.stream.listen(onData);
 
-Future<Widget> onLaunchMessageWidgetOr(Widget fallback) async {
-  final data = await abstraction.getInitialMessage();
-  if (data == null) return fallback;
+Future<String> getInitialPath() async {
+  try {
+    final data = await abstraction.getInitialMessage();
+    if (data == null) return null;
 
-  final path = _getContentLink(data);
-  if (path == null) return fallback;
+    final path = _getContentLink(data);
+    if (path != null) {
+      debugPrint('push_notification getInitialPath() -> $path');
+    }
 
-  return _OnLaunchMessageWidget(path, fallback: fallback);
+    return path;
+  } catch (e) {
+    print(e);
+  }
+
+  return null;
 }
 
 String _getContentLink(Map<String, dynamic> message) {
@@ -205,48 +212,6 @@ class PushNotificationToken extends ChangeNotifier {
 
     return null;
   }
-}
-
-class _OnLaunchMessageWidget extends StatefulWidget {
-  final Widget fallback;
-  final String path;
-
-  _OnLaunchMessageWidget(this.path, {this.fallback, Key key})
-      : assert(path != null),
-        assert(fallback != null),
-        super(key: key);
-
-  @override
-  State<StatefulWidget> createState() => _OnLaunchMessageState();
-}
-
-class _OnLaunchMessageState extends State<_OnLaunchMessageWidget> {
-  var _fallback = false;
-  Future<Widget> _future;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _future = buildWidget(
-      ApiCaller.stateful(this),
-      widget.path,
-      defaultWidget: const NotificationListScreen(),
-    ).catchError((error) async {
-      await showApiErrorDialog(context, error);
-      setState(() => _fallback = true);
-    });
-  }
-
-  @override
-  Widget build(BuildContext _) => _fallback
-      ? widget.fallback
-      : FutureBuilder<Widget>(
-          builder: (__, snapshot) => snapshot.hasData
-              ? snapshot.data
-              : const Center(child: CircularProgressIndicator()),
-          future: _future,
-        );
 }
 
 class _UnreadIcon extends StatefulWidget {

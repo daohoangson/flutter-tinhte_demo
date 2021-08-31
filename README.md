@@ -8,112 +8,15 @@ Google Play Store: [Open Beta Testing](https://play.google.com/apps/testing/com.
 
 Apple App Store: [TestFlight](https://testflight.apple.com/join/4lGGYeSU)
 
-Or check the PR / commit comments, this repo has GitHub Actions setup to build the apk+ipa then
-upload them to GCS (automatically deleted after 30 days).
-The comment includes link to download the apks and iTunes manifest to install on mobile devices.
+Or check the PR / commit comments, this repo has GitHub Actions setup to build for Android/iOS/macOS and Windows then
+upload the apps to GCS (automatically deleted after 30 days).
 
 ## Features
 
-### Home
-
-- Primary list: home threads
-  - Image
-  - Poster
-  - Post date
-  - Short snippet
-- Special blocks:
-  - Feature pages
-  - Top threads
-  - Trending tags
-- Actions:
-  - Create new thread
-
-### Login
-
-- Username & password
 - Apple login via [apple_sign_in](https://pub.dev/packages/apple_sign_in)
 - Facebook login via [flutter_facebook_login](https://pub.dev/packages/flutter_facebook_login)
 - Google login via [google_sign_in](https://pub.dev/packages/google_sign_in)
-
-### Forum list
-
-### Forum view / Node view
-
-- Navigation
-- Primary list: threads
-  - Title
-  - Image
-  - Poster avatar, username
-  - Post date
-  - Short snippet
-  - Counters: replies, likes
-  - Actions: comment, like, share
-  - Sticky thread banner
-  - Special support: background post, TinhteFact
-- Search in forum
-
-### Member view
-
-- User profile
-  - Avatar
-  - Username
-  - Joined date
-  - Message count
-  - Like count
-- Actions
-  - Follow
-  - Ignore
-- Primary list: user's threads
-- Search user contents
-
-### My feed
-
-### Notification list
-
-- Primary list: notifications
 - Push notification via [firebase_messaging](https://pub.dev/packages/firebase_messaging)
-- Note: FCM support requires deployment of [Cloud Functions for Firebase](firebase/functions)
-
-### Tag view / Feature page
-
-- Tag info
-  - Tag text
-  - Image (fp only)
-  - Use count
-  - News count (fp only)
-- Actions
-  - Follow
-- Primary list: tagged threads
-
-### Thread view
-
-- Navigation
-- Poll
-- Primary list: posts
-  - Poster avatar, username
-  - Post body
-  - Post date
-  - Attachments
-  - Actions: like, reply, delete, open in browser, report
-  - Replies
-- Actions:
-  - Font control
-  - Bookmark
-  - Open in browser
-  - Share
-  - Quick reply
-    - Post body
-    - Attachments
-
-### Create new thread
-
-- Forum picker
-- Thread title
-- Post body
-- Attachments
-
-### Others
-
 - Dark mode: on / off / auto
 - Localization (auto)
   - English
@@ -160,22 +63,25 @@ See [How to use another package name?](#how-to-use-another-package-name) for mor
 
 Pick a unique package name across Play Store and App Store then update these files:
 
-- `.github/workflows/flutter.yml` GCS_BUCKET
+- `.github/workflows/flutter.yml` GCS_BUCKET, GCS_URL
 - `android/app/build.gradle` applicationId, signingConfigs.release
-- `android/app/google-services.json`
 - `android/app/src/main/AndroidManifest.xml` package, android:label
 - `android/app/src/main/res/values/strings.xml` app_name, facebook_app_id, fb_login_protocol_scheme
 - `android/fastlane/metadata/android/en-US/` title.txt, full_description.txt, short_description.txt
-- `android/fastlane/Appfile` package_name
-- `android/release.jks`
+- `android/fastlane/Appfile`
 - `firebase/.firebaserc` projects.default
 - `ios/Runner.xcodeproj/project.pbxproj` PRODUCT_BUNDLE_IDENTIFIER x2, PROVISIONING_PROFILE_SPECIFIER x2
-- `ios/Runner/GoogleService-Info.plist`
 - `ios/Runner/Info.plist` CFBundleName, CFBundleURLSchemes, FacebookAppID, FacebookDisplayName
-- `ios/fastlane/Appfile` app_identifier, apple_id, etc. (basically everything)
+- `ios/fastlane/Appfile`
 - `ios/fastlane/Fastfile` xcargs (PROVISIONING_PROFILE_SPECIFIER), manifest (appURL, displayImageURL, fullSizeImageURL)
-- `ios/fastlane/Matchfile` google_cloud_bucket_name
-- `ios/gc_keys.json`
+- `ios/fastlane/Matchfile`
+- `macos/Runner/Configs/AppInfo.xcconfig`
+- `macos/Runner.xcodeproj/project.pbxproj` PROVISIONING_PROFILE_SPECIFIER x3
+- `macos/fastlane/Appfile`
+- `macos/fastlane/Fastfile` notarize
+- `macos/fastlane/Matchfile`
+- `windows/runner/Runner.rc`
+- `pubspec.yaml` msix_config>identity_name
 
 You will also need to move the files within `android/app/src/main/java/com/daohoangson/flutter_ttdemo` to another directory to match the new Android package.
 

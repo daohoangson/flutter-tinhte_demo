@@ -4,14 +4,14 @@ version: 2.0.0+27
 publish_to: none
 
 environment:
-  flutter: ^2.2.0-0
+  flutter: 2.2.1
   sdk: ">=2.3.0 <3.0.0"
 
 dependencies:
   # firebase
-  firebase_core: 1.0.0
+  firebase_core: 1.1.0
   firebase_messaging: ^9.0.0
-  firebase_crashlytics: ^1.0.0
+  firebase_crashlytics: ^2.0.0
 
   # ours
   flutter_widget_from_html: ^0.6.0
@@ -20,13 +20,13 @@ dependencies:
     path: ./packages/api
   
   apple_sign_in: ^0.1.0
+  chewie: any
   convert: any
   crypto: any
   flutter:
     sdk: flutter
   flutter_auth_buttons: ^0.8.0
   flutter_cache_manager: any
-  flutter_custom_tabs: ^0.6.0
   flutter_facebook_login: ^3.0.0
   flutter_localizations:
     sdk: flutter
@@ -40,16 +40,18 @@ dependencies:
   intl_translation: any
   package_info: ^0.4.1
   photo_view: ^0.9.2
-  provider: ^4.1.3
+  provider: any
   share: ^0.6.4+3
   shared_preferences: ^2.0.0
   scroll_to_index: ^1.0.3
   timeago: ^2.0.26
+  uni_links: ^0.5.1
+  video_player: any
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  msix: ^1.0.6
+  msix: ^2.0.0
 
 dependency_overrides:
   analyzer: ^1.4.0
@@ -66,3 +68,9 @@ flutter:
   assets:
     - assets/
   uses-material-design: true
+
+msix_config:
+  certificate_path: windows\certificate.pfx
+  certificate_password: release
+  identity_name: com.daohoangson.flutterttdemo
+  publisher: E=flutter_ttdemo@daohoangson.com, CN=Dao Hoang Son, OU=Developer, O=DAO HOANG SON, L=Vietnam, S=Ho Chi Minh City, C=VN

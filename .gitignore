@@ -6,6 +6,8 @@
 /ios/*.cer
 /ios/*.mobileprovision
 /ios/Runner.*
+/macos/fastlane/README.md
+/macos/fastlane/report.xml
 
 # Miscellaneous
 *.class
@@ -31,6 +33,7 @@
 
 # Flutter/Dart/Pub related
 **/doc/api/
+**/ios/Flutter/.last_build_id
 .dart_tool/
 .flutter-plugins
 .flutter-plugins-dependencies

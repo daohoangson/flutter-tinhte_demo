@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:the_api/api.dart';
+import 'package:the_api/login_result.dart';
 import 'package:the_api/oauth_token.dart';
 import 'package:the_app/src/api.dart';
 import 'package:the_app/src/config.dart';
@@ -25,7 +26,7 @@ void logout(BuildContext context) {
 
   apiData.setToken(null);
 
-  if (token?.obtainMethod == ObtainMethod.Google) {
+  if (token?.obtainMethod == ObtainMethod.google) {
     _googleSignIn.signOut();
   }
 }
@@ -63,13 +64,15 @@ class _LoginFormState extends State<LoginForm> {
   @override
   Widget build(BuildContext context) => Form(
         key: formKey,
-        child: ListView(
-          children: _tfa != null
-              ? _buildFieldsTfa()
-              : _associatable != null
-                  ? _buildFieldsAssociate()
-                  : _buildFieldsLogin(),
-          padding: const EdgeInsets.all(20.0),
+        child: AutofillGroup(
+          child: ListView(
+            children: _tfa != null
+                ? _buildFieldsTfa()
+                : _associatable != null
+                    ? _buildFieldsAssociate()
+                    : _buildFieldsLogin(),
+            padding: const EdgeInsets.all(20.0),
+          ),
         ),
       );
 
@@ -201,6 +204,7 @@ class _LoginFormState extends State<LoginForm> {
       );
 
   Widget _buildPassword({bool autofocus = false}) => TextFormField(
+        autofillHints: [AutofillHints.password],
         autofocus: autofocus,
         decoration: InputDecoration(
           hintText: l(context).loginPasswordHint,
@@ -219,6 +223,7 @@ class _LoginFormState extends State<LoginForm> {
       );
 
   Widget _buildUsername() => TextFormField(
+      autofillHints: [AutofillHints.email, AutofillHints.username],
       autofocus: true,
       decoration: InputDecoration(
         hintText: l(context).loginUsernameHint,
@@ -300,7 +305,7 @@ class _LoginFormState extends State<LoginForm> {
 
           return Future.error(result.status.toString());
         })
-        .then((appleIdCredential) => loginExternal(api, ObtainMethod.Apple, {
+        .then((appleIdCredential) => loginExternal(api, ObtainMethod.apple, {
               'client_id': api.clientId,
               'client_secret': api.clientSecret,
               'apple_token':
@@ -331,7 +336,7 @@ class _LoginFormState extends State<LoginForm> {
 
           return Future.error(result.status.toString());
         })
-        .then((facebookToken) => loginExternal(api, ObtainMethod.Facebook, {
+        .then((facebookToken) => loginExternal(api, ObtainMethod.facebook, {
               'client_id': api.clientId,
               'client_secret': api.clientSecret,
               'facebook_token': facebookToken,
@@ -364,7 +369,7 @@ class _LoginFormState extends State<LoginForm> {
 
           return googleToken;
         })
-        .then((googleToken) => loginExternal(api, ObtainMethod.Google, {
+        .then((googleToken) => loginExternal(api, ObtainMethod.google, {
               'client_id': api.clientId,
               'client_secret': api.clientSecret,
               'google_token': googleToken,
@@ -377,17 +382,15 @@ class _LoginFormState extends State<LoginForm> {
   void _onResult(LoginResult result) {
     if (!mounted || result == null) return;
 
-    if (result.token != null) {
-      final apiAuth = ApiAuth.of(context, listen: false);
-      apiAuth.setToken(result.token);
-      Navigator.pop(context, true);
-      return;
-    }
-
-    if (result.associatable != null)
-      setState(() => _associatable = result.associatable);
-
-    if (result.tfa != null) setState(() => _tfa = result.tfa);
+    result.when(
+      associatable: (v) => setState(() => _associatable = v),
+      tfa: (v) => setState(() => _tfa = v),
+      token: (v) {
+        final apiAuth = ApiAuth.of(context, listen: false);
+        apiAuth.setToken(v);
+        Navigator.pop(context, true);
+      },
+    );
   }
 
   void _showError(error) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(

@@ -3,12 +3,12 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'batch_job.g.dart';
 
-@JsonSerializable(createFactory: false, createToJson: true)
+@JsonSerializable(createFactory: false)
 class BatchJob {
   final String id;
   final String method;
   final String uri;
-  final Map<String, String> params;
+  final Map<String, String>? params;
 
   @JsonKey(ignore: true)
   final Completer completer = Completer();

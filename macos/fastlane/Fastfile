@@ -1,0 +1,33 @@
+default_platform(:mac)
+
+platform :mac do
+  lane :devices do
+    register_devices(devices_file: "./fastlane/devices.txt")
+    match(type: "development", force_for_new_devices: true)
+  end
+
+  lane :app do
+    desc "Build developer-id app (CI)"
+
+    setup_ci
+    commit = last_git_commit
+
+    sync_code_signing(
+      type: "developer_id",
+      readonly: true
+    )
+
+    build_app(
+      workspace: "Runner.xcworkspace",
+      scheme: "Runner",
+
+      export_method:  "developer-id",
+      output_directory: "../build/app/outputs/macos/release"
+    )
+
+    notarize(
+      package: "../build/app/outputs/macos/release/ttdemo.app",
+      api_key_path: "fastlane/4TV2PTBPVG.json"
+    )
+  end
+end
