@@ -8,7 +8,7 @@ Google Play Store: [Open Beta Testing](https://play.google.com/apps/testing/com.
 
 Apple App Store: [TestFlight](https://testflight.apple.com/join/4lGGYeSU)
 
-Or check the PR / commit comments, this repo has GitHub Actions setup to build for Android/iOS/macOS and Windows then
+Or check the PR / commit comments, this repo has GitHub Actions setup to build for Android/iOS/Linux/macOS and Windows then
 upload the apps to GCS (automatically deleted after 30 days).
 
 ## Features
@@ -75,6 +75,7 @@ Pick a unique package name across Play Store and App Store then update these fil
 - `ios/fastlane/Appfile`
 - `ios/fastlane/Fastfile` xcargs (PROVISIONING_PROFILE_SPECIFIER), manifest (appURL, displayImageURL, fullSizeImageURL)
 - `ios/fastlane/Matchfile`
+- `linux/CMakeLists.txt` APPLICATION_ID
 - `macos/Runner/Configs/AppInfo.xcconfig`
 - `macos/Runner.xcodeproj/project.pbxproj` PROVISIONING_PROFILE_SPECIFIER x3
 - `macos/fastlane/Appfile`
