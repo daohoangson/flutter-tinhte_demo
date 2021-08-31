@@ -274,7 +274,7 @@ class L10n {
   String get register =>
       Intl.message('Register', locale: localeName, name: 'register');
 
-  String registerAgreeCheckboxHtml({String terms, String privacyPolicy}) =>
+  String registerAgreeCheckboxHtml(String terms, String privacyPolicy) =>
       Intl.message(
           'I agree to the <a href="$terms">terms</a> and <a href="$privacyPolicy">privacy policy</a>.',
           args: [terms, privacyPolicy],
