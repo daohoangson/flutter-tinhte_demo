@@ -3,22 +3,16 @@ import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:the_api/api.dart';
 import 'package:the_api/login_result.dart';
 import 'package:the_api/oauth_token.dart';
 import 'package:the_app/src/api.dart';
 import 'package:the_app/src/config.dart';
 import 'package:the_app/src/intl.dart';
+import 'package:the_app/src/abstracts/google_sign_in.dart' as google_sign_in;
 import 'package:the_app/src/screens/register.dart';
 
 final _facebookLogin = FacebookLogin();
-
-final _googleSignIn = GoogleSignIn(
-  scopes: [
-    'email',
-  ],
-);
 
 void logout(BuildContext context) {
   final apiData = ApiAuth.of(context, listen: false);
@@ -27,7 +21,7 @@ void logout(BuildContext context) {
   apiData.setToken(null);
 
   if (token?.obtainMethod == ObtainMethod.google) {
-    _googleSignIn.signOut();
+    google_sign_in.signOut();
   }
 }
 
@@ -108,53 +102,42 @@ class _LoginFormState extends State<LoginForm> {
   List<Widget> _buildFieldsLogin() => [
         _buildInputPadding(_buildUsername()),
         _buildInputPadding(_buildPassword()),
-        _buildInputPadding(
-          Row(
-            children: <Widget>[
-              Expanded(
-                child: TextButton(
-                  child: Text(l(context).register),
-                  onPressed: _isLoggingIn
-                      ? null
-                      : () => Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(builder: (_) => RegisterScreen())),
-                ),
+        Row(
+          children: <Widget>[
+            Expanded(
+              child: TextButton(
+                child: Text(l(context).register),
+                onPressed: _isLoggingIn
+                    ? null
+                    : () => Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(builder: (_) => RegisterScreen())),
               ),
-              Expanded(
-                child: ElevatedButton(
-                  child: Text(l(context).login),
-                  onPressed: _isLoggingIn ? null : _login,
-                ),
+            ),
+            Expanded(
+              child: ElevatedButton(
+                child: Text(l(context).login),
+                onPressed: _isLoggingIn ? null : _login,
               ),
-            ],
-          ),
+            ),
+          ],
         ),
         if (_canLoginApple)
-          _buildInputPadding(
-            SignInButton(
-              Buttons.AppleDark,
-              onPressed: _isLoggingIn ? null : _loginApple,
-              padding: const EdgeInsets.all(16),
-              text: l(context).loginWithApple,
-            ),
+          SignInButton(
+            Buttons.AppleDark,
+            onPressed: _loginApple,
+            text: l(context).loginWithApple,
           ),
         if (config.loginWithFacebook)
-          _buildInputPadding(
-            SignInButton(
-              Buttons.Facebook,
-              onPressed: _isLoggingIn ? null : _loginFacebook,
-              padding: const EdgeInsets.all(16),
-              text: l(context).loginWithFacebook,
-            ),
+          SignInButton(
+            Buttons.Facebook,
+            onPressed: _loginFacebook,
+            text: l(context).loginWithFacebook,
           ),
-        if (config.loginWithGoogle)
-          _buildInputPadding(
-            SignInButton(
-              Buttons.GoogleDark,
-              onPressed: _isLoggingIn ? null : _loginGoogle,
-              padding: const EdgeInsets.all(0),
-              text: l(context).loginWithGoogle,
-            ),
+        if (config.loginWithGoogle && google_sign_in.isSupported)
+          SignInButton(
+            Buttons.GoogleDark,
+            onPressed: _loginGoogle,
+            text: l(context).loginWithGoogle,
           ),
       ];
 
@@ -360,24 +343,8 @@ class _LoginFormState extends State<LoginForm> {
     setState(() => _isLoggingIn = true);
 
     final api = ApiAuth.of(context, listen: false).api;
-    _googleSignIn
-        .signIn()
-        .then<GoogleSignInAuthentication>((account) {
-          if (account == null) {
-            return Future.error(l(context).loginGoogleErrorAccountIsNull);
-          }
-
-          return account.authentication;
-        })
-        .then<String>((auth) {
-          // the server supports both kind of tokens
-          final googleToken = auth?.idToken ?? auth?.accessToken;
-          if (googleToken.isNotEmpty != true) {
-            return Future.error(l(context).loginGoogleErrorTokenIsEmpty);
-          }
-
-          return googleToken;
-        })
+    google_sign_in
+        .signIn(context)
         .then((googleToken) => loginExternal(api, ObtainMethod.google, {
               'client_id': api.clientId,
               'client_secret': api.clientSecret,
