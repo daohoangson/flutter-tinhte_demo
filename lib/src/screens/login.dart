@@ -1,6 +1,6 @@
 import 'package:apple_sign_in/apple_sign_in.dart' as apple;
-import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
+import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -108,45 +108,54 @@ class _LoginFormState extends State<LoginForm> {
   List<Widget> _buildFieldsLogin() => [
         _buildInputPadding(_buildUsername()),
         _buildInputPadding(_buildPassword()),
-        Row(
-          children: <Widget>[
-            Expanded(
-              child: TextButton(
-                child: Text(l(context).register),
-                onPressed: _isLoggingIn
-                    ? null
-                    : () => Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(builder: (_) => RegisterScreen())),
+        _buildInputPadding(
+          Row(
+            children: <Widget>[
+              Expanded(
+                child: TextButton(
+                  child: Text(l(context).register),
+                  onPressed: _isLoggingIn
+                      ? null
+                      : () => Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(builder: (_) => RegisterScreen())),
+                ),
               ),
-            ),
-            Expanded(
-              child: ElevatedButton(
-                child: Text(l(context).login),
-                onPressed: _isLoggingIn ? null : _login,
+              Expanded(
+                child: ElevatedButton(
+                  child: Text(l(context).login),
+                  onPressed: _isLoggingIn ? null : _login,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-        config.loginWithFacebook
-            ? FacebookSignInButton(
-                onPressed: _isLoggingIn ? null : _loginFacebook,
-                text: l(context).loginWithFacebook,
-              )
-            : const SizedBox.shrink(),
-        config.loginWithGoogle
-            ? GoogleSignInButton(
-                darkMode: true,
-                onPressed: _isLoggingIn ? null : _loginGoogle,
-                text: l(context).loginWithGoogle,
-              )
-            : const SizedBox.shrink(),
-        _canLoginApple
-            ? AppleSignInButton(
-                onPressed: _isLoggingIn ? null : _loginApple,
-                style: AppleButtonStyle.black,
-                text: l(context).loginWithApple,
-              )
-            : const SizedBox.shrink(),
+        if (_canLoginApple)
+          _buildInputPadding(
+            SignInButton(
+              Buttons.AppleDark,
+              onPressed: _isLoggingIn ? null : _loginApple,
+              padding: const EdgeInsets.all(16),
+              text: l(context).loginWithApple,
+            ),
+          ),
+        if (config.loginWithFacebook)
+          _buildInputPadding(
+            SignInButton(
+              Buttons.Facebook,
+              onPressed: _isLoggingIn ? null : _loginFacebook,
+              padding: const EdgeInsets.all(16),
+              text: l(context).loginWithFacebook,
+            ),
+          ),
+        if (config.loginWithGoogle)
+          _buildInputPadding(
+            SignInButton(
+              Buttons.GoogleDark,
+              onPressed: _isLoggingIn ? null : _loginGoogle,
+              padding: const EdgeInsets.all(0),
+              text: l(context).loginWithGoogle,
+            ),
+          ),
       ];
 
   List<Widget> _buildFieldsTfa() => [
