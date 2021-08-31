@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
 
-bool isSupported = Platform.isAndroid || Platform.isIOS;
+bool isSupported = Platform.isAndroid || Platform.isIOS || Platform.isMacOS;
 
 Future<void> initializeApp() async {
   if (!isSupported) return;

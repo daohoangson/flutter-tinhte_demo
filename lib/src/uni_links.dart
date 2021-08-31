@@ -1,13 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/widgets.dart';
+import 'package:the_app/src/abstracts/uni_links.dart' as abstraction;
 import 'package:the_app/src/link.dart';
 import 'package:the_app/src/push_notification.dart';
-import 'package:uni_links/uni_links.dart' as lib;
 
 Future<String> getInitialLink() async {
   try {
-    final initialLink = await lib.getInitialLink();
+    final initialLink = await abstraction.getInitialLink();
     if (initialLink == null) return null;
 
     debugPrint('uni_links getInitialLink() -> $initialLink');
@@ -34,7 +34,7 @@ class _UniLinksState extends State<UniLinksApp> {
   @override
   void initState() {
     super.initState();
-    subscription = lib.linkStream.listen((link) {
+    subscription = abstraction.listenToLinkStream((link) {
       if (link?.isNotEmpty != true) return;
 
       final context = primaryNavKey.currentContext;

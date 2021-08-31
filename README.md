@@ -8,9 +8,8 @@ Google Play Store: [Open Beta Testing](https://play.google.com/apps/testing/com.
 
 Apple App Store: [TestFlight](https://testflight.apple.com/join/4lGGYeSU)
 
-Or check the PR / commit comments, this repo has GitHub Actions setup to build for Android/iOS and Windows then
+Or check the PR / commit comments, this repo has GitHub Actions setup to build for Android/iOS/macOS and Windows then
 upload the apps to GCS (automatically deleted after 30 days).
-The comment includes link to download the apks and iTunes manifest to install on mobile devices.
 
 ## Features
 
@@ -64,22 +63,23 @@ See [How to use another package name?](#how-to-use-another-package-name) for mor
 
 Pick a unique package name across Play Store and App Store then update these files:
 
-- `.github/workflows/flutter.yml` GCS_BUCKET
+- `.github/workflows/flutter.yml` GCS_BUCKET, GCS_URL
 - `android/app/build.gradle` applicationId, signingConfigs.release
-- `android/app/google-services.json`
 - `android/app/src/main/AndroidManifest.xml` package, android:label
 - `android/app/src/main/res/values/strings.xml` app_name, facebook_app_id, fb_login_protocol_scheme
 - `android/fastlane/metadata/android/en-US/` title.txt, full_description.txt, short_description.txt
-- `android/fastlane/Appfile` package_name
-- `android/release.jks`
+- `android/fastlane/Appfile`
 - `firebase/.firebaserc` projects.default
 - `ios/Runner.xcodeproj/project.pbxproj` PRODUCT_BUNDLE_IDENTIFIER x2, PROVISIONING_PROFILE_SPECIFIER x2
-- `ios/Runner/GoogleService-Info.plist`
 - `ios/Runner/Info.plist` CFBundleName, CFBundleURLSchemes, FacebookAppID, FacebookDisplayName
-- `ios/fastlane/Appfile` app_identifier, apple_id, etc. (basically everything)
+- `ios/fastlane/Appfile`
 - `ios/fastlane/Fastfile` xcargs (PROVISIONING_PROFILE_SPECIFIER), manifest (appURL, displayImageURL, fullSizeImageURL)
-- `ios/fastlane/Matchfile` google_cloud_bucket_name
-- `ios/gc_keys.json`
+- `ios/fastlane/Matchfile`
+- `macos/Runner/Configs/AppInfo.xcconfig`
+- `macos/Runner.xcodeproj/project.pbxproj` PROVISIONING_PROFILE_SPECIFIER x3
+- `macos/fastlane/Appfile`
+- `macos/fastlane/Fastfile` notarize
+- `macos/fastlane/Matchfile`
 - `windows/runner/Runner.rc`
 - `pubspec.yaml` msix_config>identity_name
 

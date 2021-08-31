@@ -6,6 +6,7 @@ on:
       - 'android/**'
       - 'ios/**'
       - 'lib/**'
+      - 'macos/**'
       - 'packages/**'
       - 'windows/**'
       - pubspec.yaml
@@ -156,6 +157,70 @@ jobs:
             echo '```'; \
             echo; \
             printf '[manifest.plist](%s)' "${GCS_URL}/ipa/redirect.html"; \
+          )
+
+          _message="${_message//'%'/%25}"
+          _message="${_message//$'\n'/%0A}"
+          _message="${_message//$'\r'/%0D}"
+          echo "::set-output name=MESSAGE::${_message}"
+      - name: Post GitHub comment
+        uses: daohoangson/comment-on-github@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          body: ${{ steps.markdown.outputs.MESSAGE }}
+          fingerprint: <!-- ${{ github.sha }} -->
+
+  build_macos:
+    if: ${{ github.ref == 'refs/heads/master' || contains(github.ref, 'macos') }}
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Prepare repo
+        run: echo "${SCRIPT_PREPARE_REPO}" | bash -
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v1
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+      - run: flutter config --enable-macos-desktop
+      - name: Prepare packages/api
+        run: ./packages/api/tool/build.sh
+      - run: flutter pub get
+      - name: Run flutter build macos
+        run: |
+          set -e
+
+          flutter build macos "--build-name=${BUILD_NAME}" || true
+          ( cd macos && fastlane app )
+
+          cd build/app/outputs/macos/release
+          _appPath=$( ls -d *.app )
+          _appBasename=$( basename "${_appPath}" )
+          ditto -c -k --keepParent "${_appBasename}" "${_appBasename}.zip"
+
+      - name: Setup gcloud
+        uses: google-github-actions/setup-gcloud@master
+        with:
+          service_account_key: ${{ secrets.GCP_UPLOADER_SA_KEY }}
+      - name: Run gsutil cp
+        run: gsutil cp build/app/outputs/macos/release/* "${GCS_PATH}/macos"
+
+      - name: Prepare markdown
+        id: markdown
+        run: |
+          set -e
+
+          _message=$( \
+            echo '### macOS build'; \
+            echo '```'; \
+            cat macos/Flutter/ephemeral/Flutter-Generated.xcconfig | grep BUILD_NAME | sed s/FLUTTER_//; \
+            echo "FLUTTER_VERSION=${FLUTTER_VERSION}"; \
+            echo '```'; \
+            echo; \
+            ls build/app/outputs/macos/release/*.zip \
+              | xargs -n 1 basename \
+              | xargs -n 1 -I {} printf -- "- [%s](${GCS_URL}/macos/%s)\n" {} {}; \
           )
 
           _message="${_message//'%'/%25}"
