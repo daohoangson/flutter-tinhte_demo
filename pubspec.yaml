@@ -14,7 +14,7 @@ dependencies:
   firebase_crashlytics: ^2.0.0
 
   # ours
-  flutter_widget_from_html: ^0.6.0
+  flutter_widget_from_html: ^0.7.0
   fwfh_webview: any
   the_api:
     path: ./packages/api
