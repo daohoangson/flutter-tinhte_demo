@@ -201,23 +201,21 @@ class _ApiAppState extends State<ApiApp> {
 
   Api get api => widget.api;
 
+  String get _prefKeyToken => kPrefKeyPrefixToken + (api.clientId ?? '');
+
   @override
   void initState() {
     super.initState();
 
     SharedPreferences.getInstance().then((prefs) {
-      final clientId = prefs.getString(kPrefKeyTokenClientId);
-      if (clientId != api.clientId) return _setToken(null, savePref: false);
+      OauthToken token;
 
-      final tokenJson = prefs.getString(kPrefKeyToken);
-      if (tokenJson?.isNotEmpty != true) {
-        return _setToken(null, savePref: false);
-      }
-
-      final token = OauthToken.fromJson(
-        jsonDecode(tokenJson),
-        ObtainMethod.storage,
-      );
+      try {
+        token = OauthToken.fromJson(
+          jsonDecode(prefs.getString(_prefKeyToken) ?? ''),
+          ObtainMethod.storage,
+        );
+      } catch (_) {}
 
       _setToken(token, savePref: false);
     });
@@ -297,8 +295,7 @@ class _ApiAppState extends State<ApiApp> {
     if (savePref) {
       final prefs = await SharedPreferences.getInstance();
 
-      prefs.setString(kPrefKeyToken, jsonEncode(value));
-      prefs.setString(kPrefKeyTokenClientId, api.clientId ?? '');
+      prefs.setString(_prefKeyToken, jsonEncode(value));
       debugPrint("Saved token ${value?.accessToken}, "
           "expires at ${value?.expiresAt}, "
           "refresh token ${value?.refreshToken}");
