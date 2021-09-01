@@ -4,7 +4,7 @@ const _kHeaderTfaProviders = 'x-api-tfa-providers';
 
 Future<LoginResult> _postOauthToken(
   Api api,
-  ObtainMethod om,
+  ObtainMethod obtainMethod,
   String path,
   Map<String, String> bodyFields,
 ) async {
@@ -18,8 +18,7 @@ Future<LoginResult> _postOauthToken(
       return Future.error(ApiErrorUnexpectedResponse(json));
     }
 
-    return LoginResult.token(
-        OauthToken.fromJson(json).copyWith(obtainMethod: om));
+    return LoginResult.token(OauthToken.fromJson(json, obtainMethod));
   } on ApiError {
     final headers = api.latestResponse?.headers ?? const {};
     final providersString = headers[_kHeaderTfaProviders];
@@ -29,7 +28,8 @@ Future<LoginResult> _postOauthToken(
           .map((e) => e.trim())
           .where((e) => e.isNotEmpty);
       if (providers.isNotEmpty) {
-        return LoginResult.tfa(LoginTfa(bodyFields, om, path, providers));
+        return LoginResult.tfa(
+            LoginTfa(bodyFields, obtainMethod, path, providers));
       }
     }
 
@@ -60,10 +60,10 @@ Future<LoginResult> loginAssociate(Api api, LoginAssociatable a, String pass) =>
 
 Future<LoginResult> loginExternal(
   Api api,
-  ObtainMethod om,
+  ObtainMethod obtainMethod,
   Map<String, String> bodyFields,
 ) async {
-  final omId = om.toString().replaceFirst('ObtainMethod.', '').toLowerCase();
+  final omId = obtainMethod.toString().split('.').last;
   final json = await api.postJson('oauth/token/$omId', bodyFields: bodyFields);
 
   if (json is! Map<String, dynamic>) {
@@ -74,11 +74,11 @@ Future<LoginResult> loginExternal(
     if (json.containsKey('user_data')) {
       final Map<String, dynamic> userData = json['user_data'];
       if (userData.containsKey('associatable')) {
-        final associatable = LoginAssociatable.fromJson(om, userData);
+        final associatable = LoginAssociatable.fromJson(userData, obtainMethod);
         if (associatable != null) return LoginResult.associatable(associatable);
       }
 
-      final token = await _tryAutoRegister(api, om, userData);
+      final token = await _tryAutoRegister(api, obtainMethod, userData);
       if (token != null) return LoginResult.token(token);
     }
 
@@ -89,8 +89,7 @@ Future<LoginResult> loginExternal(
     return Future.error(ApiErrorUnexpectedResponse(json));
   }
 
-  return LoginResult.token(
-      OauthToken.fromJson(json).copyWith(obtainMethod: om));
+  return LoginResult.token(OauthToken.fromJson(json, obtainMethod));
 }
 
 Future<LoginResult> loginTfa(
@@ -154,6 +153,5 @@ Future<OauthToken?> _tryAutoRegister(
   if (json is! Map) return null;
 
   if (!json.containsKey('token')) return null;
-  return OauthToken.fromJson(json['token'])
-      .copyWith(obtainMethod: obtainMethod);
+  return OauthToken.fromJson(json['token'], obtainMethod);
 }

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
@@ -208,26 +209,14 @@ class _ApiAppState extends State<ApiApp> {
       final clientId = prefs.getString(kPrefKeyTokenClientId);
       if (clientId != api.clientId) return _setToken(null, savePref: false);
 
-      final accessToken = prefs.getString(kPrefKeyTokenAccessToken);
-      final expiresAtKey = kPrefKeyTokenExpiresAtMillisecondsSinceEpoch;
-      final expiresAt = prefs.getInt(expiresAtKey) ?? 0;
-      final refreshToken = prefs.getString(kPrefKeyTokenRefreshToken);
-      final scope = prefs.getString(kPrefKeyTokenScope);
-      final userId = prefs.getInt(kPrefKeyTokenUserId);
-      if (accessToken?.isNotEmpty != true || expiresAt < 1) {
+      final tokenJson = prefs.getString(kPrefKeyToken);
+      if (tokenJson?.isNotEmpty != true) {
         return _setToken(null, savePref: false);
       }
 
-      final now = DateTime.now().millisecondsSinceEpoch;
-      final expiresIn = ((expiresAt - now) / 1000).floor();
-      final token = OauthToken(
-        accessToken: accessToken,
-        refreshToken: refreshToken,
-        scope: scope,
-        userId: userId,
-        expiresIn: expiresIn,
-        millisecondsSinceEpoch: now,
-        obtainMethod: ObtainMethod.storage,
+      final token = OauthToken.fromJson(
+        jsonDecode(tokenJson),
+        ObtainMethod.storage,
       );
 
       _setToken(token, savePref: false);
@@ -308,13 +297,8 @@ class _ApiAppState extends State<ApiApp> {
     if (savePref) {
       final prefs = await SharedPreferences.getInstance();
 
-      prefs.setString(kPrefKeyTokenAccessToken, value?.accessToken ?? '');
+      prefs.setString(kPrefKeyToken, jsonEncode(value));
       prefs.setString(kPrefKeyTokenClientId, api.clientId ?? '');
-      prefs.setInt(
-          kPrefKeyTokenExpiresAtMillisecondsSinceEpoch, value?.expiresAt ?? 0);
-      prefs.setString(kPrefKeyTokenRefreshToken, value?.refreshToken ?? '');
-      prefs.setString(kPrefKeyTokenScope, value?.scope ?? '');
-      prefs.setInt(kPrefKeyTokenUserId, value?.userId ?? 0);
       debugPrint("Saved token ${value?.accessToken}, "
           "expires at ${value?.expiresAt}, "
           "refresh token ${value?.refreshToken}");
