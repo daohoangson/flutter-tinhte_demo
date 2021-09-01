@@ -39,6 +39,7 @@ class LoginForm extends StatefulWidget {
 }
 
 class _LoginFormState extends State<LoginForm> {
+  final focusNodePassword = FocusNode();
   final formKey = GlobalKey<FormState>();
 
   LoginAssociatable _associatable;
@@ -59,6 +60,13 @@ class _LoginFormState extends State<LoginForm> {
     if (config.loginWithApple)
       apple.AppleSignIn.isAvailable()
           .then((ok) => ok ? setState(() => _canLoginApple = true) : null);
+  }
+
+  @override
+  void dispose() {
+    focusNodePassword.dispose();
+
+    super.dispose();
   }
 
   @override
@@ -210,9 +218,11 @@ class _LoginFormState extends State<LoginForm> {
           hintText: l(context).loginPasswordHint,
           labelText: l(context).loginPassword,
         ),
+        focusNode: focusNodePassword,
         initialValue: password,
         obscureText: true,
         onSaved: (value) => password = value,
+        onFieldSubmitted: (_) => _login(),
         validator: (password) {
           if (password.isEmpty) {
             return l(context).loginErrorPasswordIsEmpty;
@@ -232,6 +242,7 @@ class _LoginFormState extends State<LoginForm> {
       initialValue: username,
       keyboardType: TextInputType.emailAddress,
       onSaved: (value) => username = value,
+      onFieldSubmitted: (_) => focusNodePassword.requestFocus(),
       validator: (username) {
         if (username.isEmpty) {
           return l(context).loginErrorUsernameIsEmpty;
