@@ -35,7 +35,7 @@ dependencies:
   google_sign_in: ^5.0.0
   html_unescape: ^2.0.0
   http: any
-  image_picker: ^0.7.0
+  image_picker: ^0.8.0
   intl: any
   intl_generator: ^0.2.0
   package_info_plus: ^1.0.0

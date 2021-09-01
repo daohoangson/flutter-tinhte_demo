@@ -118,7 +118,7 @@ class AttachmentEditorState extends State<AttachmentEditorWidget> {
       );
 
   void pickGallery() async {
-    var pickedFile = await _imagePicker.getImage(
+    var pickedFile = await _imagePicker.pickImage(
       maxHeight: 2048.0,
       maxWidth: 2048.0,
       source: ImageSource.gallery,
