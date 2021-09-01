@@ -43,7 +43,7 @@ dependencies:
   provider: ^6.0.0
   share_plus: ^2.0.0
   shared_preferences: ^2.0.0
-  scroll_to_index: ^1.0.3
+  scroll_to_index: ^2.0.0
   timeago: ^3.0.0
   uni_links: ^0.5.1
   video_player: any
