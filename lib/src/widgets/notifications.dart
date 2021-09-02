@@ -91,7 +91,6 @@ class _NotificationsState extends State<NotificationsWidget> {
 
     return TinhteHtmlWidget(
       n.notificationHtml,
-      hyperlinkColor: s.color,
       textStyle: s,
     );
   }

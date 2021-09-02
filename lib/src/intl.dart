@@ -183,6 +183,16 @@ class L10n {
   String get menuDarkThemeAuto => Intl.message("Use system's color scheme",
       locale: localeName, name: 'menuDarkThemeAuto');
 
+  String get menuDeveloper =>
+      Intl.message('Developer Menu', locale: localeName, name: 'menuDeveloper');
+
+  String get menuDeveloperCrashTest => Intl.message('Crash Test',
+      locale: localeName, name: 'menuDeveloperCrashTest');
+
+  String get menuDeveloperShowPerformanceOverlay =>
+      Intl.message('Show Performance Overlay',
+          locale: localeName, name: 'menuDeveloperShowPerformanceOverlay');
+
   String get menuLogout =>
       Intl.message('Logout', locale: localeName, name: 'menuLogout');
 
@@ -274,10 +284,10 @@ class L10n {
   String get register =>
       Intl.message('Register', locale: localeName, name: 'register');
 
-  String registerAgreeCheckboxHtml({String terms, String privacyPolicy}) =>
+  String registerAgreeCheckboxHtml(String privacyPolicy, String terms) =>
       Intl.message(
           'I agree to the <a href="$terms">terms</a> and <a href="$privacyPolicy">privacy policy</a>.',
-          args: [terms, privacyPolicy],
+          args: [privacyPolicy, terms],
           locale: localeName,
           name: 'registerAgreeCheckboxHtml');
 
