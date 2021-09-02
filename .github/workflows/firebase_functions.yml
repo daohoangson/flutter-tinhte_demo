@@ -25,6 +25,7 @@ jobs:
             npm-
 
       - run: npm install --global firebase-tools
+      - run: npm ci
       - run: npm run deploy -- --token ${{ secrets.FIREBASE_TOKEN }}
 
       - name: Upload npm logs
