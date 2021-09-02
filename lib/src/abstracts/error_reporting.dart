@@ -5,11 +5,23 @@ import 'package:flutter/foundation.dart';
 
 import 'firebase.dart' as firebase;
 
-R runZoned<R>(R Function() body) {
-  if (!firebase.isSupported) {
-    return body();
-  }
+final backend =
+    firebase.isSupported ? Backend.firebaseCrashlytics : Backend.none;
 
-  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
-  return runZonedGuarded(body, FirebaseCrashlytics.instance.recordError);
+void crash() => FirebaseCrashlytics.instance.crash();
+
+// ignore: missing_return
+R runZoned<R>(R Function() body) {
+  switch (backend) {
+    case Backend.firebaseCrashlytics:
+      FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
+      return runZonedGuarded(body, FirebaseCrashlytics.instance.recordError);
+    case Backend.none:
+      return body();
+  }
+}
+
+enum Backend {
+  firebaseCrashlytics,
+  none,
 }

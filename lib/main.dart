@@ -15,6 +15,7 @@ import 'package:the_app/src/widgets/dismiss_keyboard.dart';
 import 'package:the_app/src/api.dart';
 import 'package:the_app/src/push_notification.dart' as push_notification;
 import 'package:the_app/src/uni_links.dart' as uni_links;
+import 'package:the_app/src/widgets/menu/dev_tools.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 void main() async {
@@ -30,6 +31,7 @@ void main() async {
       FontScale.create(),
       push_notification.getInitialPath(),
       uni_links.getInitialLink(),
+      DevTools.create(),
     ]);
 
     String initialPath;
@@ -45,6 +47,7 @@ void main() async {
 
     runApp(MyApp(
       darkTheme: values[0],
+      devTools: values[4],
       fontScale: values[1],
       home: initialPath != null
           ? InitialPathScreen(
@@ -59,25 +62,32 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   final DarkTheme darkTheme;
+  final DevTools devTools;
   final FontScale fontScale;
   final Widget home;
 
   MyApp({
     this.darkTheme,
+    this.devTools,
     this.fontScale,
     this.home,
   });
 
   @override
-  Widget build(BuildContext context) => MultiProvider(
-        child: Consumer<DarkTheme>(builder: (_, __, ___) => _buildApp()),
+  Widget build(BuildContext _) => MultiProvider(
+        child: Builder(builder: (context) => _buildApp(context)),
         providers: [
           ChangeNotifierProvider<DarkTheme>.value(value: darkTheme),
+          ChangeNotifierProvider<DevTools>.value(value: devTools),
           ChangeNotifierProvider<FontScale>.value(value: fontScale),
         ],
       );
 
-  Widget _buildApp() {
+  Widget _buildApp(BuildContext context) {
+    context.watch<DarkTheme>();
+    final showPerformanceOverlay = context.select<DevTools, bool>(
+        (DevTools devTools) => devTools.showPerformanceOverlay);
+
     Widget app = MaterialApp(
       darkTheme: _theme(_themeDark),
       home: home,
@@ -90,6 +100,7 @@ class MyApp extends StatelessWidget {
       navigatorKey: push_notification.primaryNavKey,
       navigatorObservers: [FontControlWidget.routeObserver],
       onGenerateTitle: (context) => l(context).appTitle,
+      showPerformanceOverlay: showPerformanceOverlay,
       supportedLocales: [
         const Locale('en', ''),
         const Locale('vi', ''),
