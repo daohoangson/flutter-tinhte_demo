@@ -12,6 +12,7 @@ import 'availability/uni_links.dart';
 
 class DevTools extends ChangeNotifier {
   bool _isDeveloper;
+  bool _showPerformanceOverlay;
 
   DevTools._();
 
@@ -23,13 +24,26 @@ class DevTools extends ChangeNotifier {
 
     SharedPreferences.getInstance().then((prefs) => v == null
         ? prefs.remove(kPrefKeyDevToolIsDeveloper)
-        : prefs.setBool(kPrefKeyDevToolIsDeveloper, _isDeveloper));
+        : prefs.setBool(kPrefKeyDevToolIsDeveloper, v));
+  }
+
+  bool get showPerformanceOverlay => _showPerformanceOverlay == true;
+
+  set showPerformanceOverlay(bool v) {
+    _showPerformanceOverlay = v;
+    notifyListeners();
+
+    SharedPreferences.getInstance().then((prefs) => v == null
+        ? prefs.remove(kPrefKeyDevToolShowPerformanceOverlay)
+        : prefs.setBool(kPrefKeyDevToolShowPerformanceOverlay, v));
   }
 
   static Future<DevTools> create() async {
     final developer = DevTools._();
     final prefs = await SharedPreferences.getInstance();
     developer._isDeveloper = prefs.getBool(kPrefKeyDevToolIsDeveloper);
+    developer._showPerformanceOverlay =
+        prefs.getBool(kPrefKeyDevToolShowPerformanceOverlay);
     return developer;
   }
 }
@@ -59,6 +73,7 @@ class DeveloperMenuScreen extends StatelessWidget {
             FirebaseWidget(),
             PushNotificationWidget(),
             UniLinksWidget(),
+            _ShowPerformanceOverlayWidget(),
             _CrashTestWidget(),
           ],
         ),
@@ -71,4 +86,23 @@ class _CrashTestWidget extends StatelessWidget {
         title: Text(l(context).menuDeveloperCrashTest),
         onTap: () => error_reporting.crash(),
       );
+}
+
+class _ShowPerformanceOverlayWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) => Consumer<DevTools>(
+        builder: (_, devTools, __) => ListTile(
+          leading: Checkbox(
+            onChanged: (value) => _updateValue(context, value),
+            value: devTools.showPerformanceOverlay,
+          ),
+          title: Text(l(context).menuDeveloperShowPerformanceOverlay),
+          onTap: () => _updateValue(context),
+        ),
+      );
+
+  void _updateValue(BuildContext context, [bool value]) {
+    final devTools = context.read<DevTools>();
+    devTools.showPerformanceOverlay = value ?? !devTools.showPerformanceOverlay;
+  }
 }

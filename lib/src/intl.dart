@@ -189,6 +189,10 @@ class L10n {
   String get menuDeveloperCrashTest => Intl.message('Crash Test',
       locale: localeName, name: 'menuDeveloperCrashTest');
 
+  String get menuDeveloperShowPerformanceOverlay =>
+      Intl.message('Show Performance Overlay',
+          locale: localeName, name: 'menuDeveloperShowPerformanceOverlay');
+
   String get menuLogout =>
       Intl.message('Logout', locale: localeName, name: 'menuLogout');
 

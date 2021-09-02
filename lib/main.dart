@@ -74,8 +74,8 @@ class MyApp extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) => MultiProvider(
-        child: Consumer<DarkTheme>(builder: (_, __, ___) => _buildApp()),
+  Widget build(BuildContext _) => MultiProvider(
+        child: Builder(builder: (context) => _buildApp(context)),
         providers: [
           ChangeNotifierProvider<DarkTheme>.value(value: darkTheme),
           ChangeNotifierProvider<DevTools>.value(value: devTools),
@@ -83,7 +83,11 @@ class MyApp extends StatelessWidget {
         ],
       );
 
-  Widget _buildApp() {
+  Widget _buildApp(BuildContext context) {
+    context.watch<DarkTheme>();
+    final showPerformanceOverlay = context.select<DevTools, bool>(
+        (DevTools devTools) => devTools.showPerformanceOverlay);
+
     Widget app = MaterialApp(
       darkTheme: _theme(_themeDark),
       home: home,
@@ -96,6 +100,7 @@ class MyApp extends StatelessWidget {
       navigatorKey: push_notification.primaryNavKey,
       navigatorObservers: [FontControlWidget.routeObserver],
       onGenerateTitle: (context) => l(context).appTitle,
+      showPerformanceOverlay: showPerformanceOverlay,
       supportedLocales: [
         const Locale('en', ''),
         const Locale('vi', ''),
