@@ -28,6 +28,7 @@ jobs:
       - run: npm run deploy -- --token ${{ secrets.FIREBASE_TOKEN }}
 
       - name: Upload npm logs
+        if: always()
         uses: actions/upload-artifact@v2
         with:
           name: npm-logs
