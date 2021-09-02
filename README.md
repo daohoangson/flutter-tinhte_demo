@@ -18,9 +18,7 @@ upload the apps to GCS (automatically deleted after 30 days).
 - Google login via [google_sign_in](https://pub.dev/packages/google_sign_in)
 - Push notification via [firebase_messaging](https://pub.dev/packages/firebase_messaging)
 - Dark mode: on / off / auto
-- Localization (auto)
-  - English
-  - Tiếng Việt
+- Developer menu
 
 ## FAQ
 
