@@ -130,8 +130,8 @@ class _RegisterState extends State<RegisterForm> {
             Expanded(
               child: TinhteHtmlWidget(
                 l(context).registerAgreeCheckboxHtml(
-                  privacyPolicy: config.linkPrivacyPolicy,
-                  terms: config.linkTos,
+                  config.linkPrivacyPolicy,
+                  config.linkTos,
                 ),
                 textPadding: 0,
               ),
