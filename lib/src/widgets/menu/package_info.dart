@@ -31,7 +31,7 @@ class _PackageInfoState extends State<PackageInfoWidget> {
       onTap: devTools.isDeveloper
           ? null
           : () {
-              if (++count > 3) {
+              if (++count >= 3) {
                 devTools.isDeveloper = true;
               }
             },
