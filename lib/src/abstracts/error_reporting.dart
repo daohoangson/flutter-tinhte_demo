@@ -5,6 +5,8 @@ import 'package:flutter/foundation.dart';
 
 import 'firebase.dart' as firebase;
 
+void crash() => FirebaseCrashlytics.instance.crash();
+
 R runZoned<R>(R Function() body) {
   if (!firebase.isSupported) {
     return body();
