@@ -10,7 +10,7 @@
     "logs": "firebase functions:log"
   },
   "engines": {
-    "node": "10"
+    "node": "14"
   },
   "main": "lib/index.js",
   "dependencies": {
@@ -26,7 +26,6 @@
     "@types/node": "^15.12.0",
     "@types/request-promise-native": "^1.0.17",
     "firebase-functions-test": "^0.2.1",
-    "firebase-tools": "^9.12.1",
     "tslint": "^6.1.2",
     "typescript": "^3.9.6"
   },
