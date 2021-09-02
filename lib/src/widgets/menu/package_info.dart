@@ -3,7 +3,7 @@ import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 import 'package:the_app/src/intl.dart';
 
-import 'developer.dart';
+import 'dev_tools.dart';
 
 class PackageInfoWidget extends StatefulWidget {
   @override
@@ -22,17 +22,17 @@ class _PackageInfoState extends State<PackageInfoWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final developer = context.watch<Developer>();
+    final devTools = context.watch<DevTools>();
     return ListTile(
       title: Text(l(context).appVersion),
       subtitle: Text(_info != null
           ? l(context).appVersionInfo(_info.version, _info.buildNumber)
           : l(context).appVersionNotAvailable),
-      onTap: developer.value == true
+      onTap: devTools.isDeveloper
           ? null
           : () {
               if (++count > 3) {
-                developer.value = true;
+                devTools.isDeveloper = true;
               }
             },
     );

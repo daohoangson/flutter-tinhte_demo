@@ -1,5 +1,5 @@
 const kPrefKeyDarkTheme = 'darkTheme';
-const kPrefKeyDeveloper = 'developer';
+const kPrefKeyDevToolIsDeveloper = 'isDeveloper';
 const kPrefKeyFontScale = 'fontScale';
 
 const kPrefKeyTokenAccessToken = 'token__accessToken';

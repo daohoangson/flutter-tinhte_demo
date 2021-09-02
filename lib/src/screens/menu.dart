@@ -10,7 +10,7 @@ import 'package:the_app/src/widgets/menu/dark_theme.dart';
 import 'package:the_app/src/widgets/app_bar.dart';
 import 'package:the_app/src/config.dart';
 import 'package:the_app/src/link.dart';
-import 'package:the_app/src/widgets/menu/developer.dart';
+import 'package:the_app/src/widgets/menu/dev_tools.dart';
 import 'package:the_app/src/widgets/menu/package_info.dart';
 
 class MenuScreen extends StatelessWidget {

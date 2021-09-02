@@ -15,7 +15,7 @@ import 'package:the_app/src/widgets/dismiss_keyboard.dart';
 import 'package:the_app/src/api.dart';
 import 'package:the_app/src/push_notification.dart' as push_notification;
 import 'package:the_app/src/uni_links.dart' as uni_links;
-import 'package:the_app/src/widgets/menu/developer.dart';
+import 'package:the_app/src/widgets/menu/dev_tools.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 void main() async {
@@ -31,7 +31,7 @@ void main() async {
       FontScale.create(),
       push_notification.getInitialPath(),
       uni_links.getInitialLink(),
-      Developer.create(),
+      DevTools.create(),
     ]);
 
     String initialPath;
@@ -47,7 +47,7 @@ void main() async {
 
     runApp(MyApp(
       darkTheme: values[0],
-      developer: values[4],
+      devTools: values[4],
       fontScale: values[1],
       home: initialPath != null
           ? InitialPathScreen(
@@ -62,13 +62,13 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   final DarkTheme darkTheme;
-  final Developer developer;
+  final DevTools devTools;
   final FontScale fontScale;
   final Widget home;
 
   MyApp({
     this.darkTheme,
-    this.developer,
+    this.devTools,
     this.fontScale,
     this.home,
   });
@@ -78,7 +78,7 @@ class MyApp extends StatelessWidget {
         child: Consumer<DarkTheme>(builder: (_, __, ___) => _buildApp()),
         providers: [
           ChangeNotifierProvider<DarkTheme>.value(value: darkTheme),
-          ChangeNotifierProvider<Developer>.value(value: developer),
+          ChangeNotifierProvider<DevTools>.value(value: devTools),
           ChangeNotifierProvider<FontScale>.value(value: fontScale),
         ],
       );
