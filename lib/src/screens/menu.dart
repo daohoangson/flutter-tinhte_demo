@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 import 'package:the_api/user.dart';
 import 'package:the_app/src/intl.dart';
@@ -11,6 +10,8 @@ import 'package:the_app/src/widgets/menu/dark_theme.dart';
 import 'package:the_app/src/widgets/app_bar.dart';
 import 'package:the_app/src/config.dart';
 import 'package:the_app/src/link.dart';
+import 'package:the_app/src/widgets/menu/dev_tools.dart';
+import 'package:the_app/src/widgets/menu/package_info.dart';
 
 class MenuScreen extends StatelessWidget {
   @override
@@ -29,7 +30,8 @@ class MenuScreen extends StatelessWidget {
               _buildNotifications(context, user),
               AppBarDrawerFooter(),
               _buildPrivacyPolicy(context),
-              _PackageInfoWidget(),
+              DeveloperMenu(),
+              PackageInfoWidget(),
             ],
           ),
         ),
@@ -73,26 +75,4 @@ class MenuScreen extends StatelessWidget {
               .push(MaterialPageRoute(builder: (_) => RegisterScreen())),
         )
       : const SizedBox.shrink();
-}
-
-class _PackageInfoWidget extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() => _PackageInfoState();
-}
-
-class _PackageInfoState extends State<_PackageInfoWidget> {
-  PackageInfo _info;
-
-  @override
-  void initState() {
-    super.initState();
-    PackageInfo.fromPlatform().then((info) => setState(() => _info = info));
-  }
-
-  @override
-  Widget build(BuildContext context) => ListTile(
-      title: Text(l(context).appVersion),
-      subtitle: Text(_info != null
-          ? l(context).appVersionInfo(_info.version, _info.buildNumber)
-          : l(context).appVersionNotAvailable));
 }

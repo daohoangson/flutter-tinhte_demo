@@ -1,4 +1,6 @@
 const kPrefKeyDarkTheme = 'darkTheme';
+const kPrefKeyDevToolIsDeveloper = 'isDeveloper';
+const kPrefKeyDevToolShowPerformanceOverlay = 'showPerformanceOverlay';
 const kPrefKeyFontScale = 'fontScale';
 
 const kPrefKeyTokenAccessToken = 'token__accessToken';
