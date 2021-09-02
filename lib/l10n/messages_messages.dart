@@ -4,17 +4,17 @@
 // function name.
 
 // Ignore issues from commonly used lints in this file.
-// ignore_for_file:unnecessary_brace_in_string_interps, unnecessary_new
+// ignore_for_file:unnecessary_brace_in_string_interps
 // ignore_for_file:prefer_single_quotes,comment_references, directives_ordering
 // ignore_for_file:annotate_overrides,prefer_generic_function_type_aliases
-// ignore_for_file:unused_import, file_names
+// ignore_for_file:unused_import, file_names, always_declare_return_types
 
 import 'package:intl/intl.dart';
 import 'package:intl/message_lookup_by_library.dart';
 
-final messages = new MessageLookup();
+final messages = MessageLookup();
 
-typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
+typedef String MessageIfAbsent(String messageStr, List<Object> args);
 
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'messages';
@@ -41,6 +41,8 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m10(number) => "Tap to load ${number} hidden replies...";
 
+  static m14(terms, privacyPolicy) => "I agree to the <a href=\"${terms}\">terms</a> and <a href=\"${privacyPolicy}\">privacy policy</a>.";
+
   static m11(query) => "Submit to search for \'${query}\'";
 
   static m12(username) => " by user \'${username}\'";
@@ -48,7 +50,7 @@ class MessageLookup extends MessageLookupByLibrary {
   static m13(forumTitle) => " in forum \'${forumTitle}\'";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
-  static _notInlinedMessages(_) => <String, Function> {
+  static Map<String, Function> _notInlinedMessages(_) => <String, Function> {
     "_statsXReplies" : m0,
     "_statsXViews" : m1,
     "apiError" : MessageLookupByLibrary.simpleMessage("API Error"),
@@ -118,6 +120,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "postReportedThanks" : MessageLookupByLibrary.simpleMessage("Thank you for your report!"),
     "postUnlike" : MessageLookupByLibrary.simpleMessage("Unlike"),
     "privacyPolicy" : MessageLookupByLibrary.simpleMessage("Privacy Policy"),
+    "register" : MessageLookupByLibrary.simpleMessage("Register"),
+    "registerAgreeCheckboxHtml" : m14,
+    "registerEmail" : MessageLookupByLibrary.simpleMessage("Email"),
+    "registerErrorEmailIsEmpty" : MessageLookupByLibrary.simpleMessage("Email cannot be empty"),
+    "registerErrorNoAccessToken" : MessageLookupByLibrary.simpleMessage("Cannot register new user account."),
+    "registerErrorPasswordIsEmpty" : MessageLookupByLibrary.simpleMessage("Password cannot be empty"),
+    "registerErrorUsernameIsEmpty" : MessageLookupByLibrary.simpleMessage("Username cannot be empty"),
     "search" : MessageLookupByLibrary.simpleMessage("Search"),
     "searchEnterSomething" : MessageLookupByLibrary.simpleMessage("Enter something to search"),
     "searchSubmitToContinue" : m11,

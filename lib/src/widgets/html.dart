@@ -39,13 +39,11 @@ const _kSmilies = {
 
 class TinhteHtmlWidget extends StatelessWidget {
   final String html;
-  final Color hyperlinkColor;
   final double textPadding;
   final TextStyle textStyle;
 
   TinhteHtmlWidget(
     this.html, {
-    this.hyperlinkColor,
     this.textPadding = kPostBodyPadding,
     this.textStyle,
   });
@@ -68,7 +66,6 @@ class TinhteHtmlWidget extends StatelessWidget {
             deviceWidth: bc.biggest.width,
             textPadding: textPadding,
           ),
-          hyperlinkColor: hyperlinkColor,
           onTapUrl: (url) => launchLink(c, url),
           textStyle: textStyle,
           webView: true,
@@ -89,6 +86,8 @@ class TinhteWidgetFactory extends WidgetFactory {
 
   LbTrigger _lbTrigger;
   PhotoCompare _photoCompare;
+
+  var _needBottomTextPadding = false;
 
   TinhteWidgetFactory({
     this.devicePixelRatio,
@@ -198,29 +197,23 @@ class TinhteWidgetFactory extends WidgetFactory {
   }
 
   @override
-  WidgetPlaceholder buildColumnPlaceholder(
-    BuildMetadata meta,
-    Iterable<Widget> children, {
-    bool trimMarginVertical = false,
-  }) {
-    final built = super.buildColumnPlaceholder(meta, children,
-        trimMarginVertical: trimMarginVertical);
+  WidgetPlaceholder buildBody(
+      BuildMetadata meta, Iterable<WidgetPlaceholder> children) {
+    _needBottomTextPadding = children.last is WidgetPlaceholder<BuildTree>;
 
-    if (trimMarginVertical) {
-      built?.wrapWith((_, child) {
-        return Padding(
-          child: child,
-          padding: EdgeInsets.only(
-            top: textPadding,
-            bottom: children.last is WidgetPlaceholder<BuildTree>
-                ? textPadding
-                : 0.0,
-          ),
-        );
-      });
-    }
+    return super.buildBody(meta, children);
+  }
 
-    return built;
+  Widget buildBodyWidget(BuildContext context, Widget child) {
+    child = Padding(
+      child: child,
+      padding: EdgeInsets.only(
+        top: textPadding,
+        bottom: _needBottomTextPadding ? textPadding : 0.0,
+      ),
+    );
+
+    return super.buildBodyWidget(context, child);
   }
 
   static final _resizedUrl = Expando<String>();
@@ -241,16 +234,15 @@ class TinhteWidgetFactory extends WidgetFactory {
     return super.buildImage(meta, data);
   }
 
-  Widget buildImageWidget(
-    BuildMetadata meta, {
-    String semanticLabel,
-    @required String url,
-  }) =>
-      super.buildImageWidget(
-        meta,
-        semanticLabel: semanticLabel,
-        url: _resizedUrl[meta] ?? url,
-      );
+  @override
+  Widget buildImageWidget(BuildMetadata meta, ImageSource src) {
+    final resizedUrl = _resizedUrl[meta];
+    if (resizedUrl != null) {
+      // TODO: switch to `ImageSource.copyWith` when it's available
+      src = ImageSource(resizedUrl, height: src.height, width: src.width);
+    }
+    return super.buildImageWidget(meta, src);
+  }
 
   @override
   Widget buildText(BuildMetadata meta, TextStyleHtml tsh, InlineSpan text) {

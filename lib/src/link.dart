@@ -16,23 +16,23 @@ import 'package:url_launcher/url_launcher.dart';
 String buildToolsParseLinkPath(String link) =>
     "tools/parse-link?link=${Uri.encodeQueryComponent(link)}";
 
-void launchLink(
+Future<bool> launchLink(
   BuildContext context,
   String link, {
   bool forceWebView = false,
 }) async {
-  // automatically cancel launching for CHR links
+  // automatically shallow launching for CHR links
   // TODO: reconsider when https://github.com/daohoangson/flutter_widget_from_html/pull/116 is merged
-  if (link.contains('misc/api-chr')) return;
+  if (link.contains('misc/api-chr')) return true;
 
   if (link.startsWith(config.siteRoot)) {
     final path = buildToolsParseLinkPath(link);
     if (!forceWebView) {
       final parsed = await parsePath(path, context: context);
-      if (parsed) return;
+      if (parsed) return true;
 
       // this is our link, we tried to parse it and failed
-      // let's open it via webview
+      // force web view to avoid universal link loop
       forceWebView = true;
     }
 
@@ -44,9 +44,9 @@ void launchLink(
     }
   }
 
-  if (!await canLaunch(link)) return;
+  if (!await canLaunch(link)) return false;
 
-  launch(
+  return launch(
     link,
     forceSafariVC: forceWebView,
     forceWebView: forceWebView,

@@ -75,7 +75,6 @@ class TinhteFact extends StatelessWidget {
     Attachment threadImageAttachment;
     final threadImageLink = thread.threadImage.link;
     for (final attachment in firstPost?.attachments ?? const []) {
-      print(attachment.links.permalink);
       if (attachment.links.permalink == threadImageLink ||
           attachment.links.thumbnail == threadImageLink) {
         threadImageAttachment = attachment;

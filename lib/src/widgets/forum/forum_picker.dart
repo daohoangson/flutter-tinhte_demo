@@ -37,7 +37,7 @@ class _ForumPickerBody extends StatelessWidget {
   Widget _buildRow(BuildContext context, Node node) {
     final description = node.description;
     final forum = node is Forum ? node : null;
-    final canCreateThread = forum?.permissions?.createThread;
+    final canCreateThread = forum?.permissions?.createThread == true;
 
     Widget built = ListTile(
       title: Text(
