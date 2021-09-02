@@ -2,7 +2,7 @@ name: CodeQL
 on:
   push:
     paths:
-      - .github/workflows/firebase_functions.yml
+      - .github/workflows/codeql.yml
       - "firebase/functions/**"
 
 jobs:
