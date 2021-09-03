@@ -266,7 +266,7 @@ class _ApiAppState extends State<ApiApp> {
     batch.fetch();
   }
 
-  void _fetchUser(bool scheduleDequeue) => _enqueue(() async {
+  void _fetchUser() => _enqueue(() async {
         if (_token == null) return;
 
         try {
@@ -279,7 +279,7 @@ class _ApiAppState extends State<ApiApp> {
         } catch (e) {
           print(e);
         }
-      }, scheduleDequeue: scheduleDequeue);
+      }, scheduleDequeue: false);
 
   void _refreshToken() {
     if (_isRefreshingToken) return;
@@ -312,15 +312,8 @@ class _ApiAppState extends State<ApiApp> {
     _token = value;
     _tokenHasBeenSet = true;
 
-    if (value != null) {
-      _fetchUser(savePref);
-      return;
-    }
-
-    if (visitor.userId != 0) {
-      visitor.reset();
-    }
-
+    if (visitor.userId != 0) visitor.reset();
+    if (value != null) _fetchUser();
     _dequeue();
   }
 }
