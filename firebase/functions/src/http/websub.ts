@@ -1,6 +1,8 @@
 import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
 
+import escapeHtml = require('escape-html');
+
 import {
   Config,
   firestoreCollectionPings,
@@ -16,7 +18,10 @@ export default (_: Config) => functions.https.onRequest(async (req, resp) => {
     },
   } = req;
 
-  if (challenge) { resp.send(challenge); return; }
+  if (typeof challenge === 'string') {
+    resp.send(escapeHtml(challenge));
+    return;
+  }
 
   if (!Array.isArray(body)) { resp.sendStatus(400); return; }
   if (body.length === 0) { resp.sendStatus(200); return; }
