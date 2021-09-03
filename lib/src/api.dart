@@ -2,9 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:the_api/api.dart';
 import 'package:the_api/oauth_token.dart';
 import 'package:the_api/user.dart';
@@ -192,6 +192,7 @@ class ApiApp extends StatefulWidget {
 }
 
 class _ApiAppState extends State<ApiApp> {
+  final secureStorage = new FlutterSecureStorage();
   final visitor = User.zero();
 
   var _isRefreshingToken = false;
@@ -201,24 +202,24 @@ class _ApiAppState extends State<ApiApp> {
 
   Api get api => widget.api;
 
-  String get _prefKeyToken => kPrefKeyPrefixToken + (api.clientId ?? '');
+  String get _secureStorageKeyToken =>
+      kSecureStorageKeyPrefixToken + (api.clientId ?? '');
 
   @override
   void initState() {
     super.initState();
 
-    SharedPreferences.getInstance().then((prefs) {
-      OauthToken token;
-
-      try {
-        token = OauthToken.fromJson(
-          jsonDecode(prefs.getString(_prefKeyToken) ?? ''),
-          ObtainMethod.storage,
-        );
-      } catch (_) {}
-
-      _setToken(token, savePref: false);
-    });
+    secureStorage.read(key: _secureStorageKeyToken).then<OauthToken>(
+      (value) {
+        try {
+          final json = jsonDecode(value ?? '');
+          return OauthToken.fromJson(json, ObtainMethod.storage);
+        } catch (_) {
+          return null;
+        }
+      },
+      onError: (_, __) => null,
+    ).then((token) => _setToken(token, savePref: false));
   }
 
   @override
@@ -293,12 +294,19 @@ class _ApiAppState extends State<ApiApp> {
 
   void _setToken(OauthToken value, {bool savePref = true}) async {
     if (savePref) {
-      final prefs = await SharedPreferences.getInstance();
-
-      prefs.setString(_prefKeyToken, jsonEncode(value));
-      debugPrint("Saved token ${value?.accessToken}, "
-          "expires at ${value?.expiresAt}, "
-          "refresh token ${value?.refreshToken}");
+      try {
+        await secureStorage.write(
+          key: _secureStorageKeyToken,
+          value: jsonEncode(value),
+        );
+        debugPrint("Saved token ${value?.accessToken}, "
+            "expires at ${value?.expiresAt}, "
+            "refresh token ${value?.refreshToken}");
+      } catch (error) {
+        if (value != null) {
+          debugPrint('Failed saving token ${value.accessToken}: $error');
+        }
+      }
     }
 
     _token = value;
