@@ -21,6 +21,9 @@ class RegisterForm extends StatefulWidget {
 }
 
 class _RegisterState extends State<RegisterForm> {
+  final focusNodeEmail = FocusNode();
+  final focusNodePassword = FocusNode();
+  final focusNodeAgreed = FocusNode();
   final formKey = GlobalKey<FormState>();
 
   bool _isRegistering = false;
@@ -31,6 +34,15 @@ class _RegisterState extends State<RegisterForm> {
   String emailError;
   String password;
   bool agreed = false;
+
+  @override
+  void dispose() {
+    focusNodeEmail.dispose();
+    focusNodePassword.dispose();
+    focusNodeAgreed.dispose();
+
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) => Form(
@@ -74,8 +86,10 @@ class _RegisterState extends State<RegisterForm> {
 
   Widget _buildPassword() => TextFormField(
         decoration: InputDecoration(labelText: l(context).loginPassword),
+        focusNode: focusNodePassword,
         initialValue: password,
         obscureText: true,
+        onFieldSubmitted: (_) => focusNodeAgreed.requestFocus(),
         onSaved: (value) => password = value,
         validator: (password) {
           if (password.isEmpty) {
@@ -91,8 +105,10 @@ class _RegisterState extends State<RegisterForm> {
         labelText: l(context).registerEmail,
         errorText: emailError,
       ),
+      focusNode: focusNodeEmail,
       initialValue: email,
       keyboardType: TextInputType.emailAddress,
+      onFieldSubmitted: (_) => focusNodePassword.requestFocus(),
       onSaved: (value) => email = value,
       validator: (email) {
         if (email.isEmpty) {
@@ -110,6 +126,7 @@ class _RegisterState extends State<RegisterForm> {
       ),
       initialValue: username,
       keyboardType: TextInputType.name,
+      onFieldSubmitted: (_) => focusNodeEmail.requestFocus(),
       onSaved: (value) => username = value,
       validator: (username) {
         if (username.isEmpty) {
@@ -120,9 +137,11 @@ class _RegisterState extends State<RegisterForm> {
       });
 
   Widget _buildAgreed() => InkWell(
+        canRequestFocus: false,
         child: Row(
           children: [
             Checkbox(
+              focusNode: focusNodeAgreed,
               onChanged: (value) => setState(() => agreed = value),
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
               value: agreed,
@@ -179,7 +198,10 @@ class _RegisterState extends State<RegisterForm> {
       return _showError(l(context).registerErrorNoAccessToken);
 
     final apiAuth = ApiAuth.of(context, listen: false);
-    apiAuth.setToken(OauthToken.fromJson(map['token']));
+    apiAuth.setToken(OauthToken.fromJson(
+      map['token'],
+      ObtainMethod.usernamePassword,
+    ));
     Navigator.pop(context, true);
   }
 

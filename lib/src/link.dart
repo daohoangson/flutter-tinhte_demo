@@ -8,6 +8,7 @@ import 'package:the_app/src/api.dart';
 import 'package:the_app/src/config.dart';
 import 'package:the_app/src/intl.dart';
 import 'package:the_app/src/screens/fp_view.dart';
+import 'package:the_app/src/screens/home.dart';
 import 'package:the_app/src/screens/member_view.dart';
 import 'package:the_app/src/screens/tag_view.dart';
 import 'package:the_app/src/screens/thread_view.dart';
@@ -21,10 +22,6 @@ Future<bool> launchLink(
   String link, {
   bool forceWebView = false,
 }) async {
-  // automatically shallow launching for CHR links
-  // TODO: reconsider when https://github.com/daohoangson/flutter_widget_from_html/pull/116 is merged
-  if (link.contains('misc/api-chr')) return true;
-
   if (link.startsWith(config.siteRoot)) {
     final path = buildToolsParseLinkPath(link);
     if (!forceWebView) {
@@ -99,7 +96,12 @@ Future<bool> parsePath(
       if (cancelled || widget == null) return false;
 
       cancelDialog();
-      navigator.push(MaterialPageRoute(builder: (_) => widget));
+      if (widget is HomeScreen) {
+        // special handling for home screen
+        navigator.popUntil((route) => route.isFirst);
+      } else {
+        navigator.push(MaterialPageRoute(builder: (_) => widget));
+      }
       return true;
     },
     onError: (error) {
@@ -120,7 +122,8 @@ Future<Widget> buildWidget(
     caller,
     path,
     onSuccess: (json) {
-      Widget widget = defaultWidget;
+      Widget widget;
+
       if (json.containsKey('tag') && json.containsKey('tagged')) {
         widget = _parseTag(json);
       } else if (json.containsKey('thread') && json.containsKey('posts')) {
@@ -129,7 +132,20 @@ Future<Widget> buildWidget(
         widget = _parseUser(json);
       }
 
-      completer.complete(widget);
+      if (widget == null && json.containsKey('link')) {
+        final link = json['link'];
+        if (link is String) {
+          final uri = Uri.tryParse(link);
+          switch (uri.path) {
+            case '':
+            case '/':
+              widget = HomeScreen();
+              break;
+          }
+        }
+      }
+
+      completer.complete(widget ?? defaultWidget);
     },
     onError: (error) => completer.completeError(error),
   );

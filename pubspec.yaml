@@ -18,7 +18,7 @@ dependencies:
   fwfh_webview: any
   the_api:
     path: ./packages/api
-  
+
   apple_sign_in: ^0.1.0
   chewie: any
   convert: any
@@ -29,6 +29,7 @@ dependencies:
   flutter_facebook_login: ^3.0.0
   flutter_localizations:
     sdk: flutter
+  flutter_secure_storage: ^5.0.0-0
   flutter_signin_button: ^2.0.0
   flutter_speed_dial: ^4.0.0
   font_awesome_flutter: ^9.0.0

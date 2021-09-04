@@ -206,22 +206,29 @@ class PostsState extends State<PostsWidget> {
     }
   }
 
-  void _showSnackBarUnread(
-          SuperListState<_PostListItem> sls, String postsUnread) =>
-      _unreadController = ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        action: SnackBarAction(
-          label: l(context).postGoUnreadYes,
-          onPressed: () => sls.fetch(
-            clearItems: true,
-            fc: FetchContext<_PostListItem>(
-              path: postsUnread,
-              state: sls,
-            ),
+  Future<void> _showSnackBarUnread(
+      SuperListState<_PostListItem> sls, String postsUnread) async {
+    final controller =
+        _unreadController = ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      action: SnackBarAction(
+        label: l(context).postGoUnreadYes,
+        onPressed: () => sls.fetch(
+          clearItems: true,
+          fc: FetchContext<_PostListItem>(
+            path: postsUnread,
+            state: sls,
           ),
         ),
-        content: Text(l(context).postGoUnreadQuestion),
-        duration: const Duration(seconds: 10),
-      ));
+      ),
+      content: Text(l(context).postGoUnreadQuestion),
+      duration: const Duration(seconds: 10),
+    ));
+
+    await controller.closed;
+    if (_unreadController == controller) {
+      _unreadController = null;
+    }
+  }
 
   void _scrollToPage(SuperListState<_PostListItem> state, int page) {
     var i = -1;
