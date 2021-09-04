@@ -21,10 +21,6 @@ Future<bool> launchLink(
   String link, {
   bool forceWebView = false,
 }) async {
-  // automatically shallow launching for CHR links
-  // TODO: reconsider when https://github.com/daohoangson/flutter_widget_from_html/pull/116 is merged
-  if (link.contains('misc/api-chr')) return true;
-
   if (link.startsWith(config.siteRoot)) {
     final path = buildToolsParseLinkPath(link);
     if (!forceWebView) {
