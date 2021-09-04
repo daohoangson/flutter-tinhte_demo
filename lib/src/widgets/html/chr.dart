@@ -61,12 +61,12 @@ class _ChrState extends State<_ChrWidget> {
       _sendRequest();
     }
 
-    return AspectRatio(
-      aspectRatio: 16 / 9,
-      child: _isFinalUrl
-          ? widget.wf.buildWebView(widget.meta, _url)
-          : CircularProgressIndicator.adaptive(),
-    );
+    return _isFinalUrl
+        ? widget.wf.buildWebView(widget.meta, _url)
+        : AspectRatio(
+            aspectRatio: 16 / 9,
+            child: CircularProgressIndicator.adaptive(),
+          );
   }
 
   void _sendRequest() {
@@ -77,7 +77,7 @@ class _ChrState extends State<_ChrWidget> {
     apiAuth.api.sendRequest('GET', _url).then(
       (value) {
         if (value is Response && value.statusCode == 301) {
-          // this is needed because Android WebView opens our app after 2 redirects
+          // this works around Android WebView calling our app after 2 redirects
           // (because of the domain association)
           _url = value.headers['location'];
           print('Unwrapped CHR url: $_url');
