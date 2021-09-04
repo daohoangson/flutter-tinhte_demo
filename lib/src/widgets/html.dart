@@ -7,7 +7,9 @@ import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:fwfh_webview/fwfh_webview.dart';
 import 'package:html_unescape/html_unescape.dart';
+import 'package:http/http.dart';
 import 'package:photo_view/photo_view_gallery.dart';
+import 'package:the_app/src/api.dart';
 import 'package:the_app/src/config.dart';
 import 'package:the_app/src/constants.dart';
 import 'package:the_app/src/intl.dart';
@@ -16,6 +18,7 @@ import 'package:the_app/src/widgets/image.dart';
 import 'package:the_app/src/widgets/video_player.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+part 'html/chr.dart';
 part 'html/galleria.dart';
 part 'html/link_expander.dart';
 part 'html/lb_trigger.dart';
@@ -121,29 +124,9 @@ class TinhteWidgetFactory extends WidgetFactory {
   }
 
   BuildOp get chrOp {
-    _chrOp ??= BuildOp(
-      defaultStyles: (_) => {'margin': '0.5em 0'},
-      onWidgets: (meta, __) {
-        final a = meta.element.attributes;
-        final url = urlFull(a['href']);
-        if (url?.isEmpty != false) return null;
-
-        final youtubeId = !Platform.isIOS && a.containsKey('data-chr-thumbnail')
-            ? RegExp(r'^https://img.youtube.com/vi/([^/]+)/0.jpg$')
-                .firstMatch(a['data-chr-thumbnail'])
-                ?.group(1)
-            : null;
-
-        final contents = youtubeId != null
-            ? YouTubeWidget(
-                youtubeId,
-                lowresThumbnailUrl: a['data-chr-thumbnail'],
-              )
-            : buildWebView(meta, url);
-
-        return [contents];
-      },
-    );
+    if (_chrOp == null) {
+      _chrOp = Chr(this).op;
+    }
     return _chrOp;
   }
 
