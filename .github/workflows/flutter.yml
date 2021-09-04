@@ -9,6 +9,7 @@ env:
 
 jobs:
   build_apk:
+    if: ${{ false }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -61,7 +62,7 @@ jobs:
           fingerprint: <!-- ${{ github.sha }} -->
 
   build_ipa:
-    if: ${{ github.ref == 'refs/heads/master' || contains(github.ref, 'ios') || true }}
+    if: ${{ github.ref == 'refs/heads/master' || contains(github.ref, 'ios') }}
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
@@ -124,7 +125,7 @@ jobs:
           fingerprint: <!-- ${{ github.sha }} -->
 
   build_linux:
-    if: ${{ github.ref == 'refs/heads/master' || contains(github.ref, 'linux') || true }}
+    if: ${{ github.ref == 'refs/heads/master' || contains(github.ref, 'linux') }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -189,7 +190,7 @@ jobs:
           fingerprint: <!-- ${{ github.sha }} -->
 
   build_macos:
-    if: ${{ github.ref == 'refs/heads/master' || contains(github.ref, 'macos') }}
+    if: ${{ false }}
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
@@ -263,6 +264,10 @@ jobs:
       - uses: Vampire/setup-wsl@v1
         with:
           additional-packages: ca-certificates git git-crypt gettext wget
+      - run: pwd
+        shell: wsl-bash {0}
+      - run: ls -al .
+        shell: wsl-bash {0}
       - name: Prepare repo
         run: bash ./.github/workflows/prepare.sh
         shell: wsl-bash {0}
