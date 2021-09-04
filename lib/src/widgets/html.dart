@@ -7,7 +7,9 @@ import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:fwfh_webview/fwfh_webview.dart';
 import 'package:html_unescape/html_unescape.dart';
+import 'package:http/http.dart';
 import 'package:photo_view/photo_view_gallery.dart';
+import 'package:the_app/src/api.dart';
 import 'package:the_app/src/config.dart';
 import 'package:the_app/src/constants.dart';
 import 'package:the_app/src/intl.dart';
@@ -16,6 +18,7 @@ import 'package:the_app/src/widgets/image.dart';
 import 'package:the_app/src/widgets/video_player.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+part 'html/chr.dart';
 part 'html/galleria.dart';
 part 'html/link_expander.dart';
 part 'html/lb_trigger.dart';
@@ -39,13 +42,11 @@ const _kSmilies = {
 
 class TinhteHtmlWidget extends StatelessWidget {
   final String html;
-  final Color hyperlinkColor;
   final double textPadding;
   final TextStyle textStyle;
 
   TinhteHtmlWidget(
     this.html, {
-    this.hyperlinkColor,
     this.textPadding = kPostBodyPadding,
     this.textStyle,
   });
@@ -68,7 +69,6 @@ class TinhteHtmlWidget extends StatelessWidget {
             deviceWidth: bc.biggest.width,
             textPadding: textPadding,
           ),
-          hyperlinkColor: hyperlinkColor,
           onTapUrl: (url) => launchLink(c, url),
           textStyle: textStyle,
           webView: true,
@@ -89,6 +89,8 @@ class TinhteWidgetFactory extends WidgetFactory {
 
   LbTrigger _lbTrigger;
   PhotoCompare _photoCompare;
+
+  var _needBottomTextPadding = false;
 
   TinhteWidgetFactory({
     this.devicePixelRatio,
@@ -122,29 +124,9 @@ class TinhteWidgetFactory extends WidgetFactory {
   }
 
   BuildOp get chrOp {
-    _chrOp ??= BuildOp(
-      defaultStyles: (_) => {'margin': '0.5em 0'},
-      onWidgets: (meta, __) {
-        final a = meta.element.attributes;
-        final url = urlFull(a['href']);
-        if (url?.isEmpty != false) return null;
-
-        final youtubeId = !Platform.isIOS && a.containsKey('data-chr-thumbnail')
-            ? RegExp(r'^https://img.youtube.com/vi/([^/]+)/0.jpg$')
-                .firstMatch(a['data-chr-thumbnail'])
-                ?.group(1)
-            : null;
-
-        final contents = youtubeId != null
-            ? YouTubeWidget(
-                youtubeId,
-                lowresThumbnailUrl: a['data-chr-thumbnail'],
-              )
-            : buildWebView(meta, url);
-
-        return [contents];
-      },
-    );
+    if (_chrOp == null) {
+      _chrOp = Chr(this).op;
+    }
     return _chrOp;
   }
 
@@ -198,29 +180,23 @@ class TinhteWidgetFactory extends WidgetFactory {
   }
 
   @override
-  WidgetPlaceholder buildColumnPlaceholder(
-    BuildMetadata meta,
-    Iterable<Widget> children, {
-    bool trimMarginVertical = false,
-  }) {
-    final built = super.buildColumnPlaceholder(meta, children,
-        trimMarginVertical: trimMarginVertical);
+  WidgetPlaceholder buildBody(
+      BuildMetadata meta, Iterable<WidgetPlaceholder> children) {
+    _needBottomTextPadding = children.last is WidgetPlaceholder<BuildTree>;
 
-    if (trimMarginVertical) {
-      built?.wrapWith((_, child) {
-        return Padding(
-          child: child,
-          padding: EdgeInsets.only(
-            top: textPadding,
-            bottom: children.last is WidgetPlaceholder<BuildTree>
-                ? textPadding
-                : 0.0,
-          ),
-        );
-      });
-    }
+    return super.buildBody(meta, children);
+  }
 
-    return built;
+  Widget buildBodyWidget(BuildContext context, Widget child) {
+    child = Padding(
+      child: child,
+      padding: EdgeInsets.only(
+        top: textPadding,
+        bottom: _needBottomTextPadding ? textPadding : 0.0,
+      ),
+    );
+
+    return super.buildBodyWidget(context, child);
   }
 
   static final _resizedUrl = Expando<String>();
@@ -241,16 +217,15 @@ class TinhteWidgetFactory extends WidgetFactory {
     return super.buildImage(meta, data);
   }
 
-  Widget buildImageWidget(
-    BuildMetadata meta, {
-    String semanticLabel,
-    @required String url,
-  }) =>
-      super.buildImageWidget(
-        meta,
-        semanticLabel: semanticLabel,
-        url: _resizedUrl[meta] ?? url,
-      );
+  @override
+  Widget buildImageWidget(BuildMetadata meta, ImageSource src) {
+    final resizedUrl = _resizedUrl[meta];
+    if (resizedUrl != null) {
+      // TODO: switch to `ImageSource.copyWith` when it's available
+      src = ImageSource(resizedUrl, height: src.height, width: src.width);
+    }
+    return super.buildImageWidget(meta, src);
+  }
 
   @override
   Widget buildText(BuildMetadata meta, TextStyleHtml tsh, InlineSpan text) {

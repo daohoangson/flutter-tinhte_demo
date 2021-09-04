@@ -195,6 +195,9 @@ jobs:
           sudo apt-get install -y clang libgtk-3-dev ninja-build
           flutter doctor
 
+          # for flutter_secure_storage
+          sudo apt-get install libsecret-1-dev libjsoncpp-dev
+
           flutter build linux
 
           cd build/linux/x64/release

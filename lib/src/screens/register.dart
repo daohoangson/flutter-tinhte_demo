@@ -149,8 +149,8 @@ class _RegisterState extends State<RegisterForm> {
             Expanded(
               child: TinhteHtmlWidget(
                 l(context).registerAgreeCheckboxHtml(
-                  privacyPolicy: config.linkPrivacyPolicy,
-                  terms: config.linkTos,
+                  config.linkPrivacyPolicy,
+                  config.linkTos,
                 ),
                 textPadding: 0,
               ),
@@ -198,7 +198,10 @@ class _RegisterState extends State<RegisterForm> {
       return _showError(l(context).registerErrorNoAccessToken);
 
     final apiAuth = ApiAuth.of(context, listen: false);
-    apiAuth.setToken(OauthToken.fromJson(map['token']));
+    apiAuth.setToken(OauthToken.fromJson(
+      map['token'],
+      ObtainMethod.usernamePassword,
+    ));
     Navigator.pop(context, true);
   }
 

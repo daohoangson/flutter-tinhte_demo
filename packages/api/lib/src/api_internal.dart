@@ -8,12 +8,14 @@ Future _sendRequest(Client client, String method, String url,
     {Map<String, String>? bodyFields,
     String? bodyJson,
     Map<String, File>? fileFields,
+    bool followRedirects = false,
     Map<String, String>? headers,
     bool parseJson = false}) async {
   _requestCount++;
   final uri = Uri.parse(url);
   final request =
       fileFields == null ? Request(method, uri) : MultipartRequest(method, uri);
+  request.followRedirects = followRedirects;
 
   if (headers != null) {
     request.headers.addAll(headers);

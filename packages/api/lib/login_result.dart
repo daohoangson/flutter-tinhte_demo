@@ -16,8 +16,8 @@ class LoginAssociatable {
   );
 
   static LoginAssociatable? fromJson(
-    ObtainMethod obtainMethod,
     Map<String, dynamic> userData,
+    ObtainMethod obtainMethod,
   ) {
     if (!userData.containsKey('associatable') ||
         !userData.containsKey('extra_data') ||
