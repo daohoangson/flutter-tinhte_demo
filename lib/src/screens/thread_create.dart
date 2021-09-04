@@ -141,6 +141,8 @@ class _ThreadCreateScreenState extends State<ThreadCreateScreen> {
 }
 
 class _ThreadCreateData extends ChangeNotifier {
+  final focusNodeBody = FocusNode();
+
   String _body;
   bool _isPosting = false;
   String _title;
@@ -159,6 +161,12 @@ class _ThreadCreateData extends ChangeNotifier {
     _title = v;
     notifyListeners();
   }
+
+  @override
+  void dispose() {
+    focusNodeBody.dispose();
+    super.dispose();
+  }
 }
 
 class _ThreadCreateTitle extends StatelessWidget {
@@ -169,6 +177,8 @@ class _ThreadCreateTitle extends StatelessWidget {
         hintText: l(context).threadCreateTitleHint,
         labelText: l(context).threadCreateTitle,
       ),
+      onEditingComplete: () =>
+          context.read<_ThreadCreateData>().focusNodeBody.requestFocus(),
       onSaved: (v) => context.read<_ThreadCreateData>().title = v,
       validator: (title) {
         if (title.isEmpty) {
@@ -181,20 +191,27 @@ class _ThreadCreateTitle extends StatelessWidget {
 
 class _ThreadCreateBody extends StatelessWidget {
   @override
-  Widget build(BuildContext context) => TextFormField(
+  Widget build(BuildContext context) {
+    final data = context.watch<_ThreadCreateData>();
+
+    return TextFormField(
       autofocus: true,
       decoration: InputDecoration(
         hintText: l(context).threadCreateBodyHint,
         labelText: l(context).threadCreateBody,
       ),
+      focusNode: data.focusNodeBody,
       keyboardType: TextInputType.multiline,
       maxLines: null,
-      onSaved: (v) => context.read<_ThreadCreateData>().body = v,
+      onEditingComplete: () => data,
+      onSaved: (v) => data.body = v,
       validator: (body) {
         if (body.isEmpty) {
           return l(context).threadCreateErrorBodyIsEmpty;
         }
 
         return null;
-      });
+      },
+    );
+  }
 }
