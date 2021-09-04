@@ -1,11 +1,11 @@
 {
-    "name": "the_app",
-    "short_name": "the_app",
+    "name": "ttdemo",
+    "short_name": "ttdemo",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "Tinh tế mobile apps built with Flutter for evaluation purposes.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

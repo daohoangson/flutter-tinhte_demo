@@ -79,6 +79,7 @@ Pick a unique package name across Play Store and App Store then update these fil
 - `macos/fastlane/Appfile`
 - `macos/fastlane/Fastfile` notarize
 - `macos/fastlane/Matchfile`
+- `web/manifest.json`
 - `windows/runner/Runner.rc`
 - `pubspec.yaml` msix_config>identity_name
 
