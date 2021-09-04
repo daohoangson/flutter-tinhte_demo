@@ -268,7 +268,7 @@ jobs:
         run: bash ./.github/workflows/prepare.sh
         shell: wsl-bash {0}
         env:
-          WSLENV: GITHUB_ENV,GIT_CRYPT_KEY
+          WSLENV: GITHUB_ENV:GIT_CRYPT_KEY
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v1
