@@ -264,15 +264,11 @@ jobs:
       - uses: Vampire/setup-wsl@v1
         with:
           additional-packages: ca-certificates file git git-crypt gettext wget
-      - run: pwd
-        shell: wsl-bash {0}
-      - run: ls -al .
-        shell: wsl-bash {0}
       - name: Prepare repo
         run: bash ./.github/workflows/prepare.sh
         shell: wsl-bash {0}
         env:
-          WSLENV: GITHUB_ENV
+          WSLENV: GITHUB_ENV,GIT_CRYPT_KEY
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v1
