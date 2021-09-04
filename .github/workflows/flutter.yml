@@ -263,7 +263,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: Vampire/setup-wsl@v1
         with:
-          additional-packages: ca-certificates git git-crypt gettext wget
+          additional-packages: ca-certificates file git git-crypt gettext wget
       - run: pwd
         shell: wsl-bash {0}
       - run: ls -al .
