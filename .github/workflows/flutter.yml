@@ -246,8 +246,7 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Prepare repo
-        run: echo "${SCRIPT_PREPARE_REPO}" | bash -
+      - run: brew install --verbose git-crypt
       - run: exit 1
 
       - name: Setup Flutter
