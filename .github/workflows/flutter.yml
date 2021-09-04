@@ -1,59 +1,11 @@
 name: Flutter
 on:
   push:
-    paths: 
-      - .github/workflows/flutter.yml
-      - 'android/**'
-      - 'ios/**'
-      - 'lib/**'
-      - 'macos/**'
-      - 'packages/**'
-      - 'windows/**'
-      - pubspec.yaml
 
 env:
   GCS_PATH: gs://flutterttdemo/${{ github.sha }}
   GCS_URL: https://storage.googleapis.com/flutterttdemo/${{ github.sha }}
-  SCRIPT_PREPARE_REPO: |
-    set -e
-
-    git submodule update --init --recursive
-
-    # Unlock git-crypt
-    if ! command -v git-crypt &>/dev/null; then
-      brew install git-crypt
-    fi
-    # https://github.com/sliteteam/github-action-git-crypt-unlock/blob/master/entrypoint.sh
-    echo "${{ secrets.GIT_CRYPT_KEY }}" | base64 --decode > ./git-crypt-key
-    git-crypt unlock ./git-crypt-key
-    rm ./git-crypt-key
-
-    # Extract config from pubspec.yaml
-    if ! command -v yq &>/dev/null; then
-      if ! command -v brew &>/dev/null; then
-        _os=$( uname -s | tr '[:upper:]' '[:lower:]' )
-        _arch=amd64
-        wget "https://github.com/mikefarah/yq/releases/download/v4.12.1/yq_${_os}_${_arch}" --quiet -O /usr/bin/yq && chmod +x /usr/bin/yq
-      else
-        brew install yq
-      fi
-    fi
-    _appVersion=$( yq e '.version' pubspec.yaml )
-    _appVersionWithoutNumber=$( echo "${_appVersion}" | sed 's/+.*$//' )
-    _githubSha=${{ github.sha }}
-
-    if ! command -v wslpath &>/dev/null; then
-      echo "GITHUB_ENV=$GITHUB_ENV"
-    else
-      _wslGithubEnv=$( wslpath -u "$GITHUB_ENV" )
-      export "GITHUB_ENV=${_wslGithubEnv}"
-    fi
-
-    echo "APP_VERSION=${_appVersion}" | tee -a $GITHUB_ENV
-    echo "BUILD_NAME=${_appVersionWithoutNumber}-${_githubSha:0:7}" | tee -a $GITHUB_ENV
-  
-    _flutterVersion=$( yq e '.environment.flutter' pubspec.yaml )
-    echo "FLUTTER_VERSION=${_flutterVersion}" | tee -a $GITHUB_ENV
+  GIT_CRYPT_KEY: ${{ secrets.GIT_CRYPT_KEY }}
 
 jobs:
   build_apk:
@@ -61,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Prepare repo
-        run: echo "${SCRIPT_PREPARE_REPO}" | bash -
+        run: bash ./.github/workflows/prepare.sh
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v1
@@ -114,7 +66,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Prepare repo
-        run: echo "${SCRIPT_PREPARE_REPO}" | bash -
+        run: bash ./.github/workflows/prepare.sh
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v1
@@ -177,7 +129,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Prepare repo
-        run: echo "${SCRIPT_PREPARE_REPO}" | bash -
+        run: bash ./.github/workflows/prepare.sh
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v1
@@ -242,7 +194,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Prepare repo
-        run: echo "${SCRIPT_PREPARE_REPO}" | bash -
+        run: bash ./.github/workflows/prepare.sh
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v1
@@ -310,12 +262,12 @@ jobs:
       - uses: actions/checkout@v2
       - uses: Vampire/setup-wsl@v1
         with:
-          additional-packages: ca-certificates git git-crypt gettext wget
+          additional-packages: ca-certificates file git git-crypt gettext wget
       - name: Prepare repo
-        run: ${{ env.SCRIPT_PREPARE_REPO }}
+        run: bash ./.github/workflows/prepare.sh
         shell: wsl-bash {0}
         env:
-          WSLENV: GITHUB_ENV
+          WSLENV: GITHUB_ENV:GIT_CRYPT_KEY
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v1
@@ -329,7 +281,7 @@ jobs:
       - name: Run flutter pub run msix:create
         run: |
           set -e
-          
+
           _packageVersion=$( echo $APP_VERSION | sed 's/+/./' )
           echo "PACKAGE_VERSION=${_packageVersion}" | tee -a $GITHUB_ENV
 
