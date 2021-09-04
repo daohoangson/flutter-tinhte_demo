@@ -12,12 +12,11 @@ class Chr {
           final url = wf.urlFull(a['href']);
           if (url?.isEmpty != false) return null;
 
-          final youtubeId =
-              !Platform.isIOS && a.containsKey('data-chr-thumbnail')
-                  ? RegExp(r'^https://img.youtube.com/vi/([^/]+)/0.jpg$')
-                      .firstMatch(a['data-chr-thumbnail'])
-                      ?.group(1)
-                  : null;
+          final youtubeId = a.containsKey('data-chr-thumbnail')
+              ? RegExp(r'^https://img.youtube.com/vi/([^/]+)/0.jpg$')
+                  .firstMatch(a['data-chr-thumbnail'])
+                  ?.group(1)
+              : null;
 
           final contents = youtubeId != null
               ? YouTubeWidget(
