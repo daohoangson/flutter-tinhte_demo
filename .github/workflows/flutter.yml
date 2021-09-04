@@ -5,15 +5,15 @@ on:
 env:
   GCS_PATH: gs://flutterttdemo/${{ github.sha }}
   GCS_URL: https://storage.googleapis.com/flutterttdemo/${{ github.sha }}
+  GIT_CRYPT_KEY: ${{ secrets.GIT_CRYPT_KEY }}
 
 jobs:
   build_apk:
-    if: ${{ false }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - name: Prepare repo
-        run: echo "${SCRIPT_PREPARE_REPO}" | bash -
+        run: bash ./.github/workflows/prepare.sh
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v1
@@ -61,12 +61,12 @@ jobs:
           fingerprint: <!-- ${{ github.sha }} -->
 
   build_ipa:
-    if: ${{ github.ref == 'refs/heads/master' || contains(github.ref, 'ios') }}
+    if: ${{ github.ref == 'refs/heads/master' || contains(github.ref, 'ios') || true }}
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
       - name: Prepare repo
-        run: echo "${SCRIPT_PREPARE_REPO}" | bash -
+        run: bash ./.github/workflows/prepare.sh
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v1
@@ -124,12 +124,12 @@ jobs:
           fingerprint: <!-- ${{ github.sha }} -->
 
   build_linux:
-    if: ${{ github.ref == 'refs/heads/master' || contains(github.ref, 'linux') }}
+    if: ${{ github.ref == 'refs/heads/master' || contains(github.ref, 'linux') || true }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - name: Prepare repo
-        run: echo "${SCRIPT_PREPARE_REPO}" | bash -
+        run: bash ./.github/workflows/prepare.sh
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v1
@@ -193,10 +193,8 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
-      - run: bash ./.github/workflows/prepare.sh
-        env:
-          GIT_CRYPT_KEY: ${{ secrets.GIT_CRYPT_KEY }}
-      - run: exit 1
+      - name: Prepare repo
+        run: bash ./.github/workflows/prepare.sh
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v1
@@ -255,7 +253,7 @@ jobs:
           fingerprint: <!-- ${{ github.sha }} -->
 
   build_windows:
-    if: ${{ github.ref == 'refs/heads/master' || contains(github.ref, 'windows') }}
+    if: ${{ github.ref == 'refs/heads/master' || contains(github.ref, 'windows') || true }}
     runs-on: windows-latest
     defaults:
       run:
@@ -266,8 +264,7 @@ jobs:
         with:
           additional-packages: ca-certificates git git-crypt gettext wget
       - name: Prepare repo
-        run: ${{ env.SCRIPT_PREPARE_REPO }}
-        shell: wsl-bash {0}
+        run: wsl-bash ./.github/workflows/prepare.sh
         env:
           WSLENV: GITHUB_ENV
 
@@ -283,7 +280,7 @@ jobs:
       - name: Run flutter pub run msix:create
         run: |
           set -e
-          
+
           _packageVersion=$( echo $APP_VERSION | sed 's/+/./' )
           echo "PACKAGE_VERSION=${_packageVersion}" | tee -a $GITHUB_ENV
 
