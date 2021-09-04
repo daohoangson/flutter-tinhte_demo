@@ -1,15 +1,6 @@
 name: Flutter
 on:
   push:
-    paths: 
-      - .github/workflows/flutter.yml
-      - 'android/**'
-      - 'ios/**'
-      - 'lib/**'
-      - 'macos/**'
-      - 'packages/**'
-      - 'windows/**'
-      - pubspec.yaml
 
 env:
   GCS_PATH: gs://flutterttdemo/${{ github.sha }}
