@@ -5,8 +5,11 @@ import 'package:flutter/foundation.dart';
 
 import 'firebase.dart' as firebase;
 
-final backend =
-    firebase.isSupported ? Backend.firebaseCrashlytics : Backend.none;
+final backend = kIsWeb
+    ? Backend.none
+    : firebase.isSupported
+        ? Backend.firebaseCrashlytics
+        : Backend.none;
 
 void crash() => FirebaseCrashlytics.instance.crash();
 
