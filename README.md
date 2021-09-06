@@ -8,14 +8,23 @@ Google Play Store: [Open Beta Testing](https://play.google.com/apps/testing/com.
 
 Apple App Store: [TestFlight](https://testflight.apple.com/join/4lGGYeSU)
 
-Or check the PR / commit comments, this repo has GitHub Actions setup to build for Android/iOS/Linux/macOS and Windows then
+Or check the PR / commit comments, this repo has GitHub Actions setup to build and
 upload the apps to GCS (automatically deleted after 30 days).
 
 ## Features
 
+- Supported platforms:
+  - Android
+  - iOS
+  - Linux
+  - macOS
+  - Windows
+- State management with [provider](https://pub.dev/packages/provider)
 - Apple login via [apple_sign_in](https://pub.dev/packages/apple_sign_in)
 - Facebook login via [flutter_facebook_login](https://pub.dev/packages/flutter_facebook_login)
 - Google login via [google_sign_in](https://pub.dev/packages/google_sign_in)
+- Store authentication token with [flutter_secure_storage](https://pub.dev/packages/flutter_secure_storage)
+- Render HTML with [flutter_widget_from_html](https://pub.dev/packages/flutter_widget_from_html)
 - Push notification via [firebase_messaging](https://pub.dev/packages/firebase_messaging)
 - Dark mode: on / off / auto
 - Developer menu
