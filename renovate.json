@@ -1,5 +1,10 @@
 {
   "extends": [
     "config:base"
+  ],
+  "ignorePaths": [
+    "android/**",
+    "ios/**",
+    "macos/**"
   ]
 }
