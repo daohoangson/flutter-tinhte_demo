@@ -11,7 +11,7 @@ jobs:
   build_apk:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Prepare repo
         run: bash ./.github/workflows/prepare.sh
 
@@ -64,7 +64,7 @@ jobs:
     if: ${{ github.ref == 'refs/heads/master' || contains(github.ref, 'ios') }}
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Prepare repo
         run: bash ./.github/workflows/prepare.sh
 
@@ -127,7 +127,7 @@ jobs:
     if: ${{ github.ref == 'refs/heads/master' || contains(github.ref, 'linux') }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Prepare repo
         run: bash ./.github/workflows/prepare.sh
 
@@ -192,7 +192,7 @@ jobs:
     if: ${{ github.ref == 'refs/heads/master' || contains(github.ref, 'macos') }}
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Prepare repo
         run: bash ./.github/workflows/prepare.sh
 
@@ -259,7 +259,7 @@ jobs:
       run:
         shell: bash
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: Vampire/setup-wsl@v1
         with:
           additional-packages: ca-certificates file git git-crypt gettext wget
