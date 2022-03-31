@@ -25,7 +25,7 @@ jobs:
       - run: flutter build apk "--build-name=${BUILD_NAME}" --split-per-abi
 
       - name: Setup gcloud
-        uses: google-github-actions/setup-gcloud@master
+        uses: google-github-actions/setup-gcloud@v0
         with:
           service_account_key: ${{ secrets.GCP_UPLOADER_SA_KEY }}
       - name: Run gsutil cp
@@ -83,7 +83,7 @@ jobs:
           ( cd ios && fastlane ipa )
 
       - name: Setup gcloud
-        uses: google-github-actions/setup-gcloud@master
+        uses: google-github-actions/setup-gcloud@v0
         with:
           service_account_key: ${{ secrets.GCP_UPLOADER_SA_KEY }}
       - name: Run gsutil cp
@@ -156,7 +156,7 @@ jobs:
           zip -r bundle.zip bundle/*
 
       - name: Setup gcloud
-        uses: google-github-actions/setup-gcloud@master
+        uses: google-github-actions/setup-gcloud@v0
         with:
           service_account_key: ${{ secrets.GCP_UPLOADER_SA_KEY }}
       - name: Run gsutil cp
@@ -217,7 +217,7 @@ jobs:
           ditto -c -k --keepParent "${_appBasename}" "${_appBasename}.zip"
 
       - name: Setup gcloud
-        uses: google-github-actions/setup-gcloud@master
+        uses: google-github-actions/setup-gcloud@v0
         with:
           service_account_key: ${{ secrets.GCP_UPLOADER_SA_KEY }}
       - name: Run gsutil cp
@@ -288,7 +288,7 @@ jobs:
           flutter pub run msix:create "--v=${_packageVersion}"
 
       - name: Setup gcloud
-        uses: google-github-actions/setup-gcloud@master
+        uses: google-github-actions/setup-gcloud@v0
         with:
           service_account_key: ${{ secrets.GCP_UPLOADER_SA_KEY }}
       - name: Run gsutil cp
