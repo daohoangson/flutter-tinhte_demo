@@ -254,7 +254,7 @@ jobs:
 
   build_windows:
     if: ${{ github.ref == 'refs/heads/master' || contains(github.ref, 'windows') }}
-    runs-on: windows-latest
+    runs-on: windows-2019
     defaults:
       run:
         shell: bash
