@@ -16,7 +16,7 @@ jobs:
         run: bash ./.github/workflows/prepare.sh
 
       - name: Setup Flutter
-        uses: subosito/flutter-action@v1
+        uses: subosito/flutter-action@v2
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
       - name: Prepare packages/api
@@ -69,7 +69,7 @@ jobs:
         run: bash ./.github/workflows/prepare.sh
 
       - name: Setup Flutter
-        uses: subosito/flutter-action@v1
+        uses: subosito/flutter-action@v2
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
       - name: Prepare packages/api
@@ -132,7 +132,7 @@ jobs:
         run: bash ./.github/workflows/prepare.sh
 
       - name: Setup Flutter
-        uses: subosito/flutter-action@v1
+        uses: subosito/flutter-action@v2
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
       - run: flutter config --enable-linux-desktop
@@ -197,7 +197,7 @@ jobs:
         run: bash ./.github/workflows/prepare.sh
 
       - name: Setup Flutter
-        uses: subosito/flutter-action@v1
+        uses: subosito/flutter-action@v2
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
       - run: flutter config --enable-macos-desktop
@@ -270,7 +270,7 @@ jobs:
           WSLENV: GITHUB_ENV:GIT_CRYPT_KEY
 
       - name: Setup Flutter
-        uses: subosito/flutter-action@v1
+        uses: subosito/flutter-action@v2
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
       - run: flutter config --enable-windows-desktop
