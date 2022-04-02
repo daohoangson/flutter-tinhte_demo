@@ -75,7 +75,6 @@
 				3135AC37999DFF4B39CF9C64 /* Pods-Runner.debug.xcconfig */,
 				DEF8245F86A6C09BF2A575EC /* Pods-Runner.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -162,6 +161,7 @@
 				1637FA4C2286EA89008DBB7D /* ShellScript */,
 				3742DC3C3A48A729291B9D27 /* [CP] Embed Pods Frameworks */,
 				259B55397B3AB3BA85875F51 /* [CP] Copy Pods Resources */,
+				1600915B27F8BDF200AA1F2B /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -229,6 +229,23 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		1600915B27F8BDF200AA1F2B /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "$PODS_ROOT/FirebaseCrashlytics/upload-symbols --build-phase --validate -ai 1:638176411768:ios:4d0a4dda3d592e7e\n$PODS_ROOT/FirebaseCrashlytics/upload-symbols --build-phase -ai 1:638176411768:ios:4d0a4dda3d592e7e\n";
+		};
 		1637FA4C2286EA89008DBB7D /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -552,10 +569,7 @@
 				);
 				INFOPLIST_FILE = Runner/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
@@ -584,10 +598,7 @@
 				);
 				INFOPLIST_FILE = Runner/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
