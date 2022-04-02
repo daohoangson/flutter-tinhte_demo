@@ -16,14 +16,14 @@ class HomeBottomBar extends StatelessWidget {
           children: <Widget>[
             Expanded(
               child: _BottomBarItem(
-                icon: Icon(FontAwesomeIcons.home),
+                icon: Icon(FontAwesomeIcons.house),
                 onTap: onHomeTap,
                 tooltip: l(context).home,
               ),
             ),
             Expanded(
               child: _BottomBarItem(
-                icon: Icon(FontAwesomeIcons.search),
+                icon: Icon(FontAwesomeIcons.magnifyingGlass),
                 onTap: () => showSearch(
                     context: context, delegate: ThreadSearchDelegate()),
                 tooltip: l(context).search,
@@ -31,7 +31,7 @@ class HomeBottomBar extends StatelessWidget {
             ),
             Expanded(
               child: _BottomBarItem(
-                icon: Icon(FontAwesomeIcons.listAlt),
+                icon: Icon(FontAwesomeIcons.rectangleList),
                 onTap: () => Navigator.of(context).push(MaterialPageRoute(
                   builder: (_) => ForumListScreen(),
                 )),

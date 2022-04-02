@@ -87,7 +87,7 @@ class ChannelsWidget extends StatelessWidget {
         ),
         _buildContentListViewButton(
           context: context,
-          icon: FontAwesomeIcons.volumeUp,
+          icon: FontAwesomeIcons.volumeHigh,
           label: 'Audio',
           listId: 9,
         ),
