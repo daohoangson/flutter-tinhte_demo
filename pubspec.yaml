@@ -4,35 +4,33 @@ version: 2.0.0+27
 publish_to: none
 
 environment:
-  flutter: 2.5.0
+  flutter: 2.10.3
   sdk: ">=2.3.0 <3.0.0"
 
 dependencies:
   # firebase
   firebase_core: any
-  firebase_messaging: ^10.0.0
-  firebase_crashlytics: ^2.0.0
+  firebase_messaging: ^11.2.12
+  firebase_crashlytics: ^2.5.3
 
   # ours
-  flutter_widget_from_html: ^0.7.0
+  flutter_widget_from_html: ^0.8.0
   fwfh_webview: any
   the_api:
     path: ./packages/api
 
-  apple_sign_in: ^0.1.0
   chewie: any
   convert: any
   crypto: any
   flutter:
     sdk: flutter
   flutter_cache_manager: any
-  flutter_facebook_login: ^3.0.0
+  flutter_facebook_auth: ^4.1.2
   flutter_localizations:
     sdk: flutter
   flutter_secure_storage: ^5.0.0-0
-  flutter_signin_button: ^2.0.0
-  flutter_speed_dial: ^4.0.0
-  font_awesome_flutter: ^9.0.0
+  flutter_speed_dial: ^5.0.0
+  font_awesome_flutter: ^10.0.0
   google_sign_in: ^5.0.0
   html_unescape: ^2.0.0
   http: any
@@ -42,9 +40,10 @@ dependencies:
   package_info_plus: ^1.0.0
   photo_view: ^0.13.0
   provider: ^6.0.0
-  share_plus: ^3.0.0
+  share_plus: ^4.0.0
   shared_preferences: ^2.0.0
   scroll_to_index: ^2.0.0
+  the_apple_sign_in: ^1.1.1
   timeago: ^3.0.0
   uni_links: ^0.5.1
   video_player: any
@@ -52,7 +51,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  msix: ^2.0.0
+  msix: ^3.0.0
 
 flutter:
   assets:

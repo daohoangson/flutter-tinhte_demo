@@ -137,8 +137,8 @@ Future<OauthToken?> _tryAutoRegister(
   for (final e in userData.entries) {
     try {
       bodyFields[e.key] = e.value.toString();
-    } catch (e) {
-      print(e);
+    } catch (error) {
+      log('$error');
     }
   }
 

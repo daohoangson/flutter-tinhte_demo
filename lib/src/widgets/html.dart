@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -71,7 +70,6 @@ class TinhteHtmlWidget extends StatelessWidget {
           ),
           onTapUrl: (url) => launchLink(c, url),
           textStyle: textStyle,
-          webView: true,
         ),
       );
 }
@@ -89,8 +87,6 @@ class TinhteWidgetFactory extends WidgetFactory {
 
   LbTrigger _lbTrigger;
   PhotoCompare _photoCompare;
-
-  var _needBottomTextPadding = false;
 
   TinhteWidgetFactory({
     this.devicePixelRatio,
@@ -148,7 +144,9 @@ class TinhteWidgetFactory extends WidgetFactory {
         final title = a['data-title'];
         if (!_kSmilies.containsKey(title)) return;
 
-        tree.replaceWith(TextBit(tree, _kSmilies[title]));
+        // TODO: use `replaceWith` when it comes back in v0.9
+        TextBit(tree.parent, _kSmilies[title]).insertBefore(tree);
+        tree.detach();
       },
     );
     return _smilieOp;
@@ -169,6 +167,9 @@ class TinhteWidgetFactory extends WidgetFactory {
     return _webViewDataUriOp;
   }
 
+  @override
+  bool get webView => true;
+
   LbTrigger get lbTrigger {
     _lbTrigger ??= LbTrigger(wf: this);
     return _lbTrigger;
@@ -180,50 +181,33 @@ class TinhteWidgetFactory extends WidgetFactory {
   }
 
   @override
-  WidgetPlaceholder buildBody(
-      BuildMetadata meta, Iterable<WidgetPlaceholder> children) {
-    _needBottomTextPadding = children.last is WidgetPlaceholder<BuildTree>;
-
-    return super.buildBody(meta, children);
-  }
-
   Widget buildBodyWidget(BuildContext context, Widget child) {
     child = Padding(
       child: child,
-      padding: EdgeInsets.only(
-        top: textPadding,
-        bottom: _needBottomTextPadding ? textPadding : 0.0,
-      ),
+      padding: EdgeInsets.symmetric(vertical: textPadding),
     );
 
     return super.buildBodyWidget(context, child);
   }
 
-  static final _resizedUrl = Expando<String>();
-
   @override
-  Widget buildImage(BuildMetadata meta, ImageMetadata data) {
-    final source = data.sources.first;
+  Widget buildImageWidget(BuildMetadata meta, ImageSource source) {
+    String resizedUrl;
     if (source.width != null && source.height != null) {
-      final resizedUrl = getResizedUrl(
+      resizedUrl = getResizedUrl(
         apiUrl: source.url,
         boxWidth: devicePixelRatio * deviceWidth,
         imageHeight: source.height,
         imageWidth: source.width,
       );
-      if (resizedUrl != null) _resizedUrl[meta] = resizedUrl;
     }
 
-    return super.buildImage(meta, data);
-  }
-
-  @override
-  Widget buildImageWidget(BuildMetadata meta, ImageSource src) {
-    final resizedUrl = _resizedUrl[meta];
+    ImageSource src = source;
     if (resizedUrl != null) {
       // TODO: switch to `ImageSource.copyWith` when it's available
       src = ImageSource(resizedUrl, height: src.height, width: src.width);
     }
+
     return super.buildImageWidget(meta, src);
   }
 
@@ -232,7 +216,10 @@ class TinhteWidgetFactory extends WidgetFactory {
     var built = super.buildText(meta, tsh, text);
 
     if (built != null) {
-      built = _TextPadding(built, textPadding);
+      built = Padding(
+        child: built,
+        padding: EdgeInsets.symmetric(horizontal: textPadding),
+      );
     }
 
     return built;
@@ -327,15 +314,4 @@ class TinhteWidgetFactory extends WidgetFactory {
 
     super.reset(state);
   }
-}
-
-class _TextPadding extends StatelessWidget {
-  final Widget child;
-  final double padding;
-
-  const _TextPadding(this.child, this.padding, {Key key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext _) =>
-      Padding(child: child, padding: EdgeInsets.symmetric(horizontal: padding));
 }

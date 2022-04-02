@@ -115,7 +115,7 @@ class _ThreadWidget extends StatelessWidget {
           TextSpan(
             children: <TextSpan>[
               TextSpan(
-                style: TextStyle(color: theme.accentColor),
+                style: TextStyle(color: theme.colorScheme.secondary),
                 text: thread.creatorUsername,
               ),
               TextSpan(

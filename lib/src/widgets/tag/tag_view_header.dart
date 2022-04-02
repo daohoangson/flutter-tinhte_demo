@@ -27,7 +27,9 @@ class TagViewHeader extends StatelessWidget {
                 children: <TextSpan>[
                   TextSpan(
                     text: formatNumber(value),
-                    style: TextStyle(color: Theme.of(context).accentColor),
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.secondary,
+                    ),
                   ),
                   TextSpan(text: " $label"),
                 ],

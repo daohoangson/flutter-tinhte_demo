@@ -46,7 +46,7 @@ class _ForumViewScreenState extends State<ForumViewScreen> {
               ),
             ),
             SpeedDialChild(
-              child: Icon(FontAwesomeIcons.edit),
+              child: Icon(FontAwesomeIcons.penToSquare),
               label: l(context).threadCreateNew,
               onTap: () => Navigator.of(context).push(MaterialPageRoute(
                   builder: (_) => ThreadCreateScreen(forum: forum))),

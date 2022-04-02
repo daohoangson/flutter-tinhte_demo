@@ -69,7 +69,7 @@ class TagWidget extends StatelessWidget {
 
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: theme.colorScheme.secondaryVariant,
+        color: theme.colorScheme.secondaryContainer,
         borderRadius: BorderRadius.circular(5),
       ),
       child: ClipRRect(

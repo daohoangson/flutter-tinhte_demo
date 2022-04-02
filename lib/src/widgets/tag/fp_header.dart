@@ -55,7 +55,9 @@ class FpHeader extends StatelessWidget {
               children: <Widget>[
                 Text(
                   formatNumber(value),
-                  style: TextStyle(color: Theme.of(context).accentColor),
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.secondary,
+                  ),
                 ),
                 Text(label),
               ],

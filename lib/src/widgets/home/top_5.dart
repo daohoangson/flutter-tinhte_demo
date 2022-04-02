@@ -133,7 +133,7 @@ class _HomeTop5WidgetThread extends StatelessWidget {
     final spans = <TextSpan>[];
 
     spans.add(TextSpan(
-      style: TextStyle(color: theme.accentColor),
+      style: TextStyle(color: theme.colorScheme.secondary),
       text: thread.creatorUsername,
     ));
 

@@ -67,10 +67,12 @@ class FeaturePage extends ChangeNotifier implements _FeaturePage, Followable {
 
 @freezed
 class _FeaturePageInternal with _$_FeaturePageInternal {
+  // ignore: invalid_annotation_target
   @JsonSerializable(fieldRename: FieldRename.none)
   const factory _FeaturePageInternal(
     int? forumId,
     String? fullName,
+    // ignore: invalid_annotation_target
     @JsonKey(name: 'is_followed') bool? isFollowed,
     int? tagId,
     String? tagText,
@@ -101,7 +103,9 @@ class FeaturePageValues with _$FeaturePageValues {
     int? followerCount,
     int? newsCount,
     int? tagUseCount,
+    // ignore: invalid_annotation_target
     @JsonKey(name: '7_days_thread_count') int? xDaysThreadCount,
+    // ignore: invalid_annotation_target
     @JsonKey(name: '7_days_news_count') int? xDaysNewsCount,
   }) = _FeaturePageValues;
 

@@ -209,11 +209,13 @@ class _ThreadInternal with _$_ThreadInternal {
     bool? threadIsPublished,
     bool? threadIsSticky,
     int? threadPostCount,
+    // ignore: invalid_annotation_target
     @JsonKey(fromJson: _threadTagsFromJson) Map<String, String>? threadTags,
     String? threadTitle,
     int? threadUpdateDate,
     int? threadViewCount,
     bool? userIsIgnored,
+    // ignore: invalid_annotation_target
     @JsonKey(fromJson: _forumFromJson, name: 'forum') Node? node,
     ThreadLinks? links,
     ThreadPermissions? permissions,

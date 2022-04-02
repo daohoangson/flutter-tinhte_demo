@@ -43,7 +43,7 @@ class FeaturePagesWidget extends StatelessWidget {
                   delegate: FpSearchDelegate(pages),
                 ),
                 style: TextButton.styleFrom(
-                  primary: Theme.of(context).accentColor,
+                  primary: Theme.of(context).colorScheme.secondary,
                 ),
               ),
             )

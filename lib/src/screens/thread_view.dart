@@ -138,7 +138,10 @@ class _ThreadViewState extends State<ThreadViewScreen> {
       buffer.write(' ');
       inlineSpans.add(WidgetSpan(
         alignment: PlaceholderAlignment.middle,
-        child: Icon(FontAwesomeIcons.solidCheckCircle, size: fontSize),
+        child: Icon(
+          FontAwesomeIcons.solidCircleCheck,
+          size: fontSize,
+        ),
       ));
     }
 

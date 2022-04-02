@@ -8,8 +8,11 @@ class UserFeedData with _$UserFeedData {
   const factory UserFeedData({
     int? feedTime,
     double? score,
+    // ignore: invalid_annotation_target
     @JsonKey(name: "_score_weighted") double? scoreWeighted,
+    // ignore: invalid_annotation_target
     @JsonKey(name: "_sort_bucket") String? sortBucket,
+    // ignore: invalid_annotation_target
     @JsonKey(name: "_sources") Map<String, int>? sources,
   }) = _UserFeedData;
 

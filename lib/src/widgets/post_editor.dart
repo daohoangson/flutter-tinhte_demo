@@ -162,7 +162,7 @@ class _PostEditorState extends State<PostEditorWidget> {
             TextSpan(
               text: parentPost.posterUsername + ' ',
               style: textTheme.bodyText2.copyWith(
-                color: theme.accentColor,
+                color: theme.colorScheme.secondary,
                 fontWeight: FontWeight.bold,
               ),
             ),
