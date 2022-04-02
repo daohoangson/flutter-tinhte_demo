@@ -285,7 +285,7 @@ jobs:
           _packageVersion=$( echo $APP_VERSION | sed 's/+/./' )
           echo "PACKAGE_VERSION=${_packageVersion}" | tee -a $GITHUB_ENV
 
-          flutter pub run msix:create "--v=${_packageVersion}"
+          flutter pub run msix:create "--version=${_packageVersion}"
 
       - name: Setup gcloud
         uses: google-github-actions/setup-gcloud@v0
