@@ -151,7 +151,7 @@ class ThreadWidget extends StatelessWidget {
       inlineSpans.add(WidgetSpan(
         alignment: PlaceholderAlignment.middle,
         child: Icon(
-          FontAwesomeIcons.solidCheckCircle,
+          FontAwesomeIcons.solidCircleCheck,
           color: theme.colorScheme.secondary,
           size: style.fontSize,
         ),
@@ -234,7 +234,7 @@ class _ThreadWidgetActionsState extends State<_ThreadWidgetActions> {
               Expanded(child: _buildButtonLike()),
               Expanded(
                 child: TextButton.icon(
-                  icon: Icon(FontAwesomeIcons.commentAlt),
+                  icon: Icon(FontAwesomeIcons.message),
                   label: Text(l(context).postReply),
                   onPressed: () => Navigator.of(context).push(
                     MaterialPageRoute(
@@ -248,7 +248,7 @@ class _ThreadWidgetActionsState extends State<_ThreadWidgetActions> {
               ),
               Expanded(
                 child: TextButton.icon(
-                  icon: Icon(FontAwesomeIcons.shareAlt),
+                  icon: Icon(FontAwesomeIcons.shareNodes),
                   label: Text(l(context).share),
                   onPressed: linkPermalink?.isNotEmpty == true
                       ? () => Share.share(linkPermalink)

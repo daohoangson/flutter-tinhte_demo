@@ -75,7 +75,7 @@ class MemberViewHeader extends StatelessWidget {
         Row(
           children: <Widget>[
             Icon(
-              FontAwesomeIcons.solidCommentAlt,
+              FontAwesomeIcons.solidMessage,
               color: theme.colorScheme.secondary,
               size: style.fontSize,
             ),

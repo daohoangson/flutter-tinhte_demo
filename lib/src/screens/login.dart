@@ -1,6 +1,5 @@
 import 'package:apple_sign_in/apple_sign_in.dart' as apple;
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
-import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:the_api/api.dart';
@@ -11,6 +10,7 @@ import 'package:the_app/src/config.dart';
 import 'package:the_app/src/intl.dart';
 import 'package:the_app/src/abstracts/google_sign_in.dart' as google_sign_in;
 import 'package:the_app/src/screens/register.dart';
+import 'package:the_app/src/widgets/sign_in_button.dart';
 
 final _facebookLogin = FacebookLogin();
 
@@ -130,20 +130,17 @@ class _LoginFormState extends State<LoginForm> {
           ],
         ),
         if (_canLoginApple)
-          SignInButton(
-            Buttons.AppleDark,
+          SignInButton.apple(
             onPressed: _loginApple,
             text: l(context).loginWithApple,
           ),
         if (config.loginWithFacebook)
-          SignInButton(
-            Buttons.Facebook,
+          SignInButton.facebook(
             onPressed: _loginFacebook,
             text: l(context).loginWithFacebook,
           ),
         if (config.loginWithGoogle && google_sign_in.isSupported)
-          SignInButton(
-            Buttons.GoogleDark,
+          SignInButton.google(
             onPressed: _loginGoogle,
             text: l(context).loginWithGoogle,
           ),

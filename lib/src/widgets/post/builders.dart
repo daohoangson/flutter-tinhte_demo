@@ -114,7 +114,7 @@ Widget buildPosterInfo(
 
   if (userHasVerifiedBadge == true) {
     children.add(Icon(
-      FontAwesomeIcons.solidCheckCircle,
+      FontAwesomeIcons.solidCircleCheck,
       color: theme.colorScheme.secondary,
       size: style.fontSize,
     ));
