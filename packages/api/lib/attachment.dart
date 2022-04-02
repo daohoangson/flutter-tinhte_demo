@@ -14,8 +14,11 @@ class Attachment with _$Attachment {
     String? filename,
     AttachmentLinks? links,
     AttachmentPermissions? permissions,
+    // ignore: invalid_annotation_target
     @JsonKey(name: 'attachment_is_video') bool? xVideoIsVideo,
+    // ignore: invalid_annotation_target
     @JsonKey(name: 'attachment_video_is_processing') bool? xVideoIsProcessing,
+    // ignore: invalid_annotation_target
     @JsonKey(name: 'video_ratio') double? xVideoRatio,
   }) = _Attachment;
 
@@ -49,6 +52,7 @@ class AttachmentLinks with _$AttachmentLinks {
     String? permalink,
     String? data,
     String? thumbnail,
+    // ignore: invalid_annotation_target
     @JsonKey(name: 'video_url') String? xVideoUrl,
   }) = _AttachmentLinks;
 

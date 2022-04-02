@@ -531,7 +531,7 @@ packages:
       name: json_annotation
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.0.1"
+    version: "4.4.0"
   just_audio:
     dependency: transitive
     description:

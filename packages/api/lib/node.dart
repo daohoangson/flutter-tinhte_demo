@@ -5,11 +5,10 @@ import 'thread_prefix.dart';
 part 'node.freezed.dart';
 part 'node.g.dart';
 
-@Freezed(unionKey: 'navigation_type')
+@Freezed(unionKey: 'navigation_type', fallbackUnion: 'default')
 class Node with _$Node {
   const factory Node(
-    int navigationId,
-    String navigationType, {
+    int navigationId, {
     bool? hasSubElements,
     ElementLinks? links,
     int? navigationDepth,
@@ -18,7 +17,6 @@ class Node with _$Node {
 
   const factory Node.category(
     int navigationId,
-    String navigationType,
     // category
     int categoryId, {
     bool? hasSubElements,
@@ -33,7 +31,6 @@ class Node with _$Node {
 
   const factory Node.forum(
     int navigationId,
-    String navigationType,
     // forum
     int forumId, {
     bool? hasSubElements,
@@ -54,7 +51,6 @@ class Node with _$Node {
 
   const factory Node.linkforum(
     int navigationId,
-    String navigationType,
     //  link forum
     int linkId, {
     bool? hasSubElements,
@@ -85,7 +81,7 @@ class Node with _$Node {
       );
 
   String? get title => map(
-        (_) => '${_.navigationType}#${_.navigationId}',
+        (_) => '#${_.navigationId}',
         category: (_) => _.categoryTitle,
         forum: (_) => _.forumTitle,
         linkforum: (_) => _.linkTitle,
@@ -101,8 +97,7 @@ class CategoryLinks with _$CategoryLinks implements NodeLinks {
   const factory CategoryLinks({
     String? detail,
     String? permalink,
-
-    // element links
+    // ignore: invalid_annotation_target
     @JsonKey(name: 'sub-elements') String? subElements,
   }) = _CategoryLinks;
 
@@ -126,6 +121,8 @@ class CategoryPermissions with _$CategoryPermissions {
 class ElementLinks with _$ElementLinks implements NodeLinks {
   const factory ElementLinks({
     String? permalink,
+
+    // ignore: invalid_annotation_target
     @JsonKey(name: 'sub-elements') String? subElements,
   }) = _ElementLinks;
 
@@ -140,8 +137,7 @@ class ForumLinks with _$ForumLinks implements NodeLinks {
     String? followers,
     String? permalink,
     String? threads,
-
-    // element links
+    // ignore: invalid_annotation_target
     @JsonKey(name: 'sub-elements') String? subElements,
   }) = _ForumLinks;
 
@@ -169,8 +165,7 @@ class ForumPermissions with _$ForumPermissions {
 class LinkForumLinks with _$LinkForumLinks implements NodeLinks {
   const factory LinkForumLinks({
     String? target,
-
-    // element links
+    // ignore: invalid_annotation_target
     @JsonKey(name: 'sub-elements') String? subElements,
   }) = _LinkForumLinks;
 
