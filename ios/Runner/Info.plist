@@ -39,6 +39,8 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>FacebookAppID</key>
 	<string>566879507102666</string>
+	<key>FacebookClientToken</key>
+	<string>bee1edd35d32695d76209b09c46c60dc</string>
 	<key>FacebookDisplayName</key>
 	<string>com.daohoangson.flutter_ttdemo</string>
 	<key>ITSAppUsesNonExemptEncryption</key>

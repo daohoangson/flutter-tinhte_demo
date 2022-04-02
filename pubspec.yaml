@@ -25,7 +25,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_cache_manager: any
-  flutter_facebook_login: ^3.0.0
+  flutter_facebook_auth: ^4.1.2
   flutter_localizations:
     sdk: flutter
   flutter_secure_storage: ^5.0.0-0
