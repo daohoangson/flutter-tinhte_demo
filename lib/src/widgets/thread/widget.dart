@@ -152,7 +152,7 @@ class ThreadWidget extends StatelessWidget {
         alignment: PlaceholderAlignment.middle,
         child: Icon(
           FontAwesomeIcons.solidCheckCircle,
-          color: theme.accentColor,
+          color: theme.colorScheme.secondary,
           size: style.fontSize,
         ),
       ));

@@ -43,7 +43,7 @@ Future _sendRequest(Client client, String method, String url,
   final response =
       _latestResponse = await Response.fromStream(await client.send(request));
 
-  print("$method $url -> ${response.statusCode}");
+  log("$method $url -> ${response.statusCode}");
 
   if (parseJson) {
     final decodedJson = json.decode(response.body);

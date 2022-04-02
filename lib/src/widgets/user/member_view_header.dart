@@ -76,7 +76,7 @@ class MemberViewHeader extends StatelessWidget {
           children: <Widget>[
             Icon(
               FontAwesomeIcons.solidCommentAlt,
-              color: theme.accentColor,
+              color: theme.colorScheme.secondary,
               size: style.fontSize,
             ),
             const SizedBox(width: 5),
@@ -90,7 +90,7 @@ class MemberViewHeader extends StatelessWidget {
           children: <Widget>[
             Icon(
               FontAwesomeIcons.solidHeart,
-              color: theme.accentColor,
+              color: theme.colorScheme.secondary,
               size: style.fontSize,
             ),
             const SizedBox(width: 5),

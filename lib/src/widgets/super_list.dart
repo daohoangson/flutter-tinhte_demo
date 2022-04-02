@@ -153,7 +153,8 @@ class SuperListState<T> extends State<SuperListView<T>> {
           built = AutoScrollTag(
             child: built,
             controller: _scrollControllerAuto,
-            highlightColor: Theme.of(context).accentColor.withOpacity(.1),
+            highlightColor:
+                Theme.of(context).colorScheme.secondary.withOpacity(.1),
             index: i,
             key: ValueKey(i),
           );

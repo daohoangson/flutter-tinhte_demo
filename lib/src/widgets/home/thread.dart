@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:the_api/search.dart';
 import 'package:the_api/thread.dart';
 import 'package:the_api/x_content_list.dart';
@@ -76,7 +75,7 @@ class HomeThreadWidget extends StatelessWidget {
     final spans = <TextSpan>[];
 
     spans.add(TextSpan(
-      style: TextStyle(color: theme.accentColor),
+      style: TextStyle(color: theme.colorScheme.secondary),
       text: thread.creatorUsername,
     ));
 

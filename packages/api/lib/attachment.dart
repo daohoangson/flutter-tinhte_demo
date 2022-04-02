@@ -30,6 +30,8 @@ class Attachment with _$Attachment {
     } else if (isVideo) {
       return xVideoRatio;
     }
+
+    return null;
   }
 
   bool get isImage {

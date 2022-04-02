@@ -105,7 +105,7 @@ Widget buildPosterInfo(
       text: TextSpan(
         text: username,
         style: style.copyWith(
-          color: theme.accentColor,
+          color: theme.colorScheme.secondary,
           fontWeight: FontWeight.bold,
         ),
       ),
@@ -115,7 +115,7 @@ Widget buildPosterInfo(
   if (userHasVerifiedBadge == true) {
     children.add(Icon(
       FontAwesomeIcons.solidCheckCircle,
-      color: theme.accentColor,
+      color: theme.colorScheme.secondary,
       size: style.fontSize,
     ));
   }

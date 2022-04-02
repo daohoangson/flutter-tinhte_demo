@@ -51,7 +51,7 @@ class TinhteFact extends StatelessWidget {
                     thread.threadTitle,
                     maxLines: null,
                     style: theme.textTheme.headline6.copyWith(
-                      color: theme.accentColor,
+                      color: theme.colorScheme.secondary,
                       fontWeight: FontWeight.bold,
                     ),
                     textAlign: TextAlign.center,

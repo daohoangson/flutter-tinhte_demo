@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:async';
+import 'dart:developer';
 
 import '../api.dart';
 import '../batch_job.dart';
@@ -13,9 +14,9 @@ class Batch {
   final _uniqueJobs = <String, BatchJob>{};
 
   String get bodyJson {
-    print('Batch has ${_jobs.length} jobs, ${_uniqueJobs.length} unique');
+    log('Batch has ${_jobs.length} jobs, ${_uniqueJobs.length} unique');
     for (final _job in _jobs) {
-      print("Batch job ${_job.id}: ${_job.method} ${_job.uri}");
+      log("Batch job ${_job.id}: ${_job.method} ${_job.uri}");
     }
 
     return json.encode(_uniqueJobs.values.toList());

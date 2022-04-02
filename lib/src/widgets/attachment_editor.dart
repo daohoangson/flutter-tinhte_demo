@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'dart:math';
-import 'package:flutter/animation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
@@ -95,7 +94,7 @@ class AttachmentEditorState extends State<AttachmentEditorWidget> {
             child: attachment.ok
                 ? Icon(
                     Icons.cloud_done,
-                    color: Theme.of(context).accentColor,
+                    color: Theme.of(context).colorScheme.secondary,
                   )
                 : _UploadingIcon(),
           ),

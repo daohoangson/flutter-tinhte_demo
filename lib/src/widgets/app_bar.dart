@@ -75,7 +75,7 @@ class AppBarDrawerHeader extends StatelessWidget {
   TextSpan _compileUsername(BuildContext context, User user) => TextSpan(
         text: user.username ?? '',
         style: Theme.of(context).textTheme.headline6.copyWith(
-              color: Theme.of(context).accentColor,
+              color: Theme.of(context).colorScheme.secondary,
             ),
       );
 }
