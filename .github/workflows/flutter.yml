@@ -277,7 +277,6 @@ jobs:
       - name: Prepare packages/api
         run: ./packages/api/tool/build.sh
       - run: flutter pub get
-      - run: flutter build windows
       - name: Run flutter pub run msix:create
         run: |
           set -e
@@ -285,7 +284,7 @@ jobs:
           _packageVersion=$( echo $APP_VERSION | sed 's/+/./' )
           echo "PACKAGE_VERSION=${_packageVersion}" | tee -a $GITHUB_ENV
 
-          flutter pub run msix:create "--version=${_packageVersion}"
+          flutter pub run msix:create --install-certificate=false "--version=${_packageVersion}"
 
       - name: Setup gcloud
         uses: google-github-actions/setup-gcloud@v0
