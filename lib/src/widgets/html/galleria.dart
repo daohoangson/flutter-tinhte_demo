@@ -66,11 +66,6 @@ class _GalleriaItem {
       case 'LbTrigger':
         _source ??= wf.urlFull(e.attributes['href']);
         _triggerOp ??= BuildOp(
-          // onChild: (childMeta) {
-          //   if (childMeta.domElement.localName == 'img') {
-          //     childMeta.isBlockElement = true;
-          //   }
-          // },
           onWidgets: (meta, widgets) {
             // bypass built-in A tag handling with 0 priority
             // and NOT returning anything in `onWidgets`

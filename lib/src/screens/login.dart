@@ -1,5 +1,3 @@
-import 'package:apple_sign_in/apple_sign_in.dart' as apple;
-import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:the_api/api.dart';
@@ -8,11 +6,11 @@ import 'package:the_api/oauth_token.dart';
 import 'package:the_app/src/api.dart';
 import 'package:the_app/src/config.dart';
 import 'package:the_app/src/intl.dart';
+import 'package:the_app/src/abstracts/apple_sign_in.dart' as apple_sign_in;
+import 'package:the_app/src/abstracts/facebook_log_in.dart' as facebook_log_in;
 import 'package:the_app/src/abstracts/google_sign_in.dart' as google_sign_in;
 import 'package:the_app/src/screens/register.dart';
 import 'package:the_app/src/widgets/sign_in_button.dart';
-
-final _facebookLogin = FacebookLogin();
 
 void logout(BuildContext context) {
   final apiData = ApiAuth.of(context, listen: false);
@@ -20,8 +18,15 @@ void logout(BuildContext context) {
 
   apiData.setToken(null);
 
-  if (token?.obtainMethod == ObtainMethod.google) {
-    google_sign_in.signOut();
+  switch (token?.obtainMethod) {
+    case ObtainMethod.facebook:
+      facebook_log_in.logOut();
+      break;
+    case ObtainMethod.google:
+      google_sign_in.signOut();
+      break;
+    default:
+    // intentionally left empty
   }
 }
 
@@ -52,8 +57,10 @@ class _LoginFormState extends State<LoginForm> {
     super.initState();
 
     if (config.loginWithApple)
-      apple.AppleSignIn.isAvailable()
-          .then((ok) => ok ? setState(() => _canLoginApple = true) : null);
+      apple_sign_in.isSupported.then((ok) {
+        if (!ok || !mounted) return;
+        setState(() => _canLoginApple = true);
+      });
   }
 
   @override
@@ -289,27 +296,13 @@ class _LoginFormState extends State<LoginForm> {
     setState(() => _isLoggingIn = true);
 
     final api = ApiAuth.of(context, listen: false).api;
-    final req = apple.AppleIdRequest(requestedScopes: [apple.Scope.email]);
 
-    apple.AppleSignIn.performRequests([req])
-        .then<apple.AppleIdCredential>((result) {
-          switch (result.status) {
-            case apple.AuthorizationStatus.authorized:
-              return result.credential;
-            case apple.AuthorizationStatus.cancelled:
-              final _l = l(context);
-              return Future.error(_l.loginErrorCancelled(_l.loginWithApple));
-            case apple.AuthorizationStatus.error:
-              return Future.error(result.error.localizedDescription);
-          }
-
-          return Future.error(result.status.toString());
-        })
-        .then((appleIdCredential) => loginExternal(api, ObtainMethod.apple, {
+    apple_sign_in
+        .signIn(context)
+        .then((appleToken) => loginExternal(api, ObtainMethod.apple, {
               'client_id': api.clientId,
               'client_secret': api.clientSecret,
-              'apple_token':
-                  String.fromCharCodes(appleIdCredential.identityToken),
+              'apple_token': appleToken,
             }))
         .then(_onResult)
         .catchError(_showError)
@@ -321,21 +314,8 @@ class _LoginFormState extends State<LoginForm> {
     setState(() => _isLoggingIn = true);
 
     final api = ApiAuth.of(context, listen: false).api;
-    _facebookLogin
-        .logIn(['email'])
-        .then<String>((result) {
-          switch (result.status) {
-            case FacebookLoginStatus.loggedIn:
-              return result.accessToken.token;
-            case FacebookLoginStatus.cancelledByUser:
-              final _l = l(context);
-              return Future.error(_l.loginErrorCancelled(_l.loginWithFacebook));
-            case FacebookLoginStatus.error:
-              return Future.error(result.errorMessage);
-          }
-
-          return Future.error(result.status.toString());
-        })
+    facebook_log_in
+        .logIn(context)
         .then((facebookToken) => loginExternal(api, ObtainMethod.facebook, {
               'client_id': api.clientId,
               'client_secret': api.clientSecret,

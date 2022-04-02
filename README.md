@@ -73,7 +73,7 @@ Pick a unique package name across Play Store and App Store then update these fil
 - `.github/workflows/flutter.yml` GCS_BUCKET, GCS_URL
 - `android/app/build.gradle` applicationId, signingConfigs.release
 - `android/app/src/main/AndroidManifest.xml` package, android:label
-- `android/app/src/main/res/values/strings.xml` app_name, facebook_app_id, fb_login_protocol_scheme
+- `android/app/src/main/res/values/strings.xml` app_name, facebook_app_id, facebook_client_token, fb_login_protocol_scheme
 - `android/fastlane/metadata/android/en-US/` title.txt, full_description.txt, short_description.txt
 - `android/fastlane/Appfile`
 - `firebase/.firebaserc` projects.default
