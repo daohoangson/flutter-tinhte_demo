@@ -64,8 +64,8 @@ class LinkExpander {
 
     return WidgetPlaceholder<LinkExpander>(this)
       ..wrapWith((context, _) {
-        Widget built = wf.buildDecoratedBox(meta, child,
-            color: Theme.of(context).cardColor);
+        Widget built =
+            wf.buildDecoration(meta, child, color: Theme.of(context).cardColor);
 
         if (width != null) {
           built = CssSizing(
