@@ -11,4 +11,4 @@ PRODUCT_NAME = ttdemo
 PRODUCT_BUNDLE_IDENTIFIER = com.daohoangson.flutterttdemo
 
 // The copyright displayed in application information
-PRODUCT_COPYRIGHT = Copyright © 2020 com.daohoangson. All rights reserved.
+PRODUCT_COPYRIGHT = Copyright © 2022 com.daohoangson. All rights reserved.
