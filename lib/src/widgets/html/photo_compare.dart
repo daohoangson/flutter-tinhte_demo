@@ -51,9 +51,7 @@ class _PhotoCompareWidget extends StatefulWidget {
     required this.aspectRatio,
     required this.image0,
     required this.image1,
-  })  : assert(aspectRatio != null),
-        assert(image0 != null),
-        assert(image1 != null);
+  });
 
   @override
   _PhotoCompareState createState() => _PhotoCompareState();

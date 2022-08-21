@@ -10,7 +10,7 @@ class HomeTop5Widget extends StatelessWidget {
   final List<SearchResult<Thread>> items;
 
   HomeTop5Widget(this.items, {Key? key})
-      : assert(items?.length == 5),
+      : assert(items.length == 5),
         super(key: key);
 
   @override
@@ -93,7 +93,7 @@ class _HomeTop5WidgetThread extends StatelessWidget {
   final Thread thread;
 
   _HomeTop5WidgetThread(SearchResult<Thread> srt, {Key? key})
-      : assert(srt?.content != null),
+      : assert(srt.content != null),
         item = srt.listItem,
         thread = srt.content!,
         super(key: key);

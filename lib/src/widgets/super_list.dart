@@ -40,8 +40,6 @@ class SuperListView<T> extends StatefulWidget {
     this.progressIndicator,
     this.shrinkWrap,
   })  : assert((fetchPathInitial != null) || (initialJson != null)),
-        assert(fetchOnSuccess != null),
-        assert(itemBuilder != null),
         super(key: key);
 
   @override
@@ -66,7 +64,7 @@ class FetchContext<T> {
     this.id = FetchContextId.FetchCustom,
     this.path,
     required this.state,
-  }) : assert(state != null);
+  });
 }
 
 enum FetchContextId { FetchCustom, FetchInitial, FetchNext, FetchPrev }
@@ -77,8 +75,7 @@ class SuperListItemFullWidth extends StatelessWidget {
   SuperListItemFullWidth({
     required this.child,
     Key? key,
-  })  : assert(child != null),
-        super(key: key);
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) => child;
@@ -86,7 +83,7 @@ class SuperListItemFullWidth extends StatelessWidget {
 
 class SuperListState<T> extends State<SuperListView<T>> {
   final List<SuperListComplexItemRegistration> _complexItems = [];
-  final List<T > _items = [];
+  final List<T> _items = [];
 
   var _isFetching = false;
   var _isRefreshing = false;
@@ -106,7 +103,7 @@ class SuperListState<T> extends State<SuperListView<T>> {
   bool get isFetching => _isFetching;
   int get itemCountAfter => (widget.footer != null ? 1 : 0) + 1;
   int get itemCountBefore => 1 + (widget.header != null ? 1 : 0);
-  Iterable<T > get items => _items;
+  Iterable<T> get items => _items;
 
   @override
   void initState() {
@@ -140,7 +137,7 @@ class SuperListState<T> extends State<SuperListView<T>> {
       itemBuilder: (context, i) {
         Widget built = _buildItem(context, i) ?? Container();
 
-        if (widget.itemMaxWidth != null && !(built is SuperListItemFullWidth)) {
+        if (!(built is SuperListItemFullWidth)) {
           built = Center(
             child: ConstrainedBox(
               constraints: BoxConstraints(maxWidth: widget.itemMaxWidth),
@@ -310,7 +307,7 @@ class SuperListState<T> extends State<SuperListView<T>> {
     });
   }
 
-  Widget _buildItem(BuildContext context, int i) {
+  Widget? _buildItem(BuildContext context, int i) {
     if (i == 0) return _buildProgressIndicator(canFetchPrev && _isFetching);
     i--;
 
@@ -429,7 +426,7 @@ class SuperListState<T> extends State<SuperListView<T>> {
 }
 
 typedef void _FetchOnSuccess<T>(Map json, FetchContext<T> fetchContext);
-typedef Widget _ItemBuilder<T>(
+typedef Widget? _ItemBuilder<T>(
   BuildContext context,
   SuperListState<T> state,
   T item,
@@ -445,7 +442,6 @@ class SuperListComplexItemRegistration {
   SuperListComplexItemRegistration(
     InheritedProvider provider, {
     SuperListComplexItemClearer? clear,
-  })  : assert(provider != null),
-        _provider = provider,
+  })  : _provider = provider,
         _clear = clear;
 }

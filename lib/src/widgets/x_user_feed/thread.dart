@@ -13,7 +13,7 @@ PopupMenuButton? buildPopupMenuButtonForThread(
   if (data == null) return null;
 
   final entries = <PopupMenuEntry<String>>[];
-  data.sources?.keys?.forEach((key) {
+  data.sources?.keys.forEach((key) {
     final m = _sourceRegExp.firstMatch(key);
     if (m == null) return;
     final type = m.group(1);

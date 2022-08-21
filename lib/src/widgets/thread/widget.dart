@@ -11,8 +11,7 @@ class ThreadWidget extends StatelessWidget {
     this.thread, {
     Key? key,
     this.feedData,
-  })  : assert(thread != null),
-        super(key: key);
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -203,9 +202,7 @@ class ThreadWidget extends StatelessWidget {
 class _ThreadWidgetActions extends StatefulWidget {
   final Thread thread;
 
-  _ThreadWidgetActions(this.thread, {Key? key})
-      : assert(thread != null),
-        super(key: key);
+  _ThreadWidgetActions(this.thread, {Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _ThreadWidgetActionsState();

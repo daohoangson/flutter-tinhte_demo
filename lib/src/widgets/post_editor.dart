@@ -19,7 +19,7 @@ class PostEditorWidget extends StatefulWidget {
     required this.callback,
     required this.paddingHorizontal,
     required this.paddingVertical,
-  }) : assert(callback != null);
+  });
 
   @override
   State<StatefulWidget> createState() => _PostEditorState();
@@ -269,7 +269,7 @@ class PostEditorData extends ChangeNotifier {
   var _isEnabled = false;
   Post? _parentPost;
 
-  PostEditorData(this.thread) : assert(thread != null);
+  PostEditorData(this.thread);
 
   String get sessionId => "$hashCode-$_counter";
 
@@ -317,11 +317,9 @@ class _EmojiSuggestion {
   static final _regExpBefore = RegExp(r':[a-z]+(:?)$', caseSensitive: false);
   static final _regExpAfter = RegExp(r'^[a-z]*:?', caseSensitive: false);
 
-  _EmojiSuggestion({required this.query, required this.emojis, required this.start})
-      : assert(query != null),
-        assert(emojis != null),
-        assert(start != null),
-        end = start + query.length;
+  _EmojiSuggestion(
+      {required this.query, required this.emojis, required this.start})
+      : end = start + query.length;
 
   static _EmojiSuggestion? suggest(String text, TextSelection s) {
     if (!s.isValid) return null;
@@ -335,8 +333,8 @@ class _EmojiSuggestion {
         : null;
 
     // skip suggestion if query is not long enough (avoid rendering too many results)
-    final query =
-        (before.group(0)! + (after != null ? after.group(0)! : '')).toLowerCase();
+    final query = (before.group(0)! + (after != null ? after.group(0)! : ''))
+        .toLowerCase();
     if (query.length < 3) return null;
 
     final emojis = searchEmojis(query);

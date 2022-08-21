@@ -7,14 +7,14 @@ const _kThreadNavigationSeparatorPadding = 2.0;
 class ThreadNavigationWidget extends StatefulWidget {
   final Thread thread;
 
-  ThreadNavigationWidget(this.thread) : assert(thread != null);
+  ThreadNavigationWidget(this.thread);
 
   @override
   State<ThreadNavigationWidget> createState() => _ThreadNavigationState();
 }
 
 class _ThreadNavigationState extends State<ThreadNavigationWidget> {
-  List<Node > get nodes {
+  List<Node> get nodes {
     final navigation = widget.thread.navigation;
     if (navigation != null) return navigation;
 

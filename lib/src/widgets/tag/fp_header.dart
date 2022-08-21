@@ -7,7 +7,7 @@ import 'package:the_app/src/intl.dart';
 class FpHeader extends StatelessWidget {
   final FeaturePage fp;
 
-  FpHeader(this.fp) : assert(fp != null);
+  FpHeader(this.fp);
 
   @override
   Widget build(BuildContext context) =>

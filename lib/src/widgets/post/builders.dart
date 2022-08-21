@@ -36,8 +36,8 @@ Widget buildPostButton(
 Widget buildPostRow(
   BuildContext context,
   Widget avatar, {
-  required List<Widget > box,
-  required List<Widget > footer,
+  required List<Widget> box,
+  required List<Widget> footer,
 }) {
   final children = <Widget>[
     Padding(

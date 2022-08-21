@@ -3,9 +3,7 @@ part of '../posts.dart';
 class _PostWidget extends StatelessWidget {
   final Post post;
 
-  const _PostWidget({Key? key, required this.post})
-      : assert(post != null),
-        super(key: key);
+  const _PostWidget({Key? key, required this.post}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -55,9 +53,7 @@ class _PostReplyHiddenWidget extends StatefulWidget {
     this.postReply,
     this.superListIndex, {
     Key? key,
-  })  : assert(superListIndex != null),
-        assert(postReply != null),
-        super(key: key);
+  }) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _PostReplyHiddenWidgetState();

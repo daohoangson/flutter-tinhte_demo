@@ -5,9 +5,7 @@ class _FirstPostWidget extends StatelessWidget {
   final Thread thread;
 
   const _FirstPostWidget({Key? key, required this.post, required this.thread})
-      : assert(post != null),
-        assert(thread != null),
-        super(key: key);
+      : super(key: key);
 
   @override
   Widget build(BuildContext _) => AnimatedBuilder(

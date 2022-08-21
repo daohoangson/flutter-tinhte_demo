@@ -12,8 +12,7 @@ class PostsWidget extends StatefulWidget {
     this.initialJson,
     Key? key,
     this.path,
-  })  : assert(thread != null),
-        super(key: key);
+  }) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => PostsState();
@@ -248,12 +247,11 @@ class _PostListItem {
   Post? post;
   PostReply? postReply;
 
-  _PostListItem.post(Post this.post) : assert(post != null);
+  _PostListItem.post(Post this.post);
 
-  _PostListItem.postReply(PostReply this.postReply) : assert(postReply != null);
+  _PostListItem.postReply(PostReply this.postReply);
 
-  _PostListItem.page(int this.pageCurrent, this.pageTotal)
-      : assert(pageCurrent != null);
+  _PostListItem.page(int this.pageCurrent, this.pageTotal);
 
   int? get postId => post?.postId ?? postReply?.postId;
 

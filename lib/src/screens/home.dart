@@ -73,7 +73,7 @@ class HomeScreen extends StatelessWidget {
 
     for (int i = 0; i < l; i++) {
       var srt = config.homeParser(threadsJson[i]);
-      if (srt == null || srt.content == null) continue;
+      if (srt.content == null) continue;
 
       if (top5 != null && top5.length < 5) {
         top5.add(srt);

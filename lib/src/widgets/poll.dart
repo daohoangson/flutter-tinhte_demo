@@ -7,7 +7,7 @@ import 'package:the_app/src/intl.dart';
 class PollWidget extends StatefulWidget {
   final PollOwner owner;
 
-  PollWidget(this.owner) : assert(owner != null);
+  PollWidget(this.owner);
 
   @override
   State<PollWidget> createState() => _PollState();
@@ -116,18 +116,14 @@ class _PollResponsesWidget extends StatefulWidget {
     Key? key,
     required this.maxVotes,
     required this.poll,
-  })  : assert(canVote != null),
-        assert(hasResults != null),
-        assert(maxVotes != null),
-        assert(poll != null),
-        super(key: key);
+  }) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _PollResponsesState();
 }
 
 class _PollResponsesState extends State<_PollResponsesWidget> {
-  final _selectedResponseIds = Set<int >();
+  final _selectedResponseIds = Set<int>();
 
   bool get isSingleChoice => widget.maxVotes == 1;
   Iterable<PollResponse> get responses => widget.poll.responses;

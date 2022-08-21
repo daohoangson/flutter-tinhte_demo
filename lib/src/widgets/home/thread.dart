@@ -14,7 +14,7 @@ class HomeThreadWidget extends StatelessWidget {
   HomeThreadWidget(
     SearchResult<Thread> srt, {
     Key? key,
-  })  : assert(srt?.content != null),
+  })  : assert(srt.content != null),
         item = srt.listItem,
         thread = srt.content!,
         super(key: key);

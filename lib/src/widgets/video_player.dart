@@ -12,9 +12,7 @@ class VideoPlayer extends StatefulWidget {
     required this.autoPlay,
     Key? key,
     required this.url,
-  })  : assert(aspectRatio != null),
-        assert(url != null),
-        super(key: key);
+  }) : super(key: key);
 
   @override
   State<VideoPlayer> createState() => _VideoState();
@@ -54,8 +52,7 @@ class _VideoState extends State<VideoPlayer> {
 
   @override
   Widget build(BuildContext context) {
-    if (_chewieController?.videoPlayerController?.value?.isInitialized !=
-        true) {
+    if (_chewieController?.videoPlayerController.value.isInitialized != true) {
       return AspectRatio(
         aspectRatio: widget.aspectRatio,
         child: Center(

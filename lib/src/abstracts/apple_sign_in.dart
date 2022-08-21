@@ -18,6 +18,4 @@ Future<String> signIn(BuildContext context) async {
     case lib.AuthorizationStatus.error:
       throw new StateError(result.error!.localizedDescription!);
   }
-
-  throw new StateError(result.status.toString());
 }

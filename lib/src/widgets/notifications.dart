@@ -163,7 +163,7 @@ class _NotificationsState extends State<NotificationsWidget> {
     OauthToken token,
     User user,
   ) async {
-    if (fcmToken?.isNotEmpty != true) return;
+    if (fcmToken.isEmpty) return;
 
     final url = "${config.pushServer}/subscribe";
     final hubTopic = "user_notification_${user.userId}";

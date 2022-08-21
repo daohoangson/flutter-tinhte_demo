@@ -3,9 +3,7 @@ part of '../posts.dart';
 class _PostBodyWidget extends StatelessWidget {
   final Post post;
 
-  const _PostBodyWidget({Key? key, required this.post})
-      : assert(post != null),
-        super(key: key);
+  const _PostBodyWidget({Key? key, required this.post}) : super(key: key);
 
   @override
   Widget build(BuildContext context) => AnimatedBuilder(
@@ -40,8 +38,7 @@ class _PostBodyWidget extends StatelessWidget {
       );
 }
 
-TextStyle? _getPostBodyTextStyle(
-    BuildContext context, bool isFirstPost) {
+TextStyle? _getPostBodyTextStyle(BuildContext context, bool isFirstPost) {
   final themeStyle = Theme.of(context).textTheme.bodyText2;
   if (themeStyle == null) return null;
 

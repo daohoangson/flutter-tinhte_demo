@@ -13,9 +13,7 @@ class ContentListViewScreen extends StatelessWidget {
     Key? key,
     required this.listId,
     required this.title,
-  })  : assert(listId != null),
-        assert(title != null),
-        super(key: key);
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) => Scaffold(

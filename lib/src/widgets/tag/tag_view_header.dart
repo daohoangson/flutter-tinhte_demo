@@ -6,7 +6,7 @@ import 'package:the_app/src/intl.dart';
 class TagViewHeader extends StatelessWidget {
   final Tag tag;
 
-  TagViewHeader(this.tag) : assert(tag != null);
+  TagViewHeader(this.tag);
 
   @override
   Widget build(BuildContext context) => Row(

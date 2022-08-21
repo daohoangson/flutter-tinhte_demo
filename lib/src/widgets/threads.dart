@@ -56,7 +56,7 @@ class ThreadsWidget extends StatelessWidget {
     final list = json[threadsKey] as List;
     for (final j in list) {
       final thread = Thread.fromJson(j, forum: forum);
-      if (thread.threadId == null || thread.firstPost == null) continue;
+      if (thread.firstPost == null) continue;
 
       fc.items.add(thread);
     }

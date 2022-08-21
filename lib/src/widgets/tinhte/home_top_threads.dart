@@ -94,11 +94,7 @@ class _ThreadWidget extends StatelessWidget {
     required this.isWide,
     required this.width,
     Key? key,
-  })  : assert(thread != null),
-        assert(height != null),
-        assert(isWide != null),
-        assert(width != null),
-        super(key: key);
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

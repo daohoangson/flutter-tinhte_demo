@@ -44,7 +44,7 @@ void apiGet(ApiCaller caller, String path,
     );
 
 void apiPost(ApiCaller caller, String path,
-        {Map<String, String >? bodyFields,
+        {Map<String, String>? bodyFields,
         Map<String, File>? fileFields,
         VoidCallback? onComplete,
         ApiOnError? onError,
@@ -112,9 +112,7 @@ void _setupApiCompleter<T>(
 
   if (onSuccess != null) {
     f = f.then(
-      (data) => (caller.canReceiveCallback && onSuccess != null)
-          ? onSuccess(data)
-          : data,
+      (data) => (caller.canReceiveCallback) ? onSuccess(data) : data,
     );
   }
 
@@ -180,8 +178,7 @@ class ApiApp extends StatefulWidget {
   ApiApp({
     required this.child,
     Key? key,
-  })  : assert(child != null),
-        api = Api(config.apiRoot, config.clientId, config.clientSecret)
+  })  : api = Api(config.apiRoot, config.clientId, config.clientSecret)
           ..httpHeaders['Api-Bb-Code-Chr'] = '1'
           ..httpHeaders['Api-Post-Tree'] = '1',
         super(key: key);
@@ -202,13 +199,13 @@ class _ApiAppState extends State<ApiApp> {
   Api get api => widget.api;
 
   String get _secureStorageKeyToken =>
-      kSecureStorageKeyPrefixToken + (api.clientId ?? '');
+      kSecureStorageKeyPrefixToken + api.clientId;
 
   @override
   void initState() {
     super.initState();
 
-    secureStorage.read(key: _secureStorageKeyToken).then<OauthToken? >(
+    secureStorage.read(key: _secureStorageKeyToken).then<OauthToken?>(
       (value) {
         try {
           final json = jsonDecode(value ?? '');

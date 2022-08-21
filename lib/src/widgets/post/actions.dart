@@ -12,8 +12,7 @@ class _PostActionsWidget extends StatefulWidget {
     Key? key,
     required this.post,
     this.showPostCreateDate = true,
-  })  : assert(post != null),
-        super(key: key);
+  }) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _PostActionsWidgetState();
@@ -205,11 +204,8 @@ class _PostActionsDialogReason extends StatelessWidget {
 
   final _controller = TextEditingController();
 
-  _PostActionsDialogReason(
-      {required this.button, required this.hint, Key? key})
-      : assert(button != null),
-        assert(hint != null),
-        super(key: key);
+  _PostActionsDialogReason({required this.button, required this.hint, Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) => AlertDialog(

@@ -103,8 +103,8 @@ class _YouTubeState extends State<YouTubeWidget> {
     final file = await DefaultCacheManager().getSingleFile(videoUrl);
     final html = await file.readAsString();
     final unescape = HtmlUnescape();
-    final metaTags = Map.fromEntries(_kMetaTag.allMatches(html).map(
-        (match) => MapEntry(match.group(1), unescape.convert(match.group(2)!))));
+    final metaTags = Map.fromEntries(_kMetaTag.allMatches(html).map((match) =>
+        MapEntry(match.group(1), unescape.convert(match.group(2)!))));
     if (!metaTags.containsKey(_kOgImage)) return;
 
     double aspectRatio = _aspectRatio;

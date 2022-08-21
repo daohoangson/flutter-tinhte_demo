@@ -20,12 +20,10 @@ Widget buildCachedNetworkImage(String imageUrl) => CachedNetworkImage(
 String? getResizedUrl({
   required String apiUrl,
   required double boxWidth,
-  required double? imageHeight,
-  required double? imageWidth,
+  required double imageHeight,
+  required double imageWidth,
   int proxyPixelsMax = 50000000,
 }) {
-  if (apiUrl == null || boxWidth == null) return null;
-  if (imageHeight == null || imageWidth == null) return null;
   if (!apiUrl.startsWith(_apiUrlAttachments)) return null;
 
   final proxyWidth = (boxWidth / 100).ceil() * 100;

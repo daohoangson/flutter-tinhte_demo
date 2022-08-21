@@ -28,7 +28,7 @@ class LbTrigger {
         ),
       );
 
-  BuildOp? prepareThumbnailOp(Map<Object, String > a) {
+  BuildOp? prepareThumbnailOp(Map<Object, String> a) {
     final url = wf?.urlFull(a['href'] ?? '');
     if (url == null) return null;
 
@@ -103,7 +103,7 @@ abstract class LbTriggerSource {
   String get url;
 
   factory LbTriggerSource.image(String url) = _LbTriggerImage;
-  factory LbTriggerSource.video(String url, {double aspectRatio}) =
+  factory LbTriggerSource.video(String url, {required double aspectRatio}) =
       _LbTriggerVideo;
 
   const LbTriggerSource._();

@@ -89,9 +89,7 @@ Future<bool> _onMessageOpenedApp(Map<String, dynamic> message) async {
 class PushNotificationApp extends StatefulWidget {
   final Widget child;
 
-  PushNotificationApp({required this.child})
-      : assert(child != null),
-        super(key: _key);
+  PushNotificationApp({required this.child}) : super(key: _key);
 
   @override
   State<StatefulWidget> createState() => _PushNotificationAppState();

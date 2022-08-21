@@ -9,8 +9,10 @@ import 'package:the_app/src/widgets/video_player.dart';
 
 bool isTinhteFact(Thread thread) =>
     thread.threadImage != null &&
-    (thread.threadTags?.values
-            ?.fold(false, ((prev, tagText) => prev || tagText == 'tinhtefact') as bool? Function(bool?, String)) ??
+    (thread.threadTags?.values.fold<bool>(
+          false,
+          (prev, tagText) => prev || tagText == 'tinhtefact',
+        ) ??
         false);
 
 class TinhteFact extends StatelessWidget {
@@ -25,8 +27,7 @@ class TinhteFact extends StatelessWidget {
     this.autoPlayVideo = false,
     Key? key,
     this.post,
-  })  : assert(thread != null),
-        super(key: key);
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

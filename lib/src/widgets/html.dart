@@ -190,12 +190,14 @@ class TinhteWidgetFactory extends WidgetFactory {
   @override
   Widget? buildImageWidget(BuildMetadata meta, ImageSource source) {
     String? resizedUrl;
-    if (source.width != null && source.height != null) {
+    final width = source.width;
+    final height = source.height;
+    if (width != null && height != null) {
       resizedUrl = getResizedUrl(
         apiUrl: source.url,
         boxWidth: devicePixelRatio * deviceWidth,
-        imageHeight: source.height,
-        imageWidth: source.width,
+        imageHeight: height,
+        imageWidth: width,
       );
     }
 

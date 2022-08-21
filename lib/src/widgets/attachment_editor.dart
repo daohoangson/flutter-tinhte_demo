@@ -39,7 +39,7 @@ class AttachmentEditorState extends State<AttachmentEditorWidget> {
       _attachments.length +
       (widget.showPickIcon &&
               attachmentHash?.isNotEmpty == true &&
-              Provider.of<User>(context)?.userIsVisitor == true
+              Provider.of<User>(context).userIsVisitor == true
           ? 1
           : 0);
 

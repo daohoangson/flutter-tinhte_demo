@@ -15,8 +15,7 @@ class BackgroundPost extends StatelessWidget {
   const BackgroundPost(
     this.post, {
     Key? key,
-  })  : assert(post != null),
-        super(key: key);
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

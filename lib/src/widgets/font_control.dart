@@ -32,7 +32,7 @@ class FontControlWidget extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _FontControlState();
 
-  static final routeObserver = RouteObserver<PageRoute<dynamic>? >();
+  static final routeObserver = RouteObserver<PageRoute<dynamic>>();
 }
 
 class _FontControlState extends State<FontControlWidget> with RouteAware {
@@ -50,8 +50,7 @@ class _FontControlState extends State<FontControlWidget> with RouteAware {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    FontControlWidget.routeObserver
-        .subscribe(this, ModalRoute.of<dynamic>(context) as PageRoute<dynamic>?);
+    FontControlWidget.routeObserver.subscribe(this, ModalRoute.of(context));
   }
 
   @override

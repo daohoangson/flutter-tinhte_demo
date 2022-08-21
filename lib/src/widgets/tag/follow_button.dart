@@ -9,7 +9,7 @@ import 'package:the_app/src/intl.dart';
 class FollowButton extends StatefulWidget {
   final Followable followable;
 
-  FollowButton(this.followable) : assert(followable != null);
+  FollowButton(this.followable);
 
   @override
   State<StatefulWidget> createState() => _FollowState();

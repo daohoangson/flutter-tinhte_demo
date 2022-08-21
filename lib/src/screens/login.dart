@@ -358,7 +358,7 @@ class _LoginFormState extends State<LoginForm> {
   }
 
   void _onResult(LoginResult result) {
-    if (!mounted || result == null) return;
+    if (!mounted) return;
 
     result.when(
       associatable: (v) => setState(() => _associatable = v),

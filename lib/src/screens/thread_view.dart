@@ -24,8 +24,7 @@ class ThreadViewScreen extends StatefulWidget {
     this.enablePostEditor = false,
     this.initialJson,
     Key? key,
-  })  : assert(thread != null),
-        super(key: key);
+  }) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _ThreadViewState();

@@ -8,9 +8,9 @@ class InitialPathScreen extends StatefulWidget {
   final String? fallbackLink;
   final String path;
 
-  InitialPathScreen(this.path, {this.defaultWidget, this.fallbackLink, Key? key})
-      : assert(path != null),
-        super(key: key);
+  InitialPathScreen(this.path,
+      {this.defaultWidget, this.fallbackLink, Key? key})
+      : super(key: key);
 
   @override
   State<InitialPathScreen> createState() => _InitialPathState();

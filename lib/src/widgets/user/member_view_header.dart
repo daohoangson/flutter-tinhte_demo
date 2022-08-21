@@ -9,7 +9,7 @@ import 'package:the_app/src/widgets/tag/follow_button.dart';
 class MemberViewHeader extends StatelessWidget {
   final User user;
 
-  MemberViewHeader(this.user) : assert(user != null);
+  MemberViewHeader(this.user);
 
   @override
   Widget build(BuildContext context) => Padding(
@@ -108,7 +108,7 @@ class MemberViewHeader extends StatelessWidget {
 class _IgnoreButton extends StatefulWidget {
   final User user;
 
-  _IgnoreButton(this.user) : assert(user != null);
+  _IgnoreButton(this.user);
 
   @override
   State<StatefulWidget> createState() => _IgnoreButtonState();

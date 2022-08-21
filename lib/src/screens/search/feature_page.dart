@@ -51,8 +51,7 @@ class FpSearchDelegate extends SearchDelegate {
       : pages
           .where(
             (p) =>
-                p.fullName?.toLowerCase()?.contains(query.toLowerCase()) ==
-                true,
+                p.fullName?.toLowerCase().contains(query.toLowerCase()) == true,
           )
           .toList();
 }

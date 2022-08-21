@@ -62,7 +62,6 @@ Future<bool> parsePath(
   Widget? defaultWidget,
   NavigatorState? rootNavigator,
 }) {
-  assert(path != null);
   assert((context == null) != (rootNavigator == null));
   final navigator = rootNavigator ?? Navigator.of(context!);
   if (context == null) context = navigator.context;
@@ -112,7 +111,7 @@ Future<bool> parsePath(
   ).whenComplete(() => cancelDialog());
 }
 
-Future<Widget? > buildWidget(
+Future<Widget?> buildWidget(
   ApiCaller caller,
   String path, {
   Widget? defaultWidget,
