@@ -36,6 +36,7 @@ class ChannelsWidget extends StatelessWidget {
     GestureTapCallback onTap,
   }) {
     final style = Theme.of(context).textTheme.caption;
+    final fontSize = style?.fontSize;
 
     return InkWell(
       child: Padding(
@@ -43,7 +44,7 @@ class ChannelsWidget extends StatelessWidget {
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.all(10),
-              child: Icon(icon, size: style.fontSize * 2.5),
+              child: Icon(icon, size: fontSize != null ? fontSize * 2.5 : null),
             ),
             Text(
               label,
@@ -61,9 +62,9 @@ class ChannelsWidget extends StatelessWidget {
 
   _buildContentListViewButton({
     BuildContext context,
-    IconData icon,
-    String label,
-    int listId,
+    IconData /*!*/ icon,
+    String /*!*/ label,
+    int /*!*/ listId,
   }) =>
       _buildButton(
         context: context,
@@ -82,8 +83,8 @@ class ChannelsWidget extends StatelessWidget {
           icon: FontAwesomeIcons.youtube,
           label: 'Video',
           onTap: () => launch(
-                'https://www.youtube.com/channel/UCyQobySFx_h9oFwsBV0KGdg',
-              ),
+            'https://www.youtube.com/channel/UCyQobySFx_h9oFwsBV0KGdg',
+          ),
         ),
         _buildContentListViewButton(
           context: context,

@@ -15,11 +15,12 @@ Widget buildPostButton(
   GestureTapCallback onTap,
 }) {
   final theme = Theme.of(context);
+  final fontSize = theme.textTheme.button?.fontSize;
 
   Widget button = TextButton(
     child: Text(
       (count > 0 ? "$count • " : '') + text,
-      style: TextStyle(fontSize: theme.textTheme.button.fontSize - 2),
+      style: fontSize != null ? TextStyle(fontSize: fontSize - 2) : null,
     ),
     onPressed: onTap,
   );
@@ -35,13 +36,11 @@ Widget buildPostButton(
 Widget buildPostRow(
   BuildContext context,
   Widget avatar, {
-  List<Widget> box,
-  List<Widget> footer,
+  List<Widget /*!*/ > /*!*/ box,
+  List<Widget /*!*/ > /*!*/ footer,
 }) {
-  final children = <Widget>[];
-
-  if (box != null) {
-    children.add(Padding(
+  final children = <Widget>[
+    Padding(
       padding: kEdgeInsetsHorizontal,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(3),
@@ -51,16 +50,13 @@ Widget buildPostRow(
               padding: const EdgeInsets.only(top: 10.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: box.where((widget) => widget != null).toList(),
+                children: box,
               )),
         ),
       ),
-    ));
-  }
-
-  if (footer != null) {
-    children.addAll(footer.where((widget) => widget != null));
-  }
+    ),
+    ...footer,
+  ];
 
   return Padding(
     padding: const EdgeInsets.symmetric(vertical: 5),
@@ -104,7 +100,7 @@ Widget buildPosterInfo(
     RichText(
       text: TextSpan(
         text: username,
-        style: style.copyWith(
+        style: style?.copyWith(
           color: theme.colorScheme.secondary,
           fontWeight: FontWeight.bold,
         ),
@@ -116,7 +112,7 @@ Widget buildPosterInfo(
     children.add(Icon(
       FontAwesomeIcons.solidCircleCheck,
       color: theme.colorScheme.secondary,
-      size: style.fontSize,
+      size: style?.fontSize,
     ));
   }
 
@@ -124,9 +120,7 @@ Widget buildPosterInfo(
     children.add(RichText(
       text: TextSpan(
         text: userRank,
-        style: style.copyWith(
-          color: theme.hintColor,
-        ),
+        style: style?.copyWith(color: theme.hintColor),
       ),
     ));
   }

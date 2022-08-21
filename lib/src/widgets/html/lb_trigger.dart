@@ -19,7 +19,7 @@ class LbTrigger {
         onTap: () => Navigator.push(
           c,
           _ScaleRoute(
-            page: _Screen(
+            _Screen(
               captions: _captions,
               initialPage: i,
               sources: _sources,
@@ -28,17 +28,12 @@ class LbTrigger {
         ),
       );
 
-  BuildOp prepareThumbnailOp(Map<dynamic, String> a) {
-    if (!a.containsKey('data-height') ||
-        !a.containsKey('data-width') ||
-        !a.containsKey('href')) return null;
-
-    final href = a['href'];
-    final url = wf.urlFull(href);
+  BuildOp prepareThumbnailOp(Map<Object, String /*!*/ > a) {
+    final url = wf?.urlFull(a['href'] ?? '');
     if (url == null) return null;
 
-    final height = double.tryParse(a['data-height']);
-    final width = double.tryParse(a['data-width']);
+    final height = double.tryParse(a['data-height'] ?? '');
+    final width = double.tryParse(a['data-width'] ?? '');
     if (height == null || width == null) return null;
 
     var childHeight = 265.0 / 2;
@@ -70,14 +65,13 @@ class LbTrigger {
     );
   }
 
-  BuildOp get fullOp {
-    _fullOp = BuildOp(
+  BuildOp /*!*/ get fullOp {
+    return _fullOp ??= BuildOp(
       onChild: (meta) {
         if (meta.element.localName != 'img') return;
 
         final a = meta.element.attributes;
-        final href = a['src'];
-        final url = wf.urlFull(href);
+        final url = wf?.urlFull(a['src'] ?? '');
         if (url == null) return;
 
         final index = addSource(LbTriggerSource.image(url));
@@ -91,8 +85,6 @@ class LbTrigger {
           }));
       },
     );
-
-    return _fullOp;
   }
 
   int addSource(LbTriggerSource source, {Widget caption}) {
@@ -108,7 +100,7 @@ class LbTrigger {
 }
 
 abstract class LbTriggerSource {
-  String get url;
+  String /*!*/ get url;
 
   factory LbTriggerSource.image(String url) = _LbTriggerImage;
   factory LbTriggerSource.video(String url, {double aspectRatio}) =
@@ -125,18 +117,18 @@ class _LbTriggerImage extends LbTriggerSource {
 }
 
 class _LbTriggerVideo extends LbTriggerSource {
-  final double aspectRatio;
+  final double /*!*/ aspectRatio;
 
   @override
   final String url;
 
-  _LbTriggerVideo(this.url, {this.aspectRatio}) : super._();
+  _LbTriggerVideo(this.url, {@required this.aspectRatio}) : super._();
 }
 
 class _ScaleRoute extends PageRouteBuilder {
   final Widget page;
 
-  _ScaleRoute({this.page})
+  _ScaleRoute(this.page)
       : super(
           pageBuilder: (_, __, ___) => page,
           transitionsBuilder: (context, animation, _, __) => ScaleTransition(
@@ -158,9 +150,9 @@ class _Screen extends StatefulWidget {
   final List<LbTriggerSource> sources;
 
   _Screen({
-    this.captions,
-    this.initialPage,
-    this.sources,
+    @required this.captions,
+    @required this.initialPage,
+    @required this.sources,
   }) : pageController = PageController(initialPage: initialPage);
 
   @override
@@ -185,17 +177,18 @@ class _ScreenState extends State<_Screen> {
             PhotoViewGallery.builder(
               builder: _buildItem,
               itemCount: widget.sources.length,
-              loadingBuilder: (context, event) => Container(
-                child: Center(
-                  child: CircularProgressIndicator(
-                    value: event == null
-                        ? null
-                        : event.cumulativeBytesLoaded /
-                            event.expectedTotalBytes,
+              loadingBuilder: (context, event) {
+                final loaded = event?.cumulativeBytesLoaded ?? 0;
+                final total = event?.expectedTotalBytes ?? 0;
+                return Container(
+                  child: Center(
+                    child: CircularProgressIndicator(
+                      value: total == 0 ? null : loaded / total,
+                    ),
                   ),
-                ),
-                decoration: BoxDecoration(color: Colors.black),
-              ),
+                  decoration: BoxDecoration(color: Colors.black),
+                );
+              },
               pageController: widget.pageController,
               onPageChanged: onPageChanged,
               scrollPhysics: const ClampingScrollPhysics(),
@@ -211,28 +204,31 @@ class _ScreenState extends State<_Screen> {
         ),
       );
 
-  Widget _buildCaption(BuildContext context, int index) => Column(
-        children: <Widget>[
-          widget.captions.containsKey(index)
-              ? DefaultTextStyle(
-                  child: widget.captions[index],
-                  style: TextStyle(color: kCaptionColor),
-                )
-              : Text(
-                  l(context).navXOfY(index + 1, widget.sources.length),
-                  style: Theme.of(context)
-                      .textTheme
-                      .caption
-                      .copyWith(color: kCaptionColor),
-                ),
-          TextButton(
-            child: Text(lm(context).okButtonLabel),
-            onPressed: () => Navigator.of(context).pop(),
-            style: TextButton.styleFrom(primary: kCaptionColor),
-          )
-        ],
-        mainAxisSize: MainAxisSize.min,
-      );
+  Widget _buildCaption(BuildContext context, int /*!*/ index) {
+    final caption = widget.captions[index];
+    return Column(
+      children: <Widget>[
+        caption != null
+            ? DefaultTextStyle(
+                child: caption,
+                style: TextStyle(color: kCaptionColor),
+              )
+            : Text(
+                l(context).navXOfY(index + 1, widget.sources.length),
+                style: Theme.of(context)
+                    .textTheme
+                    .caption
+                    ?.copyWith(color: kCaptionColor),
+              ),
+        TextButton(
+          child: Text(lm(context).okButtonLabel),
+          onPressed: () => Navigator.of(context).pop(),
+          style: TextButton.styleFrom(primary: kCaptionColor),
+        )
+      ],
+      mainAxisSize: MainAxisSize.min,
+    );
+  }
 
   PhotoViewGalleryPageOptions _buildItem(BuildContext context, int index) {
     final source = widget.sources[index];

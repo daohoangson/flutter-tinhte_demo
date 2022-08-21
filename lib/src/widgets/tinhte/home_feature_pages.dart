@@ -24,7 +24,8 @@ class FeaturePagesWidget extends StatelessWidget {
         ),
       );
 
-  Widget _build(BuildContext context, List<FeaturePage> pages, int cols) =>
+  Widget _build(
+          BuildContext context, List<FeaturePage> /*!*/ pages, int cols) =>
       Card(
         margin: const EdgeInsets.only(bottom: 10.0),
         child: Column(

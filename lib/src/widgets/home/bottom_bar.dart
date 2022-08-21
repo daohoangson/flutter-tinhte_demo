@@ -59,8 +59,12 @@ class _BottomBarItem extends StatelessWidget {
   final VoidCallback onTap;
   final String tooltip;
 
-  const _BottomBarItem({Key key, this.icon, this.onTap, this.tooltip})
-      : super(key: key);
+  const _BottomBarItem({
+    Key key,
+    this.icon,
+    this.onTap,
+    @required this.tooltip,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) => InkWell(

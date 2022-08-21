@@ -29,13 +29,14 @@ class UniLinksApp extends StatefulWidget {
 }
 
 class _UniLinksState extends State<UniLinksApp> {
-  StreamSubscription<String> subscription;
+  /* late final */ StreamSubscription<String> subscription;
 
   @override
   void initState() {
     super.initState();
-    subscription = abstraction.listenToLinkStream((link) {
-      if (link?.isNotEmpty != true) return;
+    subscription = abstraction.listenToLinkStream((event) {
+      final link = event ?? '';
+      if (link.isEmpty) return;
 
       final context = primaryNavKey.currentContext;
       if (context == null) {

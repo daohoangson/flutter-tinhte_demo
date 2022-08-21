@@ -23,7 +23,7 @@ class _ForumViewScreenState extends State<ForumViewScreen> {
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
-          title: Text(forum.forumTitle),
+          title: Text(forum.forumTitle ?? ''),
         ),
         body: ThreadsWidget(
           forum: forum,

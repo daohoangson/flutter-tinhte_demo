@@ -16,9 +16,9 @@ class PostEditorWidget extends StatefulWidget {
   final double paddingVertical;
 
   PostEditorWidget({
-    this.callback,
-    this.paddingHorizontal,
-    this.paddingVertical,
+    @required this.callback,
+    @required this.paddingHorizontal,
+    @required this.paddingVertical,
   }) : assert(callback != null);
 
   @override
@@ -61,11 +61,13 @@ class _PostEditorState extends State<PostEditorWidget> {
           _controller.text = '';
         }
 
+        final scopedEmojiSuggestion = _emojiSuggestion;
+
         return Padding(
           child: Column(
             children: <Widget>[
-              _emojiSuggestion != null
-                  ? _buildEmojiSuggestion(_emojiSuggestion)
+              scopedEmojiSuggestion != null
+                  ? _buildEmojiSuggestion(scopedEmojiSuggestion)
                   : SizedBox(height: widget.paddingVertical),
               _buildIntro(data),
               Container(
@@ -150,7 +152,13 @@ class _PostEditorState extends State<PostEditorWidget> {
 
   Widget _buildIntro(PostEditorData data) {
     final parentPost = data._parentPost;
-    if (parentPost?.postIsFirstPost != false) return const SizedBox.shrink();
+    if (parentPost == null || parentPost.postIsFirstPost != false) {
+      return const SizedBox.shrink();
+    }
+
+    final posterUsername = parentPost.posterUsername ?? '';
+    final postBodyPlainText = parentPost.postBodyPlainText ?? '';
+
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
     return Padding(
@@ -159,15 +167,16 @@ class _PostEditorState extends State<PostEditorWidget> {
           text: l(context).postReplyingToAt,
           style: textTheme.bodyText2,
           children: [
-            TextSpan(
-              text: parentPost.posterUsername + ' ',
-              style: textTheme.bodyText2.copyWith(
-                color: theme.colorScheme.secondary,
-                fontWeight: FontWeight.bold,
+            if (posterUsername.isNotEmpty)
+              TextSpan(
+                text: posterUsername + ' ',
+                style: textTheme.bodyText2?.copyWith(
+                  color: theme.colorScheme.secondary,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
             TextSpan(
-              text: parentPost.postBodyPlainText.replaceAll('\n', ' '),
+              text: postBodyPlainText.replaceAll('\n', ' '),
               style: textTheme.caption,
             ),
           ],
@@ -201,7 +210,7 @@ class _PostEditorState extends State<PostEditorWidget> {
       );
 
   void _onTextChange() {
-    if (_emojiTimer != null) _emojiTimer.cancel();
+    _emojiTimer?.cancel();
     _emojiTimer = Timer(const Duration(milliseconds: 500), _suggestEmoji);
   }
 
@@ -211,7 +220,7 @@ class _PostEditorState extends State<PostEditorWidget> {
     final parentPost = data._parentPost;
     final quotePostId = parentPost?.postIsFirstPost != false
         ? ''
-        : parentPost?.postId?.toString() ?? '';
+        : parentPost?.postId.toString() ?? '';
     final text = _controller.text.trim();
     final threadId = data.thread.threadId.toString();
     if (text.isEmpty) {
@@ -314,7 +323,7 @@ class _EmojiSuggestion {
         assert(start != null),
         end = start + query.length;
 
-  factory _EmojiSuggestion.suggest(String text, TextSelection s) {
+  static _EmojiSuggestion suggest(String text, TextSelection s) {
     if (!s.isValid) return null;
 
     // get text right before and after carret that is

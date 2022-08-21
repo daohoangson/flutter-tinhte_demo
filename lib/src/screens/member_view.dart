@@ -25,7 +25,7 @@ class _MemberViewScreenState extends State<MemberViewScreen> {
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
-          title: Text(user.username),
+          title: Text(user.username ?? ''),
         ),
         body: NotificationListener<ScrollNotification>(
           child: ThreadsWidget(
@@ -36,7 +36,10 @@ class _MemberViewScreenState extends State<MemberViewScreen> {
           ),
           onNotification: (scrollInfo) {
             if (scrollInfo is ScrollUpdateNotification) {
-              setState(() => _fabIsVisible = scrollInfo.scrollDelta < 0.0);
+              final scrollDelta = scrollInfo.scrollDelta;
+              if (scrollDelta != null) {
+                setState(() => _fabIsVisible = scrollDelta < 0.0);
+              }
             }
             return false;
           },

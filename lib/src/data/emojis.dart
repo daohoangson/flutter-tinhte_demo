@@ -2406,6 +2406,9 @@ const _emojis = {
 Map<String, String> searchEmojis(String query) {
   Map<String, String> result;
   for (final code in _emojis.keys) {
+    final resultKey = _emojis[code];
+    if (resultKey == null) continue;
+
     // prefix match
     var matches = code.startsWith(query);
 
@@ -2417,8 +2420,8 @@ Map<String, String> searchEmojis(String query) {
 
     if (!matches) continue;
 
-    if (result == null) result = Map<String, String>();
-    result[_emojis[code]] = code;
+    result ??= {};
+    result[resultKey] = code;
   }
 
   return result;

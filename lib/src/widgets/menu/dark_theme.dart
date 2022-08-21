@@ -17,7 +17,7 @@ class DarkTheme extends ChangeNotifier {
 
     SharedPreferences.getInstance().then((prefs) => v == null
         ? prefs.remove(kPrefKeyDarkTheme)
-        : prefs.setBool(kPrefKeyDarkTheme, _value));
+        : prefs.setBool(kPrefKeyDarkTheme, v));
   }
 
   static Future<DarkTheme> create() async {
@@ -52,6 +52,10 @@ class MenuDarkTheme extends StatelessWidget {
   void _updateValue(BuildContext context) {
     final darkTheme = context.read<DarkTheme>();
     final value = darkTheme.value;
-    darkTheme.value = value == false ? true : value == true ? null : false;
+    darkTheme.value = value == false
+        ? true
+        : value == true
+            ? null
+            : false;
   }
 }

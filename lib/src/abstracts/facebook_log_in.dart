@@ -16,7 +16,7 @@ Future<String> logIn(BuildContext context) async {
       throw new StateError('${result.status.name}: ${result.message}');
   }
 
-  throw new StateError(result.message);
+  throw new StateError(result.message ?? '');
 }
 
 Future<void> logOut() => lib.FacebookAuth.instance.logOut();

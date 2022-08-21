@@ -19,7 +19,7 @@ Future<String> signIn(BuildContext context) async {
   }
 
   final auth = await account.authentication;
-  final googleToken = auth?.idToken ?? auth?.accessToken;
+  final googleToken = auth.idToken ?? auth.accessToken ?? '';
   if (googleToken.isNotEmpty != true) {
     throw new StateError(l(context).loginGoogleErrorTokenIsEmpty);
   }

@@ -1,20 +1,13 @@
 part of '../posts.dart';
 
 class _PostStickersWidget extends StatelessWidget {
-  final List<PostSticker> stickers;
+  final LbTrigger /*!*/ lbTrigger;
+  final List<PostSticker> /*!*/ stickers;
 
-  _PostStickersWidget(this.stickers);
+  _PostStickersWidget._(this.lbTrigger, this.stickers);
 
   @override
   Widget build(BuildContext context) {
-    final lbTrigger = LbTrigger();
-    for (final sticker in stickers) {
-      lbTrigger.addSource(
-        LbTriggerSource.image(sticker.links.imageDataUrl),
-        caption: Text(sticker.stickerName),
-      );
-    }
-
     return Padding(
       child: SizedBox(
         height: 100,
@@ -30,18 +23,37 @@ class _PostStickersWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildSticker(PostSticker sticker) => AspectRatio(
-        aspectRatio: sticker.imageWidth / sticker.imageHeight,
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(3),
-          child: buildCachedNetworkImage(sticker.links.imageUrl),
-        ),
-      );
+  Widget _buildSticker(PostSticker sticker) {
+    final width = sticker.imageWidth ?? 0;
+    final height = sticker.imageHeight ?? 0;
+    final aspectRatio = height != 0 ? width / height : 1.0;
+
+    return AspectRatio(
+      aspectRatio: aspectRatio,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(3),
+        child: buildCachedNetworkImage(sticker.links?.imageUrl ?? ''),
+      ),
+    );
+  }
 
   static Widget forPost(Post post) {
-    final stickers = post.stickers;
-    if (stickers?.isNotEmpty != true) return null;
+    final lbTrigger = LbTrigger();
+    final stickers = <PostSticker>[];
 
-    return _PostStickersWidget(stickers);
+    for (final sticker in post.stickers ?? []) {
+      final imageUrl = sticker.links?.imageDataUrl ?? '';
+      if (imageUrl.isNotEmpty) {
+        lbTrigger.addSource(
+          LbTriggerSource.image(imageUrl),
+          caption: Text(sticker.stickerName ?? '#${sticker.stickerId}'),
+        );
+        stickers.add(sticker);
+      }
+    }
+
+    if (stickers.isEmpty) return null;
+
+    return _PostStickersWidget._(lbTrigger, stickers);
   }
 }

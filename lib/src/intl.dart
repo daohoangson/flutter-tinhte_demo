@@ -5,7 +5,7 @@ import 'package:timeago/timeago.dart' as timeago;
 
 final _numberFormatCompact = NumberFormat.compact();
 
-L10n l(BuildContext context) => Localizations.of<L10n>(context, L10n);
+L10n/*!*/ l(BuildContext context) => Localizations.of<L10n>(context, L10n);
 
 MaterialLocalizations lm(BuildContext context) =>
     MaterialLocalizations.of(context);

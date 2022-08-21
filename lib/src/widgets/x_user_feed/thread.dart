@@ -17,21 +17,25 @@ PopupMenuButton buildPopupMenuButtonForThread(
     final m = _sourceRegExp.firstMatch(key);
     if (m == null) return;
     final type = m.group(1);
-    final id = m.group(2);
+    final String /*!*/ id = m.group(2);
 
     switch (type) {
       case 'tag_watch':
-        if (thread.threadTags?.containsKey(id) == true) {
-          entries.add(PopupMenuItem(
-            child: Text("#${thread.threadTags[id]}"),
-            value: "tags/$id",
-          ));
+        final tags = thread.threadTags;
+        if (tags != null) {
+          final tag = tags[id];
+          if (tag != null) {
+            entries.add(PopupMenuItem(
+              child: Text("#$tag"),
+              value: "tags/$id",
+            ));
+          }
         }
         break;
       case 'user_follow':
         if (thread.creatorUserId.toString() == id) {
           entries.add(PopupMenuItem(
-            child: Text(thread.creatorUsername),
+            child: Text(thread.creatorUsername ?? '#$id'),
             value: "users/$id",
           ));
         }

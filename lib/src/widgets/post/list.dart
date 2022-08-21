@@ -31,17 +31,19 @@ class PostsState extends State<PostsWidget> {
   }
 
   @override
-  Widget build(BuildContext _) => SuperListView<_PostListItem>(
-        enableScrollToIndex: true,
-        fetchPathInitial: widget.path,
-        fetchOnSuccess: _fetchOnSuccess,
-        initialItems: widget.thread.firstPost != null
-            ? [_PostListItem.post(widget.thread.firstPost)]
-            : null,
-        initialJson: widget.initialJson,
-        itemBuilder: _buildItem,
-        key: _slsKey,
-      );
+  Widget build(BuildContext _) {
+    final firstPost = widget.thread.firstPost;
+
+    return SuperListView<_PostListItem>(
+      enableScrollToIndex: true,
+      fetchPathInitial: widget.path,
+      fetchOnSuccess: _fetchOnSuccess,
+      initialItems: firstPost != null ? [_PostListItem.post(firstPost)] : null,
+      initialJson: widget.initialJson,
+      itemBuilder: _buildItem,
+      key: _slsKey,
+    );
+  }
 
   void insertNewPost(Post post) {
     final sls = _slsKey.currentState;
@@ -53,27 +55,26 @@ class PostsState extends State<PostsWidget> {
 
   Widget _buildItem(
     BuildContext context,
-    SuperListState state,
+    SuperListState<_PostListItem> state,
     _PostListItem item,
   ) {
-    if (item.pageCurrent != null)
-      return _buildPageIndicator(context, state, item);
+    final page = item.pageCurrent;
+    if (page != null) {
+      return _buildPageIndicator(context, state, page, item.pageTotal);
+    }
 
     final post = item.post;
     if (post != null) {
-      return post.postIsFirstPost
+      return post.postIsFirstPost == true
           ? _FirstPostWidget(post: post, thread: widget.thread)
           : _PostWidget(post: post);
     }
 
     final postReply = item.postReply;
-    if (postReply?.postReplyCount != null) {
+    if (postReply != null && postReply.postReplyCount != null) {
       final superListIndex = state.indexOf(item);
       assert(superListIndex > -1);
-      return _PostReplyHiddenWidget(
-        postReply,
-        superListIndex,
-      );
+      return _PostReplyHiddenWidget(postReply, superListIndex);
     }
 
     return const SizedBox.shrink();
@@ -81,12 +82,10 @@ class PostsState extends State<PostsWidget> {
 
   Widget _buildPageIndicator(
     BuildContext context,
-    SuperListState state,
-    _PostListItem item,
+    SuperListState<_PostListItem> state,
+    int /*!*/ page,
+    int /*?*/ total,
   ) {
-    final page = item.pageCurrent;
-    final total = item.pageTotal;
-
     if (state.isFetching) {
       return Stack(children: <Widget>[
         const Divider(height: _kPageIndicatorHeight),
@@ -104,7 +103,8 @@ class PostsState extends State<PostsWidget> {
       ),
     ];
 
-    if (page > state.fetchedPageMin) {
+    final fetchedPageMin = state.fetchedPageMin ?? page;
+    if (page > fetchedPageMin) {
       if (page > 2) {
         children.add(_buildPageIndicatorText(
           context,
@@ -122,7 +122,8 @@ class PostsState extends State<PostsWidget> {
       ));
     }
 
-    if (page < state.fetchedPageMax) {
+    final fetchedPageMax = state.fetchedPageMax ?? page;
+    if (page < fetchedPageMax) {
       children.add(_buildPageIndicatorText(
         context,
         l(context).navLowercaseNext,
@@ -174,9 +175,8 @@ class PostsState extends State<PostsWidget> {
     final firstItemPostId =
         fc.state.items.isEmpty ? null : fc.state.items.first.post?.postId;
     final linksPage = fc.linksPage ?? 1;
-    final pageOfPostId = json.containsKey('page_of_post_id')
-        ? json['page_of_post_id'] as int
-        : null;
+    final pageOfPostIdValue = json['page_of_post_id'];
+    final pageOfPostId = pageOfPostIdValue is int ? pageOfPostIdValue : null;
 
     if (firstItemPostId != null || linksPage != 1) {
       fc.items.add(_PostListItem.page(linksPage, fc.linksPages));
@@ -225,7 +225,7 @@ class PostsState extends State<PostsWidget> {
     ));
 
     await controller.closed;
-    if (_unreadController == controller) {
+    if (identical(_unreadController, controller)) {
       _unreadController = null;
     }
   }

@@ -15,13 +15,19 @@ class FpWidget extends StatelessWidget {
   FpWidget(this.fp);
 
   @override
-  Widget build(BuildContext context) => TagWidget(
-        image: fp?.links?.thumbnail ?? fp?.links?.image,
-        label: fp?.fullName,
-        onTap: () => Navigator.of(context).push(
-          MaterialPageRoute(builder: (_) => FpViewScreen(fp)),
-        ),
-      );
+  Widget build(BuildContext context) {
+    final scopedFp = fp;
+
+    return TagWidget(
+      image: fp?.links?.thumbnail ?? fp?.links?.image,
+      label: fp?.fullName,
+      onTap: scopedFp != null
+          ? () => Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => FpViewScreen(scopedFp)),
+              )
+          : null,
+    );
+  }
 }
 
 class TagWidget extends StatelessWidget {
@@ -37,32 +43,35 @@ class TagWidget extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => _buildGestureDetector(
+  Widget build(BuildContext context) {
+    final imageUrl = image ?? '';
+    return _buildGestureDetector(
+      context,
+      _buildBox(
         context,
-        _buildBox(
-          context,
-          image?.isNotEmpty == true
-              ? Image(
-                  image: CachedNetworkImageProvider(image),
-                  fit: BoxFit.cover,
-                )
-              : null,
-          LayoutBuilder(
-            builder: (_, bc) => Align(
-              alignment: Alignment.centerLeft,
-              child: Padding(
-                child: Text(
-                  label ?? l(context).loadingEllipsis,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(fontSize: bc.biggest.height / 2),
-                ),
-                padding: const EdgeInsets.symmetric(horizontal: 5),
+        imageUrl.isNotEmpty
+            ? Image(
+                image: CachedNetworkImageProvider(imageUrl),
+                fit: BoxFit.cover,
+              )
+            : null,
+        LayoutBuilder(
+          builder: (_, bc) => Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              child: Text(
+                label ?? l(context).loadingEllipsis,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(fontSize: bc.biggest.height / 2),
               ),
+              padding: const EdgeInsets.symmetric(horizontal: 5),
             ),
           ),
         ),
-      );
+      ),
+    );
+  }
 
   Widget _buildBox(BuildContext context, Widget head, Widget body) {
     final theme = Theme.of(context);

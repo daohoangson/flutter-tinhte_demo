@@ -55,11 +55,14 @@ class ThreadSearchDelegate extends SearchDelegate {
       sb.write(l(context).searchSubmitToContinue(query));
     }
 
-    if (forum != null) {
-      sb.write(l(context).searchThreadInForum(forum.forumTitle));
+    final scopedForum = forum;
+    if (scopedForum != null) {
+      sb.write(l(context).searchThreadInForum(scopedForum.forumTitle ?? ''));
     }
-    if (user != null) {
-      sb.write(l(context).searchThreadByUser(user.username));
+
+    final scopedUser = user;
+    if (scopedUser != null) {
+      sb.write(l(context).searchThreadByUser(scopedUser.username ?? ''));
     }
 
     sb.write(query.isEmpty ? '...' : '.');

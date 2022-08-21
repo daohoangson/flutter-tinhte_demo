@@ -16,9 +16,8 @@ class FontScale extends ChangeNotifier {
     _value = v;
     notifyListeners();
 
-    SharedPreferences.getInstance().then((prefs) => v == null
-        ? prefs.remove(kPrefKeyFontScale)
-        : prefs.setDouble(kPrefKeyFontScale, _value));
+    SharedPreferences.getInstance()
+        .then((prefs) => prefs.setDouble(kPrefKeyFontScale, v));
   }
 
   static Future<FontScale> create() async {
@@ -33,7 +32,7 @@ class FontControlWidget extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _FontControlState();
 
-  static final routeObserver = RouteObserver<PageRoute>();
+  static final routeObserver = RouteObserver<PageRoute<dynamic> /*?*/ >();
 }
 
 class _FontControlState extends State<FontControlWidget> with RouteAware {
@@ -51,7 +50,8 @@ class _FontControlState extends State<FontControlWidget> with RouteAware {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    FontControlWidget.routeObserver.subscribe(this, ModalRoute.of(context));
+    FontControlWidget.routeObserver
+        .subscribe(this, ModalRoute.of<dynamic>(context));
   }
 
   @override
@@ -67,7 +67,7 @@ class _FontControlState extends State<FontControlWidget> with RouteAware {
   }
 
   OverlayEntry _buildOverlayEntry() {
-    RenderBox renderBox = _key.currentContext.findRenderObject();
+    final renderBox = _key.currentContext?.findRenderObject() as RenderBox;
     final buttonSize = renderBox.size;
     final buttonPosition = renderBox.localToGlobal(Offset.zero);
     final screenWidth = MediaQuery.of(context).size.width;
@@ -91,6 +91,7 @@ class _FontControlState extends State<FontControlWidget> with RouteAware {
                 color: theme.dialogBackgroundColor,
                 child: Builder(builder: (context) {
                   final style = DefaultTextStyle.of(context).style;
+                  final fontSize = style.fontSize;
 
                   return Row(
                     children: <Widget>[
@@ -107,7 +108,7 @@ class _FontControlState extends State<FontControlWidget> with RouteAware {
                             '${(context.watch<FontScale>().value * 100).toInt()}%',
                             textAlign: TextAlign.center,
                           ),
-                          width: style.fontSize * 3,
+                          width: fontSize != null ? fontSize * 3 : null,
                         ),
                         onTap: () => context.read<FontScale>().value = 1,
                       ),
@@ -128,14 +129,14 @@ class _FontControlState extends State<FontControlWidget> with RouteAware {
   }
 
   void _menuClose() {
-    _overlayEntry.remove();
+    _overlayEntry?.remove();
     _isMenuOpen = false;
     _overlayEntry = null;
   }
 
   void _menuOpen() {
-    _overlayEntry = _buildOverlayEntry();
-    Overlay.of(context).insert(_overlayEntry);
+    final overlayEntry = _overlayEntry = _buildOverlayEntry();
+    Overlay.of(context)?.insert(overlayEntry);
     _isMenuOpen = true;
   }
 }

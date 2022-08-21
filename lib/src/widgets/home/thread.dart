@@ -9,7 +9,7 @@ import 'package:the_app/src/widgets/image.dart';
 
 class HomeThreadWidget extends StatelessWidget {
   final ContentListItem item;
-  final Thread thread;
+  final Thread /*!*/ thread;
 
   HomeThreadWidget(
     SearchResult<Thread> srt, {
@@ -79,8 +79,9 @@ class HomeThreadWidget extends StatelessWidget {
       text: thread.creatorUsername,
     ));
 
-    if (item?.itemDate != null) {
-      spans.add(TextSpan(text: " ${formatTimestamp(context, item.itemDate)}"));
+    final itemDate = item?.itemDate;
+    if (itemDate != null) {
+      spans.add(TextSpan(text: " ${formatTimestamp(context, itemDate)}"));
     }
 
     return RichText(
@@ -94,11 +95,11 @@ class HomeThreadWidget extends StatelessWidget {
   }
 
   Widget _buildSnippet(TextStyle style) => Text(
-        thread.firstPost.postBodyPlainText,
+        thread.firstPost?.postBodyPlainText ?? '',
         maxLines: 3,
         overflow: TextOverflow.ellipsis,
         style: style,
       );
 
-  Widget _buildTitle() => Text(thread.threadTitle);
+  Widget _buildTitle() => Text(thread.threadTitle ?? '#${thread.threadId}');
 }

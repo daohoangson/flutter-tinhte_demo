@@ -48,9 +48,9 @@ class TinhteFact extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.all(kPaddingHorizontal),
                   child: Text(
-                    thread.threadTitle,
+                    thread.threadTitle ?? '',
                     maxLines: null,
-                    style: theme.textTheme.headline6.copyWith(
+                    style: theme.textTheme.headline6?.copyWith(
                       color: theme.colorScheme.secondary,
                       fontWeight: FontWeight.bold,
                     ),
@@ -59,7 +59,7 @@ class TinhteFact extends StatelessWidget {
                 ),
                 _buildContents(),
                 TinhteHtmlWidget(
-                  "<center>${firstPost.postBodyHtml ?? ''}</center>",
+                  "<center>${firstPost?.postBodyHtml ?? ''}</center>",
                   textStyle: theme.textTheme.bodyText2,
                 ),
               ],
@@ -73,7 +73,7 @@ class TinhteFact extends StatelessWidget {
 
   Widget _buildContents() {
     Attachment threadImageAttachment;
-    final threadImageLink = thread.threadImage.link;
+    final threadImageLink = thread.threadImage?.link;
     for (final attachment in firstPost?.attachments ?? const []) {
       if (attachment.links.permalink == threadImageLink ||
           attachment.links.thumbnail == threadImageLink) {
@@ -81,13 +81,17 @@ class TinhteFact extends StatelessWidget {
       }
     }
 
-    if (threadImageAttachment?.isVideo == true) {
+    if (threadImageAttachment != null && threadImageAttachment.isVideo) {
       final video = threadImageAttachment;
-      return VideoPlayer(
-        aspectRatio: video.aspectRatio,
-        autoPlay: autoPlayVideo,
-        url: video.links?.xVideoUrl,
-      );
+      final aspectRatio = video.aspectRatio;
+      final videoUrl = video.links?.xVideoUrl;
+      if (aspectRatio != null && videoUrl != null) {
+        return VideoPlayer(
+          aspectRatio: aspectRatio,
+          autoPlay: autoPlayVideo,
+          url: videoUrl,
+        );
+      }
     }
 
     return ThreadImageWidget.big(thread, thread.threadImage);

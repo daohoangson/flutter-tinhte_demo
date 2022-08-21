@@ -14,12 +14,11 @@ class LinkExpander {
 
   BuildOp _leOp;
   BuildOp get op {
-    _leOp ??= BuildOp(
+    return _leOp ??= BuildOp(
       defaultStyles: (_) => {'margin': '0.5em 0'},
       onChild: onChild,
       onWidgets: onWidgets,
     );
-    return _leOp;
   }
 
   void onChild(BuildMetadata childMeta) {
@@ -30,8 +29,10 @@ class LinkExpander {
           _isCover = e.classes.contains('thumbnail-cover');
 
           childMeta.register(BuildOp(onWidgets: (meta, widgets) {
-            _thumbnail = wf.buildColumnPlaceholder(meta, widgets);
-            return [_thumbnail];
+            final thumbnail =
+                _thumbnail = wf.buildColumnPlaceholder(meta, widgets);
+            if (thumbnail == null) return [];
+            return [thumbnail];
           }));
         } else if (e.classes.contains('info')) {
           childMeta
@@ -51,21 +52,29 @@ class LinkExpander {
     }
   }
 
-  Iterable<Widget> onWidgets(BuildMetadata _, Iterable<WidgetPlaceholder> __) =>
-      _thumbnail != null && _info != null
-          ? [_isCover != false ? _buildCover() : _buildSquare()]
-          : [];
+  Iterable<Widget> onWidgets(BuildMetadata _, Iterable<WidgetPlaceholder> __) {
+    final scopedInfo = _info;
+    final scopedThumbnail = _thumbnail;
+    if (scopedInfo == null || scopedThumbnail == null) return [];
+
+    return [
+      _isCover != false
+          ? _buildCover(scopedThumbnail, scopedInfo)
+          : _buildSquare(scopedThumbnail, scopedInfo),
+    ];
+  }
 
   Widget _buildBox(BuildMetadata meta, Widget child, {double width}) {
     final a = meta.element.attributes;
-    final href = a.containsKey('href') ? a['href'] : null;
-    final fullUrl = wf.urlFull(href) ?? href;
-    final onTap = wf.gestureTapCallback(fullUrl);
+    final fullUrl = wf.urlFull(a['href'] ?? '');
+    final onTap = fullUrl != null ? wf.gestureTapCallback(fullUrl) : null;
 
     return WidgetPlaceholder<LinkExpander>(this)
-      ..wrapWith((context, _) {
-        Widget built =
+      ..wrapWith((context, previous) {
+        final decoBox =
             wf.buildDecoration(meta, child, color: Theme.of(context).cardColor);
+        if (decoBox == null) return previous;
+        Widget /*!*/ built = decoBox;
 
         if (width != null) {
           built = CssSizing(
@@ -75,26 +84,28 @@ class LinkExpander {
           );
         }
 
-        built = wf.buildGestureDetector(meta, built, onTap);
+        if (onTap != null) {
+          built = wf.buildGestureDetector(meta, built, onTap) ?? built;
+        }
 
         return built;
       });
   }
 
-  Widget _buildSquare() => _buildBox(
+  Widget _buildSquare(Widget left, Widget right) => _buildBox(
         linkMeta,
         LayoutBuilder(
           builder: (_, bc) {
-            if (bc.maxWidth < 480) return _info;
+            if (bc.maxWidth < 480) return right;
 
             return Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                _thumbnail,
+                left,
                 Expanded(
                   child: SizedBox(
                     height: kLinkExpanderSquareThumbnailSize,
-                    child: _info,
+                    child: right,
                   ),
                 ),
               ],
@@ -103,24 +114,18 @@ class LinkExpander {
         ),
       );
 
-  Widget _buildCover() => _buildBox(
+  Widget _buildCover(Widget top, Widget bottom) => _buildBox(
         linkMeta,
-        Column(
-          children: <Widget>[
-            _thumbnail ?? Container(),
-            _info,
-          ],
-        ),
+        Column(children: [top, bottom]),
         width: 480,
       );
 
   static BuildOp _oembedOp;
   static BuildOp getOembedOp() {
-    _oembedOp ??= BuildOp(
+    return _oembedOp ??= BuildOp(
       defaultStyles: (_) => {'margin': '0.5em 0'},
       onWidgets: (meta, _) => [_buildOembedWebView(meta.element.outerHtml)],
     );
-    return _oembedOp;
   }
 
   static Widget _buildOembedWebView(String html) {
@@ -158,11 +163,10 @@ class _LinkExpanderInfo {
 
   BuildOp _infoOp;
   BuildOp get op {
-    _infoOp ??= BuildOp(
+    return _infoOp ??= BuildOp(
       onChild: onChild,
       onWidgets: onWidgets,
     );
-    return _infoOp;
   }
 
   void onChild(BuildMetadata childMeta) {
@@ -177,41 +181,46 @@ class _LinkExpanderInfo {
           ..['text-overflow'] = 'ellipsis';
         break;
       case 'description':
-        _descriptionOp ??= BuildOp(onWidgets: (meta, widgets) {
-          _description = wf.buildColumnPlaceholder(meta, widgets);
-          return [_description];
+        final descriptionOp =
+            _descriptionOp ??= BuildOp(onWidgets: (meta, widgets) {
+          final description =
+              _description = wf.buildColumnPlaceholder(meta, widgets);
+          if (description == null) return [];
+          return [description];
         });
-        childMeta.register(_descriptionOp);
+        childMeta.register(descriptionOp);
         break;
     }
   }
 
   Iterable<Widget> onWidgets(
       BuildMetadata _, Iterable<WidgetPlaceholder> widgets) {
-    widgets = widgets.toList(growable: false);
-    final expanded = <Widget>[];
-    for (final widget in widgets) {
-      if (widget == _description) {
-        expanded.add(Expanded(child: widget));
-      } else {
-        expanded.add(widget);
-      }
-    }
-
-    le._info = WidgetPlaceholder<_LinkExpanderInfo>(
+    final scopedDescription = _description;
+    final widget = le._info = WidgetPlaceholder<_LinkExpanderInfo>(
       this,
-      child: LayoutBuilder(
-        builder: (_, bc) => Padding(
-          padding: const EdgeInsets.symmetric(vertical: kPostBodyPadding),
-          child: Column(
-            children: bc.maxHeight.isFinite ? expanded : widgets,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisSize: MainAxisSize.max,
-          ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: kPostBodyPadding),
+        child: LayoutBuilder(
+          builder: (_, bc) {
+            Iterable<Widget> children = widgets;
+            if (bc.maxHeight.isFinite) {
+              children = children.map(
+                (child) => identical(child, scopedDescription)
+                    ? Expanded(child: child)
+                    : child,
+              );
+            }
+
+            return Column(
+              children: children.toList(growable: false),
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisSize: MainAxisSize.max,
+            );
+          },
         ),
       ),
     );
 
-    return [le._info];
+    return [widget];
   }
 }

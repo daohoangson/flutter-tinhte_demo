@@ -21,7 +21,7 @@ class VideoPlayer extends StatefulWidget {
 }
 
 class _VideoState extends State<VideoPlayer> {
-  VideoPlayerController _videoPlayerController;
+  /* late final */ VideoPlayerController _videoPlayerController;
   ChewieController _chewieController;
 
   @override

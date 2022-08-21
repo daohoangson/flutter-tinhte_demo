@@ -35,13 +35,13 @@ class MemberViewHeader extends StatelessWidget {
 
   Widget _buildInfo(BuildContext context) {
     final theme = Theme.of(context);
+    final avatar = user.links?.avatarBig;
 
     return Row(
       children: <Widget>[
         CircleAvatar(
-          backgroundImage: CachedNetworkImageProvider(
-            user.links?.avatarBig,
-          ),
+          backgroundImage:
+              avatar != null ? CachedNetworkImageProvider(avatar) : null,
           radius: 30,
         ),
         Expanded(
@@ -50,9 +50,9 @@ class MemberViewHeader extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  user.username,
+                  user.username ?? '#${user.userId}',
                   style: theme.textTheme.subtitle1
-                      .copyWith(fontWeight: FontWeight.bold),
+                      ?.copyWith(fontWeight: FontWeight.bold),
                 ),
                 Text(
                   "${l(context).userRegisterDate}: ${formatTimestamp(context, user.userRegisterDate)}",
@@ -77,7 +77,7 @@ class MemberViewHeader extends StatelessWidget {
             Icon(
               FontAwesomeIcons.solidMessage,
               color: theme.colorScheme.secondary,
-              size: style.fontSize,
+              size: style?.fontSize,
             ),
             const SizedBox(width: 5),
             Text(
@@ -91,7 +91,7 @@ class MemberViewHeader extends StatelessWidget {
             Icon(
               FontAwesomeIcons.solidHeart,
               color: theme.colorScheme.secondary,
-              size: style.fontSize,
+              size: style?.fontSize,
             ),
             const SizedBox(width: 5),
             Text(
@@ -137,11 +137,15 @@ class _IgnoreButtonState extends State<_IgnoreButton> {
 
   void _ignore() => prepareForApiAction(context, () {
         if (_isRequesting) return;
+
+        final linkIgnore = user.links?.ignore ?? '';
+        if (linkIgnore.isEmpty) return;
+
         setState(() => _isRequesting = true);
 
         apiPost(
           ApiCaller.stateful(this),
-          user.links.ignore,
+          linkIgnore,
           onSuccess: (_) => setState(() => user.userIsIgnored = true),
           onComplete: () => setState(() => _isRequesting = false),
         );
@@ -149,11 +153,15 @@ class _IgnoreButtonState extends State<_IgnoreButton> {
 
   void _unignore() => prepareForApiAction(context, () {
         if (_isRequesting) return;
+
+        final linkIgnore = user.links?.ignore ?? '';
+        if (linkIgnore.isEmpty) return;
+
         setState(() => _isRequesting = true);
 
         apiDelete(
           ApiCaller.stateful(this),
-          user.links.ignore,
+          linkIgnore,
           onSuccess: (_) => setState(() => user.userIsIgnored = false),
           onComplete: () => setState(() => _isRequesting = false),
         );

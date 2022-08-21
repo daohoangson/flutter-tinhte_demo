@@ -16,10 +16,10 @@ class FollowButton extends StatefulWidget {
 }
 
 class _FollowState extends State<FollowButton> {
-  var _alert = false;
-  var _email = false;
-  var _hasOptions = false;
-  var _isRequesting = false;
+  bool /*!*/ _alert = false;
+  bool /*!*/ _email = false;
+  bool /*!*/ _hasOptions = false;
+  bool /*!*/ _isRequesting = false;
 
   Followable get f => widget.followable;
 
@@ -34,22 +34,22 @@ class _FollowState extends State<FollowButton> {
       ApiCaller.stateful(this),
       f.followersLink,
       onSuccess: (json) {
-        if (!json.containsKey('users')) return;
-        final List users = json['users'];
+        final usersValue = json['users'];
+        final users = usersValue is List ? usersValue : [];
         if (users.length != 1) return;
-        final Map<String, dynamic> user = users[0];
+        final userValue = users[0];
+        final user = userValue is Map ? userValue : {};
 
-        if (!user.containsKey('user_id')) return;
-        final int userId = user['user_id'];
+        final userId = user['user_id'];
         final visitor = context.read<User>();
         if (visitor.userId != userId) return;
 
-        if (!user.containsKey('follow')) return;
-        final Map<String, dynamic> follow = user['follow'];
+        final followValue = user['follow'];
+        final follow = followValue is Map ? followValue : {};
         var alert = _alert;
         var email = _email;
-        if (follow.containsKey('alert')) alert = follow['alert'];
-        if (follow.containsKey('email')) email = follow['email'];
+        if (follow.containsKey('alert')) alert = follow['alert'] == true;
+        if (follow.containsKey('email')) email = follow['email'] == true;
 
         setState(() {
           _alert = alert;
@@ -69,7 +69,7 @@ class _FollowState extends State<FollowButton> {
 
   Widget _buildButtonFollow() => TextButton(
         child: Text(l(context).follow),
-        onPressed: _isRequesting ? null : _follow,
+        onPressed: _isRequesting ? null : () => _follow(_FollowOptions()),
       );
 
   Widget _buildButtonFollowing() => Row(
@@ -89,10 +89,7 @@ class _FollowState extends State<FollowButton> {
         ],
       );
 
-  void _follow([_FollowOptions options]) {
-    final alert = options?.alert != false;
-    final email = options?.email == true;
-
+  void _follow(_FollowOptions options) {
     prepareForApiAction(context, () {
       if (_isRequesting) return;
       setState(() => _isRequesting = true);
@@ -101,13 +98,13 @@ class _FollowState extends State<FollowButton> {
         ApiCaller.stateful(this),
         f.followersLink,
         bodyFields: {
-          'alert': alert ? '1' : '0',
-          'email': email ? '1' : '0',
+          'alert': options.alert ? '1' : '0',
+          'email': options.email ? '1' : '0',
         },
         onSuccess: (_) => setState(() {
           f.isFollowed = true;
-          _alert = alert;
-          _email = email;
+          _alert = options.alert;
+          _email = options.email;
           _hasOptions = true;
         }),
         onComplete: () => setState(() => _isRequesting = false),
@@ -169,8 +166,8 @@ class _FollowOptionsDialog extends StatefulWidget {
 }
 
 class _FollowOptionsState extends State<_FollowOptionsDialog> {
-  var _alert = false;
-  var _email = false;
+  bool /*!*/ _alert = false;
+  bool /*!*/ _email = false;
 
   Followable get f => widget.followable;
 
@@ -188,12 +185,12 @@ class _FollowOptionsState extends State<_FollowOptionsDialog> {
           children: <Widget>[
             Text(l(context).followNotificationChannelExplainForX(f.name)),
             CheckboxListTile(
-              onChanged: (v) => setState(() => _alert = v),
+              onChanged: (v) => setState(() => _alert = v == true),
               title: Text(l(context).followNotificationChannelAlert),
               value: _alert,
             ),
             CheckboxListTile(
-              onChanged: (v) => setState(() => _email = v),
+              onChanged: (v) => setState(() => _email = v == true),
               title: Text(l(context).followNotificationChannelEmail),
               value: _email,
             ),
@@ -220,5 +217,5 @@ class _FollowOptions {
   final bool alert;
   final bool email;
 
-  _FollowOptions({this.alert, this.email});
+  _FollowOptions({this.alert = true, this.email = false});
 }

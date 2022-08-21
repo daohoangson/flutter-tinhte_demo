@@ -86,31 +86,30 @@ class ThreadImageWidget extends StatelessWidget {
       );
     }
 
-    final placeholder =
-        this.placeholder != null && this.placeholder.link != link
-            ? _buildImage(this.placeholder.link)
+    final scopedPlaceholder = placeholder;
+    final placeholderWidget =
+        scopedPlaceholder != null && scopedPlaceholder.link != link
+            ? _buildImage(scopedPlaceholder.link)
             : null;
 
     final img = _buildImage(
       link,
-      frameBuilder: placeholder != null
+      frameBuilder: placeholderWidget != null
           ? (_, child, frame, wasSynchronouslyLoaded) {
               if (wasSynchronouslyLoaded) return child;
-              return frame != null ? child : placeholder;
+              return frame != null ? child : placeholderWidget;
             }
           : null,
     );
 
+    final width = image?.width ?? 0;
+    final height = image?.height ?? 0;
+
     return AspectRatio(
-      aspectRatio: useImageRatio == true &&
-              image.width != null &&
-              image.height != null &&
-              image.height != 0
-          ? image.width / image.height
+      aspectRatio: useImageRatio == true && width > 0 && height > 0
+          ? width / height
           : kThreadImageAspectRatio,
-      child: threadId != null
-          ? Hero(child: img, tag: "threadImageHero--$threadId")
-          : img,
+      child: Hero(child: img, tag: "threadImageHero--$threadId"),
     );
   }
 

@@ -42,7 +42,7 @@ Future<String> getToken() async {
       await instance.requestPermission();
       return instance.getToken();
     case Backend.none:
-      return '';
+      return null;
   }
 }
 

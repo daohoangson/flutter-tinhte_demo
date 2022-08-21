@@ -45,7 +45,7 @@ class BackgroundPost extends StatelessWidget {
         RegExp(r'<span class="metaBbCode meta-thread_background_url">.+'
             r'<a href="([^"]+)"[^>]+>([^<]+)</a>'
             r'</span></span>');
-    final postBodyHtml = post.postBodyHtml;
+    final postBodyHtml = post.postBodyHtml ?? '';
     final m = regExp.firstMatch(postBodyHtml);
     final href = m?.group(1);
     final text = m?.group(2);

@@ -18,7 +18,7 @@ class InitialPathScreen extends StatefulWidget {
 
 class _InitialPathState extends State<InitialPathScreen>
     with WidgetsBindingObserver {
-  Future<Widget> _future;
+  /* late final */ Future<Widget> _future;
   var _home = _ShouldRender.no;
 
   @override

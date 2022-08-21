@@ -70,36 +70,38 @@ class AttachmentEditorState extends State<AttachmentEditorWidget> {
         )
       : const SizedBox.shrink();
 
-  Widget _buildAttachment(_Attachment attachment) => Stack(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 5.0),
-            child: AspectRatio(
-              aspectRatio: 1.0,
-              child: Opacity(
-                opacity: attachment.ok ? 1.0 : 0.5,
-                child: attachment.ok
-                    ? buildCachedNetworkImage(
-                        attachment.apiData.links.thumbnail,
-                      )
-                    : Image.file(
-                        attachment.file,
-                        fit: BoxFit.cover,
-                      ),
-              ),
+  Widget _buildAttachment(_Attachment attachment) {
+    final apiData = attachment.apiData;
+    final thumbnail = apiData?.links?.thumbnail;
+    return Stack(
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 5.0),
+          child: AspectRatio(
+            aspectRatio: 1.0,
+            child: Opacity(
+              opacity: apiData != null ? 1.0 : 0.5,
+              child: thumbnail != null
+                  ? buildCachedNetworkImage(thumbnail)
+                  : Image.file(
+                      attachment.file,
+                      fit: BoxFit.cover,
+                    ),
             ),
           ),
-          Align(
-            alignment: Alignment.bottomRight,
-            child: attachment.ok
-                ? Icon(
-                    Icons.cloud_done,
-                    color: Theme.of(context).colorScheme.secondary,
-                  )
-                : _UploadingIcon(),
-          ),
-        ],
-      );
+        ),
+        Align(
+          alignment: Alignment.bottomRight,
+          child: apiData != null
+              ? Icon(
+                  Icons.cloud_done,
+                  color: Theme.of(context).colorScheme.secondary,
+                )
+              : _UploadingIcon(),
+        ),
+      ],
+    );
+  }
 
   Widget _buildPickIcon() => Tooltip(
         child: InkWell(
@@ -154,8 +156,6 @@ class AttachmentEditorState extends State<AttachmentEditorWidget> {
 class _Attachment {
   final File file;
   Attachment apiData;
-
-  bool get ok => apiData != null;
 
   _Attachment(this.file);
 }

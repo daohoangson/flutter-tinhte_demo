@@ -28,7 +28,8 @@ class HomeScreen extends StatelessWidget {
                 );
               }
 
-              if (item.thread != null) return HomeThreadWidget(item.thread);
+              final itemThread = item.thread;
+              if (itemThread != null) return HomeThreadWidget(itemThread);
 
               return null;
             },

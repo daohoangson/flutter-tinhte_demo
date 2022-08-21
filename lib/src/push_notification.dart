@@ -43,10 +43,12 @@ Future<String> getInitialPath() async {
 
 String _getContentLink(Map<String, dynamic> message) {
   final Map d = message.containsKey('data') ? message['data'] : message;
-  if (!d.containsKey('notification_id')) return null;
+
+  final id = d['notification_id'];
+  if (id == null) return null;
 
   // TODO: use message.data.links.content when it is available
-  return "notifications/content?notification_id=${d['notification_id']}";
+  return "notifications/content?notification_id=$id";
 }
 
 void _notifControllerAddFromFcmMessage(Map data) {
@@ -100,7 +102,7 @@ class _PushNotificationAppState extends State<PushNotificationApp> {
 
   User _user;
 
-  var _unread = 0;
+  int /*!*/ _unread = 0;
   var _unreadIsVisible = false;
   final _unreadDismissibleKey = UniqueKey();
 
@@ -108,14 +110,15 @@ class _PushNotificationAppState extends State<PushNotificationApp> {
   Widget build(BuildContext _) => Consumer<User>(
         builder: (_, user, __) {
           final existingUserId = _user?.userId ?? 0;
-          final newUserId = user?.userId ?? 0;
+          final newUserId = user.userId;
           if (newUserId != existingUserId) {
             if (existingUserId > 0 && user.userId == 0) {
               _unread = 0;
               _unregister();
             } else {
-              if (user.userUnreadNotificationCount != null) {
-                _unread = user.userUnreadNotificationCount;
+              final unread = user.userUnreadNotificationCount;
+              if (unread != null) {
+                _unread = unread;
                 _unreadIsVisible = _unread > 0;
               }
             }
@@ -221,7 +224,7 @@ class _UnreadIcon extends StatefulWidget {
 
 class _UnreadIconState extends State<_UnreadIcon>
     with TickerProviderStateMixin {
-  AnimationController _controller;
+  /* late final */ AnimationController _controller;
 
   @override
   void initState() {

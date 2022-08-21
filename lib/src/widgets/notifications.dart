@@ -26,7 +26,7 @@ class NotificationsWidget extends StatefulWidget {
 class _NotificationsState extends State<NotificationsWidget> {
   final _slsKey = GlobalKey<SuperListState<api.Notification>>();
 
-  StreamSubscription subscription;
+  /* late final */ StreamSubscription subscription;
 
   @override
   initState() {
@@ -44,8 +44,11 @@ class _NotificationsState extends State<NotificationsWidget> {
   Widget build(BuildContext _) => Consumer2<PushNotificationToken, User>(
         builder: (context, pnt, user, __) {
           if (user.userId > 0 && user.userId != _subscribedUserId) {
+            final fcmToken = pnt.value;
             final token = ApiAuth.of(context, listen: false).token;
-            _subscribe(context, pnt.value, token, user);
+            if (fcmToken != null && token != null) {
+              _subscribe(context, fcmToken, token, user);
+            }
           }
 
           return SuperListView<api.Notification>(
@@ -81,18 +84,23 @@ class _NotificationsState extends State<NotificationsWidget> {
         ),
       );
 
-  Widget _buildAvatar(api.Notification n) => CircleAvatar(
-        backgroundImage: CachedNetworkImageProvider(n.links.creatorAvatar),
-      );
+  Widget _buildAvatar(api.Notification n) {
+    final avatar = n.links?.creatorAvatar;
+    return CircleAvatar(
+      backgroundImage:
+          avatar != null ? CachedNetworkImageProvider(avatar) : null,
+    );
+  }
 
   Widget _buildHtmlWidget(BuildContext context, api.Notification n) {
-    final w = n.notificationIsUnread ? FontWeight.bold : FontWeight.normal;
+    final html = n.notificationHtml ?? '';
+    if (html.isEmpty) return const SizedBox.shrink();
+
+    final w =
+        n.notificationIsUnread == true ? FontWeight.bold : FontWeight.normal;
     final s = DefaultTextStyle.of(context).style.copyWith(fontWeight: w);
 
-    return TinhteHtmlWidget(
-      n.notificationHtml,
-      textStyle: s,
-    );
+    return TinhteHtmlWidget(html, textStyle: s);
   }
 
   Widget _buildInfo(BuildContext context, api.Notification n) {
@@ -107,7 +115,7 @@ class _NotificationsState extends State<NotificationsWidget> {
 
     return Wrap(
       children: <Widget>[
-        Icon(icon, color: style.color, size: style.fontSize),
+        Icon(icon, color: style?.color, size: style?.fontSize),
         timestamp,
       ],
       spacing: 5,
@@ -127,23 +135,24 @@ class _NotificationsState extends State<NotificationsWidget> {
 
   void _onNotificationData(int newId) {
     final apiAuth = ApiAuth.of(context, listen: false);
-    if (!apiAuth.hasToken) return;
+    final token = apiAuth.token;
+    if (token == null) return;
 
     apiAuth.api
-        .getJson("notifications?oauth_token=${apiAuth.token.accessToken}")
+        .getJson("notifications?oauth_token=${token.accessToken}")
         .then((json) {
-      if (!json.containsKey('notifications')) return;
-
-      final list = json['notifications'] as List;
-      final j = list.where((j) {
-        if (!(j is Map)) return false;
-        final m = j as Map;
-        return m.containsKey('notification_id') &&
-            m['notification_id'] == newId;
+      final listValue = json['notifications'];
+      final list = listValue is List ? listValue : [];
+      final filtered = list.where((j) {
+        if (j is Map) {
+          return j['notification_id'] == newId;
+        } else {
+          return false;
+        }
       });
-      if (j.length != 1) return;
+      if (filtered.length != 1) return;
 
-      final notification = api.Notification.fromJson(j.first);
+      final notification = api.Notification.fromJson(filtered.first);
       _slsKey.currentState?.itemsInsert(0, notification);
     });
   }

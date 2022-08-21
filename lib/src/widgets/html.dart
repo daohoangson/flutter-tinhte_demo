@@ -40,7 +40,7 @@ const _kSmilies = {
 };
 
 class TinhteHtmlWidget extends StatelessWidget {
-  final String html;
+  final String /*!*/ html;
   final double textPadding;
   final TextStyle textStyle;
 
@@ -89,95 +89,92 @@ class TinhteWidgetFactory extends WidgetFactory {
   PhotoCompare _photoCompare;
 
   TinhteWidgetFactory({
-    this.devicePixelRatio,
-    this.deviceWidth,
-    this.textPadding,
+    @required this.devicePixelRatio,
+    @required this.deviceWidth,
+    @required this.textPadding,
   });
 
   BuildOp get blockquoteOp {
-    _blockquoteOp ??= BuildOp(
-      onWidgets: (meta, widgets) => [
-        buildColumnPlaceholder(meta, widgets)
-          ..wrapWith(
-            (context, child) => Padding(
-              child: DecoratedBox(
-                child: child,
-                decoration: BoxDecoration(
-                  border: Border(
-                    left: BorderSide(
-                      color: Theme.of(context).dividerColor,
-                      width: 3,
-                    ),
+    return _blockquoteOp ??= BuildOp(
+      onWidgets: (meta, widgets) {
+        final column = buildColumnPlaceholder(meta, widgets)?.wrapWith(
+          (context, child) => Padding(
+            child: DecoratedBox(
+              child: child,
+              decoration: BoxDecoration(
+                border: Border(
+                  left: BorderSide(
+                    color: Theme.of(context).dividerColor,
+                    width: 3,
                   ),
                 ),
               ),
-              padding: EdgeInsets.all(textPadding),
             ),
+            padding: EdgeInsets.all(textPadding),
           ),
-      ],
+        );
+
+        return [if (column != null) column];
+      },
     );
-    return _blockquoteOp;
   }
 
   BuildOp get chrOp {
-    if (_chrOp == null) {
-      _chrOp = Chr(this).op;
-    }
-    return _chrOp;
+    return _chrOp ??= Chr(this).op;
   }
 
   BuildOp get metaBbCodeOp {
-    _metaBbCodeOp ??= BuildOp(
+    return _metaBbCodeOp ??= BuildOp(
       onChild: (meta) => (meta.element.localName == 'span' &&
               !meta.element.classes.contains('value'))
           ? meta['display'] = 'none'
           : null,
     );
-    return _metaBbCodeOp;
   }
 
   BuildOp get smilieOp {
-    _smilieOp ??= BuildOp(
+    return _smilieOp ??= BuildOp(
       onTree: (meta, tree) {
         final a = meta.element.attributes;
-        if (!a.containsKey('data-title')) return;
         final title = a['data-title'];
-        if (!_kSmilies.containsKey(title)) return;
+        if (title == null) return;
+        final smilie = _kSmilies[title];
+        if (smilie == null) return;
+        final parentTree = tree.parent;
+        if (parentTree == null) return;
 
         // TODO: use `replaceWith` when it comes back in v0.9
-        TextBit(tree.parent, _kSmilies[title]).insertBefore(tree);
+        TextBit(parentTree, smilie).insertBefore(tree);
         tree.detach();
       },
     );
-    return _smilieOp;
   }
 
   BuildOp get webViewDataUriOp {
-    _webViewDataUriOp ??= BuildOp(
-      onWidgets: (meta, _) => [
-        buildWebView(
-            meta,
-            Uri.dataFromString(
-              """<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"></head><body>${meta.element.outerHtml}</body></html>""",
-              encoding: Encoding.getByName('utf-8'),
-              mimeType: 'text/html',
-            ).toString())
-      ],
+    return _webViewDataUriOp ??= BuildOp(
+      onWidgets: (meta, _) {
+        final webView = buildWebView(
+          meta,
+          Uri.dataFromString(
+            """<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"></head><body>${meta.element.outerHtml}</body></html>""",
+            encoding: Encoding.getByName('utf-8'),
+            mimeType: 'text/html',
+          ).toString(),
+        );
+        return [if (webView != null) webView];
+      },
     );
-    return _webViewDataUriOp;
   }
 
   @override
   bool get webView => true;
 
   LbTrigger get lbTrigger {
-    _lbTrigger ??= LbTrigger(wf: this);
-    return _lbTrigger;
+    return _lbTrigger ??= LbTrigger(wf: this);
   }
 
   PhotoCompare get photoCompare {
-    _photoCompare ??= PhotoCompare(this);
-    return _photoCompare;
+    return _photoCompare ??= PhotoCompare(this);
   }
 
   @override
@@ -245,7 +242,10 @@ class TinhteWidgetFactory extends WidgetFactory {
             attrs.containsKey('data-height') &&
             attrs.containsKey('data-permalink') &&
             attrs.containsKey('data-width')) {
-          meta.register(lbTrigger.prepareThumbnailOp(attrs));
+          final thumbnailOp = lbTrigger.prepareThumbnailOp(attrs);
+          if (thumbnailOp != null) {
+            meta.register(thumbnailOp);
+          }
           return;
         }
         break;
@@ -263,11 +263,13 @@ class TinhteWidgetFactory extends WidgetFactory {
         }
         break;
       case 'img':
-        if (attrs.containsKey('data-height')) {
-          attrs['height'] = attrs['data-height'];
+        final height = attrs['data-height'];
+        if (height != null) {
+          attrs['height'] = height;
         }
-        if (attrs.containsKey('data-width')) {
-          attrs['width'] = attrs['data-width'];
+        final width = attrs['data-width'];
+        if (width != null) {
+          attrs['width'] = width;
         }
         break;
       case 'ul':

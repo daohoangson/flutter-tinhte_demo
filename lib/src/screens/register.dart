@@ -28,12 +28,12 @@ class _RegisterState extends State<RegisterForm> {
 
   bool _isRegistering = false;
 
-  String username;
-  String usernameError;
-  String email;
-  String emailError;
-  String password;
-  bool agreed = false;
+  String /*!*/ _username = '';
+  String _usernameError;
+  String /*!*/ _email = '';
+  String _emailError;
+  String /*!*/ _password = '';
+  bool /*!*/ _agreed = false;
 
   @override
   void dispose() {
@@ -72,7 +72,7 @@ class _RegisterState extends State<RegisterForm> {
             Expanded(
               child: ElevatedButton(
                 child: Text(l(context).register),
-                onPressed: !agreed || _isRegistering ? null : _register,
+                onPressed: !_agreed || _isRegistering ? null : _register,
               ),
             ),
           ],
@@ -87,11 +87,12 @@ class _RegisterState extends State<RegisterForm> {
   Widget _buildPassword() => TextFormField(
         decoration: InputDecoration(labelText: l(context).loginPassword),
         focusNode: focusNodePassword,
-        initialValue: password,
+        initialValue: _password,
         obscureText: true,
         onFieldSubmitted: (_) => focusNodeAgreed.requestFocus(),
-        onSaved: (value) => password = value,
-        validator: (password) {
+        onSaved: (value) => _password = value,
+        validator: (value) {
+          final password = (value ?? '').trim();
           if (password.isEmpty) {
             return l(context).registerErrorPasswordIsEmpty;
           }
@@ -103,14 +104,15 @@ class _RegisterState extends State<RegisterForm> {
   Widget _buildUserEmail() => TextFormField(
       decoration: InputDecoration(
         labelText: l(context).registerEmail,
-        errorText: emailError,
+        errorText: _emailError,
       ),
       focusNode: focusNodeEmail,
-      initialValue: email,
+      initialValue: _email,
       keyboardType: TextInputType.emailAddress,
       onFieldSubmitted: (_) => focusNodePassword.requestFocus(),
-      onSaved: (value) => email = value,
-      validator: (email) {
+      onSaved: (value) => _email = value,
+      validator: (value) {
+        final email = (value ?? '').trim();
         if (email.isEmpty) {
           return l(context).registerErrorEmailIsEmpty;
         }
@@ -122,13 +124,14 @@ class _RegisterState extends State<RegisterForm> {
       autofocus: true,
       decoration: InputDecoration(
         labelText: l(context).loginUsername,
-        errorText: usernameError,
+        errorText: _usernameError,
       ),
-      initialValue: username,
+      initialValue: _username,
       keyboardType: TextInputType.name,
       onFieldSubmitted: (_) => focusNodeEmail.requestFocus(),
-      onSaved: (value) => username = value,
-      validator: (username) {
+      onSaved: (value) => _username = value,
+      validator: (value) {
+        final username = (value ?? '').trim();
         if (username.isEmpty) {
           return l(context).registerErrorUsernameIsEmpty;
         }
@@ -142,9 +145,9 @@ class _RegisterState extends State<RegisterForm> {
           children: [
             Checkbox(
               focusNode: focusNodeAgreed,
-              onChanged: (value) => setState(() => agreed = value),
+              onChanged: (value) => setState(() => _agreed = value == true),
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              value: agreed,
+              value: _agreed,
             ),
             Expanded(
               child: TinhteHtmlWidget(
@@ -157,19 +160,19 @@ class _RegisterState extends State<RegisterForm> {
             ),
           ],
         ),
-        onTap: () => setState(() => agreed = !agreed),
+        onTap: () => setState(() => _agreed = !_agreed),
       );
 
   void _register() {
     if (_isRegistering) return;
 
     setState(() {
-      usernameError = null;
-      emailError = null;
+      _usernameError = null;
+      _emailError = null;
     });
 
     final form = formKey.currentState;
-    if (form?.validate() != true) return;
+    if (form == null || !form.validate()) return;
     form.save();
 
     setState(() => _isRegistering = true);
@@ -180,9 +183,9 @@ class _RegisterState extends State<RegisterForm> {
           'users',
           bodyFields: {
             'client_id': api.clientId,
-            'username': username,
-            'user_email': email,
-            'password': password,
+            'username': _username,
+            'user_email': _email,
+            'password': _password,
           },
         )
         .then(_onJson)
@@ -216,10 +219,10 @@ class _RegisterState extends State<RegisterForm> {
       for (final e in errors.entries) {
         switch (e.key) {
           case 'username':
-            setState(() => usernameError = e.value);
+            setState(() => _usernameError = e.value);
             break;
           case 'email':
-            setState(() => emailError = e.value);
+            setState(() => _emailError = e.value);
             break;
           default:
             unknownErrors.add(e.value);

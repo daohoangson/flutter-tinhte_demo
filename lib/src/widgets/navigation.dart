@@ -40,19 +40,22 @@ class NavigationWidget extends StatelessWidget {
           title: Text("#${node.navigationId}"),
         ),
         category: (category) => ListTile(
-          title: Text(category.categoryTitle),
+          title: Text(category.categoryTitle ?? '#${category.categoryId}'),
           onTap: () => Navigator.push(
               context, NavigationRoute((_) => NodeViewScreen(category))),
         ),
         forum: (forum) => ListTile(
-          title: Text(forum.forumTitle),
+          title: Text(forum.forumTitle ?? '#${forum.forumId}'),
           onTap: () => Navigator.push(context,
               MaterialPageRoute(builder: (_) => ForumViewScreen(forum))),
         ),
-        linkforum: (link) => ListTile(
-          title: Text(link.linkTitle),
-          onTap: () => launchLink(context, link.links.target),
-        ),
+        linkforum: (link) {
+          final target = link.links?.target;
+          return ListTile(
+            title: Text(link.linkTitle ?? '#${link.linkId}'),
+            onTap: target != null ? () => launchLink(context, target) : null,
+          );
+        },
       );
 
   void _fetchOnSuccess(Map json, FetchContext<Node> fc) {

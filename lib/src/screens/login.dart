@@ -46,9 +46,9 @@ class _LoginFormState extends State<LoginForm> {
   bool _canLoginApple = false;
   bool _isLoggingIn = false;
 
-  String username;
-  String password;
-  String tfaCode;
+  String /*!*/ _username = '';
+  String /*!*/ _password = '';
+  String /*!*/ _tfaCode = '';
 
   _LoginFormState();
 
@@ -71,48 +71,55 @@ class _LoginFormState extends State<LoginForm> {
   }
 
   @override
-  Widget build(BuildContext context) => Form(
-        key: formKey,
-        child: AutofillGroup(
-          child: ListView(
-            children: _tfa != null
-                ? _buildFieldsTfa()
-                : _associatable != null
-                    ? _buildFieldsAssociate()
-                    : _buildFieldsLogin(),
-            padding: const EdgeInsets.all(20.0),
-          ),
-        ),
-      );
+  Widget build(BuildContext context) {
+    final scopedTfa = _tfa;
+    final scopedAssociatable = _associatable;
 
-  List<Widget> _buildFieldsAssociate() => [
-        Text(l(context).loginAssociateEnterPassword),
-        _buildInputPadding(TextFormField(
-          decoration: InputDecoration(labelText: l(context).loginUsername),
-          enabled: false,
-          initialValue: _associatable.username,
-          key: ObjectKey(_associatable),
-        )),
-        _buildInputPadding(_buildPassword(autofocus: true)),
-        Row(
-          children: <Widget>[
-            Expanded(
-              child: TextButton(
-                child: Text(lm(context).cancelButtonLabel),
-                onPressed: _isLoggingIn
-                    ? null
-                    : () => setState(() => _associatable = null),
-              ),
-            ),
-            Expanded(
-              child: ElevatedButton(
-                child: Text(l(context).loginAssociate),
-                onPressed: _isLoggingIn ? null : _associate,
-              ),
-            ),
-          ],
+    return Form(
+      key: formKey,
+      child: AutofillGroup(
+        child: ListView(
+          children: scopedTfa != null
+              ? _buildFieldsTfa(scopedTfa)
+              : scopedAssociatable != null
+                  ? _buildFieldsAssociate(scopedAssociatable)
+                  : _buildFieldsLogin(),
+          padding: const EdgeInsets.all(20.0),
         ),
-      ];
+      ),
+    );
+  }
+
+  List<Widget> _buildFieldsAssociate(LoginAssociatable associatable) {
+    return [
+      Text(l(context).loginAssociateEnterPassword),
+      _buildInputPadding(TextFormField(
+        decoration: InputDecoration(labelText: l(context).loginUsername),
+        enabled: false,
+        initialValue: associatable.username,
+        key: ObjectKey(associatable),
+      )),
+      _buildInputPadding(_buildPassword(autofocus: true)),
+      Row(
+        children: <Widget>[
+          Expanded(
+            child: TextButton(
+              child: Text(lm(context).cancelButtonLabel),
+              onPressed: _isLoggingIn
+                  ? null
+                  : () => setState(() => _associatable = null),
+            ),
+          ),
+          Expanded(
+            child: ElevatedButton(
+              child: Text(l(context).loginAssociate),
+              onPressed: _isLoggingIn ? null : _associate,
+            ),
+          ),
+        ],
+      ),
+    ];
+  }
 
   List<Widget> _buildFieldsLogin() => [
         _buildInputPadding(_buildUsername()),
@@ -153,54 +160,55 @@ class _LoginFormState extends State<LoginForm> {
           ),
       ];
 
-  List<Widget> _buildFieldsTfa() => [
-        Text(l(context).loginTfaMethodPleaseChooseOne),
-      ]
-        ..addAll(_tfa.providers
-            .map((provider) => ElevatedButton.icon(
-                  icon: !_isLoggingIn && _tfa.triggeredProvider == provider
-                      ? Icon(
-                          FontAwesomeIcons.check,
-                          color: Theme.of(context).indicatorColor,
-                        )
-                      : const SizedBox.shrink(),
-                  label: Text(provider == 'backup'
-                      ? l(context).loginTfaMethodBackup
-                      : provider == 'email'
-                          ? l(context).loginTfaMethodEmail
-                          : provider == 'totp'
-                              ? l(context).loginTfaMethodTotp
-                              : provider),
-                  onPressed: _isLoggingIn ? null : () => _tfaTrigger(provider),
-                ))
-            .toList(growable: false))
-        ..add(_tfa.triggeredProvider != null
-            ? _buildInputPadding(_buildTfaCode())
-            : const SizedBox.shrink())
-        ..add(_tfa.triggeredProvider != null
-            ? Row(
-                children: <Widget>[
-                  Expanded(
-                    child: TextButton(
-                      child: Text(lm(context).cancelButtonLabel),
-                      onPressed: _isLoggingIn
-                          ? null
-                          : () => setState(() => _tfa = null),
-                    ),
+  List<Widget> _buildFieldsTfa(LoginTfa tfa) {
+    return [
+      Text(l(context).loginTfaMethodPleaseChooseOne),
+    ]
+      ..addAll(tfa.providers
+          .map((provider) => ElevatedButton.icon(
+                icon: !_isLoggingIn && tfa.triggeredProvider == provider
+                    ? Icon(
+                        FontAwesomeIcons.check,
+                        color: Theme.of(context).indicatorColor,
+                      )
+                    : const SizedBox.shrink(),
+                label: Text(provider == 'backup'
+                    ? l(context).loginTfaMethodBackup
+                    : provider == 'email'
+                        ? l(context).loginTfaMethodEmail
+                        : provider == 'totp'
+                            ? l(context).loginTfaMethodTotp
+                            : provider),
+                onPressed: _isLoggingIn ? null : () => _tfaTrigger(provider),
+              ))
+          .toList(growable: false))
+      ..add(tfa.triggeredProvider != null
+          ? _buildInputPadding(_buildTfaCode())
+          : const SizedBox.shrink())
+      ..add(tfa.triggeredProvider != null
+          ? Row(
+              children: <Widget>[
+                Expanded(
+                  child: TextButton(
+                    child: Text(lm(context).cancelButtonLabel),
+                    onPressed:
+                        _isLoggingIn ? null : () => setState(() => _tfa = null),
                   ),
-                  Expanded(
-                    child: ElevatedButton(
-                      child: Text(l(context).loginTfaVerify),
-                      onPressed: _isLoggingIn ? null : _tfaVerify,
-                    ),
+                ),
+                Expanded(
+                  child: ElevatedButton(
+                    child: Text(l(context).loginTfaVerify),
+                    onPressed: _isLoggingIn ? null : _tfaVerify,
                   ),
-                ],
-              )
-            : TextButton(
-                child: Text(lm(context).cancelButtonLabel),
-                onPressed:
-                    _isLoggingIn ? null : () => setState(() => _tfa = null),
-              ));
+                ),
+              ],
+            )
+          : TextButton(
+              child: Text(lm(context).cancelButtonLabel),
+              onPressed:
+                  _isLoggingIn ? null : () => setState(() => _tfa = null),
+            ));
+  }
 
   Widget _buildInputPadding(Widget child) => Padding(
         padding: const EdgeInsets.symmetric(vertical: 5.0),
@@ -215,11 +223,12 @@ class _LoginFormState extends State<LoginForm> {
           labelText: l(context).loginPassword,
         ),
         focusNode: focusNodePassword,
-        initialValue: password,
+        initialValue: _password,
         obscureText: true,
-        onSaved: (value) => password = value,
+        onSaved: (value) => _password = value,
         onFieldSubmitted: (_) => _login(),
-        validator: (password) {
+        validator: (value) {
+          final password = (value ?? '').trim();
           if (password.isEmpty) {
             return l(context).loginErrorPasswordIsEmpty;
           }
@@ -235,11 +244,12 @@ class _LoginFormState extends State<LoginForm> {
         hintText: l(context).loginUsernameHint,
         labelText: l(context).loginUsernameOrEmail,
       ),
-      initialValue: username,
+      initialValue: _username,
       keyboardType: TextInputType.emailAddress,
-      onSaved: (value) => username = value,
+      onSaved: (value) => _username = value,
       onFieldSubmitted: (_) => focusNodePassword.requestFocus(),
-      validator: (username) {
+      validator: (value) {
+        final username = (value ?? '').trim();
         if (username.isEmpty) {
           return l(context).loginErrorUsernameIsEmpty;
         }
@@ -250,8 +260,9 @@ class _LoginFormState extends State<LoginForm> {
   Widget _buildTfaCode() => TextFormField(
       autofocus: true,
       keyboardType: TextInputType.number,
-      onSaved: (value) => tfaCode = value,
-      validator: (tfaCode) {
+      onSaved: (value) => _tfaCode = value,
+      validator: (value) {
+        final tfaCode = (value ?? '').trim();
         if (tfaCode.isEmpty) {
           return l(context).loginTfaErrorCodeIsEmpty;
         }
@@ -262,14 +273,17 @@ class _LoginFormState extends State<LoginForm> {
   void _associate() {
     if (_isLoggingIn) return;
 
+    final scopedAssociatable = _associatable;
+    if (scopedAssociatable == null) return;
+
     final form = formKey.currentState;
-    if (form?.validate() != true) return;
+    if (form == null || !form.validate()) return;
     form.save();
 
     setState(() => _isLoggingIn = true);
 
     final api = ApiAuth.of(context, listen: false).api;
-    loginAssociate(api, _associatable, password)
+    loginAssociate(api, scopedAssociatable, _password)
         .then(_onResult)
         .catchError(_showError)
         .whenComplete(() => setState(() => _isLoggingIn = false));
@@ -279,13 +293,13 @@ class _LoginFormState extends State<LoginForm> {
     if (_isLoggingIn) return;
 
     final form = formKey.currentState;
-    if (form?.validate() != true) return;
+    if (form == null || !form.validate()) return;
     form.save();
 
     setState(() => _isLoggingIn = true);
 
     final api = ApiAuth.of(context, listen: false).api;
-    login(api, username, password)
+    login(api, _username, _password)
         .then(_onResult)
         .catchError(_showError)
         .whenComplete(() => setState(() => _isLoggingIn = false));
@@ -363,10 +377,14 @@ class _LoginFormState extends State<LoginForm> {
 
   void _tfaTrigger(String provider) {
     if (_isLoggingIn) return;
+
+    final scopedTfa = _tfa;
+    if (scopedTfa == null) return;
+
     setState(() => _isLoggingIn = true);
 
     final api = ApiAuth.of(context, listen: false).api;
-    loginTfa(api, _tfa, provider, trigger: true)
+    loginTfa(api, scopedTfa, provider, trigger: true)
         .then(_onResult)
         .catchError(_showError)
         .whenComplete(() => setState(() => _isLoggingIn = false));
@@ -375,14 +393,20 @@ class _LoginFormState extends State<LoginForm> {
   void _tfaVerify() {
     if (_isLoggingIn) return;
 
+    final scopedTfa = _tfa;
+    if (scopedTfa == null) return;
+
+    final tfaProvider = scopedTfa.triggeredProvider;
+    if (tfaProvider == null) return;
+
     final form = formKey.currentState;
-    if (form?.validate() != true) return;
+    if (form == null || !form.validate()) return;
     form.save();
 
     setState(() => _isLoggingIn = true);
 
     final api = ApiAuth.of(context, listen: false).api;
-    loginTfa(api, _tfa, _tfa.triggeredProvider, code: tfaCode)
+    loginTfa(api, scopedTfa, tfaProvider, code: _tfaCode)
         .then(_onResult)
         .catchError(_showError)
         .whenComplete(() => setState(() => _isLoggingIn = false));

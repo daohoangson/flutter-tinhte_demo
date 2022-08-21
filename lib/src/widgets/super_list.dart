@@ -86,7 +86,7 @@ class SuperListItemFullWidth extends StatelessWidget {
 
 class SuperListState<T> extends State<SuperListView<T>> {
   final List<SuperListComplexItemRegistration> _complexItems = [];
-  final List<T> _items = [];
+  final List<T /*!*/ > _items = [];
 
   var _isFetching = false;
   var _isRefreshing = false;
@@ -106,7 +106,7 @@ class SuperListState<T> extends State<SuperListView<T>> {
   bool get isFetching => _isFetching;
   int get itemCountAfter => (widget.footer != null ? 1 : 0) + 1;
   int get itemCountBefore => 1 + (widget.header != null ? 1 : 0);
-  Iterable<T> get items => _items;
+  Iterable<T /*!*/ > get items => _items;
 
   @override
   void initState() {
@@ -114,7 +114,8 @@ class SuperListState<T> extends State<SuperListView<T>> {
 
     _initialJson = widget.initialJson;
 
-    if (widget.initialItems != null) _items.addAll(widget.initialItems);
+    final initialItems = widget.initialItems;
+    if (initialItems != null) _items.addAll(initialItems);
 
     final enableRefreshIndicator =
         widget.enableRefreshIndicator ?? widget.fetchPathInitial != null;
@@ -127,8 +128,7 @@ class SuperListState<T> extends State<SuperListView<T>> {
     _scrollController = _scrollControllerAuto ?? ScrollController();
 
     widget.complexItems?.forEach((register) {
-      final registration = register();
-      if (registration != null) _complexItems.add(registration);
+      _complexItems.add(register());
     });
 
     WidgetsBinding.instance.addPostFrameCallback((_) => fetch());
@@ -149,10 +149,11 @@ class SuperListState<T> extends State<SuperListView<T>> {
           );
         }
 
-        if (_scrollControllerAuto != null) {
+        final scrollController = _scrollControllerAuto;
+        if (scrollController != null) {
           built = AutoScrollTag(
             child: built,
-            controller: _scrollControllerAuto,
+            controller: scrollController,
             highlightColor:
                 Theme.of(context).colorScheme.secondary.withOpacity(.1),
             index: i,
@@ -207,7 +208,7 @@ class SuperListState<T> extends State<SuperListView<T>> {
 
   Future<void> fetch({
     bool clearItems = false,
-    FetchContext fc,
+    FetchContext<T> fc,
   }) =>
       _fetch(
         fc ??
@@ -225,7 +226,7 @@ class SuperListState<T> extends State<SuperListView<T>> {
           _fetchedPageMin = null;
           _initialJson = null;
 
-          _complexItems.forEach((r) => r._clear != null ? r._clear() : null);
+          _complexItems.forEach((r) => r._clear?.call());
         },
         preFetchedJson: _initialJson,
       );
@@ -279,13 +280,13 @@ class SuperListState<T> extends State<SuperListView<T>> {
   void itemsReplace(int index, Iterable<T> items) {
     if (!mounted) {
       _items.removeAt(index);
-      if (items != null) _items.insertAll(index, items);
+      _items.insertAll(index, items);
       return;
     }
 
     setState(() {
       _items.removeAt(index);
-      if (items != null) _items.insertAll(index, items);
+      _items.insertAll(index, items);
     });
   }
 
@@ -297,32 +298,34 @@ class SuperListState<T> extends State<SuperListView<T>> {
   void scrollToIndex(int index,
       {Duration duration: scrollAnimationDuration,
       AutoScrollPosition preferPosition}) {
-    if (_scrollControllerAuto == null) return;
+    final scrollController = _scrollControllerAuto;
+    if (scrollController == null) return;
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final i = itemCountBefore + index;
       final d = duration;
       final p = preferPosition;
-      await _scrollControllerAuto.scrollToIndex(i,
-          duration: d, preferPosition: p);
-      _scrollControllerAuto.highlight(i);
+      await scrollController.scrollToIndex(i, duration: d, preferPosition: p);
+      scrollController.highlight(i);
     });
   }
 
-  Widget _buildItem(BuildContext context, int i) {
+  Widget /*!*/ _buildItem(BuildContext context, int i) {
     if (i == 0) return _buildProgressIndicator(canFetchPrev && _isFetching);
     i--;
 
-    if (widget.header != null) {
-      if (i == 0) return widget.header;
+    final header = widget.header;
+    if (header != null) {
+      if (i == 0) return header;
       i--;
     }
 
     if (i < _items.length) return widget.itemBuilder(context, this, _items[i]);
     i -= _items.length;
 
-    if (widget.footer != null) {
-      if (i == 0) return widget.footer;
+    final footer = widget.footer;
+    if (footer != null) {
+      if (i == 0) return footer;
       i--;
     }
 
@@ -358,7 +361,7 @@ class SuperListState<T> extends State<SuperListView<T>> {
     }
 
     final c = Completer();
-    final apiMethod = fc.apiMethod ?? apiGet;
+    final ApiMethod apiMethod = fc.apiMethod ?? apiGet;
     apiMethod(
       ApiCaller.stateful(this),
       fc.path,
@@ -388,11 +391,13 @@ class SuperListState<T> extends State<SuperListView<T>> {
         _isFetching = false;
 
         final linksPage = fc.linksPage ?? 1;
-        if (_fetchedPageMin == null || _fetchedPageMin > linksPage) {
+        final fetchedPageMin = _fetchedPageMin;
+        if (fetchedPageMin == null || fetchedPageMin > linksPage) {
           _fetchedPageMin = linksPage;
           _fetchPathPrev = fc.linksPrev;
         }
-        if (_fetchedPageMax == null || _fetchedPageMax < linksPage) {
+        final fetchedPageMax = _fetchedPageMax;
+        if (fetchedPageMax == null || fetchedPageMax < linksPage) {
           _fetchedPageMax = linksPage;
           _fetchPathNext = fc.linksNext;
         }
@@ -406,10 +411,11 @@ class SuperListState<T> extends State<SuperListView<T>> {
           }
         }
 
-        if (fc.scrollToRelativeIndex != null) {
+        final scrollToRelativeIndex = fc.scrollToRelativeIndex;
+        if (scrollToRelativeIndex != null) {
           scrollToIndex(
             (fc.id != FetchContextId.FetchPrev ? itemsLengthBefore : 0) +
-                fc.scrollToRelativeIndex,
+                scrollToRelativeIndex,
             preferPosition: AutoScrollPosition.begin,
           );
         }
@@ -423,7 +429,7 @@ class SuperListState<T> extends State<SuperListView<T>> {
 }
 
 typedef void _FetchOnSuccess<T>(Map json, FetchContext<T> fetchContext);
-typedef Widget _ItemBuilder<T>(
+typedef Widget /*!*/ _ItemBuilder<T>(
   BuildContext context,
   SuperListState<T> state,
   T item,

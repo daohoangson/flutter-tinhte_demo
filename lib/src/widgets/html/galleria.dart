@@ -12,12 +12,11 @@ class Galleria {
   Galleria(this.wf, this.galleryMeta);
 
   BuildOp _galleriaOp;
-  BuildOp get op {
-    _galleriaOp ??= BuildOp(
+  BuildOp /*!*/ get op {
+    return _galleriaOp ??= BuildOp(
       onChild: onChild,
       onWidgets: onWidgets,
     );
-    return _galleriaOp;
   }
 
   void onChild(BuildMetadata childMeta) {
@@ -50,12 +49,11 @@ class _GalleriaItem {
   _GalleriaItem(this.wf, this.galleria, this.itemMeta);
 
   BuildOp _itemOp;
-  BuildOp get op {
-    _itemOp ??= BuildOp(
+  BuildOp /*!*/ get op {
+    return _itemOp ??= BuildOp(
       onChild: onChild,
       onWidgets: onWidgets,
     );
-    return _itemOp;
   }
 
   void onChild(BuildMetadata childMeta) {
@@ -64,8 +62,8 @@ class _GalleriaItem {
 
     switch (e.className) {
       case 'LbTrigger':
-        _source ??= wf.urlFull(e.attributes['href']);
-        _triggerOp ??= BuildOp(
+        _source ??= wf.urlFull(e.attributes['href'] ?? '');
+        final triggerOp = _triggerOp ??= BuildOp(
           onWidgets: (meta, widgets) {
             // bypass built-in A tag handling with 0 priority
             // and NOT returning anything in `onWidgets`
@@ -74,37 +72,40 @@ class _GalleriaItem {
           },
           priority: 0,
         );
-        childMeta.register(_triggerOp);
+        childMeta.register(triggerOp);
         break;
       case 'Tinhte_Gallery_Description':
-        _descriptionOp ??= BuildOp(onWidgets: (meta, widgets) {
-          meta.tsb.enqueue((p, _) => p.copyWith(
-              style: p
-                  .getDependency<ThemeData>()
-                  .textTheme
-                  .caption
-                  .copyWith(color: kCaptionColor)));
-          _description = wf.buildColumnPlaceholder(meta, widgets);
-          return [];
-        });
-        childMeta.register(_descriptionOp);
+        final descriptionOp = _descriptionOp ??= BuildOp(
+          onWidgets: (meta, widgets) {
+            meta.tsb.enqueue((p, dynamic _) => p.copyWith(
+                style: p
+                    .getDependency<ThemeData>()
+                    .textTheme
+                    .caption
+                    ?.copyWith(color: kCaptionColor)));
+            _description = wf.buildColumnPlaceholder(meta, widgets);
+            return [];
+          },
+        );
+        childMeta.register(descriptionOp);
         break;
     }
   }
 
   Iterable<Widget> onWidgets(
       BuildMetadata _, Iterable<WidgetPlaceholder> widgets) {
-    if (_source == null) return widgets;
-    if (_trigger == null) return widgets;
+    final scopedSource = _source;
+    final scopedTrigger = _trigger;
+    if (scopedSource == null || scopedTrigger == null) return widgets;
 
     final index = galleria._lb.addSource(
-      LbTriggerSource.image(_source),
+      LbTriggerSource.image(scopedSource),
       caption: _description,
     );
-    _trigger.wrapWith((context, child) =>
+    scopedTrigger.wrapWith((context, child) =>
         galleria._lb.buildGestureDetector(context, child, index));
 
-    return [_trigger];
+    return [scopedTrigger];
   }
 }
 

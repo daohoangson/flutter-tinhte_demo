@@ -23,16 +23,13 @@ class PhotoCompare {
           if (images.length != 2) return widgets;
 
           final a = meta.element.attributes;
-          if (!a.containsKey('data-config')) return widgets;
+          final configJson = a['data-config'] ?? '';
+          if (configJson.isEmpty) return widgets;
 
-          final Map config = json.decode(a['data-config']);
-          if (!config.containsKey('width') ||
-              (config['width'] is! num) ||
-              !config.containsKey('height') ||
-              (config['height'] is! num)) return widgets;
-
-          final width = (config['width'] as num).toDouble();
-          final height = (config['height'] as num).toDouble();
+          final Map config = json.decode(configJson);
+          final width = num.tryParse(config['width'] ?? '')?.toDouble();
+          final height = num.tryParse(config['height'] ?? '')?.toDouble();
+          if (width == null || height == null) return widgets;
 
           return [
             _PhotoCompareWidget(
@@ -116,12 +113,17 @@ class _PhotoCompareState extends State<_PhotoCompareWidget> {
     );
   }
 
-  Widget _buildAspectRatio(Widget child) => widget.aspectRatio != null
-      ? AspectRatio(aspectRatio: widget.aspectRatio, child: child)
-      : child;
+  Widget _buildAspectRatio(Widget child) => AspectRatio(
+        aspectRatio: widget.aspectRatio,
+        child: child,
+      );
 
-  void _updatePosition(BuildContext context, Offset offset) => setState(() =>
-      position = offset.dx / context.findRenderObject().paintBounds.width);
+  void _updatePosition(BuildContext context, Offset offset) {
+    final renderObject = context.findRenderObject();
+    if (renderObject == null) return;
+
+    setState(() => position = offset.dx / renderObject.paintBounds.width);
+  }
 }
 
 class _PhotoCompareHandler extends StatefulWidget {
@@ -133,7 +135,8 @@ class _PhotoCompareHandler extends StatefulWidget {
 
   final bool animate;
 
-  const _PhotoCompareHandler({Key key, this.animate}) : super(key: key);
+  const _PhotoCompareHandler({Key key, @required this.animate})
+      : super(key: key);
 
   @override
   _PhotoCompareHandlerState createState() => _PhotoCompareHandlerState();

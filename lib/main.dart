@@ -61,10 +61,10 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  final DarkTheme darkTheme;
-  final DevTools devTools;
-  final FontScale fontScale;
-  final Widget home;
+  final DarkTheme/*!*/ darkTheme;
+  final DevTools/*!*/ devTools;
+  final FontScale/*!*/ fontScale;
+  final Widget/*!*/ home;
 
   MyApp({
     this.darkTheme,

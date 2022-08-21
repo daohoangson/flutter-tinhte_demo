@@ -34,9 +34,10 @@ Future<bool> launchLink(
     }
 
     final apiAuth = ApiAuth.of(context, listen: false);
-    if (apiAuth.hasToken) {
+    final token = apiAuth.token;
+    if (token != null) {
       link = "${config.apiRoot}?tools/login"
-          "&oauth_token=${apiAuth.token.accessToken}"
+          "&oauth_token=${token.accessToken}"
           "&redirect_uri=${Uri.encodeQueryComponent(link)}";
     }
   }
@@ -52,7 +53,7 @@ Future<bool> launchLink(
   );
 }
 
-void launchMemberView(BuildContext context, int userId) =>
+void launchMemberView(BuildContext context, int/*!*/ userId) =>
     launchLink(context, "${config.siteRoot}/members/$userId/");
 
 Future<bool> parsePath(
@@ -111,7 +112,7 @@ Future<bool> parsePath(
   ).whenComplete(() => cancelDialog());
 }
 
-Future<Widget> buildWidget(
+Future<Widget /*?*/ > buildWidget(
   ApiCaller caller,
   String path, {
   Widget defaultWidget,
@@ -136,11 +137,13 @@ Future<Widget> buildWidget(
         final link = json['link'];
         if (link is String) {
           final uri = Uri.tryParse(link);
-          switch (uri.path) {
-            case '':
-            case '/':
-              widget = HomeScreen();
-              break;
+          if (uri != null) {
+            switch (uri.path) {
+              case '':
+              case '/':
+                widget = HomeScreen();
+                break;
+            }
           }
         }
       }
@@ -154,9 +157,10 @@ Future<Widget> buildWidget(
 }
 
 Widget _parseTag(Map json) {
-  final Map jsonTag = json['tag'];
-  final tag = Tag.fromJson(jsonTag);
-  if (tag.tagId == null) return null;
+  final tagValue = json['tag'];
+  final tagJson =
+      tagValue is Map<String, dynamic> ? tagValue : const <String, dynamic>{};
+  final tag = Tag.fromJson(tagJson);
 
   if (json.containsKey('feature_page')) {
     final fp = FeaturePage.fromJson(json['feature_page']);
@@ -167,17 +171,20 @@ Widget _parseTag(Map json) {
 }
 
 Widget _parseThread(Map json) {
-  final Map jsonThread = json['thread'];
-  final thread = Thread.fromJson(jsonThread);
-  if (thread.threadId == null) return null;
+  final threadValue = json['thread'];
+  final threadJson = threadValue is Map<String, dynamic>
+      ? threadValue
+      : const <String, dynamic>{};
+  final thread = Thread.fromJson(threadJson);
 
   return ThreadViewScreen(thread, initialJson: json);
 }
 
 Widget _parseUser(Map json) {
-  final Map jsonUser = json['user'];
-  final user = User.fromJson(jsonUser);
-  if (user.userId == null) return null;
+  final userValue = json['user'];
+  final userJson =
+      userValue is Map<String, dynamic> ? userValue : const <String, dynamic>{};
+  final user = User.fromJson(userJson);
 
   return MemberViewScreen(user);
 }

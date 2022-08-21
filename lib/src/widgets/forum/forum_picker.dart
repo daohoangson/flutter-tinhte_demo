@@ -9,11 +9,12 @@ class ForumPickerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final data = context.watch<ForumPickerData>();
+    final forum = data.forum;
 
     return ListTile(
       leading: Icon(FontAwesomeIcons.globe),
-      title: data.forum != null
-          ? Text(data.forum.title)
+      title: forum != null
+          ? Text(forum.title ?? '#${forum.forumId}')
           : Text(l(context).threadCreateChooseAForum),
       trailing: Icon(FontAwesomeIcons.caretDown),
       onTap: () async => data.forum = await showModalBottomSheet<Forum>(
@@ -41,7 +42,7 @@ class _ForumPickerBody extends StatelessWidget {
 
     Widget built = ListTile(
       title: Text(
-        node.title,
+        node.title ?? '#${node.navigationId}',
         style: canCreateThread
             ? null
             : TextStyle(color: Theme.of(context).disabledColor),

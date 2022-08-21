@@ -24,14 +24,16 @@ class AppBarDrawerHeader extends StatelessWidget {
               ),
       );
 
-  Widget _buildAvatar(User user) => AspectRatio(
-        aspectRatio: 1.0,
-        child: CircleAvatar(
-          backgroundImage: CachedNetworkImageProvider(
-            user.links?.avatarBig,
-          ),
-        ),
-      );
+  Widget _buildAvatar(User user) {
+    final avatar = user.links?.avatarBig;
+    return AspectRatio(
+      aspectRatio: 1.0,
+      child: CircleAvatar(
+        backgroundImage:
+            avatar != null ? CachedNetworkImageProvider(avatar) : null,
+      ),
+    );
+  }
 
   Widget _buildVisitorPanel(BuildContext context, User user) {
     Widget built = Column(
@@ -66,7 +68,7 @@ class AppBarDrawerHeader extends StatelessWidget {
 
   TextSpan _compileUserRank(BuildContext context, User user) => TextSpan(
         text: " ${user.rank?.rankName ?? ''}",
-        style: Theme.of(context).textTheme.subtitle1.copyWith(
+        style: Theme.of(context).textTheme.subtitle1?.copyWith(
               color: Theme.of(context).hintColor,
               fontWeight: FontWeight.bold,
             ),
@@ -74,7 +76,7 @@ class AppBarDrawerHeader extends StatelessWidget {
 
   TextSpan _compileUsername(BuildContext context, User user) => TextSpan(
         text: user.username ?? '',
-        style: Theme.of(context).textTheme.headline6.copyWith(
+        style: Theme.of(context).textTheme.headline6?.copyWith(
               color: Theme.of(context).colorScheme.secondary,
             ),
       );

@@ -4,7 +4,7 @@ import 'package:the_app/src/intl.dart';
 import 'package:the_app/src/widgets/tag/widget.dart';
 
 class FpSearchDelegate extends SearchDelegate {
-  final List<FeaturePage> pages;
+  final List<FeaturePage> /*!*/ pages;
 
   FpSearchDelegate(this.pages);
 
@@ -49,6 +49,10 @@ class FpSearchDelegate extends SearchDelegate {
   List<FeaturePage> _filterItems() => query.isEmpty
       ? pages
       : pages
-          .where((p) => p.fullName.toLowerCase().contains(query.toLowerCase()))
+          .where(
+            (p) =>
+                p.fullName?.toLowerCase()?.contains(query.toLowerCase()) ==
+                true,
+          )
           .toList();
 }

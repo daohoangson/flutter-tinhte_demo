@@ -22,9 +22,8 @@ class DevTools extends ChangeNotifier {
     _isDeveloper = v;
     notifyListeners();
 
-    SharedPreferences.getInstance().then((prefs) => v == null
-        ? prefs.remove(kPrefKeyDevToolIsDeveloper)
-        : prefs.setBool(kPrefKeyDevToolIsDeveloper, v));
+    SharedPreferences.getInstance()
+        .then((prefs) => prefs.setBool(kPrefKeyDevToolIsDeveloper, v));
   }
 
   bool get showPerformanceOverlay => _showPerformanceOverlay == true;
@@ -33,9 +32,8 @@ class DevTools extends ChangeNotifier {
     _showPerformanceOverlay = v;
     notifyListeners();
 
-    SharedPreferences.getInstance().then((prefs) => v == null
-        ? prefs.remove(kPrefKeyDevToolShowPerformanceOverlay)
-        : prefs.setBool(kPrefKeyDevToolShowPerformanceOverlay, v));
+    SharedPreferences.getInstance().then(
+        (prefs) => prefs.setBool(kPrefKeyDevToolShowPerformanceOverlay, v));
   }
 
   static Future<DevTools> create() async {

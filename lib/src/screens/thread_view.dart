@@ -34,7 +34,7 @@ class ThreadViewScreen extends StatefulWidget {
 class _ThreadViewState extends State<ThreadViewScreen> {
   final _postsKey = GlobalKey<PostsState>();
 
-  PostEditorData _ped;
+  /* late final */ PostEditorData _ped;
 
   Map get initialJson => widget.initialJson;
   Thread get thread => widget.thread;
@@ -67,71 +67,84 @@ class _ThreadViewState extends State<ThreadViewScreen> {
         body: _buildBody(),
       );
 
-  Widget _buildAppBarPopupMenuButton() => PopupMenuButton<String>(
-        itemBuilder: (context) => <PopupMenuEntry<String>>[
-          PopupMenuItem(
-            child: Text(l(context).openInBrowser),
-            value: _kPopupActionOpenInBrowser,
-          ),
-          PopupMenuItem(
-            child: Text(l(context).share),
-            value: _kPopupActionShare,
-          ),
-        ],
-        onSelected: (value) {
-          switch (value) {
-            case _kPopupActionOpenInBrowser:
-              launchLink(
-                context,
-                thread.links?.permalink,
-                forceWebView: true,
-              );
-              break;
-            case _kPopupActionShare:
-              Share.share(thread.links?.permalink);
-              break;
-          }
-        },
-      );
+  Widget _buildAppBarPopupMenuButton() {
+    final permalink = thread.links?.permalink;
+    if (permalink == null) {
+      return const SizedBox.shrink();
+    }
 
-  Widget _buildAppBarTitle(BuildContext context) => GestureDetector(
-        child: Row(
-          children: <Widget>[
-            CircleAvatar(
-              backgroundImage: CachedNetworkImageProvider(
-                thread.links?.firstPosterAvatar,
-              ),
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 10.0,
-                  vertical: 7.5,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    _buildAppBarUsername(),
-                    Text(
-                      formatTimestamp(context, thread.threadCreateDate),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(fontSize: (kToolbarHeight - 10) / 4),
-                      textScaleFactor: 1,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
+    return PopupMenuButton<String>(
+      itemBuilder: (context) => <PopupMenuEntry<String>>[
+        PopupMenuItem(
+          child: Text(l(context).openInBrowser),
+          value: _kPopupActionOpenInBrowser,
         ),
-        onTap: () => launchMemberView(context, thread.creatorUserId),
+        PopupMenuItem(
+          child: Text(l(context).share),
+          value: _kPopupActionShare,
+        ),
+      ],
+      onSelected: (value) {
+        switch (value) {
+          case _kPopupActionOpenInBrowser:
+            launchLink(context, permalink, forceWebView: true);
+            break;
+          case _kPopupActionShare:
+            Share.share(permalink);
+            break;
+        }
+      },
+    );
+  }
+
+  Widget _buildAppBarTitle(BuildContext context) {
+    final avatar = thread.links?.firstPosterAvatar;
+
+    Widget built = Row(
+      children: <Widget>[
+        CircleAvatar(
+          backgroundImage:
+              avatar != null ? CachedNetworkImageProvider(avatar) : null,
+        ),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 10.0,
+              vertical: 7.5,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                _buildAppBarUsername(),
+                Text(
+                  formatTimestamp(context, thread.threadCreateDate),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(fontSize: (kToolbarHeight - 10) / 4),
+                  textScaleFactor: 1,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+
+    final creatorUserId = thread.creatorUserId;
+    if (creatorUserId != null) {
+      built = GestureDetector(
+        child: built,
+        onTap: () => launchMemberView(context, creatorUserId),
       );
+    }
+
+    return built;
+  }
 
   Widget _buildAppBarUsername() {
     final fontSize = (kToolbarHeight - 10) / 2;
-    final buffer = StringBuffer(thread.creatorUsername);
+    final buffer = StringBuffer(thread.creatorUsername ?? '');
     final inlineSpans = <InlineSpan>[];
 
     if (thread.creatorHasVerifiedBadge == true) {

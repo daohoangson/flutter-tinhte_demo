@@ -17,13 +17,9 @@ abstract class ConfigBase {
 
   List<SuperListComplexItemRegister> get homeComplexItems => null;
   String get homePath => 'threads/recent';
-  SearchResult<Thread> Function(Map<dynamic, dynamic>) get homeParser => (j) {
+  SearchResult<Thread> Function(Map<String, dynamic>) get homeParser => (j) {
         final thread = Thread.fromJson(j);
-        if (thread.threadId != null) {
-          return SearchResult<Thread>('thread', thread.threadId,
-              content: thread);
-        }
-        return null;
+        return SearchResult<Thread>('thread', thread.threadId, content: thread);
       };
   Widget get homeSlot1BelowTop5 => null;
   Widget get homeSlot2BelowSlot1 => null;
@@ -40,4 +36,4 @@ abstract class ConfigBase {
   bool get threadWidgetShowCoverImageOnly => true;
 }
 
-final config = Config();
+final ConfigBase config = Config();

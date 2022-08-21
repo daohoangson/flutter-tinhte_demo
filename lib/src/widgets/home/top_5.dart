@@ -7,7 +7,7 @@ import 'package:the_app/src/intl.dart';
 import 'package:the_app/src/widgets/image.dart';
 
 class HomeTop5Widget extends StatelessWidget {
-  final List<SearchResult<Thread>> items;
+  final List<SearchResult<Thread>> /*!*/ items;
 
   HomeTop5Widget(this.items, {Key key})
       : assert(items?.length == 5),
@@ -90,7 +90,7 @@ class HomeTop5Widget extends StatelessWidget {
 
 class _HomeTop5WidgetThread extends StatelessWidget {
   final ContentListItem item;
-  final Thread thread;
+  final Thread /*!*/ thread;
 
   _HomeTop5WidgetThread(SearchResult<Thread> srt, {Key key})
       : assert(srt?.content != null),
@@ -137,8 +137,9 @@ class _HomeTop5WidgetThread extends StatelessWidget {
       text: thread.creatorUsername,
     ));
 
-    if (item?.itemDate != null) {
-      spans.add(TextSpan(text: " ${formatTimestamp(context, item.itemDate)}"));
+    final itemDate = item?.itemDate;
+    if (itemDate != null) {
+      spans.add(TextSpan(text: " ${formatTimestamp(context, itemDate)}"));
     }
 
     return RichText(
@@ -151,19 +152,22 @@ class _HomeTop5WidgetThread extends StatelessWidget {
     );
   }
 
-  Widget _buildTitle() => Text(thread.threadTitle);
+  Widget _buildTitle() => Text(thread.threadTitle ?? '#${thread.threadId}');
 
   ThreadImage _chooseImageForBox(Thread t, BuildContext c, BoxConstraints bc) {
-    if (t.threadThumbnail == null) return t.threadImage;
+    final thumbnail = t.threadThumbnail;
+    if (thumbnail == null) return t.threadImage;
+
+    final thumbnailSize = thumbnail.size;
+    if (thumbnailSize == null) return t.threadImage;
 
     final devicePixelRatio = MediaQuery.of(c).devicePixelRatio;
-    final thumbnail = t.threadThumbnail;
     switch (thumbnail.mode) {
       case 'sh':
-        if (devicePixelRatio * bc.maxWidth < thumbnail.size) return thumbnail;
+        if (devicePixelRatio * bc.maxWidth < thumbnailSize) return thumbnail;
         break;
       case 'sw':
-        if (devicePixelRatio * bc.maxHeight < thumbnail.size) return thumbnail;
+        if (devicePixelRatio * bc.maxHeight < thumbnailSize) return thumbnail;
         break;
     }
 

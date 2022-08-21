@@ -1,13 +1,5 @@
 part of '../posts.dart';
 
-TextStyle getPostBodyTextStyle(BuildContext context, bool isFirstPost) {
-  final themeStyle = Theme.of(context).textTheme.bodyText2;
-  return themeStyle.copyWith(
-    fontSize: (themeStyle.fontSize + (isFirstPost ? 1 : 0)) *
-        context.watch<FontScale>().value,
-  );
-}
-
 class _PostBodyWidget extends StatelessWidget {
   final Post post;
 
@@ -23,22 +15,39 @@ class _PostBodyWidget extends StatelessWidget {
             return Padding(
               child: Text(
                 l(context).postDeleted,
-                style: Theme.of(context).textTheme.caption.copyWith(
+                style: Theme.of(context).textTheme.caption?.copyWith(
                       decoration: TextDecoration.lineThrough,
                     ),
               ),
               padding: const EdgeInsets.all(kPostBodyPadding),
             );
 
-          final html = post.postBodyHtml;
-          if (html.isEmpty) {
-            return const SizedBox(height: 10);
+          Widget built = const SizedBox(height: 10);
+
+          final html = (post.postBodyHtml ?? '').trim();
+          if (html.isNotEmpty) {
+            built = TinhteHtmlWidget(html);
           }
 
-          return DefaultTextStyle(
-            child: TinhteHtmlWidget(html),
-            style: getPostBodyTextStyle(context, post.postIsFirstPost),
-          );
+          final style =
+              _getPostBodyTextStyle(context, post.postIsFirstPost == true);
+          if (style != null) {
+            built = DefaultTextStyle(child: built, style: style);
+          }
+
+          return built;
         },
       );
+}
+
+TextStyle /*?*/ _getPostBodyTextStyle(
+    BuildContext context, bool /*!*/ isFirstPost) {
+  final themeStyle = Theme.of(context).textTheme.bodyText2;
+  if (themeStyle == null) return null;
+
+  final size = themeStyle.fontSize;
+  if (size == null) return themeStyle;
+
+  final scale = context.watch<FontScale>().value;
+  return themeStyle.copyWith(fontSize: (size + (isFirstPost ? 1 : 0)) * scale);
 }

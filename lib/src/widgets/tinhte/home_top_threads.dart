@@ -23,11 +23,13 @@ class TopThreadsWidget extends StatelessWidget {
         },
       );
 
-  Widget _build(List<Thread> threads) => LayoutBuilder(
+  Widget _build(List<Thread> /*!*/ threads) => LayoutBuilder(
         builder: (context, bc) {
           final isWide = bc.maxWidth > 600;
+          final style = DefaultTextStyle.of(context).style;
+          final fontSize = style.fontSize;
           final height = _kTopThreadHeight +
-              (isWide ? DefaultTextStyle.of(context).style.fontSize * 2 : 0);
+              (isWide && fontSize != null ? fontSize * 2 : 0);
           final width = height * .75;
 
           return Column(
@@ -101,13 +103,15 @@ class _ThreadWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final thumbnail = thread.threadThumbnail;
+    final viewCount = thread.threadViewCount ?? 0;
     return _buildGestureDetector(
       context,
       _buildBox(
         context,
-        thread.threadThumbnail != null
+        thumbnail != null
             ? Image(
-                image: CachedNetworkImageProvider(thread.threadThumbnail.link),
+                image: CachedNetworkImageProvider(thumbnail.link),
                 fit: BoxFit.cover,
               )
             : null,
@@ -118,8 +122,8 @@ class _ThreadWidget extends StatelessWidget {
                 style: TextStyle(color: theme.colorScheme.secondary),
                 text: thread.creatorUsername,
               ),
-              TextSpan(
-                  text: " ${l(context).statsXViews(thread.threadViewCount)}")
+              if (viewCount > 0)
+                TextSpan(text: " ${l(context).statsXViews(viewCount)}")
             ],
             style: theme.textTheme.caption,
           ),
@@ -127,7 +131,7 @@ class _ThreadWidget extends StatelessWidget {
           overflow: TextOverflow.ellipsis,
         ),
         Text(
-          thread.threadTitle,
+          thread.threadTitle ?? '',
           maxLines: 4,
           overflow: TextOverflow.ellipsis,
         ),

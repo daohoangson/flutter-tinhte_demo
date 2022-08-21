@@ -1,20 +1,5 @@
 part of '../posts.dart';
 
-Widget _buildReplyToPadding(Widget child, int depth) =>
-    depth == null || depth == 0
-        ? child
-        : Padding(
-            child: child,
-            padding: EdgeInsets.only(
-              left: 2 * kPaddingHorizontal +
-                  kAvatarRootRadius +
-                  (depth > 1
-                      ? (depth - 1) *
-                          (2 * kPaddingHorizontal + kAvatarReplyToRadius)
-                      : 0),
-            ),
-          );
-
 class _PostWidget extends StatelessWidget {
   final Post post;
 
@@ -24,7 +9,7 @@ class _PostWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (post.userIsIgnored) return widget0;
+    if (post.userIsIgnored == true) return widget0;
 
     final isPostReply = post.postReplyTo != null;
     final attachments = _PostAttachmentsWidget.forPost(post);
@@ -33,7 +18,7 @@ class _PostWidget extends StatelessWidget {
     Widget built = buildPostRow(
       context,
       buildPosterCircleAvatar(
-        post.links.posterAvatar,
+        post.links?.posterAvatar,
         isPostReply: isPostReply,
       ),
       box: <Widget>[
@@ -56,7 +41,7 @@ class _PostWidget extends StatelessWidget {
       ],
     );
 
-    built = _buildReplyToPadding(built, post.postReplyDepth);
+    built = _buildReplyToPadding(built, post.postReplyDepth ?? 0);
 
     return built;
   }
@@ -89,7 +74,7 @@ class _PostReplyHiddenWidgetState extends State<_PostReplyHiddenWidget> {
             child: _buildText(
               context,
               l(context).postLoadXHidden(
-                  formatNumber(widget.postReply.postReplyCount)),
+                  formatNumber(widget.postReply.postReplyCount ?? 0)),
             ),
             onTap: fetch,
           );
@@ -102,7 +87,10 @@ class _PostReplyHiddenWidgetState extends State<_PostReplyHiddenWidget> {
       child: built,
     );
 
-    built = _buildReplyToPadding(built, widget.postReply.postReplyDepth + 1);
+    final postReplyDepth = widget.postReply.postReplyDepth;
+    if (postReplyDepth != null) {
+      built = _buildReplyToPadding(built, postReplyDepth + 1);
+    }
 
     // this is required to go full width
     built = Row(children: <Widget>[built]);
@@ -119,15 +107,15 @@ class _PostReplyHiddenWidgetState extends State<_PostReplyHiddenWidget> {
       widget.postReply.link,
       onSuccess: (jsonMap) {
         final sls = context.read<SuperListState<_PostListItem>>();
-        final jsonParentPost = jsonMap['parent_post'] as Map;
-        if (jsonParentPost != null &&
-            jsonParentPost['post_id'] == widget.postReply.postReplyTo &&
-            jsonMap.containsKey('replies')) {
-          final items = decodePostsAndTheirReplies(
-            [jsonParentPost, ...jsonMap['replies']],
-          )
-              .where((item) => item.postId != widget.postReply.postReplyTo)
-              .toList();
+        final parentPostValue = jsonMap['parent_post'];
+        final parentPost = parentPostValue is Map ? parentPostValue : {};
+        final repliesValue = jsonMap['replies'];
+        if (parentPost['post_id'] == widget.postReply.postReplyTo &&
+            repliesValue is Iterable) {
+          final items =
+              decodePostsAndTheirReplies([parentPost, ...repliesValue])
+                  .where((item) => item.postId != widget.postReply.postReplyTo)
+                  .toList();
 
           if (items.isNotEmpty &&
               items.last.postReply?.postReplyCount != null) {
@@ -151,3 +139,17 @@ class _PostReplyHiddenWidgetState extends State<_PostReplyHiddenWidget> {
         style: Theme.of(context).textTheme.caption,
       );
 }
+
+Widget _buildReplyToPadding(Widget child, int /*!*/ depth) => depth == 0
+    ? child
+    : Padding(
+        child: child,
+        padding: EdgeInsets.only(
+          left: 2 * kPaddingHorizontal +
+              kAvatarRootRadius +
+              (depth > 1
+                  ? (depth - 1) *
+                      (2 * kPaddingHorizontal + kAvatarReplyToRadius)
+                  : 0),
+        ),
+      );

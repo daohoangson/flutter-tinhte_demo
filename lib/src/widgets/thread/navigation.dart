@@ -14,9 +14,13 @@ class ThreadNavigationWidget extends StatefulWidget {
 }
 
 class _ThreadNavigationState extends State<ThreadNavigationWidget> {
-  List<Node> get nodes =>
-      widget.thread.navigation ??
-      [if (widget.thread.node != null) widget.thread.node];
+  List<Node /*!*/ > get nodes {
+    final navigation = widget.thread.navigation;
+    if (navigation != null) return navigation;
+
+    final node = widget.thread.node;
+    return [if (node != null) node];
+  }
 
   @override
   void initState() {
@@ -47,7 +51,7 @@ class _ThreadNavigationState extends State<ThreadNavigationWidget> {
         child: Icon(
           FontAwesomeIcons.caretRight,
           size: _kThreadNavigationFontSize,
-          color: Theme.of(context).textTheme.caption.color,
+          color: Theme.of(context).textTheme.caption?.color,
         ),
         padding: const EdgeInsets.symmetric(
             horizontal: _kThreadNavigationSeparatorPadding),
@@ -56,26 +60,30 @@ class _ThreadNavigationState extends State<ThreadNavigationWidget> {
   Widget _buildNode(BuildContext context, Node node) => node.map(
         (node) => _buildText(context, '#${node.navigationId}'),
         category: (category) => InkWell(
-          child: _buildText(context, category.categoryTitle),
+          child: _buildText(
+              context, category.categoryTitle ?? '#${category.categoryId}'),
           onTap: () => Navigator.push(context,
               MaterialPageRoute(builder: (_) => NodeViewScreen(category))),
         ),
         forum: (forum) => InkWell(
-          child: _buildText(context, forum.forumTitle),
+          child: _buildText(context, forum.forumTitle ?? '#${forum.forumId}'),
           onTap: () => Navigator.push(context,
               MaterialPageRoute(builder: (_) => ForumViewScreen(forum))),
         ),
-        linkforum: (link) => InkWell(
-          child: _buildText(context, link.linkTitle),
-          onTap: () => launchLink(context, link.links.target),
-        ),
+        linkforum: (link) {
+          final target = link.links?.target;
+          return InkWell(
+            child: _buildText(context, link.linkTitle ?? '#${link.linkId}'),
+            onTap: target != null ? () => launchLink(context, target) : null,
+          );
+        },
       );
 
   Widget _buildText(BuildContext context, String data) => Padding(
       child: Center(
         child: Text(
           data,
-          style: Theme.of(context).textTheme.caption.copyWith(
+          style: Theme.of(context).textTheme.caption?.copyWith(
                 height: 1,
                 fontSize: _kThreadNavigationFontSize,
               ),

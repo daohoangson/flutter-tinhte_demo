@@ -20,6 +20,7 @@ class _FirstPostWidget extends StatelessWidget {
 
   Widget _builder(BuildContext context, Widget _) {
     final _threadImage = thread.threadPrimaryImage ?? thread.threadImage;
+    final threadTitle = thread.threadTitle;
     final _isBackgroundPost = isBackgroundPost(post);
     final _isTinhteFact = isTinhteFact(thread);
     final _isCustomPost = _isBackgroundPost || _isTinhteFact;
@@ -32,14 +33,14 @@ class _FirstPostWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           ThreadNavigationWidget(thread),
-          _isThreadTitleRedundant
+          _isThreadTitleRedundant || threadTitle == null
               ? widget0
               : Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: kPaddingHorizontal,
                   ),
                   child: Text(
-                    thread.threadTitle,
+                    threadTitle,
                     maxLines: null,
                     style: Theme.of(context).textTheme.headline6,
                   ),
@@ -60,7 +61,7 @@ class _FirstPostWidget extends StatelessWidget {
                   ),
                 )
               : _PostBodyWidget(post: post),
-          thread.threadHasPoll == true && thread.links.poll != null
+          thread.threadHasPoll == true && thread.links?.poll != null
               ? PollWidget(thread)
               : widget0,
           _buildTags(context, thread) ?? widget0,
@@ -85,11 +86,12 @@ class _FirstPostWidget extends StatelessWidget {
   }
 
   Widget _buildTags(BuildContext context, Thread thread) {
-    if (thread.threadTags?.isNotEmpty != true) return null;
+    final tags = thread.threadTags ?? const {};
+    if (tags.isEmpty) return null;
 
     return Padding(
       child: Wrap(
-        children: thread.threadTags
+        children: tags
             .map((tagId, tagText) => MapEntry(tagId, _TagChip(tagId, tagText)))
             .values
             .toList(),

@@ -15,7 +15,7 @@ import 'package:the_app/src/constants.dart';
 
 final _oauthTokenRegEx = RegExp(r'oauth_token=.+(&|$)');
 
-void apiDelete(ApiCaller caller, String path,
+void apiDelete(ApiCaller caller, String /*!*/ path,
         {Map<String, String> bodyFields,
         VoidCallback onComplete,
         ApiOnError onError,
@@ -31,7 +31,7 @@ void apiDelete(ApiCaller caller, String path,
       onComplete,
     );
 
-void apiGet(ApiCaller caller, String path,
+void apiGet(ApiCaller caller, String /*!*/ path,
         {VoidCallback onComplete,
         ApiOnError onError,
         ApiOnJsonMap onSuccess}) =>
@@ -43,8 +43,8 @@ void apiGet(ApiCaller caller, String path,
       onComplete,
     );
 
-void apiPost(ApiCaller caller, String path,
-        {Map<String, String> bodyFields,
+void apiPost(ApiCaller caller, String /*!*/ path,
+        {Map<String, String /*!*/ > bodyFields,
         Map<String, File> fileFields,
         VoidCallback onComplete,
         ApiOnError onError,
@@ -114,7 +114,7 @@ void _setupApiCompleter<T>(
     f = f.then(
       (data) => (caller.canReceiveCallback && onSuccess != null)
           ? onSuccess(data)
-          : null,
+          : data,
     );
   }
 
@@ -131,7 +131,6 @@ void _setupApiCompleter<T>(
   if (onComplete != null) {
     f.whenComplete(() {
       if (!caller.canReceiveCallback) return;
-      if (onComplete == null) return;
       onComplete();
     });
   }
@@ -165,7 +164,7 @@ void _setupApiJsonHandlers(
 typedef Future ApiFetch(_ApiAppState aas);
 typedef void ApiMethod(
   ApiCaller caller,
-  String path, {
+  String /*!*/ path, {
   VoidCallback onComplete,
   ApiOnError onError,
   ApiOnJsonMap onSuccess,
@@ -209,7 +208,7 @@ class _ApiAppState extends State<ApiApp> {
   void initState() {
     super.initState();
 
-    secureStorage.read(key: _secureStorageKeyToken).then<OauthToken>(
+    secureStorage.read(key: _secureStorageKeyToken).then<OauthToken /*?*/ >(
       (value) {
         try {
           final json = jsonDecode(value ?? '');
@@ -241,17 +240,20 @@ class _ApiAppState extends State<ApiApp> {
   void _enqueue(VoidCallback callback, {bool scheduleDequeue = true}) {
     if (scheduleDequeue) Timer.run(_dequeue);
 
-    _queue ??= [];
-    _queue.add(callback);
+    final queue = _queue ??= [];
+    queue.add(callback);
   }
 
   void _dequeue() {
     if (!_tokenHasBeenSet) return;
-    if (_token?.hasExpired == true) return _refreshToken();
+
+    final token = _token;
+    if (token == null) return;
+    if (token.hasExpired) return _refreshToken(token);
 
     final __callbacks = _queue;
     _queue = null;
-    if (__callbacks?.isNotEmpty != true) return;
+    if (__callbacks == null || __callbacks.isEmpty) return;
     if (__callbacks.length == 1) return __callbacks.first();
 
     final batch = api.newBatch(path: _appendOauthToken('batch'));
@@ -281,12 +283,12 @@ class _ApiAppState extends State<ApiApp> {
         }
       }, scheduleDequeue: false);
 
-  void _refreshToken() {
+  void _refreshToken(OauthToken token) {
     if (_isRefreshingToken) return;
     _isRefreshingToken = true;
 
     api
-        .refreshToken(_token)
+        .refreshToken(token)
         .then((refreshedToken) => _setToken(refreshedToken))
         .catchError((_) => _setToken(null))
         .whenComplete(() => _isRefreshingToken = false);
