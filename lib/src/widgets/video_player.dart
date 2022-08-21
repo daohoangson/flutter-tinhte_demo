@@ -8,10 +8,10 @@ class VideoPlayer extends StatefulWidget {
   final String url;
 
   const VideoPlayer({
-    @required this.aspectRatio,
-    @required this.autoPlay,
-    Key key,
-    @required this.url,
+    required this.aspectRatio,
+    required this.autoPlay,
+    Key? key,
+    required this.url,
   })  : assert(aspectRatio != null),
         assert(url != null),
         super(key: key);
@@ -21,8 +21,8 @@ class VideoPlayer extends StatefulWidget {
 }
 
 class _VideoState extends State<VideoPlayer> {
-  /* late final */ VideoPlayerController _videoPlayerController;
-  ChewieController _chewieController;
+  late final VideoPlayerController _videoPlayerController;
+  ChewieController? _chewieController;
 
   @override
   void initState() {
@@ -67,7 +67,7 @@ class _VideoState extends State<VideoPlayer> {
     return AspectRatio(
       aspectRatio: widget.aspectRatio,
       child: Chewie(
-        controller: _chewieController,
+        controller: _chewieController!,
       ),
     );
   }

@@ -9,7 +9,7 @@ import 'package:the_app/src/api.dart';
 class MemberViewScreen extends StatefulWidget {
   final User user;
 
-  MemberViewScreen(this.user, {Key key})
+  MemberViewScreen(this.user, {Key? key})
       : assert(user != null),
         super(key: key);
 

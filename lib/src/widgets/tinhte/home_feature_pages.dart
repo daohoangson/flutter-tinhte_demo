@@ -19,13 +19,13 @@ class FeaturePagesWidget extends StatelessWidget {
 
             final cols = (bc.maxWidth / FpWidget.kPreferWidth).ceil();
 
-            return _build(context, data.pages, cols);
+            return _build(context, data.pages!, cols);
           },
         ),
       );
 
   Widget _build(
-          BuildContext context, List<FeaturePage> /*!*/ pages, int cols) =>
+          BuildContext context, List<FeaturePage> pages, int cols) =>
       Card(
         margin: const EdgeInsets.only(bottom: 10.0),
         child: Column(
@@ -99,10 +99,10 @@ class FeaturePagesWidget extends StatelessWidget {
 }
 
 class _FeaturePagesData extends ChangeNotifier {
-  List<FeaturePage> pages;
+  List<FeaturePage>? pages;
 
   void update(Iterable<FeaturePage> newPages) {
-    pages.addAll(newPages);
+    pages!.addAll(newPages);
     notifyListeners();
   }
 }

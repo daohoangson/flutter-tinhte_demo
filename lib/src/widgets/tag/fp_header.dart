@@ -39,7 +39,7 @@ class FpHeader extends StatelessWidget {
         )
       ]);
 
-  Widget _buildImage() {
+  Widget? _buildImage() {
     final imageUrl = fp.links?.image ?? '';
     return imageUrl.isNotEmpty
         ? AspectRatio(
@@ -52,7 +52,7 @@ class FpHeader extends StatelessWidget {
         : null;
   }
 
-  Widget _buildStats(BuildContext context, int value, String label) =>
+  Widget? _buildStats(BuildContext context, int? value, String label) =>
       value != null
           ? Column(
               children: <Widget>[

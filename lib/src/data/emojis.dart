@@ -2403,8 +2403,8 @@ const _emojis = {
   ":regional_indicator_a:": "\ud83c\udde6",
 };
 
-Map<String, String> searchEmojis(String query) {
-  Map<String, String> result;
+Map<String, String>? searchEmojis(String query) {
+  Map<String, String>? result;
   for (final code in _emojis.keys) {
     final resultKey = _emojis[code];
     if (resultKey == null) continue;

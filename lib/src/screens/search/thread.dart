@@ -8,10 +8,10 @@ import 'package:the_app/src/widgets/threads.dart';
 import 'package:the_app/src/api.dart';
 
 class ThreadSearchDelegate extends SearchDelegate {
-  final Forum forum;
-  final User user;
+  final Forum? forum;
+  final User? user;
 
-  _ApiQuery _apiQuery;
+  _ApiQuery? _apiQuery;
 
   ThreadSearchDelegate({
     this.forum,
@@ -74,7 +74,7 @@ class ThreadSearchDelegate extends SearchDelegate {
   }
 
   Widget _buildResults(BuildContext context) => FutureBuilder<Map>(
-        future: _apiQuery.future,
+        future: _apiQuery!.future,
         builder: (context, snapshot) => snapshot.hasData
             ? ThreadsWidget(
                 initialJson: snapshot.data,

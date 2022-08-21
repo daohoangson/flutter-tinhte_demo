@@ -1,8 +1,8 @@
 part of '../posts.dart';
 
 class _PostStickersWidget extends StatelessWidget {
-  final LbTrigger /*!*/ lbTrigger;
-  final List<PostSticker> /*!*/ stickers;
+  final LbTrigger lbTrigger;
+  final List<PostSticker> stickers;
 
   _PostStickersWidget._(this.lbTrigger, this.stickers);
 
@@ -37,7 +37,7 @@ class _PostStickersWidget extends StatelessWidget {
     );
   }
 
-  static Widget forPost(Post post) {
+  static Widget? forPost(Post post) {
     final lbTrigger = LbTrigger();
     final stickers = <PostSticker>[];
 

@@ -6,13 +6,13 @@ class LinkExpander {
   final BuildMetadata linkMeta;
   final TinhteWidgetFactory wf;
 
-  WidgetPlaceholder _info;
-  bool _isCover;
-  WidgetPlaceholder _thumbnail;
+  WidgetPlaceholder? _info;
+  bool? _isCover;
+  WidgetPlaceholder? _thumbnail;
 
   LinkExpander(this.wf, this.linkMeta);
 
-  BuildOp _leOp;
+  BuildOp? _leOp;
   BuildOp get op {
     return _leOp ??= BuildOp(
       defaultStyles: (_) => {'margin': '0.5em 0'},
@@ -45,7 +45,7 @@ class LinkExpander {
         break;
       case 'span':
         if (e.classes.contains('host')) {
-          childMeta.tsb.enqueue((p, _) =>
+          childMeta.tsb.enqueue((p, dynamic _) =>
               p.copyWith(style: p.style.copyWith(color: Colors.grey)));
         }
         break;
@@ -64,7 +64,7 @@ class LinkExpander {
     ];
   }
 
-  Widget _buildBox(BuildMetadata meta, Widget child, {double width}) {
+  Widget _buildBox(BuildMetadata meta, Widget child, {double? width}) {
     final a = meta.element.attributes;
     final fullUrl = wf.urlFull(a['href'] ?? '');
     final onTap = fullUrl != null ? wf.gestureTapCallback(fullUrl) : null;
@@ -74,7 +74,7 @@ class LinkExpander {
         final decoBox =
             wf.buildDecoration(meta, child, color: Theme.of(context).cardColor);
         if (decoBox == null) return previous;
-        Widget /*!*/ built = decoBox;
+        Widget built = decoBox;
 
         if (width != null) {
           built = CssSizing(
@@ -120,7 +120,7 @@ class LinkExpander {
         width: 480,
       );
 
-  static BuildOp _oembedOp;
+  static BuildOp? _oembedOp;
   static BuildOp getOembedOp() {
     return _oembedOp ??= BuildOp(
       defaultStyles: (_) => {'margin': '0.5em 0'},
@@ -156,12 +156,12 @@ class _LinkExpanderInfo {
   final LinkExpander le;
   final TinhteWidgetFactory wf;
 
-  Widget _description;
-  BuildOp _descriptionOp;
+  Widget? _description;
+  BuildOp? _descriptionOp;
 
   _LinkExpanderInfo(this.wf, this.le, this.infoMeta);
 
-  BuildOp _infoOp;
+  BuildOp? _infoOp;
   BuildOp get op {
     return _infoOp ??= BuildOp(
       onChild: onChild,

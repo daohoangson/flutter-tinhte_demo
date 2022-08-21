@@ -28,12 +28,12 @@ class _RegisterState extends State<RegisterForm> {
 
   bool _isRegistering = false;
 
-  String /*!*/ _username = '';
-  String _usernameError;
-  String /*!*/ _email = '';
-  String _emailError;
-  String /*!*/ _password = '';
-  bool /*!*/ _agreed = false;
+  String _username = '';
+  String? _usernameError;
+  String _email = '';
+  String? _emailError;
+  String _password = '';
+  bool _agreed = false;
 
   @override
   void dispose() {
@@ -90,7 +90,7 @@ class _RegisterState extends State<RegisterForm> {
         initialValue: _password,
         obscureText: true,
         onFieldSubmitted: (_) => focusNodeAgreed.requestFocus(),
-        onSaved: (value) => _password = value,
+        onSaved: (value) => _password = value!,
         validator: (value) {
           final password = (value ?? '').trim();
           if (password.isEmpty) {
@@ -110,7 +110,7 @@ class _RegisterState extends State<RegisterForm> {
       initialValue: _email,
       keyboardType: TextInputType.emailAddress,
       onFieldSubmitted: (_) => focusNodePassword.requestFocus(),
-      onSaved: (value) => _email = value,
+      onSaved: (value) => _email = value!,
       validator: (value) {
         final email = (value ?? '').trim();
         if (email.isEmpty) {
@@ -129,7 +129,7 @@ class _RegisterState extends State<RegisterForm> {
       initialValue: _username,
       keyboardType: TextInputType.name,
       onFieldSubmitted: (_) => focusNodeEmail.requestFocus(),
-      onSaved: (value) => _username = value,
+      onSaved: (value) => _username = value!,
       validator: (value) {
         final username = (value ?? '').trim();
         if (username.isEmpty) {
@@ -196,7 +196,7 @@ class _RegisterState extends State<RegisterForm> {
   void _onJson(json) {
     if (!mounted || json == null || json is! Map) return;
 
-    final map = json as Map;
+    final map = json;
     if (!map.containsKey('token'))
       return _showError(l(context).registerErrorNoAccessToken);
 

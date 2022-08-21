@@ -6,21 +6,21 @@ import 'package:the_api/links.dart';
 import 'package:the_app/src/api.dart';
 
 class SuperListView<T> extends StatefulWidget {
-  final ApiMethod apiMethodInitial;
-  final List<SuperListComplexItemRegister> complexItems;
-  final bool enableRefreshIndicator;
+  final ApiMethod? apiMethodInitial;
+  final List<SuperListComplexItemRegister>? complexItems;
+  final bool? enableRefreshIndicator;
   final bool enableScrollToIndex;
-  final String fetchPathInitial;
+  final String? fetchPathInitial;
   final _FetchOnSuccess<T> fetchOnSuccess;
-  final Widget footer;
-  final Widget header;
+  final Widget? footer;
+  final Widget? header;
   final double infiniteScrollingVh;
-  final Map initialJson;
-  final Iterable<T> initialItems;
+  final Map? initialJson;
+  final Iterable<T>? initialItems;
   final _ItemBuilder<T> itemBuilder;
   final double itemMaxWidth;
-  final bool progressIndicator;
-  final bool shrinkWrap;
+  final bool? progressIndicator;
+  final bool? shrinkWrap;
 
   SuperListView({
     this.apiMethodInitial,
@@ -28,15 +28,15 @@ class SuperListView<T> extends StatefulWidget {
     this.enableRefreshIndicator,
     this.enableScrollToIndex = false,
     this.fetchPathInitial,
-    this.fetchOnSuccess,
+    required this.fetchOnSuccess,
     this.footer,
     this.header,
     this.infiniteScrollingVh = 1.5,
     this.initialJson,
     this.initialItems,
-    this.itemBuilder,
+    required this.itemBuilder,
     this.itemMaxWidth = 600,
-    Key key,
+    Key? key,
     this.progressIndicator,
     this.shrinkWrap,
   })  : assert((fetchPathInitial != null) || (initialJson != null)),
@@ -49,23 +49,23 @@ class SuperListView<T> extends StatefulWidget {
 }
 
 class FetchContext<T> {
-  final ApiMethod apiMethod;
+  final ApiMethod? apiMethod;
   final FetchContextId id;
   final items = <T>[];
-  final String path;
+  final String? path;
   final SuperListState<T> state;
 
-  String linksNext;
-  int linksPage;
-  int linksPages;
-  String linksPrev;
-  int scrollToRelativeIndex;
+  String? linksNext;
+  int? linksPage;
+  int? linksPages;
+  String? linksPrev;
+  int? scrollToRelativeIndex;
 
   FetchContext({
     this.apiMethod,
     this.id = FetchContextId.FetchCustom,
     this.path,
-    @required this.state,
+    required this.state,
   }) : assert(state != null);
 }
 
@@ -75,8 +75,8 @@ class SuperListItemFullWidth extends StatelessWidget {
   final Widget child;
 
   SuperListItemFullWidth({
-    this.child,
-    Key key,
+    required this.child,
+    Key? key,
   })  : assert(child != null),
         super(key: key);
 
@@ -86,27 +86,27 @@ class SuperListItemFullWidth extends StatelessWidget {
 
 class SuperListState<T> extends State<SuperListView<T>> {
   final List<SuperListComplexItemRegistration> _complexItems = [];
-  final List<T /*!*/ > _items = [];
+  final List<T > _items = [];
 
   var _isFetching = false;
   var _isRefreshing = false;
-  String _fetchPathNext;
-  String _fetchPathPrev;
-  int _fetchedPageMax;
-  int _fetchedPageMin;
-  Map _initialJson;
-  GlobalKey<RefreshIndicatorState> _refreshIndicatorKey;
-  ScrollController _scrollController;
-  AutoScrollController _scrollControllerAuto;
+  String? _fetchPathNext;
+  String? _fetchPathPrev;
+  int? _fetchedPageMax;
+  int? _fetchedPageMin;
+  Map? _initialJson;
+  GlobalKey<RefreshIndicatorState>? _refreshIndicatorKey;
+  ScrollController? _scrollController;
+  AutoScrollController? _scrollControllerAuto;
 
   bool get canFetchNext => _fetchPathNext != null;
   bool get canFetchPrev => _fetchPathPrev != null;
-  int get fetchedPageMax => _fetchedPageMax;
-  int get fetchedPageMin => _fetchedPageMin;
+  int? get fetchedPageMax => _fetchedPageMax;
+  int? get fetchedPageMin => _fetchedPageMin;
   bool get isFetching => _isFetching;
   int get itemCountAfter => (widget.footer != null ? 1 : 0) + 1;
   int get itemCountBefore => 1 + (widget.header != null ? 1 : 0);
-  Iterable<T /*!*/ > get items => _items;
+  Iterable<T > get items => _items;
 
   @override
   void initState() {
@@ -114,7 +114,7 @@ class SuperListState<T> extends State<SuperListView<T>> {
 
     _initialJson = widget.initialJson;
 
-    final initialItems = widget.initialItems;
+    final Iterable<T>? initialItems = widget.initialItems;
     if (initialItems != null) _items.addAll(initialItems);
 
     final enableRefreshIndicator =
@@ -208,7 +208,7 @@ class SuperListState<T> extends State<SuperListView<T>> {
 
   Future<void> fetch({
     bool clearItems = false,
-    FetchContext<T> fc,
+    FetchContext<T>? fc,
   }) =>
       _fetch(
         fc ??
@@ -231,7 +231,7 @@ class SuperListState<T> extends State<SuperListView<T>> {
         preFetchedJson: _initialJson,
       );
 
-  Future<void> fetchNext({int scrollToRelativeIndex}) => _fetch(
+  Future<void> fetchNext({int? scrollToRelativeIndex}) => _fetch(
         FetchContext(
           id: FetchContextId.FetchNext,
           path: _fetchPathNext,
@@ -297,7 +297,7 @@ class SuperListState<T> extends State<SuperListView<T>> {
 
   void scrollToIndex(int index,
       {Duration duration: scrollAnimationDuration,
-      AutoScrollPosition preferPosition}) {
+      AutoScrollPosition? preferPosition}) {
     final scrollController = _scrollControllerAuto;
     if (scrollController == null) return;
 
@@ -310,7 +310,7 @@ class SuperListState<T> extends State<SuperListView<T>> {
     });
   }
 
-  Widget /*!*/ _buildItem(BuildContext context, int i) {
+  Widget _buildItem(BuildContext context, int i) {
     if (i == 0) return _buildProgressIndicator(canFetchPrev && _isFetching);
     i--;
 
@@ -346,8 +346,8 @@ class SuperListState<T> extends State<SuperListView<T>> {
 
   Future<void> _fetch(
     FetchContext<T> fc, {
-    VoidCallback onPreFetch,
-    Map preFetchedJson,
+    VoidCallback? onPreFetch,
+    Map? preFetchedJson,
   }) {
     if (_isFetching || !mounted) return Future.value();
 
@@ -364,7 +364,7 @@ class SuperListState<T> extends State<SuperListView<T>> {
     final ApiMethod apiMethod = fc.apiMethod ?? apiGet;
     apiMethod(
       ApiCaller.stateful(this),
-      fc.path,
+      fc.path!,
       onSuccess: (json) => _fetchOnSuccess(json, fc),
       onComplete: () {
         _fetchOnComplete(fc);
@@ -429,7 +429,7 @@ class SuperListState<T> extends State<SuperListView<T>> {
 }
 
 typedef void _FetchOnSuccess<T>(Map json, FetchContext<T> fetchContext);
-typedef Widget /*!*/ _ItemBuilder<T>(
+typedef Widget _ItemBuilder<T>(
   BuildContext context,
   SuperListState<T> state,
   T item,
@@ -440,11 +440,11 @@ typedef void SuperListComplexItemClearer();
 
 class SuperListComplexItemRegistration {
   InheritedProvider _provider;
-  SuperListComplexItemClearer _clear;
+  SuperListComplexItemClearer? _clear;
 
   SuperListComplexItemRegistration(
     InheritedProvider provider, {
-    SuperListComplexItemClearer clear,
+    SuperListComplexItemClearer? clear,
   })  : assert(provider != null),
         _provider = provider,
         _clear = clear;

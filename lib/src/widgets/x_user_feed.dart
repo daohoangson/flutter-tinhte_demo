@@ -13,7 +13,7 @@ class UserFeedItems extends StatelessWidget {
             _buildContent(item) ?? const SizedBox.shrink(),
       );
 
-  Widget _buildContent(SearchResult item) {
+  Widget? _buildContent(SearchResult item) {
     if (item.content is Thread) {
       final thread = item.content as Thread;
       if (thread.firstPost != null)

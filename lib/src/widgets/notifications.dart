@@ -17,7 +17,7 @@ import 'package:the_app/src/push_notification.dart';
 int _subscribedUserId = 0;
 
 class NotificationsWidget extends StatefulWidget {
-  NotificationsWidget({Key key}) : super(key: key);
+  NotificationsWidget({Key? key}) : super(key: key);
 
   @override
   _NotificationsState createState() => _NotificationsState();
@@ -26,7 +26,7 @@ class NotificationsWidget extends StatefulWidget {
 class _NotificationsState extends State<NotificationsWidget> {
   final _slsKey = GlobalKey<SuperListState<api.Notification>>();
 
-  /* late final */ StreamSubscription subscription;
+  late final StreamSubscription subscription;
 
   @override
   initState() {
@@ -185,7 +185,7 @@ class _NotificationsState extends State<NotificationsWidget> {
     }
   }
 
-  static IconData _getContentActionIcon(String contentAction) {
+  static IconData? _getContentActionIcon(String? contentAction) {
     switch (contentAction) {
       case 'like':
         return FontAwesomeIcons.solidHeart;

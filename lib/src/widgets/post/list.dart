@@ -3,14 +3,14 @@ part of '../posts.dart';
 const _kPageIndicatorHeight = 40.0;
 
 class PostsWidget extends StatefulWidget {
-  final Map initialJson;
-  final String path;
+  final Map? initialJson;
+  final String? path;
   final Thread thread;
 
   PostsWidget(
     this.thread, {
     this.initialJson,
-    Key key,
+    Key? key,
     this.path,
   })  : assert(thread != null),
         super(key: key);
@@ -22,7 +22,7 @@ class PostsWidget extends StatefulWidget {
 class PostsState extends State<PostsWidget> {
   final _slsKey = GlobalKey<SuperListState<_PostListItem>>();
 
-  ScaffoldFeatureController<SnackBar, SnackBarClosedReason> _unreadController;
+  ScaffoldFeatureController<SnackBar, SnackBarClosedReason>? _unreadController;
 
   @override
   void dispose() {
@@ -83,8 +83,8 @@ class PostsState extends State<PostsWidget> {
   Widget _buildPageIndicator(
     BuildContext context,
     SuperListState<_PostListItem> state,
-    int /*!*/ page,
-    int /*?*/ total,
+    int page,
+    int? total,
   ) {
     if (state.isFetching) {
       return Stack(children: <Widget>[
@@ -146,7 +146,7 @@ class PostsState extends State<PostsWidget> {
     BuildContext context,
     String text, {
     Alignment alignment = Alignment.center,
-    GestureTapCallback onTap,
+    GestureTapCallback? onTap,
   }) =>
       Positioned.fill(
         child: Align(
@@ -243,19 +243,19 @@ class PostsState extends State<PostsWidget> {
 }
 
 class _PostListItem {
-  int pageCurrent;
-  int pageTotal;
-  Post post;
-  PostReply postReply;
+  int? pageCurrent;
+  int? pageTotal;
+  Post? post;
+  PostReply? postReply;
 
-  _PostListItem.post(this.post) : assert(post != null);
+  _PostListItem.post(Post this.post) : assert(post != null);
 
-  _PostListItem.postReply(this.postReply) : assert(postReply != null);
+  _PostListItem.postReply(PostReply this.postReply) : assert(postReply != null);
 
-  _PostListItem.page(this.pageCurrent, this.pageTotal)
+  _PostListItem.page(int this.pageCurrent, this.pageTotal)
       : assert(pageCurrent != null);
 
-  int get postId => post?.postId ?? postReply?.postId;
+  int? get postId => post?.postId ?? postReply?.postId;
 
   static int indexOfNewPost(Iterable<_PostListItem> items, Post post) {
     final depth = post.postReplyDepth ?? 0;

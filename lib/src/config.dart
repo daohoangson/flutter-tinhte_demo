@@ -6,25 +6,25 @@ import 'package:the_app/config.encrypted.dart';
 
 abstract class ConfigBase {
   String get apiRoot;
-  String get apiBookmarkPath => null;
+  String? get apiBookmarkPath => null;
   String get clientId;
   String get clientSecret;
   String get linkPrivacyPolicy;
   String get linkTos;
   String get siteRoot;
 
-  String get pushServer => null;
+  String? get pushServer => null;
 
-  List<SuperListComplexItemRegister> get homeComplexItems => null;
+  List<SuperListComplexItemRegister>? get homeComplexItems => null;
   String get homePath => 'threads/recent';
   SearchResult<Thread> Function(Map<String, dynamic>) get homeParser => (j) {
         final thread = Thread.fromJson(j);
         return SearchResult<Thread>('thread', thread.threadId, content: thread);
       };
-  Widget get homeSlot1BelowTop5 => null;
-  Widget get homeSlot2BelowSlot1 => null;
-  Widget get homeSlot3NearEndOfPage1 => null;
-  Widget get homeSlot4EndOfPage1 => null;
+  Widget? get homeSlot1BelowTop5 => null;
+  Widget? get homeSlot2BelowSlot1 => null;
+  Widget? get homeSlot3NearEndOfPage1 => null;
+  Widget? get homeSlot4EndOfPage1 => null;
   String get homeThreadsKey => 'data';
 
   bool get loginWithApple => false;

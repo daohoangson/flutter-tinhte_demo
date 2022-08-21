@@ -30,10 +30,10 @@ class ChannelsWidget extends StatelessWidget {
       );
 
   _buildButton({
-    BuildContext context,
-    IconData icon,
-    String label,
-    GestureTapCallback onTap,
+    required BuildContext context,
+    IconData? icon,
+    required String label,
+    GestureTapCallback? onTap,
   }) {
     final style = Theme.of(context).textTheme.caption;
     final fontSize = style?.fontSize;
@@ -61,10 +61,10 @@ class ChannelsWidget extends StatelessWidget {
   }
 
   _buildContentListViewButton({
-    BuildContext context,
-    IconData /*!*/ icon,
-    String /*!*/ label,
-    int /*!*/ listId,
+    required BuildContext context,
+    required IconData icon,
+    required String label,
+    required int listId,
   }) =>
       _buildButton(
         context: context,

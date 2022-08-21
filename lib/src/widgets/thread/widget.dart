@@ -5,11 +5,11 @@ const _kThreadWidgetSpacing = const SizedBox(height: _kThreadWidgetPadding);
 
 class ThreadWidget extends StatelessWidget {
   final Thread thread;
-  final UserFeedData feedData;
+  final UserFeedData? feedData;
 
   ThreadWidget(
     this.thread, {
-    Key key,
+    Key? key,
     this.feedData,
   })  : assert(thread != null),
         super(key: key);
@@ -97,7 +97,7 @@ class ThreadWidget extends StatelessWidget {
         ),
       );
 
-  Widget _buildImage() {
+  Widget? _buildImage() {
     final image = config.threadWidgetShowCoverImageOnly
         ? thread.threadImageOriginal
         : thread.threadImage;
@@ -154,7 +154,7 @@ class ThreadWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoUsername(ThemeData theme, TextStyle /*?*/ style) {
+  Widget _buildInfoUsername(ThemeData theme, TextStyle? style) {
     final buffer = StringBuffer(thread.creatorUsername ?? '');
     final inlineSpans = <InlineSpan>[];
 
@@ -203,7 +203,7 @@ class ThreadWidget extends StatelessWidget {
 class _ThreadWidgetActions extends StatefulWidget {
   final Thread thread;
 
-  _ThreadWidgetActions(this.thread, {Key key})
+  _ThreadWidgetActions(this.thread, {Key? key})
       : assert(thread != null),
         super(key: key);
 
@@ -214,14 +214,14 @@ class _ThreadWidgetActions extends StatefulWidget {
 class _ThreadWidgetActionsState extends State<_ThreadWidgetActions> {
   var _isLiking = false;
 
-  Post get post => thread.firstPost;
+  Post? get post => thread.firstPost;
   Thread get thread => widget.thread;
 
   @override
   Widget build(BuildContext _) =>
       AnimatedBuilder(animation: thread, builder: _builder);
 
-  Widget _builder(BuildContext context, Widget _) {
+  Widget _builder(BuildContext context, Widget? _) {
     final permalink = thread.links?.permalink ?? '';
     return Column(
       children: <Widget>[
@@ -300,7 +300,7 @@ class _ThreadWidgetActionsState extends State<_ThreadWidgetActions> {
     );
   }
 
-  Widget _buildCounterLike(Post post, TextStyle textStyle) {
+  Widget? _buildCounterLike(Post post, TextStyle? textStyle) {
     final postLikeCount = post.postLikeCount ?? 0;
     if (postLikeCount == 0) return null;
 
@@ -328,7 +328,7 @@ class _ThreadWidgetActionsState extends State<_ThreadWidgetActions> {
     );
   }
 
-  Widget _buildCounterReply(TextStyle textStyle) {
+  Widget? _buildCounterReply(TextStyle? textStyle) {
     final replyCount = (thread.threadPostCount ?? 1) - 1;
 
     return replyCount > 0
@@ -340,7 +340,7 @@ class _ThreadWidgetActionsState extends State<_ThreadWidgetActions> {
         : null;
   }
 
-  Widget _buildCounters(BuildContext context) {
+  Widget? _buildCounters(BuildContext context) {
     final post = this.post;
     if (post == null) return null;
 

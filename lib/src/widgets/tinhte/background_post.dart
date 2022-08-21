@@ -14,7 +14,7 @@ class BackgroundPost extends StatelessWidget {
 
   const BackgroundPost(
     this.post, {
-    Key key,
+    Key? key,
   })  : assert(post != null),
         super(key: key);
 
@@ -51,7 +51,7 @@ class BackgroundPost extends StatelessWidget {
     final text = m?.group(2);
     final threadBackgroundUrl = href == text ? href : null;
     final _postBodyHtml = threadBackgroundUrl != null
-        ? postBodyHtml.replaceAll(m.group(0), '')
+        ? postBodyHtml.replaceAll(m!.group(0)!, '')
         : postBodyHtml;
 
     return ClipRRect(

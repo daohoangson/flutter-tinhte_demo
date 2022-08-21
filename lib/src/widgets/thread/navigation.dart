@@ -14,7 +14,7 @@ class ThreadNavigationWidget extends StatefulWidget {
 }
 
 class _ThreadNavigationState extends State<ThreadNavigationWidget> {
-  List<Node /*!*/ > get nodes {
+  List<Node > get nodes {
     final navigation = widget.thread.navigation;
     if (navigation != null) return navigation;
 

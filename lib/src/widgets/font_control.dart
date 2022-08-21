@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:the_app/src/constants.dart';
 
 class FontScale extends ChangeNotifier {
-  double _value;
+  double? _value;
 
   double get value => _value ?? 1.0;
 
@@ -32,14 +32,14 @@ class FontControlWidget extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _FontControlState();
 
-  static final routeObserver = RouteObserver<PageRoute<dynamic> /*?*/ >();
+  static final routeObserver = RouteObserver<PageRoute<dynamic>? >();
 }
 
 class _FontControlState extends State<FontControlWidget> with RouteAware {
   final _key = GlobalKey();
 
   bool _isMenuOpen = false;
-  OverlayEntry _overlayEntry;
+  OverlayEntry? _overlayEntry;
 
   @override
   Widget build(BuildContext context) => IconButton(
@@ -51,7 +51,7 @@ class _FontControlState extends State<FontControlWidget> with RouteAware {
   void didChangeDependencies() {
     super.didChangeDependencies();
     FontControlWidget.routeObserver
-        .subscribe(this, ModalRoute.of<dynamic>(context));
+        .subscribe(this, ModalRoute.of<dynamic>(context) as PageRoute<dynamic>?);
   }
 
   @override

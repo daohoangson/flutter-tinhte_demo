@@ -10,9 +10,9 @@ const kAvatarReplyToRadius = kToolbarHeight / 5;
 Widget buildPostButton(
   BuildContext context,
   String text, {
-  Color color,
+  Color? color,
   int count = 0,
-  GestureTapCallback onTap,
+  GestureTapCallback? onTap,
 }) {
   final theme = Theme.of(context);
   final fontSize = theme.textTheme.button?.fontSize;
@@ -36,8 +36,8 @@ Widget buildPostButton(
 Widget buildPostRow(
   BuildContext context,
   Widget avatar, {
-  List<Widget /*!*/ > /*!*/ box,
-  List<Widget /*!*/ > /*!*/ footer,
+  required List<Widget > box,
+  required List<Widget > footer,
 }) {
   final children = <Widget>[
     Padding(
@@ -75,7 +75,7 @@ Widget buildPostRow(
   );
 }
 
-Widget buildPosterCircleAvatar(String url, {bool isPostReply = false}) =>
+Widget buildPosterCircleAvatar(String? url, {bool isPostReply = false}) =>
     Padding(
       padding: EdgeInsets.only(
         left: kPaddingHorizontal,
@@ -89,10 +89,10 @@ Widget buildPosterCircleAvatar(String url, {bool isPostReply = false}) =>
 
 Widget buildPosterInfo(
   BuildContext context,
-  String username, {
-  int userId,
-  bool userHasVerifiedBadge,
-  String userRank,
+  String? username, {
+  int? userId,
+  bool? userHasVerifiedBadge,
+  String? userRank,
 }) {
   final theme = Theme.of(context);
   final style = theme.textTheme.caption;

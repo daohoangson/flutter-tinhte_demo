@@ -20,7 +20,7 @@ class TagViewHeader extends StatelessWidget {
         ],
       );
 
-  Widget _buildStats(BuildContext context, int value, String label) =>
+  Widget? _buildStats(BuildContext context, int? value, String label) =>
       value != null
           ? Text.rich(
               TextSpan(

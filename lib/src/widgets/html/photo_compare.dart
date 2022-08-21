@@ -48,9 +48,9 @@ class _PhotoCompareWidget extends StatefulWidget {
   final Widget image1;
 
   _PhotoCompareWidget({
-    this.aspectRatio,
-    this.image0,
-    this.image1,
+    required this.aspectRatio,
+    required this.image0,
+    required this.image1,
   })  : assert(aspectRatio != null),
         assert(image0 != null),
         assert(image1 != null);
@@ -135,7 +135,7 @@ class _PhotoCompareHandler extends StatefulWidget {
 
   final bool animate;
 
-  const _PhotoCompareHandler({Key key, @required this.animate})
+  const _PhotoCompareHandler({Key? key, required this.animate})
       : super(key: key);
 
   @override
@@ -144,7 +144,7 @@ class _PhotoCompareHandler extends StatefulWidget {
 
 class _PhotoCompareHandlerState extends State<_PhotoCompareHandler>
     with TickerProviderStateMixin {
-  AnimationController _controller;
+  late AnimationController _controller;
 
   @override
   void initState() {
@@ -198,7 +198,7 @@ class _PhotoCompareAnimation extends StatelessWidget {
   Widget build(BuildContext _) =>
       AnimatedBuilder(builder: _buildAnimation, animation: controller);
 
-  Widget _buildAnimation(BuildContext _, Widget __) => Stack(
+  Widget _buildAnimation(BuildContext _, Widget? __) => Stack(
         children: <Widget>[
           Positioned.fill(
             left: offset.value * _PhotoCompareHandler.iconSize,

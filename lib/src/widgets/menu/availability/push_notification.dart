@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:the_app/src/abstracts/push_notification.dart';
 
 class PushNotificationWidget extends StatelessWidget {
-  const PushNotificationWidget({Key key}) : super(key: key);
+  const PushNotificationWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

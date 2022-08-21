@@ -16,10 +16,10 @@ class FollowButton extends StatefulWidget {
 }
 
 class _FollowState extends State<FollowButton> {
-  bool /*!*/ _alert = false;
-  bool /*!*/ _email = false;
-  bool /*!*/ _hasOptions = false;
-  bool /*!*/ _isRequesting = false;
+  bool _alert = false;
+  bool _email = false;
+  bool _hasOptions = false;
+  bool _isRequesting = false;
 
   Followable get f => widget.followable;
 
@@ -32,7 +32,7 @@ class _FollowState extends State<FollowButton> {
     if (f.isFollowed != true || !hasLink) return;
     apiGet(
       ApiCaller.stateful(this),
-      f.followersLink,
+      f.followersLink!,
       onSuccess: (json) {
         final usersValue = json['users'];
         final users = usersValue is List ? usersValue : [];
@@ -96,7 +96,7 @@ class _FollowState extends State<FollowButton> {
 
       apiPost(
         ApiCaller.stateful(this),
-        f.followersLink,
+        f.followersLink!,
         bodyFields: {
           'alert': options.alert ? '1' : '0',
           'email': options.email ? '1' : '0',
@@ -136,7 +136,7 @@ class _FollowState extends State<FollowButton> {
 
     apiDelete(
       ApiCaller.stateful(this),
-      f.followersLink,
+      f.followersLink!,
       onSuccess: (_) => setState(() => f.isFollowed = false),
       onComplete: () => setState(() => _isRequesting = false),
     );
@@ -158,7 +158,7 @@ class _FollowOptionsDialog extends StatefulWidget {
   final _FollowOptions fo;
   final Followable followable;
 
-  const _FollowOptionsDialog(this.followable, this.fo, {Key key})
+  const _FollowOptionsDialog(this.followable, this.fo, {Key? key})
       : super(key: key);
 
   @override
@@ -166,8 +166,8 @@ class _FollowOptionsDialog extends StatefulWidget {
 }
 
 class _FollowOptionsState extends State<_FollowOptionsDialog> {
-  bool /*!*/ _alert = false;
-  bool /*!*/ _email = false;
+  bool _alert = false;
+  bool _email = false;
 
   Followable get f => widget.followable;
 

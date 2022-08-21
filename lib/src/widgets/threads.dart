@@ -23,11 +23,11 @@ part 'thread/navigation.dart';
 part 'thread/widget.dart';
 
 class ThreadsWidget extends StatelessWidget {
-  final ApiMethod apiMethod;
-  final Forum forum;
-  final Widget header;
-  final Map initialJson;
-  final String path;
+  final ApiMethod? apiMethod;
+  final Forum? forum;
+  final Widget? header;
+  final Map? initialJson;
+  final String? path;
   final String threadsKey;
 
   ThreadsWidget({
@@ -35,7 +35,7 @@ class ThreadsWidget extends StatelessWidget {
     this.forum,
     this.header,
     this.initialJson,
-    Key key,
+    Key? key,
     this.path,
     this.threadsKey = 'threads',
   }) : super(key: key);

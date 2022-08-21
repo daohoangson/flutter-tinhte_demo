@@ -6,7 +6,7 @@ class _PostAttachmentsWidget extends StatelessWidget {
 
   _PostAttachmentsWidget._(this.attachments, this.lbTrigger);
 
-  static Widget forPost(Post post, {Thread thread}) {
+  static Widget? forPost(Post post, {Thread? thread}) {
     final attachments = <Attachment>[];
     final lbTrigger = LbTrigger();
     for (final attachment in post.attachments) {
@@ -81,10 +81,10 @@ class _PostAttachmentsWidget extends StatelessWidget {
   }
 
   Widget _buildAttachment(Attachment attachment) => AspectRatio(
-        aspectRatio: attachment.aspectRatio,
+        aspectRatio: attachment.aspectRatio!,
         child: ClipRRect(
           borderRadius: BorderRadius.circular(3),
-          child: buildCachedNetworkImage(attachment.links.thumbnail),
+          child: buildCachedNetworkImage(attachment.links!.thumbnail!),
         ),
       );
 }

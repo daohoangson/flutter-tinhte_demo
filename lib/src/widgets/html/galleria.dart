@@ -11,8 +11,8 @@ class Galleria {
 
   Galleria(this.wf, this.galleryMeta);
 
-  BuildOp _galleriaOp;
-  BuildOp /*!*/ get op {
+  BuildOp? _galleriaOp;
+  BuildOp get op {
     return _galleriaOp ??= BuildOp(
       onChild: onChild,
       onWidgets: onWidgets,
@@ -40,16 +40,16 @@ class _GalleriaItem {
   final Galleria galleria;
   final WidgetFactory wf;
 
-  Widget _description;
-  BuildOp _descriptionOp;
-  String _source;
-  WidgetPlaceholder _trigger;
-  BuildOp _triggerOp;
+  Widget? _description;
+  BuildOp? _descriptionOp;
+  String? _source;
+  WidgetPlaceholder? _trigger;
+  BuildOp? _triggerOp;
 
   _GalleriaItem(this.wf, this.galleria, this.itemMeta);
 
-  BuildOp _itemOp;
-  BuildOp /*!*/ get op {
+  BuildOp? _itemOp;
+  BuildOp get op {
     return _itemOp ??= BuildOp(
       onChild: onChild,
       onWidgets: onWidgets,

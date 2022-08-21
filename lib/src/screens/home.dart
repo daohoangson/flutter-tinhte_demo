@@ -20,11 +20,11 @@ class HomeScreen extends StatelessWidget {
             fetchPathInitial: config.homePath,
             fetchOnSuccess: _fetchOnSuccess,
             itemBuilder: (context, state, item) {
-              if (item.widget != null) return item.widget;
+              if (item.widget != null) return item.widget!;
 
               if (item.top5?.length == 5) {
                 return SuperListItemFullWidth(
-                  child: HomeTop5Widget(item.top5),
+                  child: HomeTop5Widget(item.top5!),
                 );
               }
 
@@ -59,7 +59,7 @@ class HomeScreen extends StatelessWidget {
     final l = threadsJson.length;
 
     final items = fc.items;
-    List<SearchResult<Thread>> top5;
+    List<SearchResult<Thread>>? top5;
     if (fc.id == FetchContextId.FetchInitial && l >= 5) {
       top5 = [];
       items.add(_HomeListItem(top5: top5));
@@ -99,9 +99,9 @@ class HomeScreenRoute extends MaterialPageRoute {
 }
 
 class _HomeListItem {
-  final SearchResult<Thread> thread;
-  final List<SearchResult<Thread>> top5;
-  final Widget widget;
+  final SearchResult<Thread>? thread;
+  final List<SearchResult<Thread>>? top5;
+  final Widget? widget;
 
   _HomeListItem({
     this.thread,

@@ -4,7 +4,7 @@ import 'package:the_app/src/intl.dart';
 import 'package:the_app/src/widgets/tag/widget.dart';
 
 class FpSearchDelegate extends SearchDelegate {
-  final List<FeaturePage> /*!*/ pages;
+  final List<FeaturePage> pages;
 
   FpSearchDelegate(this.pages);
 

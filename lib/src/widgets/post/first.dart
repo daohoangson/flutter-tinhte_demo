@@ -4,7 +4,7 @@ class _FirstPostWidget extends StatelessWidget {
   final Post post;
   final Thread thread;
 
-  const _FirstPostWidget({Key key, @required this.post, @required this.thread})
+  const _FirstPostWidget({Key? key, required this.post, required this.thread})
       : assert(post != null),
         assert(thread != null),
         super(key: key);
@@ -18,7 +18,7 @@ class _FirstPostWidget extends StatelessWidget {
         ),
       );
 
-  Widget _builder(BuildContext context, Widget _) {
+  Widget _builder(BuildContext context, Widget? _) {
     final _threadImage = thread.threadPrimaryImage ?? thread.threadImage;
     final threadTitle = thread.threadTitle;
     final _isBackgroundPost = isBackgroundPost(post);
@@ -85,7 +85,7 @@ class _FirstPostWidget extends StatelessWidget {
     return widget;
   }
 
-  Widget _buildTags(BuildContext context, Thread thread) {
+  Widget? _buildTags(BuildContext context, Thread thread) {
     final tags = thread.threadTags ?? const {};
     if (tags.isEmpty) return null;
 

@@ -19,11 +19,11 @@ class TopThreadsWidget extends StatelessWidget {
             data.threads = [];
             _fetch(context, data);
           }
-          return _build(data.threads);
+          return _build(data.threads!);
         },
       );
 
-  Widget _build(List<Thread> /*!*/ threads) => LayoutBuilder(
+  Widget _build(List<Thread> threads) => LayoutBuilder(
         builder: (context, bc) {
           final isWide = bc.maxWidth > 600;
           final style = DefaultTextStyle.of(context).style;
@@ -90,10 +90,10 @@ class _ThreadWidget extends StatelessWidget {
 
   _ThreadWidget(
     this.thread, {
-    @required this.height,
-    @required this.isWide,
-    @required this.width,
-    Key key,
+    required this.height,
+    required this.isWide,
+    required this.width,
+    Key? key,
   })  : assert(thread != null),
         assert(height != null),
         assert(isWide != null),
@@ -141,7 +141,7 @@ class _ThreadWidget extends StatelessWidget {
 
   Widget _buildBox(
     BuildContext context,
-    Widget image,
+    Widget? image,
     Widget info,
     Widget title,
   ) {
@@ -202,10 +202,10 @@ class _ThreadWidget extends StatelessWidget {
 }
 
 class _TopThreadsData extends ChangeNotifier {
-  List<Thread> threads;
+  List<Thread>? threads;
 
   void update(Iterable<Thread> newThreads) {
-    threads.addAll(newThreads);
+    threads!.addAll(newThreads);
     notifyListeners();
   }
 }

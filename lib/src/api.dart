@@ -15,11 +15,11 @@ import 'package:the_app/src/constants.dart';
 
 final _oauthTokenRegEx = RegExp(r'oauth_token=.+(&|$)');
 
-void apiDelete(ApiCaller caller, String /*!*/ path,
-        {Map<String, String> bodyFields,
-        VoidCallback onComplete,
-        ApiOnError onError,
-        ApiOnJsonMap onSuccess}) =>
+void apiDelete(ApiCaller caller, String path,
+        {Map<String, String>? bodyFields,
+        VoidCallback? onComplete,
+        ApiOnError? onError,
+        ApiOnJsonMap? onSuccess}) =>
     _setupApiJsonHandlers(
       caller,
       (d) => d.api.deleteJson(
@@ -31,10 +31,10 @@ void apiDelete(ApiCaller caller, String /*!*/ path,
       onComplete,
     );
 
-void apiGet(ApiCaller caller, String /*!*/ path,
-        {VoidCallback onComplete,
-        ApiOnError onError,
-        ApiOnJsonMap onSuccess}) =>
+void apiGet(ApiCaller caller, String path,
+        {VoidCallback? onComplete,
+        ApiOnError? onError,
+        ApiOnJsonMap? onSuccess}) =>
     _setupApiJsonHandlers(
       caller,
       (d) => d.api.getJson(d._appendOauthToken(path)),
@@ -43,12 +43,12 @@ void apiGet(ApiCaller caller, String /*!*/ path,
       onComplete,
     );
 
-void apiPost(ApiCaller caller, String /*!*/ path,
-        {Map<String, String /*!*/ > bodyFields,
-        Map<String, File> fileFields,
-        VoidCallback onComplete,
-        ApiOnError onError,
-        ApiOnJsonMap onSuccess}) =>
+void apiPost(ApiCaller caller, String path,
+        {Map<String, String >? bodyFields,
+        Map<String, File>? fileFields,
+        VoidCallback? onComplete,
+        ApiOnError? onError,
+        ApiOnJsonMap? onSuccess}) =>
     _setupApiJsonHandlers(
       caller,
       (d) => d.api.postJson(
@@ -64,7 +64,7 @@ void apiPost(ApiCaller caller, String /*!*/ path,
 void prepareForApiAction(
   BuildContext context,
   VoidCallback onReady, {
-  VoidCallback onError,
+  VoidCallback? onError,
 }) async {
   final apiAuth = ApiAuth.of(context, listen: false);
 
@@ -82,7 +82,7 @@ void prepareForApiAction(
 Future showApiErrorDialog(
   BuildContext context,
   dynamic error, {
-  String title,
+  String? title,
 }) =>
     showDialog(
       context: context,
@@ -104,9 +104,9 @@ Future showApiErrorDialog(
 void _setupApiCompleter<T>(
   ApiCaller caller,
   Completer<T> completer,
-  ApiOnSuccess<T> onSuccess,
-  ApiOnError onError,
-  VoidCallback onComplete,
+  ApiOnSuccess<T>? onSuccess,
+  ApiOnError? onError,
+  VoidCallback? onComplete,
 ) {
   var f = completer.future;
 
@@ -139,9 +139,9 @@ void _setupApiCompleter<T>(
 void _setupApiJsonHandlers(
   ApiCaller caller,
   ApiFetch fetch,
-  ApiOnJsonMap onSuccess,
-  ApiOnError onError,
-  VoidCallback onComplete,
+  ApiOnJsonMap? onSuccess,
+  ApiOnError? onError,
+  VoidCallback? onComplete,
 ) {
   final aas = Provider.of<_ApiAppState>(caller.context, listen: false);
   final completer = Completer();
@@ -164,10 +164,10 @@ void _setupApiJsonHandlers(
 typedef Future ApiFetch(_ApiAppState aas);
 typedef void ApiMethod(
   ApiCaller caller,
-  String /*!*/ path, {
-  VoidCallback onComplete,
-  ApiOnError onError,
-  ApiOnJsonMap onSuccess,
+  String path, {
+  VoidCallback? onComplete,
+  ApiOnError? onError,
+  ApiOnJsonMap? onSuccess,
 });
 typedef T ApiOnSuccess<T>(T data);
 typedef void ApiOnJsonMap(Map jsonMap);
@@ -178,8 +178,8 @@ class ApiApp extends StatefulWidget {
   final Widget child;
 
   ApiApp({
-    @required this.child,
-    Key key,
+    required this.child,
+    Key? key,
   })  : assert(child != null),
         api = Api(config.apiRoot, config.clientId, config.clientSecret)
           ..httpHeaders['Api-Bb-Code-Chr'] = '1'
@@ -195,8 +195,8 @@ class _ApiAppState extends State<ApiApp> {
   final visitor = User.zero();
 
   var _isRefreshingToken = false;
-  List<VoidCallback> _queue;
-  OauthToken _token;
+  List<VoidCallback>? _queue;
+  OauthToken? _token;
   var _tokenHasBeenSet = false;
 
   Api get api => widget.api;
@@ -208,7 +208,7 @@ class _ApiAppState extends State<ApiApp> {
   void initState() {
     super.initState();
 
-    secureStorage.read(key: _secureStorageKeyToken).then<OauthToken /*?*/ >(
+    secureStorage.read(key: _secureStorageKeyToken).then<OauthToken? >(
       (value) {
         try {
           final json = jsonDecode(value ?? '');
@@ -294,7 +294,7 @@ class _ApiAppState extends State<ApiApp> {
         .whenComplete(() => _isRefreshingToken = false);
   }
 
-  void _setToken(OauthToken value, {bool savePref = true}) async {
+  void _setToken(OauthToken? value, {bool savePref = true}) async {
     if (savePref) {
       try {
         await secureStorage.write(
@@ -328,9 +328,9 @@ class ApiAuth {
   Api get api => aas.api;
 
   bool get hasToken => aas._token != null;
-  OauthToken get token => aas._token;
+  OauthToken? get token => aas._token;
 
-  void setToken(OauthToken token) => aas._setToken(token);
+  void setToken(OauthToken? token) => aas._setToken(token);
 
   static ApiAuth of(BuildContext context, {bool listen = true}) =>
       Provider.of<ApiAuth>(context, listen: listen);

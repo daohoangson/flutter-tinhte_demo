@@ -3,7 +3,7 @@ part of '../posts.dart';
 class _PostWidget extends StatelessWidget {
   final Post post;
 
-  const _PostWidget({Key key, @required this.post})
+  const _PostWidget({Key? key, required this.post})
       : assert(post != null),
         super(key: key);
 
@@ -54,7 +54,7 @@ class _PostReplyHiddenWidget extends StatefulWidget {
   _PostReplyHiddenWidget(
     this.postReply,
     this.superListIndex, {
-    Key key,
+    Key? key,
   })  : assert(superListIndex != null),
         assert(postReply != null),
         super(key: key);
@@ -104,7 +104,7 @@ class _PostReplyHiddenWidgetState extends State<_PostReplyHiddenWidget> {
 
     return apiGet(
       ApiCaller.stateful(this),
-      widget.postReply.link,
+      widget.postReply.link!,
       onSuccess: (jsonMap) {
         final sls = context.read<SuperListState<_PostListItem>>();
         final parentPostValue = jsonMap['parent_post'];
@@ -140,7 +140,7 @@ class _PostReplyHiddenWidgetState extends State<_PostReplyHiddenWidget> {
       );
 }
 
-Widget _buildReplyToPadding(Widget child, int /*!*/ depth) => depth == 0
+Widget _buildReplyToPadding(Widget child, int depth) => depth == 0
     ? child
     : Padding(
         child: child,

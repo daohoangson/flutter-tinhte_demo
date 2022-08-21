@@ -8,15 +8,15 @@ import 'package:the_app/src/intl.dart';
 import 'package:the_app/src/widgets/image.dart';
 
 class HomeThreadWidget extends StatelessWidget {
-  final ContentListItem item;
-  final Thread /*!*/ thread;
+  final ContentListItem? item;
+  final Thread thread;
 
   HomeThreadWidget(
     SearchResult<Thread> srt, {
-    Key key,
+    Key? key,
   })  : assert(srt?.content != null),
         item = srt.listItem,
-        thread = srt.content,
+        thread = srt.content!,
         super(key: key);
 
   @override
@@ -94,7 +94,7 @@ class HomeThreadWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildSnippet(TextStyle style) => Text(
+  Widget _buildSnippet(TextStyle? style) => Text(
         thread.firstPost?.postBodyPlainText ?? '',
         maxLines: 3,
         overflow: TextOverflow.ellipsis,

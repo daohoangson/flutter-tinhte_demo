@@ -33,10 +33,10 @@ class _ChrWidget extends StatefulWidget {
   final WidgetFactory wf;
 
   const _ChrWidget({
-    Key key,
-    @required this.meta,
-    @required this.url,
-    @required this.wf,
+    Key? key,
+    required this.meta,
+    required this.url,
+    required this.wf,
   }) : super(key: key);
 
   @override
@@ -46,7 +46,7 @@ class _ChrWidget extends StatefulWidget {
 class _ChrState extends State<_ChrWidget> {
   var _isFinalUrl = false;
   var _isSendingRequest = false;
-  /* late */ String /*!*/ _url;
+  late String _url;
 
   bool get isToolsChr => _url.contains('tools/chr') == true;
 

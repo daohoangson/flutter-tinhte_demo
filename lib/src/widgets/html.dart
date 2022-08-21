@@ -40,9 +40,9 @@ const _kSmilies = {
 };
 
 class TinhteHtmlWidget extends StatelessWidget {
-  final String /*!*/ html;
+  final String html;
   final double textPadding;
-  final TextStyle textStyle;
+  final TextStyle? textStyle;
 
   TinhteHtmlWidget(
     this.html, {
@@ -79,19 +79,19 @@ class TinhteWidgetFactory extends WidgetFactory {
   final double deviceWidth;
   final double textPadding;
 
-  BuildOp _blockquoteOp;
-  BuildOp _chrOp;
-  BuildOp _metaBbCodeOp;
-  BuildOp _smilieOp;
-  BuildOp _webViewDataUriOp;
+  BuildOp? _blockquoteOp;
+  BuildOp? _chrOp;
+  BuildOp? _metaBbCodeOp;
+  BuildOp? _smilieOp;
+  BuildOp? _webViewDataUriOp;
 
-  LbTrigger _lbTrigger;
-  PhotoCompare _photoCompare;
+  LbTrigger? _lbTrigger;
+  PhotoCompare? _photoCompare;
 
   TinhteWidgetFactory({
-    @required this.devicePixelRatio,
-    @required this.deviceWidth,
-    @required this.textPadding,
+    required this.devicePixelRatio,
+    required this.deviceWidth,
+    required this.textPadding,
   });
 
   BuildOp get blockquoteOp {
@@ -188,8 +188,8 @@ class TinhteWidgetFactory extends WidgetFactory {
   }
 
   @override
-  Widget buildImageWidget(BuildMetadata meta, ImageSource source) {
-    String resizedUrl;
+  Widget? buildImageWidget(BuildMetadata meta, ImageSource source) {
+    String? resizedUrl;
     if (source.width != null && source.height != null) {
       resizedUrl = getResizedUrl(
         apiUrl: source.url,
@@ -209,7 +209,7 @@ class TinhteWidgetFactory extends WidgetFactory {
   }
 
   @override
-  Widget buildText(BuildMetadata meta, TextStyleHtml tsh, InlineSpan text) {
+  Widget? buildText(BuildMetadata meta, TextStyleHtml tsh, InlineSpan text) {
     var built = super.buildText(meta, tsh, text);
 
     if (built != null) {

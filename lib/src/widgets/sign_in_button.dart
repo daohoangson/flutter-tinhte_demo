@@ -7,30 +7,30 @@ class SignInButton extends StatelessWidget {
   final _SignInButtonType type;
 
   const SignInButton.apple({
-    Key key,
-    @required this.onPressed,
-    @required this.text,
+    Key? key,
+    required this.onPressed,
+    required this.text,
   })  : type = _SignInButtonType.apple,
         super(key: key);
 
   const SignInButton.facebook({
-    Key key,
-    @required this.onPressed,
-    @required this.text,
+    Key? key,
+    required this.onPressed,
+    required this.text,
   })  : type = _SignInButtonType.facebook,
         super(key: key);
 
   const SignInButton.google({
-    Key key,
-    @required this.onPressed,
-    @required this.text,
+    Key? key,
+    required this.onPressed,
+    required this.text,
   })  : type = _SignInButtonType.google,
         super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    Color backgroundColor;
-    IconData icon;
+    Color? backgroundColor;
+    IconData? icon;
 
     switch (type) {
       case _SignInButtonType.apple:

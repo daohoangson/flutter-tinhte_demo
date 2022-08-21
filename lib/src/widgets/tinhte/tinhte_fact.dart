@@ -10,20 +10,20 @@ import 'package:the_app/src/widgets/video_player.dart';
 bool isTinhteFact(Thread thread) =>
     thread.threadImage != null &&
     (thread.threadTags?.values
-            ?.fold(false, (prev, tagText) => prev || tagText == 'tinhtefact') ??
+            ?.fold(false, ((prev, tagText) => prev || tagText == 'tinhtefact') as bool? Function(bool?, String)) ??
         false);
 
 class TinhteFact extends StatelessWidget {
   final bool autoPlayVideo;
-  final Post post;
+  final Post? post;
   final Thread thread;
 
-  Post get firstPost => post ?? thread.firstPost;
+  Post? get firstPost => post ?? thread.firstPost;
 
   const TinhteFact(
     this.thread, {
     this.autoPlayVideo = false,
-    Key key,
+    Key? key,
     this.post,
   })  : assert(thread != null),
         super(key: key);
@@ -72,7 +72,7 @@ class TinhteFact extends StatelessWidget {
   }
 
   Widget _buildContents() {
-    Attachment threadImageAttachment;
+    Attachment? threadImageAttachment;
     final threadImageLink = thread.threadImage?.link;
     for (final attachment in firstPost?.attachments ?? const []) {
       if (attachment.links.permalink == threadImageLink ||

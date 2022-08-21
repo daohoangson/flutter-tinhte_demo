@@ -17,11 +17,11 @@ Widget buildCachedNetworkImage(String imageUrl) => CachedNetworkImage(
       fit: BoxFit.cover,
     );
 
-String getResizedUrl({
-  @required String apiUrl,
-  @required double boxWidth,
-  @required double imageHeight,
-  @required double imageWidth,
+String? getResizedUrl({
+  required String apiUrl,
+  required double boxWidth,
+  required double? imageHeight,
+  required double? imageWidth,
   int proxyPixelsMax = 50000000,
 }) {
   if (apiUrl == null || boxWidth == null) return null;
@@ -42,21 +42,21 @@ String getResizedUrl({
 
 class ThreadImageWidget extends StatelessWidget {
   final int threadId;
-  final ThreadImage image;
-  final ThreadImage placeholder;
+  final ThreadImage? image;
+  final ThreadImage? placeholder;
   final bool useImageRatio;
 
   static final _smalls = Expando<ThreadImage>();
 
   ThreadImageWidget._({
-    @required this.image,
-    Key key,
+    required this.image,
+    Key? key,
     this.placeholder,
-    @required this.threadId,
+    required this.threadId,
     this.useImageRatio = false,
   }) : super(key: key);
 
-  factory ThreadImageWidget.small(Thread thread, ThreadImage image,
+  factory ThreadImageWidget.small(Thread thread, ThreadImage? image,
       {bool useImageRatio = false}) {
     _smalls[thread] = image;
 
@@ -67,7 +67,7 @@ class ThreadImageWidget extends StatelessWidget {
     );
   }
 
-  factory ThreadImageWidget.big(Thread thread, ThreadImage image) =>
+  factory ThreadImageWidget.big(Thread thread, ThreadImage? image) =>
       ThreadImageWidget._(
         image: image,
         placeholder: _smalls[thread],
@@ -113,7 +113,7 @@ class ThreadImageWidget extends StatelessWidget {
     );
   }
 
-  static Widget _buildImage(String url, {ImageFrameBuilder frameBuilder}) =>
+  static Widget _buildImage(String url, {ImageFrameBuilder? frameBuilder}) =>
       Image(
         frameBuilder: frameBuilder,
         image: CachedNetworkImageProvider(url),

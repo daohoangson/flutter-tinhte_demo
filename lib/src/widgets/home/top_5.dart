@@ -7,9 +7,9 @@ import 'package:the_app/src/intl.dart';
 import 'package:the_app/src/widgets/image.dart';
 
 class HomeTop5Widget extends StatelessWidget {
-  final List<SearchResult<Thread>> /*!*/ items;
+  final List<SearchResult<Thread>> items;
 
-  HomeTop5Widget(this.items, {Key key})
+  HomeTop5Widget(this.items, {Key? key})
       : assert(items?.length == 5),
         super(key: key);
 
@@ -89,13 +89,13 @@ class HomeTop5Widget extends StatelessWidget {
 }
 
 class _HomeTop5WidgetThread extends StatelessWidget {
-  final ContentListItem item;
-  final Thread /*!*/ thread;
+  final ContentListItem? item;
+  final Thread thread;
 
-  _HomeTop5WidgetThread(SearchResult<Thread> srt, {Key key})
+  _HomeTop5WidgetThread(SearchResult<Thread> srt, {Key? key})
       : assert(srt?.content != null),
         item = srt.listItem,
-        thread = srt.content,
+        thread = srt.content!,
         super(key: key);
 
   @override
@@ -154,7 +154,7 @@ class _HomeTop5WidgetThread extends StatelessWidget {
 
   Widget _buildTitle() => Text(thread.threadTitle ?? '#${thread.threadId}');
 
-  ThreadImage _chooseImageForBox(Thread t, BuildContext c, BoxConstraints bc) {
+  ThreadImage? _chooseImageForBox(Thread t, BuildContext c, BoxConstraints bc) {
     final thumbnail = t.threadThumbnail;
     if (thumbnail == null) return t.threadImage;
 

@@ -5,13 +5,13 @@ import 'package:the_app/src/constants.dart';
 import 'package:the_app/src/intl.dart';
 
 class DarkTheme extends ChangeNotifier {
-  bool _value;
+  bool? _value;
 
-  bool get value => _value;
+  bool? get value => _value;
 
   DarkTheme._();
 
-  set value(bool v) {
+  set value(bool? v) {
     _value = v;
     notifyListeners();
 

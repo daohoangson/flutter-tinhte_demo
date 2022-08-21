@@ -53,23 +53,23 @@ Future<bool> launchLink(
   );
 }
 
-void launchMemberView(BuildContext context, int/*!*/ userId) =>
+void launchMemberView(BuildContext context, int userId) =>
     launchLink(context, "${config.siteRoot}/members/$userId/");
 
 Future<bool> parsePath(
   String path, {
-  BuildContext context,
-  Widget defaultWidget,
-  NavigatorState rootNavigator,
+  BuildContext? context,
+  Widget? defaultWidget,
+  NavigatorState? rootNavigator,
 }) {
   assert(path != null);
   assert((context == null) != (rootNavigator == null));
-  final navigator = rootNavigator ?? Navigator.of(context);
+  final navigator = rootNavigator ?? Navigator.of(context!);
   if (context == null) context = navigator.context;
   var cancelled = false;
 
   navigator.push(_DialogRoute((_) => AlertDialog(
-        content: Text(l(context).justAMomentEllipsis),
+        content: Text(l(context!).justAMomentEllipsis),
         actions: <Widget>[
           TextButton(
             child: Text(lm(context).cancelButtonLabel),
@@ -112,10 +112,10 @@ Future<bool> parsePath(
   ).whenComplete(() => cancelDialog());
 }
 
-Future<Widget /*?*/ > buildWidget(
+Future<Widget? > buildWidget(
   ApiCaller caller,
   String path, {
-  Widget defaultWidget,
+  Widget? defaultWidget,
 }) {
   final completer = Completer<Widget>();
 
@@ -123,7 +123,7 @@ Future<Widget /*?*/ > buildWidget(
     caller,
     path,
     onSuccess: (json) {
-      Widget widget;
+      Widget? widget;
 
       if (json.containsKey('tag') && json.containsKey('tagged')) {
         widget = _parseTag(json);

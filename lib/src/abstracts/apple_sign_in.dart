@@ -11,12 +11,12 @@ Future<String> signIn(BuildContext context) async {
 
   switch (result.status) {
     case lib.AuthorizationStatus.authorized:
-      return String.fromCharCodes(result.credential.identityToken);
+      return String.fromCharCodes(result.credential!.identityToken!);
     case lib.AuthorizationStatus.cancelled:
       final _l = l(context);
       throw new StateError(_l.loginErrorCancelled(_l.loginWithApple));
     case lib.AuthorizationStatus.error:
-      throw new StateError(result.error.localizedDescription);
+      throw new StateError(result.error!.localizedDescription!);
   }
 
   throw new StateError(result.status.toString());

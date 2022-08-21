@@ -11,8 +11,8 @@ import 'availability/push_notification.dart';
 import 'availability/uni_links.dart';
 
 class DevTools extends ChangeNotifier {
-  bool _isDeveloper;
-  bool _showPerformanceOverlay;
+  bool? _isDeveloper;
+  bool? _showPerformanceOverlay;
 
   DevTools._();
 
@@ -99,7 +99,7 @@ class _ShowPerformanceOverlayWidget extends StatelessWidget {
         ),
       );
 
-  void _updateValue(BuildContext context, [bool value]) {
+  void _updateValue(BuildContext context, [bool? value]) {
     final devTools = context.read<DevTools>();
     devTools.showPerformanceOverlay = value ?? !devTools.showPerformanceOverlay;
   }

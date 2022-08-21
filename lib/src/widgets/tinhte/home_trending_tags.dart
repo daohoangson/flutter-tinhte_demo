@@ -25,7 +25,7 @@ class TrendingTagsWidget extends StatelessWidget {
               children: <Widget>[
                 HeaderWidget('#tag đang hot'),
                 Padding(
-                  child: _buildGrid(context, data.tags, cols),
+                  child: _buildGrid(context, data.tags!, cols),
                   padding: const EdgeInsets.all(kTagWidgetPadding),
                 ),
               ],
@@ -34,7 +34,7 @@ class TrendingTagsWidget extends StatelessWidget {
         ),
       );
 
-  Widget _buildGrid(BuildContext context, List<_Tag> /*!*/ tags, int cols) {
+  Widget _buildGrid(BuildContext context, List<_Tag> tags, int cols) {
     final rows = (_kTrendingTagsMax / cols).floor();
     final widgets = <Widget>[];
 
@@ -59,7 +59,7 @@ class TrendingTagsWidget extends StatelessWidget {
     return Column(children: widgets);
   }
 
-  Widget _buildTagWidget(BuildContext context, _Tag tag) {
+  Widget _buildTagWidget(BuildContext context, _Tag? tag) {
     final id = tag?.tagId;
     final name = tag?.tagName;
     return TagWidget(
@@ -105,18 +105,18 @@ class TrendingTagsWidget extends StatelessWidget {
 }
 
 class _Tag {
-  final int tagId;
-  final String tagImg;
-  final String tagName;
+  final int? tagId;
+  final String? tagImg;
+  final String? tagName;
 
   _Tag({this.tagId, this.tagImg, this.tagName});
 }
 
 class _TrendingTagsData extends ChangeNotifier {
-  List<_Tag> tags;
+  List<_Tag>? tags;
 
   void update(Iterable<_Tag> newTags) {
-    tags.addAll(newTags);
+    tags!.addAll(newTags);
     notifyListeners();
   }
 }

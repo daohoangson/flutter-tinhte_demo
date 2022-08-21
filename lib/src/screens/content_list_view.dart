@@ -10,9 +10,9 @@ class ContentListViewScreen extends StatelessWidget {
   final String title;
 
   ContentListViewScreen({
-    Key key,
-    @required this.listId,
-    @required this.title,
+    Key? key,
+    required this.listId,
+    required this.title,
   })  : assert(listId != null),
         assert(title != null),
         super(key: key);

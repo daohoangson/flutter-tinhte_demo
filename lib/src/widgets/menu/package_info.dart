@@ -11,7 +11,7 @@ class PackageInfoWidget extends StatefulWidget {
 }
 
 class _PackageInfoState extends State<PackageInfoWidget> {
-  PackageInfo _info;
+  PackageInfo? _info;
   var count = 0;
 
   @override

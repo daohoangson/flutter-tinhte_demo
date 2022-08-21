@@ -34,21 +34,21 @@ void main() async {
       DevTools.create(),
     ]);
 
-    String initialPath;
-    Widget defaultWidget;
-    String fallbackLink;
+    String? initialPath;
+    Widget? defaultWidget;
+    String? fallbackLink;
     if (values[2] != null) {
-      initialPath = values[2];
+      initialPath = values[2] as String?;
       defaultWidget = NotificationListScreen();
     } else if (values[3] != null) {
-      initialPath = buildToolsParseLinkPath(values[3]);
-      fallbackLink = values[3];
+      initialPath = buildToolsParseLinkPath(values[3] as String);
+      fallbackLink = values[3] as String?;
     }
 
     runApp(MyApp(
-      darkTheme: values[0],
-      devTools: values[4],
-      fontScale: values[1],
+      darkTheme: values[0] as DarkTheme,
+      devTools: values[4] as DevTools,
+      fontScale: values[1] as FontScale,
       home: initialPath != null
           ? InitialPathScreen(
               initialPath,
@@ -61,16 +61,16 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  final DarkTheme/*!*/ darkTheme;
-  final DevTools/*!*/ devTools;
-  final FontScale/*!*/ fontScale;
-  final Widget/*!*/ home;
+  final DarkTheme darkTheme;
+  final DevTools devTools;
+  final FontScale fontScale;
+  final Widget home;
 
   MyApp({
-    this.darkTheme,
-    this.devTools,
-    this.fontScale,
-    this.home,
+    required this.darkTheme,
+    required this.devTools,
+    required this.fontScale,
+    required this.home,
   });
 
   @override

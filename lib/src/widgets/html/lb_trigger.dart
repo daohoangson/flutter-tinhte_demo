@@ -4,12 +4,12 @@ const kCaptionColor = Colors.white70;
 
 class LbTrigger {
   final hashCodes = <int>[0];
-  final WidgetFactory wf;
+  final WidgetFactory? wf;
 
   final _captions = Map<int, Widget>();
   final _sources = <LbTriggerSource>[];
 
-  BuildOp _fullOp;
+  BuildOp? _fullOp;
 
   LbTrigger({this.wf});
 
@@ -28,7 +28,7 @@ class LbTrigger {
         ),
       );
 
-  BuildOp prepareThumbnailOp(Map<Object, String /*!*/ > a) {
+  BuildOp? prepareThumbnailOp(Map<Object, String > a) {
     final url = wf?.urlFull(a['href'] ?? '');
     if (url == null) return null;
 
@@ -65,7 +65,7 @@ class LbTrigger {
     );
   }
 
-  BuildOp /*!*/ get fullOp {
+  BuildOp get fullOp {
     return _fullOp ??= BuildOp(
       onChild: (meta) {
         if (meta.element.localName != 'img') return;
@@ -87,7 +87,7 @@ class LbTrigger {
     );
   }
 
-  int addSource(LbTriggerSource source, {Widget caption}) {
+  int addSource(LbTriggerSource source, {Widget? caption}) {
     final index = _sources.length;
     _sources.add(source);
 
@@ -100,7 +100,7 @@ class LbTrigger {
 }
 
 abstract class LbTriggerSource {
-  String /*!*/ get url;
+  String get url;
 
   factory LbTriggerSource.image(String url) = _LbTriggerImage;
   factory LbTriggerSource.video(String url, {double aspectRatio}) =
@@ -117,12 +117,12 @@ class _LbTriggerImage extends LbTriggerSource {
 }
 
 class _LbTriggerVideo extends LbTriggerSource {
-  final double /*!*/ aspectRatio;
+  final double aspectRatio;
 
   @override
   final String url;
 
-  _LbTriggerVideo(this.url, {@required this.aspectRatio}) : super._();
+  _LbTriggerVideo(this.url, {required this.aspectRatio}) : super._();
 }
 
 class _ScaleRoute extends PageRouteBuilder {
@@ -150,9 +150,9 @@ class _Screen extends StatefulWidget {
   final List<LbTriggerSource> sources;
 
   _Screen({
-    @required this.captions,
-    @required this.initialPage,
-    @required this.sources,
+    required this.captions,
+    required this.initialPage,
+    required this.sources,
   }) : pageController = PageController(initialPage: initialPage);
 
   @override
@@ -160,7 +160,7 @@ class _Screen extends StatefulWidget {
 }
 
 class _ScreenState extends State<_Screen> {
-  int _currentPage;
+  late int _currentPage;
 
   @override
   void initState() {
@@ -204,7 +204,7 @@ class _ScreenState extends State<_Screen> {
         ),
       );
 
-  Widget _buildCaption(BuildContext context, int /*!*/ index) {
+  Widget _buildCaption(BuildContext context, int index) {
     final caption = widget.captions[index];
     return Column(
       children: <Widget>[

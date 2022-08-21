@@ -31,7 +31,7 @@ void logout(BuildContext context) {
 }
 
 class LoginForm extends StatefulWidget {
-  LoginForm({Key key}) : super(key: key);
+  LoginForm({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _LoginFormState();
@@ -41,14 +41,14 @@ class _LoginFormState extends State<LoginForm> {
   final focusNodePassword = FocusNode();
   final formKey = GlobalKey<FormState>();
 
-  LoginAssociatable _associatable;
-  LoginTfa _tfa;
+  LoginAssociatable? _associatable;
+  LoginTfa? _tfa;
   bool _canLoginApple = false;
   bool _isLoggingIn = false;
 
-  String /*!*/ _username = '';
-  String /*!*/ _password = '';
-  String /*!*/ _tfaCode = '';
+  String _username = '';
+  String _password = '';
+  String _tfaCode = '';
 
   _LoginFormState();
 
@@ -225,7 +225,7 @@ class _LoginFormState extends State<LoginForm> {
         focusNode: focusNodePassword,
         initialValue: _password,
         obscureText: true,
-        onSaved: (value) => _password = value,
+        onSaved: (value) => _password = value!,
         onFieldSubmitted: (_) => _login(),
         validator: (value) {
           final password = (value ?? '').trim();
@@ -246,7 +246,7 @@ class _LoginFormState extends State<LoginForm> {
       ),
       initialValue: _username,
       keyboardType: TextInputType.emailAddress,
-      onSaved: (value) => _username = value,
+      onSaved: (value) => _username = value!,
       onFieldSubmitted: (_) => focusNodePassword.requestFocus(),
       validator: (value) {
         final username = (value ?? '').trim();
@@ -260,7 +260,7 @@ class _LoginFormState extends State<LoginForm> {
   Widget _buildTfaCode() => TextFormField(
       autofocus: true,
       keyboardType: TextInputType.number,
-      onSaved: (value) => _tfaCode = value,
+      onSaved: (value) => _tfaCode = value!,
       validator: (value) {
         final tfaCode = (value ?? '').trim();
         if (tfaCode.isEmpty) {

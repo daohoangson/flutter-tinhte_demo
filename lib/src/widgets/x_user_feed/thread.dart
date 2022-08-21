@@ -5,10 +5,10 @@ import 'package:the_app/src/link.dart';
 
 final _sourceRegExp = RegExp(r'^(.+) (.+)$');
 
-PopupMenuButton buildPopupMenuButtonForThread(
+PopupMenuButton? buildPopupMenuButtonForThread(
   BuildContext context,
   Thread thread,
-  UserFeedData data,
+  UserFeedData? data,
 ) {
   if (data == null) return null;
 
@@ -17,7 +17,7 @@ PopupMenuButton buildPopupMenuButtonForThread(
     final m = _sourceRegExp.firstMatch(key);
     if (m == null) return;
     final type = m.group(1);
-    final String /*!*/ id = m.group(2);
+    final String id = m.group(2)!;
 
     switch (type) {
       case 'tag_watch':

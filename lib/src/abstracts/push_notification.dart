@@ -24,7 +24,7 @@ void addListeners(
 }
 
 // ignore: missing_return
-Future<Map<String, dynamic>> getInitialMessage() async {
+Future<Map<String, dynamic>?> getInitialMessage() async {
   switch (backend) {
     case Backend.firebaseMessaging:
       final message = await FirebaseMessaging.instance.getInitialMessage();
@@ -35,7 +35,7 @@ Future<Map<String, dynamic>> getInitialMessage() async {
 }
 
 // ignore: missing_return
-Future<String> getToken() async {
+Future<String?> getToken() async {
   switch (backend) {
     case Backend.firebaseMessaging:
       final instance = FirebaseMessaging.instance;

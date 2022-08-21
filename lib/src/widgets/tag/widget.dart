@@ -10,7 +10,7 @@ class FpWidget extends StatelessWidget {
   static final kPreferAspectRatio = 1.3;
   static final kPreferWidth = 150.0;
 
-  final FeaturePage fp;
+  final FeaturePage? fp;
 
   FpWidget(this.fp);
 
@@ -31,13 +31,13 @@ class FpWidget extends StatelessWidget {
 }
 
 class TagWidget extends StatelessWidget {
-  final String image;
-  final String label;
-  final GestureTapCallback onTap;
+  final String? image;
+  final String? label;
+  final GestureTapCallback? onTap;
 
   TagWidget({
     this.image,
-    Key key,
+    Key? key,
     this.label,
     this.onTap,
   }) : super(key: key);
@@ -73,7 +73,7 @@ class TagWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildBox(BuildContext context, Widget head, Widget body) {
+  Widget _buildBox(BuildContext context, Widget? head, Widget body) {
     final theme = Theme.of(context);
 
     return DecoratedBox(

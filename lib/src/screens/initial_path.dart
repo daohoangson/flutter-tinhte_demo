@@ -4,11 +4,11 @@ import 'package:the_app/src/link.dart';
 import 'package:the_app/src/screens/home.dart';
 
 class InitialPathScreen extends StatefulWidget {
-  final Widget defaultWidget;
-  final String fallbackLink;
+  final Widget? defaultWidget;
+  final String? fallbackLink;
   final String path;
 
-  InitialPathScreen(this.path, {this.defaultWidget, this.fallbackLink, Key key})
+  InitialPathScreen(this.path, {this.defaultWidget, this.fallbackLink, Key? key})
       : assert(path != null),
         super(key: key);
 
@@ -18,7 +18,7 @@ class InitialPathScreen extends StatefulWidget {
 
 class _InitialPathState extends State<InitialPathScreen>
     with WidgetsBindingObserver {
-  /* late final */ Future<Widget> _future;
+  late final Future<Widget> _future;
   var _home = _ShouldRender.no;
 
   @override

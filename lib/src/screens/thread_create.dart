@@ -10,9 +10,9 @@ import 'package:the_app/src/widgets/attachment_editor.dart';
 import 'package:the_app/src/widgets/forum/forum_picker.dart';
 
 class ThreadCreateScreen extends StatefulWidget {
-  final Forum forum;
+  final Forum? forum;
 
-  const ThreadCreateScreen({Key key, this.forum}) : super(key: key);
+  const ThreadCreateScreen({Key? key, this.forum}) : super(key: key);
 
   @override
   _ThreadCreateScreenState createState() => _ThreadCreateScreenState();
@@ -22,8 +22,8 @@ class _ThreadCreateScreenState extends State<ThreadCreateScreen> {
   final aesKey = GlobalKey<AttachmentEditorState>();
   final formKey = GlobalKey<FormState>();
 
-  /* late final */ ForumPickerData fpd;
-  /* late final */ _ThreadCreateData tcd;
+  late final ForumPickerData fpd;
+  late final _ThreadCreateData tcd;
 
   @override
   void initState() {
@@ -147,9 +147,9 @@ class _ThreadCreateScreenState extends State<ThreadCreateScreen> {
 class _ThreadCreateData extends ChangeNotifier {
   final focusNodeBody = FocusNode();
 
-  String /*!*/ _body = '';
+  String _body = '';
   bool _isPosting = false;
-  String /*!*/ _title = '';
+  String _title = '';
 
   set body(String v) {
     _body = v;
@@ -186,7 +186,7 @@ class _ThreadCreateTitle extends StatelessWidget {
       ),
       onEditingComplete: () =>
           context.read<_ThreadCreateData>().focusNodeBody.requestFocus(),
-      onSaved: (v) => data.title = v,
+      onSaved: (v) => data.title = v!,
       validator: (value) {
         final title = (value ?? '').trim();
         if (title.isEmpty) {
@@ -214,7 +214,7 @@ class _ThreadCreateBody extends StatelessWidget {
       keyboardType: TextInputType.multiline,
       maxLines: null,
       onEditingComplete: () => data,
-      onSaved: (v) => data.body = v,
+      onSaved: (v) => data.body = v!,
       validator: (value) {
         final body = (value ?? '').trim();
         if (body.isEmpty) {

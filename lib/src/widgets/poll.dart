@@ -70,7 +70,7 @@ class _PollState extends State<PollWidget> {
 
   void _fetch() => apiGet(
         ApiCaller.stateful(this),
-        widget.owner.pollLink,
+        widget.owner.pollLink!,
         onSuccess: (jsonMap) {
           if (!jsonMap.containsKey('poll')) return;
           widget.owner.poll = Poll.fromJson(jsonMap['poll']);
@@ -111,11 +111,11 @@ class _PollResponsesWidget extends StatefulWidget {
   final Poll poll;
 
   const _PollResponsesWidget({
-    this.canVote,
-    this.hasResults,
-    Key key,
-    @required this.maxVotes,
-    @required this.poll,
+    required this.canVote,
+    required this.hasResults,
+    Key? key,
+    required this.maxVotes,
+    required this.poll,
   })  : assert(canVote != null),
         assert(hasResults != null),
         assert(maxVotes != null),
@@ -127,7 +127,7 @@ class _PollResponsesWidget extends StatefulWidget {
 }
 
 class _PollResponsesState extends State<_PollResponsesWidget> {
-  final _selectedResponseIds = Set<int /*!*/ >();
+  final _selectedResponseIds = Set<int >();
 
   bool get isSingleChoice => widget.maxVotes == 1;
   Iterable<PollResponse> get responses => widget.poll.responses;
@@ -202,7 +202,7 @@ class _PollResponsesState extends State<_PollResponsesWidget> {
     );
   }
 
-  void _onChanged(int responseId, [bool value]) {
+  void _onChanged(int? responseId, [bool? value]) {
     if (!widget.canVote) return;
     if (responseId == null) return;
 

@@ -12,8 +12,8 @@ class YouTubeWidget extends StatefulWidget {
 
   const YouTubeWidget(
     this.id, {
-    Key key,
-    @required this.lowresThumbnailUrl,
+    Key? key,
+    required this.lowresThumbnailUrl,
   }) : super(key: key);
 
   @override
@@ -24,8 +24,8 @@ class _YouTubeState extends State<YouTubeWidget> {
   String get videoUrl => "https://www.youtube.com/watch?v=${widget.id}";
 
   double _aspectRatio = 16 / 9;
-  /* late */ String _thumbnailUrl;
-  String _title;
+  late String _thumbnailUrl;
+  String? _title;
 
   @override
   void initState() {
@@ -104,7 +104,7 @@ class _YouTubeState extends State<YouTubeWidget> {
     final html = await file.readAsString();
     final unescape = HtmlUnescape();
     final metaTags = Map.fromEntries(_kMetaTag.allMatches(html).map(
-        (match) => MapEntry(match.group(1), unescape.convert(match.group(2)))));
+        (match) => MapEntry(match.group(1), unescape.convert(match.group(2)!))));
     if (!metaTags.containsKey(_kOgImage)) return;
 
     double aspectRatio = _aspectRatio;

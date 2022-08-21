@@ -9,8 +9,8 @@ class _PostActionsWidget extends StatefulWidget {
   final bool showPostCreateDate;
 
   _PostActionsWidget({
-    Key key,
-    @required this.post,
+    Key? key,
+    required this.post,
     this.showPostCreateDate = true,
   })  : assert(post != null),
         super(key: key);
@@ -206,7 +206,7 @@ class _PostActionsDialogReason extends StatelessWidget {
   final _controller = TextEditingController();
 
   _PostActionsDialogReason(
-      {@required this.button, @required this.hint, Key key})
+      {required this.button, required this.hint, Key? key})
       : assert(button != null),
         assert(hint != null),
         super(key: key);

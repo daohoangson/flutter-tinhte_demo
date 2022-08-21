@@ -4,9 +4,9 @@ import 'package:the_app/src/widgets/tag/fp_header.dart';
 import 'package:the_app/src/widgets/threads.dart';
 
 class FpViewScreen extends StatelessWidget {
-  final FeaturePage /*!*/ fp;
+  final FeaturePage fp;
 
-  FpViewScreen(this.fp, {Key key}) : super(key: key);
+  FpViewScreen(this.fp, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) => Scaffold(

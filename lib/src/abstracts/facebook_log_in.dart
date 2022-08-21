@@ -6,7 +6,7 @@ Future<String> logIn(BuildContext context) async {
   final result = await lib.FacebookAuth.instance.login();
   switch (result.status) {
     case lib.LoginStatus.success:
-      return result.accessToken.token;
+      return result.accessToken!.token;
     case lib.LoginStatus.cancelled:
       final _l = l(context);
       throw StateError(_l.loginErrorCancelled(_l.loginWithFacebook));

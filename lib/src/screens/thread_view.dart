@@ -16,14 +16,14 @@ const _kPopupActionShare = 'share';
 
 class ThreadViewScreen extends StatefulWidget {
   final bool enablePostEditor;
-  final Map initialJson;
+  final Map? initialJson;
   final Thread thread;
 
   ThreadViewScreen(
     this.thread, {
     this.enablePostEditor = false,
     this.initialJson,
-    Key key,
+    Key? key,
   })  : assert(thread != null),
         super(key: key);
 
@@ -34,9 +34,9 @@ class ThreadViewScreen extends StatefulWidget {
 class _ThreadViewState extends State<ThreadViewScreen> {
   final _postsKey = GlobalKey<PostsState>();
 
-  /* late final */ PostEditorData _ped;
+  late final PostEditorData _ped;
 
-  Map get initialJson => widget.initialJson;
+  Map? get initialJson => widget.initialJson;
   Thread get thread => widget.thread;
 
   @override

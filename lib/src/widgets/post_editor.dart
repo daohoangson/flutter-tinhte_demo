@@ -16,9 +16,9 @@ class PostEditorWidget extends StatefulWidget {
   final double paddingVertical;
 
   PostEditorWidget({
-    @required this.callback,
-    @required this.paddingHorizontal,
-    @required this.paddingVertical,
+    required this.callback,
+    required this.paddingHorizontal,
+    required this.paddingVertical,
   }) : assert(callback != null);
 
   @override
@@ -28,10 +28,10 @@ class PostEditorWidget extends StatefulWidget {
 class _PostEditorState extends State<PostEditorWidget> {
   final _controller = TextEditingController();
 
-  _EmojiSuggestion _emojiSuggestion;
-  Timer _emojiTimer;
+  _EmojiSuggestion? _emojiSuggestion;
+  Timer? _emojiTimer;
 
-  String _sessionId;
+  String? _sessionId;
   bool _isPosting = false;
 
   _PostEditorState();
@@ -194,7 +194,7 @@ class _PostEditorState extends State<PostEditorWidget> {
         onTap: () => data.enable(context),
       );
 
-  Widget _buildTextInputMessage({FocusNode focusNode}) => TextFormField(
+  Widget _buildTextInputMessage({FocusNode? focusNode}) => TextFormField(
         controller: focusNode != null ? _controller : null,
         decoration: InputDecoration(
           border: InputBorder.none,
@@ -267,7 +267,7 @@ class PostEditorData extends ChangeNotifier {
 
   var _counter = 0;
   var _isEnabled = false;
-  Post _parentPost;
+  Post? _parentPost;
 
   PostEditorData(this.thread) : assert(thread != null);
 
@@ -279,7 +279,7 @@ class PostEditorData extends ChangeNotifier {
     _focusNode.dispose();
   }
 
-  void enable(BuildContext context, {Post parentPost}) {
+  void enable(BuildContext context, {Post? parentPost}) {
     _parentPost = parentPost;
 
     _counter++;
@@ -317,13 +317,13 @@ class _EmojiSuggestion {
   static final _regExpBefore = RegExp(r':[a-z]+(:?)$', caseSensitive: false);
   static final _regExpAfter = RegExp(r'^[a-z]*:?', caseSensitive: false);
 
-  _EmojiSuggestion({this.query, this.emojis, this.start})
+  _EmojiSuggestion({required this.query, required this.emojis, required this.start})
       : assert(query != null),
         assert(emojis != null),
         assert(start != null),
         end = start + query.length;
 
-  static _EmojiSuggestion suggest(String text, TextSelection s) {
+  static _EmojiSuggestion? suggest(String text, TextSelection s) {
     if (!s.isValid) return null;
 
     // get text right before and after carret that is
@@ -336,7 +336,7 @@ class _EmojiSuggestion {
 
     // skip suggestion if query is not long enough (avoid rendering too many results)
     final query =
-        (before.group(0) + (after != null ? after.group(0) : '')).toLowerCase();
+        (before.group(0)! + (after != null ? after.group(0)! : '')).toLowerCase();
     if (query.length < 3) return null;
 
     final emojis = searchEmojis(query);
@@ -345,7 +345,7 @@ class _EmojiSuggestion {
     return _EmojiSuggestion(
       query: query,
       emojis: emojis,
-      start: s.end - before.group(0).length,
+      start: s.end - before.group(0)!.length,
     );
   }
 }

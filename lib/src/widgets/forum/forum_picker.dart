@@ -77,13 +77,13 @@ class _ForumPickerBody extends StatelessWidget {
 }
 
 class ForumPickerData extends ChangeNotifier {
-  Forum _forum;
+  Forum? _forum;
 
   ForumPickerData(this._forum);
 
-  Forum get forum => _forum;
+  Forum? get forum => _forum;
 
-  set forum(Forum v) {
+  set forum(Forum? v) {
     _forum = v;
     notifyListeners();
   }

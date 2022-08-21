@@ -5,7 +5,7 @@ import 'package:the_app/src/abstracts/uni_links.dart' as abstraction;
 import 'package:the_app/src/link.dart';
 import 'package:the_app/src/push_notification.dart';
 
-Future<String> getInitialLink() async {
+Future<String?> getInitialLink() async {
   try {
     final initialLink = await abstraction.getInitialLink();
     if (initialLink == null) return null;
@@ -22,14 +22,14 @@ Future<String> getInitialLink() async {
 class UniLinksApp extends StatefulWidget {
   final Widget child;
 
-  const UniLinksApp({@required this.child, Key key}) : super(key: key);
+  const UniLinksApp({required this.child, Key? key}) : super(key: key);
 
   @override
   State<UniLinksApp> createState() => _UniLinksState();
 }
 
 class _UniLinksState extends State<UniLinksApp> {
-  /* late final */ StreamSubscription<String> subscription;
+  late final StreamSubscription<String?>? subscription;
 
   @override
   void initState() {
