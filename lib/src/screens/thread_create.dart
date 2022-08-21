@@ -15,7 +15,7 @@ class ThreadCreateScreen extends StatefulWidget {
   const ThreadCreateScreen({Key? key, this.forum}) : super(key: key);
 
   @override
-  _ThreadCreateScreenState createState() => _ThreadCreateScreenState();
+  State<ThreadCreateScreen> createState() => _ThreadCreateScreenState();
 }
 
 class _ThreadCreateScreenState extends State<ThreadCreateScreen> {
@@ -47,13 +47,17 @@ class _ThreadCreateScreenState extends State<ThreadCreateScreen> {
     final forum = widget.forum;
 
     return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<ForumPickerData>.value(value: fpd),
+        ChangeNotifierProvider<_ThreadCreateData>.value(value: tcd),
+      ],
       child: Scaffold(
         appBar: AppBar(
           title: Text(l(context).threadCreateNew),
           actions: <Widget>[
             Consumer2<ForumPickerData, _ThreadCreateData>(
               builder: (_, fpd, tcd, __) => IconButton(
-                icon: Icon(FontAwesomeIcons.paperPlane),
+                icon: const Icon(FontAwesomeIcons.paperPlane),
                 onPressed:
                     fpd.forum != null && tcd._isPosting == false ? _post : null,
                 tooltip: l(context).threadCreateSubmit,
@@ -62,12 +66,13 @@ class _ThreadCreateScreenState extends State<ThreadCreateScreen> {
           ],
         ),
         body: Form(
+          key: formKey,
           child: Column(
             children: <Widget>[
               Expanded(
                 child: ListView(
                   children: <Widget>[
-                    ForumPickerWidget(),
+                    const ForumPickerWidget(),
                     _buildInputPadding(_ThreadCreateTitle()),
                     _buildInputPadding(_ThreadCreateBody()),
                   ],
@@ -82,13 +87,8 @@ class _ThreadCreateScreenState extends State<ThreadCreateScreen> {
               ),
             ],
           ),
-          key: formKey,
         ),
       ),
-      providers: [
-        ChangeNotifierProvider<ForumPickerData>.value(value: fpd),
-        ChangeNotifierProvider<_ThreadCreateData>.value(value: tcd),
-      ],
     );
   }
 

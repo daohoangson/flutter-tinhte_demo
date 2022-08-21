@@ -8,16 +8,20 @@ import 'package:the_app/src/screens/login.dart';
 import 'package:the_app/src/widgets/html.dart';
 
 class RegisterScreen extends StatelessWidget {
+  const RegisterScreen({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(title: Text(l(context).register)),
-        body: RegisterForm(),
+        body: const RegisterForm(),
       );
 }
 
 class RegisterForm extends StatefulWidget {
+  const RegisterForm({Key? key}) : super(key: key);
+
   @override
-  _RegisterState createState() => _RegisterState();
+  State<RegisterForm> createState() => _RegisterState();
 }
 
 class _RegisterState extends State<RegisterForm> {
@@ -48,8 +52,8 @@ class _RegisterState extends State<RegisterForm> {
   Widget build(BuildContext context) => Form(
         key: formKey,
         child: ListView(
-          children: _buildFields(),
           padding: const EdgeInsets.all(20.0),
+          children: _buildFields(),
         ),
       );
 
@@ -62,17 +66,17 @@ class _RegisterState extends State<RegisterForm> {
           children: <Widget>[
             Expanded(
               child: TextButton(
-                child: Text(l(context).login),
                 onPressed: _isRegistering
                     ? null
                     : () => Navigator.of(context)
                         .pushReplacement(LoginScreenRoute()),
+                child: Text(l(context).login),
               ),
             ),
             Expanded(
               child: ElevatedButton(
-                child: Text(l(context).register),
                 onPressed: !_agreed || _isRegistering ? null : _register,
+                child: Text(l(context).register),
               ),
             ),
           ],
@@ -197,8 +201,9 @@ class _RegisterState extends State<RegisterForm> {
     if (!mounted || json == null || json is! Map) return;
 
     final map = json;
-    if (!map.containsKey('token'))
+    if (!map.containsKey('token')) {
       return _showError(l(context).registerErrorNoAccessToken);
+    }
 
     final apiAuth = ApiAuth.of(context, listen: false);
     apiAuth.setToken(OauthToken.fromJson(

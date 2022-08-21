@@ -9,8 +9,10 @@ import 'package:the_app/src/link.dart';
 const _kTrendingTagsMax = 6;
 
 class TrendingTagsWidget extends StatelessWidget {
+  const TrendingTagsWidget({Key? key}) : super(key: key);
+
   @override
-  Widget build(BuildContext _) => LayoutBuilder(
+  Widget build(BuildContext context) => LayoutBuilder(
         builder: (_, bc) => Consumer<_TrendingTagsData>(
           builder: (context, data, _) {
             if (data.tags == null) {
@@ -23,10 +25,10 @@ class TrendingTagsWidget extends StatelessWidget {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                HeaderWidget('#tag đang hot'),
+                const HeaderWidget('#tag đang hot'),
                 Padding(
-                  child: _buildGrid(context, data.tags!, cols),
                   padding: const EdgeInsets.all(kTagWidgetPadding),
+                  child: _buildGrid(context, data.tags!, cols),
                 ),
               ],
             );
@@ -46,8 +48,8 @@ class TrendingTagsWidget extends StatelessWidget {
         final tag = i < tags.length ? tags[i] : null;
         final built = Expanded(
           child: Padding(
-            child: _buildTagWidget(context, tag),
             padding: const EdgeInsets.all(kTagWidgetPadding),
+            child: _buildTagWidget(context, tag),
           ),
         );
         rowWidgets.add(built);

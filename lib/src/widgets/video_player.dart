@@ -55,7 +55,7 @@ class _VideoState extends State<VideoPlayer> {
     if (_chewieController?.videoPlayerController.value.isInitialized != true) {
       return AspectRatio(
         aspectRatio: widget.aspectRatio,
-        child: Center(
+        child: const Center(
           child: CircularProgressIndicator(),
         ),
       );

@@ -112,7 +112,7 @@ class _GalleriaItem {
 class _GalleriaGrid extends StatelessWidget {
   final List<Widget> children;
 
-  _GalleriaGrid(this.children);
+  const _GalleriaGrid(this.children);
 
   @override
   Widget build(BuildContext context) => LayoutBuilder(
@@ -123,11 +123,11 @@ class _GalleriaGrid extends StatelessWidget {
             crossAxisCount: columns.ceil(),
             crossAxisSpacing: 5,
             childAspectRatio: 4 / 3,
-            children: children,
             shrinkWrap: true,
             mainAxisSpacing: 5,
             padding: const EdgeInsets.all(0),
             primary: false,
+            children: children,
           );
         },
       );

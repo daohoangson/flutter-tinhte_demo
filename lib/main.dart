@@ -39,7 +39,7 @@ void main() async {
     String? fallbackLink;
     if (values[2] != null) {
       initialPath = values[2] as String?;
-      defaultWidget = NotificationListScreen();
+      defaultWidget = const NotificationListScreen();
     } else if (values[3] != null) {
       initialPath = buildToolsParseLinkPath(values[3] as String);
       fallbackLink = values[3] as String?;
@@ -66,21 +66,22 @@ class MyApp extends StatelessWidget {
   final FontScale fontScale;
   final Widget home;
 
-  MyApp({
+  const MyApp({
     required this.darkTheme,
     required this.devTools,
     required this.fontScale,
+    Key? key,
     required this.home,
-  });
+  }) : super(key: key);
 
   @override
-  Widget build(BuildContext _) => MultiProvider(
-        child: Builder(builder: (context) => _buildApp(context)),
+  Widget build(BuildContext context) => MultiProvider(
         providers: [
           ChangeNotifierProvider<DarkTheme>.value(value: darkTheme),
           ChangeNotifierProvider<DevTools>.value(value: devTools),
           ChangeNotifierProvider<FontScale>.value(value: fontScale),
         ],
+        child: Builder(builder: (context) => _buildApp(context)),
       );
 
   Widget _buildApp(BuildContext context) {
@@ -91,8 +92,8 @@ class MyApp extends StatelessWidget {
     Widget app = MaterialApp(
       darkTheme: _theme(_themeDark),
       home: home,
-      localizationsDelegates: [
-        const L10nDelegate(),
+      localizationsDelegates: const [
+        L10nDelegate(),
         GlobalCupertinoLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
@@ -101,9 +102,9 @@ class MyApp extends StatelessWidget {
       navigatorObservers: [FontControlWidget.routeObserver],
       onGenerateTitle: (context) => l(context).appTitle,
       showPerformanceOverlay: showPerformanceOverlay,
-      supportedLocales: [
-        const Locale('en', ''),
-        const Locale('vi', ''),
+      supportedLocales: const [
+        Locale('en', ''),
+        Locale('vi', ''),
       ],
       theme: _theme(_themeLight),
     );
@@ -116,7 +117,7 @@ class MyApp extends StatelessWidget {
     return app;
   }
 
-  ThemeData _theme(ThemeData fallback()) {
+  ThemeData _theme(ThemeData Function() fallback) {
     switch (darkTheme.value) {
       case false:
         return _themeLight();

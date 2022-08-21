@@ -17,10 +17,11 @@ abstract class ConfigBase {
 
   List<SuperListComplexItemRegister>? get homeComplexItems => null;
   String get homePath => 'threads/recent';
-  SearchResult<Thread> Function(Map<String, dynamic>) get homeParser => (j) {
-        final thread = Thread.fromJson(j);
-        return SearchResult<Thread>('thread', thread.threadId, content: thread);
-      };
+  SearchResult<Thread> homeParser(Map<String, dynamic> json) {
+    final thread = Thread.fromJson(json);
+    return SearchResult<Thread>('thread', thread.threadId, content: thread);
+  }
+
   Widget? get homeSlot1BelowTop5 => null;
   Widget? get homeSlot2BelowSlot1 => null;
   Widget? get homeSlot3NearEndOfPage1 => null;

@@ -47,19 +47,23 @@ class DevTools extends ChangeNotifier {
 }
 
 class DeveloperMenu extends StatelessWidget {
+  const DeveloperMenu({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) => Consumer<DevTools>(
         builder: (_, developer, __) => developer.isDeveloper
             ? ListTile(
                 title: Text(l(context).menuDeveloper),
                 onTap: () => Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => DeveloperMenuScreen())),
+                    MaterialPageRoute(builder: (_) => const DeveloperMenuScreen())),
               )
             : const SizedBox.shrink(),
       );
 }
 
 class DeveloperMenuScreen extends StatelessWidget {
+  const DeveloperMenuScreen({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
@@ -67,10 +71,10 @@ class DeveloperMenuScreen extends StatelessWidget {
         ),
         body: ListView(
           children: <Widget>[
-            ErrorReportingWidget(),
-            FirebaseWidget(),
-            PushNotificationWidget(),
-            UniLinksWidget(),
+            const ErrorReportingWidget(),
+            const FirebaseWidget(),
+            const PushNotificationWidget(),
+            const UniLinksWidget(),
             _ShowPerformanceOverlayWidget(),
             _CrashTestWidget(),
           ],

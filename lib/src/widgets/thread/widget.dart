@@ -1,13 +1,13 @@
 part of '../threads.dart';
 
 const _kThreadWidgetPadding = 10.0;
-const _kThreadWidgetSpacing = const SizedBox(height: _kThreadWidgetPadding);
+const _kThreadWidgetSpacing = SizedBox(height: _kThreadWidgetPadding);
 
 class ThreadWidget extends StatelessWidget {
   final Thread thread;
   final UserFeedData? feedData;
 
-  ThreadWidget(
+  const ThreadWidget(
     this.thread, {
     Key? key,
     this.feedData,
@@ -18,19 +18,19 @@ class ThreadWidget extends StatelessWidget {
     if (thread.userIsIgnored == true) return const SizedBox.shrink();
 
     final firstPost = thread.firstPost;
-    final _isBackgroundPost =
+    final firstPostIsBackground =
         firstPost != null ? isBackgroundPost(firstPost) : false;
-    final _isTinhteFact = isTinhteFact(thread);
-    final _isCustomPost = _isBackgroundPost || _isTinhteFact;
-    final _isThreadTitleRedundant =
-        _isCustomPost || thread.isThreadTitleRedundant;
+    final threadIsTinhteFact = isTinhteFact(thread);
+    final isCustomPost = firstPostIsBackground || threadIsTinhteFact;
+    final isThreadTitleRedundant =
+        isCustomPost || thread.isThreadTitleRedundant;
 
     final children = <Widget>[
       _kThreadWidgetSpacing,
       _buildTextPadding(_buildInfo(context)),
     ];
 
-    if (!_isThreadTitleRedundant) {
+    if (!isThreadTitleRedundant) {
       children.addAll([
         _kThreadWidgetSpacing,
         _buildTextPadding(_buildTitle(context)),
@@ -40,14 +40,14 @@ class ThreadWidget extends StatelessWidget {
     children.addAll([
       _kThreadWidgetSpacing,
       _buildTextPadding(
-        firstPost != null && _isBackgroundPost
+        firstPost != null && firstPostIsBackground
             ? BackgroundPost(firstPost)
-            : (_isTinhteFact ? TinhteFact(thread) : _buildBody(context)),
+            : (threadIsTinhteFact ? TinhteFact(thread) : _buildBody(context)),
       ),
     ]);
 
     final image = _buildImage();
-    if (!_isCustomPost && image != null) {
+    if (!isCustomPost && image != null) {
       children.addAll([
         _kThreadWidgetSpacing,
         image,
@@ -71,9 +71,9 @@ class ThreadWidget extends StatelessWidget {
 
   Widget _buildBanner(BuildContext context, Widget child) => ClipRect(
         child: Banner(
-          child: child,
           location: BannerLocation.topEnd,
           message: l(context).threadStickyBanner,
+          child: child,
         ),
       );
 
@@ -87,8 +87,8 @@ class ThreadWidget extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: _kThreadWidgetPadding),
         child: GestureDetector(
           child: Column(
-            children: children,
             crossAxisAlignment: CrossAxisAlignment.start,
+            children: children,
           ),
           onTap: () => Navigator.of(context).push(
             MaterialPageRoute(builder: (_) => ThreadViewScreen(thread)),
@@ -195,14 +195,14 @@ class ThreadWidget extends StatelessWidget {
 
   Widget _buildTitle(BuildContext context) => Text(
         thread.threadTitle ?? '',
-        style: TextStyle(fontWeight: FontWeight.bold),
+        style: const TextStyle(fontWeight: FontWeight.bold),
       );
 }
 
 class _ThreadWidgetActions extends StatefulWidget {
   final Thread thread;
 
-  _ThreadWidgetActions(this.thread, {Key? key}) : super(key: key);
+  const _ThreadWidgetActions(this.thread, {Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _ThreadWidgetActionsState();
@@ -215,7 +215,7 @@ class _ThreadWidgetActionsState extends State<_ThreadWidgetActions> {
   Thread get thread => widget.thread;
 
   @override
-  Widget build(BuildContext _) =>
+  Widget build(BuildContext context) =>
       AnimatedBuilder(animation: thread, builder: _builder);
 
   Widget _builder(BuildContext context, Widget? _) {
@@ -231,7 +231,7 @@ class _ThreadWidgetActionsState extends State<_ThreadWidgetActions> {
             MaterialPageRoute(builder: (_) => ThreadViewScreen(thread)),
           ),
         ),
-        Divider(
+        const Divider(
           height: 0,
           indent: _kThreadWidgetPadding,
           endIndent: _kThreadWidgetPadding,
@@ -243,7 +243,7 @@ class _ThreadWidgetActionsState extends State<_ThreadWidgetActions> {
               Expanded(child: _buildButtonLike()),
               Expanded(
                 child: TextButton.icon(
-                  icon: Icon(FontAwesomeIcons.message),
+                  icon: const Icon(FontAwesomeIcons.message),
                   label: Text(l(context).postReply),
                   onPressed: () => Navigator.of(context).push(
                     MaterialPageRoute(
@@ -257,7 +257,7 @@ class _ThreadWidgetActionsState extends State<_ThreadWidgetActions> {
               ),
               Expanded(
                 child: TextButton.icon(
-                  icon: Icon(FontAwesomeIcons.shareNodes),
+                  icon: const Icon(FontAwesomeIcons.shareNodes),
                   label: Text(l(context).share),
                   onPressed: permalink.isNotEmpty
                       ? () => Share.share(permalink)

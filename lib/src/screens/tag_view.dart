@@ -7,7 +7,7 @@ class TagViewScreen extends StatelessWidget {
   final Tag tag;
   final Map? initialJson;
 
-  TagViewScreen(
+  const TagViewScreen(
     this.tag, {
     this.initialJson,
     Key? key,

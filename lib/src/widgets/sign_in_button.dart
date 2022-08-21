@@ -4,27 +4,27 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 class SignInButton extends StatelessWidget {
   final VoidCallback onPressed;
   final String text;
-  final _SignInButtonType type;
+  final _SignInButtonType _type;
 
   const SignInButton.apple({
     Key? key,
     required this.onPressed,
     required this.text,
-  })  : type = _SignInButtonType.apple,
+  })  : _type = _SignInButtonType.apple,
         super(key: key);
 
   const SignInButton.facebook({
     Key? key,
     required this.onPressed,
     required this.text,
-  })  : type = _SignInButtonType.facebook,
+  })  : _type = _SignInButtonType.facebook,
         super(key: key);
 
   const SignInButton.google({
     Key? key,
     required this.onPressed,
     required this.text,
-  })  : type = _SignInButtonType.google,
+  })  : _type = _SignInButtonType.google,
         super(key: key);
 
   @override
@@ -32,7 +32,7 @@ class SignInButton extends StatelessWidget {
     Color? backgroundColor;
     IconData? icon;
 
-    switch (type) {
+    switch (_type) {
       case _SignInButtonType.apple:
         backgroundColor = const Color(0xFF000000);
         icon = FontAwesomeIcons.apple;

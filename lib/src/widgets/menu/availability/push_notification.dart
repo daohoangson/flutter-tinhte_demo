@@ -11,7 +11,7 @@ class PushNotificationWidget extends StatelessWidget {
         onChanged: null,
         value: backend != Backend.none,
       ),
-      title: Text('push_notification'),
+      title: const Text('push_notification'),
       subtitle: Text('$backend'),
     );
   }

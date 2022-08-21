@@ -7,7 +7,7 @@ const _kThreadNavigationSeparatorPadding = 2.0;
 class ThreadNavigationWidget extends StatefulWidget {
   final Thread thread;
 
-  ThreadNavigationWidget(this.thread);
+  const ThreadNavigationWidget(this.thread, {Key? key}) : super(key: key);
 
   @override
   State<ThreadNavigationWidget> createState() => _ThreadNavigationState();
@@ -31,8 +31,11 @@ class _ThreadNavigationState extends State<ThreadNavigationWidget> {
   }
 
   @override
-  Widget build(BuildContext _) => SizedBox(
+  Widget build(BuildContext context) => SizedBox(
+        height: _kThreadNavigationMargin * 2 + _kThreadNavigationFontSize * 1.5,
         child: Padding(
+          padding:
+              const EdgeInsets.symmetric(horizontal: _kThreadNavigationMargin),
           child: ListView.separated(
             itemBuilder: (context, i) => i < nodes.length
                 ? _buildNode(context, nodes[i])
@@ -41,20 +44,17 @@ class _ThreadNavigationState extends State<ThreadNavigationWidget> {
             scrollDirection: Axis.horizontal,
             separatorBuilder: (context, _) => _buildSeparator(context),
           ),
-          padding:
-              const EdgeInsets.symmetric(horizontal: _kThreadNavigationMargin),
         ),
-        height: _kThreadNavigationMargin * 2 + _kThreadNavigationFontSize * 1.5,
       );
 
   Widget _buildSeparator(BuildContext context) => Padding(
+        padding: const EdgeInsets.symmetric(
+            horizontal: _kThreadNavigationSeparatorPadding),
         child: Icon(
           FontAwesomeIcons.caretRight,
           size: _kThreadNavigationFontSize,
           color: Theme.of(context).textTheme.caption?.color,
         ),
-        padding: const EdgeInsets.symmetric(
-            horizontal: _kThreadNavigationSeparatorPadding),
       );
 
   Widget _buildNode(BuildContext context, Node node) => node.map(
@@ -73,13 +73,14 @@ class _ThreadNavigationState extends State<ThreadNavigationWidget> {
         linkforum: (link) {
           final target = link.links?.target;
           return InkWell(
-            child: _buildText(context, link.linkTitle ?? '#${link.linkId}'),
             onTap: target != null ? () => launchLink(context, target) : null,
+            child: _buildText(context, link.linkTitle ?? '#${link.linkId}'),
           );
         },
       );
 
   Widget _buildText(BuildContext context, String data) => Padding(
+      padding: const EdgeInsets.symmetric(vertical: _kThreadNavigationMargin),
       child: Center(
         child: Text(
           data,
@@ -89,8 +90,7 @@ class _ThreadNavigationState extends State<ThreadNavigationWidget> {
               ),
           textAlign: TextAlign.center,
         ),
-      ),
-      padding: const EdgeInsets.symmetric(vertical: _kThreadNavigationMargin));
+      ));
 
   void _fetch() => apiGet(
         ApiCaller.stateful(this),

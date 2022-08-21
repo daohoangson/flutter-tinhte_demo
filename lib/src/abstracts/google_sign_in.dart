@@ -13,15 +13,16 @@ final _googleSignIn = lib.GoogleSignIn(
 );
 
 Future<String> signIn(BuildContext context) async {
+  final l10n = l(context);
   final account = await _googleSignIn.signIn();
   if (account == null) {
-    throw new StateError(l(context).loginGoogleErrorAccountIsNull);
+    throw StateError(l10n.loginGoogleErrorAccountIsNull);
   }
 
   final auth = await account.authentication;
   final googleToken = auth.idToken ?? auth.accessToken ?? '';
   if (googleToken.isNotEmpty != true) {
-    throw new StateError(l(context).loginGoogleErrorTokenIsEmpty);
+    throw StateError(l10n.loginGoogleErrorTokenIsEmpty);
   }
 
   return googleToken;

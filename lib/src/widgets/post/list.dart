@@ -7,7 +7,7 @@ class PostsWidget extends StatefulWidget {
   final String? path;
   final Thread thread;
 
-  PostsWidget(
+  const PostsWidget(
     this.thread, {
     this.initialJson,
     Key? key,
@@ -30,7 +30,7 @@ class PostsState extends State<PostsWidget> {
   }
 
   @override
-  Widget build(BuildContext _) {
+  Widget build(BuildContext context) {
     final firstPost = widget.thread.firstPost;
 
     return SuperListView<_PostListItem>(
@@ -181,7 +181,7 @@ class PostsState extends State<PostsWidget> {
       fc.items.add(_PostListItem.page(linksPage, fc.linksPages));
     }
 
-    final items = decodePostsAndTheirReplies(json['posts']);
+    final items = _decodePostsAndTheirReplies(json['posts']);
     for (final item in items) {
       if (firstItemPostId != null && item.postId == firstItemPostId) continue;
 
@@ -189,8 +189,9 @@ class PostsState extends State<PostsWidget> {
         fc.items.add(_PostListItem.page(linksPage, fc.linksPages));
       }
 
-      if (pageOfPostId != null && item.postId == pageOfPostId)
+      if (pageOfPostId != null && item.postId == pageOfPostId) {
         fc.scrollToRelativeIndex = fc.items.length;
+      }
 
       fc.items.add(item);
     }
@@ -199,9 +200,10 @@ class PostsState extends State<PostsWidget> {
       final freshThread = Thread.fromJson(json['thread']);
       final postsUnread = freshThread.links?.postsUnread;
 
-      if (fc.id == FetchContextId.FetchInitial && postsUnread != null)
+      if (fc.id == FetchContextId.fetchInitial && postsUnread != null) {
         WidgetsBinding.instance.addPostFrameCallback(
             (_) => _showSnackBarUnread(fc.state, postsUnread));
+      }
     }
   }
 

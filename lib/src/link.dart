@@ -22,6 +22,8 @@ Future<bool> launchLink(
   String link, {
   bool forceWebView = false,
 }) async {
+  final apiAuth = ApiAuth.of(context, listen: false);
+
   if (link.startsWith(config.siteRoot)) {
     final path = buildToolsParseLinkPath(link);
     if (!forceWebView) {
@@ -33,7 +35,6 @@ Future<bool> launchLink(
       forceWebView = true;
     }
 
-    final apiAuth = ApiAuth.of(context, listen: false);
     final token = apiAuth.token;
     if (token != null) {
       link = "${config.apiRoot}?tools/login"
@@ -42,14 +43,17 @@ Future<bool> launchLink(
     }
   }
 
-  if (!await canLaunch(link)) return false;
+  final uri = Uri.tryParse(link);
+  if (uri == null) return false;
+  if (!await canLaunchUrl(uri)) return false;
 
-  return launch(
-    link,
-    forceSafariVC: forceWebView,
-    forceWebView: forceWebView,
-    enableDomStorage: true,
-    enableJavaScript: true,
+  return launchUrl(
+    uri,
+    mode: forceWebView ? LaunchMode.inAppWebView : LaunchMode.platformDefault,
+    webViewConfiguration: const WebViewConfiguration(
+      enableDomStorage: true,
+      enableJavaScript: true,
+    ),
   );
 }
 
@@ -64,14 +68,15 @@ Future<bool> parsePath(
 }) {
   assert((context == null) != (rootNavigator == null));
   final navigator = rootNavigator ?? Navigator.of(context!);
-  if (context == null) context = navigator.context;
+  final ctx = context ??= navigator.context;
+
   var cancelled = false;
 
   navigator.push(_DialogRoute((_) => AlertDialog(
-        content: Text(l(context!).justAMomentEllipsis),
+        content: Text(l(ctx).justAMomentEllipsis),
         actions: <Widget>[
           TextButton(
-            child: Text(lm(context).cancelButtonLabel),
+            child: Text(lm(ctx).cancelButtonLabel),
             onPressed: () {
               cancelled = true;
               navigator.pop();
@@ -80,12 +85,12 @@ Future<bool> parsePath(
         ],
       )));
 
-  final cancelDialog = () {
+  cancelDialog() {
     if (cancelled) return;
 
     navigator.pop();
     cancelled = true;
-  };
+  }
 
   return buildWidget(
     ApiCaller.stateless(context),
@@ -104,10 +109,7 @@ Future<bool> parsePath(
       }
       return true;
     },
-    onError: (error) {
-      print(error);
-      return false;
-    },
+    onError: (_) => false,
   ).whenComplete(() => cancelDialog());
 }
 

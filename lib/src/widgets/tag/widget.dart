@@ -7,12 +7,12 @@ import 'package:the_app/src/screens/fp_view.dart';
 const kTagWidgetPadding = 2.5;
 
 class FpWidget extends StatelessWidget {
-  static final kPreferAspectRatio = 1.3;
-  static final kPreferWidth = 150.0;
+  static const kPreferAspectRatio = 1.3;
+  static const kPreferWidth = 150.0;
 
   final FeaturePage? fp;
 
-  FpWidget(this.fp);
+  const FpWidget(this.fp, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +35,7 @@ class TagWidget extends StatelessWidget {
   final String? label;
   final GestureTapCallback? onTap;
 
-  TagWidget({
+  const TagWidget({
     this.image,
     Key? key,
     this.label,
@@ -59,13 +59,13 @@ class TagWidget extends StatelessWidget {
           builder: (_, bc) => Align(
             alignment: Alignment.centerLeft,
             child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 5),
               child: Text(
                 label ?? l(context).loadingEllipsis,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(fontSize: bc.biggest.height / 2),
               ),
-              padding: const EdgeInsets.symmetric(horizontal: 5),
             ),
           ),
         ),
@@ -82,6 +82,7 @@ class TagWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(5),
       ),
       child: ClipRRect(
+        borderRadius: BorderRadius.circular(5),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -92,20 +93,19 @@ class TagWidget extends StatelessWidget {
             AspectRatio(
               aspectRatio: 4,
               child: DefaultTextStyle(
-                child: body,
                 style: TextStyle(color: theme.colorScheme.onSecondary),
+                child: body,
               ),
             ),
           ],
         ),
-        borderRadius: BorderRadius.circular(5),
       ),
     );
   }
 
   Widget _buildGestureDetector(BuildContext context, Widget child) =>
       GestureDetector(
-        child: child,
         onTap: onTap,
+        child: child,
       );
 }

@@ -35,6 +35,7 @@ class TinhteFact extends StatelessWidget {
         ThemeData.localize(ThemeData.dark(), Theme.of(context).textTheme);
 
     return Theme(
+      data: theme,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
@@ -68,7 +69,6 @@ class TinhteFact extends StatelessWidget {
           ),
         ],
       ),
-      data: theme,
     );
   }
 

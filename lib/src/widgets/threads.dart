@@ -30,7 +30,7 @@ class ThreadsWidget extends StatelessWidget {
   final String? path;
   final String threadsKey;
 
-  ThreadsWidget({
+  const ThreadsWidget({
     this.apiMethod,
     this.forum,
     this.header,
@@ -41,7 +41,7 @@ class ThreadsWidget extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext _) => SuperListView<Thread>(
+  Widget build(BuildContext context) => SuperListView<Thread>(
         apiMethodInitial: apiMethod,
         fetchOnSuccess: _fetchOnSuccess,
         fetchPathInitial: path,

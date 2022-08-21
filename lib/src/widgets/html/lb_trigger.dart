@@ -6,7 +6,7 @@ class LbTrigger {
   final hashCodes = <int>[0];
   final WidgetFactory? wf;
 
-  final _captions = Map<int, Widget>();
+  final _captions = <int, Widget>{};
   final _sources = <LbTriggerSource>[];
 
   BuildOp? _fullOp;
@@ -132,13 +132,13 @@ class _ScaleRoute extends PageRouteBuilder {
       : super(
           pageBuilder: (_, __, ___) => page,
           transitionsBuilder: (context, animation, _, __) => ScaleTransition(
-            child: page,
             scale: Tween<double>(begin: 0.0, end: 1.0).animate(
               CurvedAnimation(
                 parent: animation,
                 curve: Curves.fastOutSlowIn,
               ),
             ),
+            child: page,
           ),
         );
 }
@@ -181,12 +181,12 @@ class _ScreenState extends State<_Screen> {
                 final loaded = event?.cumulativeBytesLoaded ?? 0;
                 final total = event?.expectedTotalBytes ?? 0;
                 return Container(
+                  decoration: const BoxDecoration(color: Colors.black),
                   child: Center(
                     child: CircularProgressIndicator(
                       value: total == 0 ? null : loaded / total,
                     ),
                   ),
-                  decoration: BoxDecoration(color: Colors.black),
                 );
               },
               pageController: widget.pageController,
@@ -196,8 +196,8 @@ class _ScreenState extends State<_Screen> {
             Align(
               alignment: Alignment.bottomCenter,
               child: Padding(
-                child: _buildCaption(context, _currentPage),
                 padding: const EdgeInsets.all(44),
+                child: _buildCaption(context, _currentPage),
               ),
             ),
           ],
@@ -207,11 +207,12 @@ class _ScreenState extends State<_Screen> {
   Widget _buildCaption(BuildContext context, int index) {
     final caption = widget.captions[index];
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         caption != null
             ? DefaultTextStyle(
+                style: const TextStyle(color: kCaptionColor),
                 child: caption,
-                style: TextStyle(color: kCaptionColor),
               )
             : Text(
                 l(context).navXOfY(index + 1, widget.sources.length),
@@ -221,12 +222,11 @@ class _ScreenState extends State<_Screen> {
                     ?.copyWith(color: kCaptionColor),
               ),
         TextButton(
-          child: Text(lm(context).okButtonLabel),
           onPressed: () => Navigator.of(context).pop(),
           style: TextButton.styleFrom(primary: kCaptionColor),
+          child: Text(lm(context).okButtonLabel),
         )
       ],
-      mainAxisSize: MainAxisSize.min,
     );
   }
 

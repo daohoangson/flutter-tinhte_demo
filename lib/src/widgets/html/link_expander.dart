@@ -78,9 +78,9 @@ class LinkExpander {
 
         if (width != null) {
           built = CssSizing(
-            child: built,
             maxWidth: CssSizingValue.value(width),
             minWidth: CssSizingValue.value(width),
+            child: built,
           );
         }
 
@@ -212,9 +212,9 @@ class _LinkExpanderInfo {
             }
 
             return Column(
-              children: children.toList(growable: false),
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisSize: MainAxisSize.max,
+              children: children.toList(growable: false),
             );
           },
         ),

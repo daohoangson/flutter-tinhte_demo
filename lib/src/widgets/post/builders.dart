@@ -18,16 +18,16 @@ Widget buildPostButton(
   final fontSize = theme.textTheme.button?.fontSize;
 
   Widget button = TextButton(
+    onPressed: onTap,
     child: Text(
       (count > 0 ? "$count • " : '') + text,
       style: fontSize != null ? TextStyle(fontSize: fontSize - 2) : null,
     ),
-    onPressed: onTap,
   );
 
   button = ButtonTheme.fromButtonThemeData(
-    child: button,
     data: ButtonTheme.of(context).copyWith(height: 0, minWidth: 0),
+    child: button,
   );
 
   return button;
@@ -126,8 +126,8 @@ Widget buildPosterInfo(
   }
 
   Widget built = Wrap(
-    children: children,
     spacing: 5,
+    children: children,
   );
 
   if (userId != null) {

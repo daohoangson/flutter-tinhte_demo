@@ -46,7 +46,7 @@ class ThreadImageWidget extends StatelessWidget {
 
   static final _smalls = Expando<ThreadImage>();
 
-  ThreadImageWidget._({
+  const ThreadImageWidget._({
     required this.image,
     Key? key,
     this.placeholder,
@@ -80,7 +80,7 @@ class ThreadImageWidget extends StatelessWidget {
     if (link.isEmpty) {
       return DecoratedBox(
         decoration: BoxDecoration(color: Theme.of(context).backgroundColor),
-        child: AspectRatio(aspectRatio: kThreadImageAspectRatio),
+        child: const AspectRatio(aspectRatio: kThreadImageAspectRatio),
       );
     }
 
@@ -107,7 +107,7 @@ class ThreadImageWidget extends StatelessWidget {
       aspectRatio: useImageRatio == true && width > 0 && height > 0
           ? width / height
           : kThreadImageAspectRatio,
-      child: Hero(child: img, tag: "threadImageHero--$threadId"),
+      child: Hero(tag: "threadImageHero--$threadId", child: img),
     );
   }
 

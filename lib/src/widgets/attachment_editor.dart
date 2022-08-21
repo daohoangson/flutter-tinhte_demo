@@ -15,7 +15,7 @@ class AttachmentEditorWidget extends StatefulWidget {
   final double height;
   final bool showPickIcon;
 
-  AttachmentEditorWidget({
+  const AttachmentEditorWidget({
     this.apiPostPath,
     this.height = 50,
     Key? key,
@@ -54,7 +54,7 @@ class AttachmentEditorState extends State<AttachmentEditorWidget> {
   }
 
   @override
-  Widget build(BuildContext _) => itemCount > 0
+  Widget build(BuildContext context) => itemCount > 0
       ? Padding(
           padding: const EdgeInsets.all(10.0),
           child: SizedBox(
@@ -104,6 +104,7 @@ class AttachmentEditorState extends State<AttachmentEditorWidget> {
   }
 
   Widget _buildPickIcon() => Tooltip(
+        message: l(context).pickGallery,
         child: InkWell(
           child: Container(
             color: Theme.of(context).backgroundColor,
@@ -115,7 +116,6 @@ class AttachmentEditorState extends State<AttachmentEditorWidget> {
           ),
           onTap: () => pickGallery(),
         ),
-        message: l(context).pickGallery,
       );
 
   void pickGallery() async {

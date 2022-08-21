@@ -49,7 +49,7 @@ class _PostReplyHiddenWidget extends StatefulWidget {
   final PostReply postReply;
   final int superListIndex;
 
-  _PostReplyHiddenWidget(
+  const _PostReplyHiddenWidget(
     this.postReply,
     this.superListIndex, {
     Key? key,
@@ -67,12 +67,12 @@ class _PostReplyHiddenWidgetState extends State<_PostReplyHiddenWidget> {
     Widget built = _isFetching
         ? _buildText(context, l(context).loadingEllipsis)
         : GestureDetector(
+            onTap: fetch,
             child: _buildText(
               context,
               l(context).postLoadXHidden(
                   formatNumber(widget.postReply.postReplyCount ?? 0)),
             ),
-            onTap: fetch,
           );
 
     built = Padding(
@@ -109,7 +109,7 @@ class _PostReplyHiddenWidgetState extends State<_PostReplyHiddenWidget> {
         if (parentPost['post_id'] == widget.postReply.postReplyTo &&
             repliesValue is Iterable) {
           final items =
-              decodePostsAndTheirReplies([parentPost, ...repliesValue])
+              _decodePostsAndTheirReplies([parentPost, ...repliesValue])
                   .where((item) => item.postId != widget.postReply.postReplyTo)
                   .toList();
 
@@ -139,7 +139,6 @@ class _PostReplyHiddenWidgetState extends State<_PostReplyHiddenWidget> {
 Widget _buildReplyToPadding(Widget child, int depth) => depth == 0
     ? child
     : Padding(
-        child: child,
         padding: EdgeInsets.only(
           left: 2 * kPaddingHorizontal +
               kAvatarRootRadius +
@@ -148,4 +147,5 @@ Widget _buildReplyToPadding(Widget child, int depth) => depth == 0
                       (2 * kPaddingHorizontal + kAvatarReplyToRadius)
                   : 0),
         ),
+        child: child,
       );

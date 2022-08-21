@@ -4,11 +4,12 @@ class _PostStickersWidget extends StatelessWidget {
   final LbTrigger lbTrigger;
   final List<PostSticker> stickers;
 
-  _PostStickersWidget._(this.lbTrigger, this.stickers);
+  const _PostStickersWidget._(this.lbTrigger, this.stickers);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
+      padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
       child: SizedBox(
         height: 100,
         child: ListView.separated(
@@ -19,7 +20,6 @@ class _PostStickersWidget extends StatelessWidget {
           separatorBuilder: (context, _) => const SizedBox(width: 10.0),
         ),
       ),
-      padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
     );
   }
 

@@ -4,7 +4,7 @@ class _PostAttachmentsWidget extends StatelessWidget {
   final List<Attachment> attachments;
   final LbTrigger lbTrigger;
 
-  _PostAttachmentsWidget._(this.attachments, this.lbTrigger);
+  const _PostAttachmentsWidget._(this.attachments, this.lbTrigger);
 
   static Widget? forPost(Post post, {Thread? thread}) {
     final attachments = <Attachment>[];
@@ -66,6 +66,7 @@ class _PostAttachmentsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
+      padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
       child: SizedBox(
         height: 100,
         child: ListView.separated(
@@ -76,7 +77,6 @@ class _PostAttachmentsWidget extends StatelessWidget {
           separatorBuilder: (context, _) => const SizedBox(width: 10.0),
         ),
       ),
-      padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
     );
   }
 

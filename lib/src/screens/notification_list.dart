@@ -10,6 +10,6 @@ class NotificationListScreen extends StatelessWidget {
         appBar: AppBar(
           title: Text(l(context).notifications),
         ),
-        body: NotificationsWidget(),
+        body: const NotificationsWidget(),
       );
 }

@@ -2415,7 +2415,7 @@ Map<String, String>? searchEmojis(String query) {
     if (!matches) {
       // start of word match
       // e.g. `:heel` will match `:high_heel:`
-      matches = code.contains('_' + query.substring(1));
+      matches = code.contains('_${query.substring(1)}');
     }
 
     if (!matches) continue;

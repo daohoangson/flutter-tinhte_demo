@@ -5,17 +5,17 @@ import 'package:the_apple_sign_in/the_apple_sign_in.dart' as lib;
 Future<bool> get isSupported => lib.TheAppleSignIn.isAvailable();
 
 Future<String> signIn(BuildContext context) async {
-  final req = lib.AppleIdRequest(requestedScopes: [lib.Scope.email]);
+  final l10n = l(context);
 
+  const req = lib.AppleIdRequest(requestedScopes: [lib.Scope.email]);
   final result = await lib.TheAppleSignIn.performRequests([req]);
 
   switch (result.status) {
     case lib.AuthorizationStatus.authorized:
       return String.fromCharCodes(result.credential!.identityToken!);
     case lib.AuthorizationStatus.cancelled:
-      final _l = l(context);
-      throw new StateError(_l.loginErrorCancelled(_l.loginWithApple));
+      throw StateError(l10n.loginErrorCancelled(l10n.loginWithApple));
     case lib.AuthorizationStatus.error:
-      throw new StateError(result.error!.localizedDescription!);
+      throw StateError(result.error!.localizedDescription!);
   }
 }

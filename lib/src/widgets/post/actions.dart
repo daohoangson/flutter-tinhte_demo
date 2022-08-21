@@ -8,7 +8,7 @@ class _PostActionsWidget extends StatefulWidget {
   final Post post;
   final bool showPostCreateDate;
 
-  _PostActionsWidget({
+  const _PostActionsWidget({
     Key? key,
     required this.post,
     this.showPostCreateDate = true,
@@ -70,11 +70,11 @@ class _PostActionsWidgetState extends State<_PostActionsWidget> {
           );
 
           final row = Padding(
+            padding: const EdgeInsets.only(left: kPaddingHorizontal / 2),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: buttons,
             ),
-            padding: const EdgeInsets.only(left: kPaddingHorizontal / 2),
           );
 
           return row;
@@ -131,23 +131,23 @@ class _PostActionsWidgetState extends State<_PostActionsWidget> {
     final entries = <PopupMenuEntry<String>>[
       if (post.links?.permalink != null)
         PopupMenuItem(
-          child: Text(l(context).openInBrowser),
           value: _kPopupActionOpenInBrowser,
+          child: Text(l(context).openInBrowser),
         ),
     ];
 
     if (post.links?.report?.isNotEmpty == true) {
       entries.add(PopupMenuItem(
-        child: Text(l(context).postReport),
         enabled: post.permissions?.report == true,
         value: _kPopupActionReport,
+        child: Text(l(context).postReport),
       ));
     }
 
     if (post.permissions?.delete == true) {
       entries.add(PopupMenuItem(
-        child: Text(l(context).postDelete),
         value: _kPopupActionDelete,
+        child: Text(l(context).postDelete),
       ));
     }
 

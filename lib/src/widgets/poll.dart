@@ -7,7 +7,7 @@ import 'package:the_app/src/intl.dart';
 class PollWidget extends StatefulWidget {
   final PollOwner owner;
 
-  PollWidget(this.owner);
+  const PollWidget(this.owner, {Key? key}) : super(key: key);
 
   @override
   State<PollWidget> createState() => _PollState();
@@ -28,7 +28,7 @@ class _PollState extends State<PollWidget> {
   }
 
   @override
-  Widget build(BuildContext _) {
+  Widget build(BuildContext context) {
     final poll = widget.owner.poll;
     if (poll == null) {
       return const Center(child: CircularProgressIndicator());
@@ -38,7 +38,13 @@ class _PollState extends State<PollWidget> {
     final theme = Theme.of(context);
 
     return Container(
+      decoration: BoxDecoration(
+        color: theme.highlightColor,
+      ),
+      padding: const EdgeInsets.all(kPostBodyPadding),
+      margin: const EdgeInsets.symmetric(vertical: kPostBodyPadding),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(poll.pollQuestion ?? '', style: theme.textTheme.headline6),
           _PollResponsesWidget(
@@ -52,19 +58,13 @@ class _PollState extends State<PollWidget> {
               ? Align(
                   alignment: Alignment.centerRight,
                   child: ElevatedButton(
-                    child: Text(l(context).pollVote),
                     onPressed: _isVoting ? null : _vote,
+                    child: Text(l(context).pollVote),
                   ),
                 )
               : const SizedBox.shrink(),
         ],
-        crossAxisAlignment: CrossAxisAlignment.start,
       ),
-      decoration: BoxDecoration(
-        color: theme.highlightColor,
-      ),
-      padding: const EdgeInsets.all(kPostBodyPadding),
-      margin: const EdgeInsets.symmetric(vertical: kPostBodyPadding),
     );
   }
 
@@ -123,7 +123,7 @@ class _PollResponsesWidget extends StatefulWidget {
 }
 
 class _PollResponsesState extends State<_PollResponsesWidget> {
-  final _selectedResponseIds = Set<int>();
+  final _selectedResponseIds = <int>{};
 
   bool get isSingleChoice => widget.maxVotes == 1;
   Iterable<PollResponse> get responses => widget.poll.responses;
@@ -164,6 +164,7 @@ class _PollResponsesState extends State<_PollResponsesWidget> {
               : const SizedBox.shrink(),
           InkWell(
             child: Padding(
+              padding: const EdgeInsets.all(kPostBodyPadding),
               child: Text(
                 response.responseAnswer ?? '',
                 style: TextStyle(
@@ -171,7 +172,6 @@ class _PollResponsesState extends State<_PollResponsesWidget> {
                       response.responseIsVoted == true ? FontWeight.bold : null,
                 ),
               ),
-              padding: const EdgeInsets.all(kPostBodyPadding),
             ),
             onTap: () => _onChanged(
               response.responseId,
@@ -180,16 +180,16 @@ class _PollResponsesState extends State<_PollResponsesWidget> {
           ),
           widget.hasResults && responseVoteCount > 0 && pollVoteCount > 0
               ? Padding(
+                  padding: const EdgeInsets.all(kPostBodyPadding),
                   child: Text(
                     "${(responseVoteCount / pollVoteCount * 100).toStringAsFixed(1)}%",
                     textAlign: TextAlign.end,
                   ),
-                  padding: const EdgeInsets.all(kPostBodyPadding),
                 )
               : const SizedBox.shrink(),
         ]);
       }).toList(),
-      columnWidths: {
+      columnWidths: const {
         0: IntrinsicColumnWidth(),
         1: FlexColumnWidth(),
         2: IntrinsicColumnWidth(),

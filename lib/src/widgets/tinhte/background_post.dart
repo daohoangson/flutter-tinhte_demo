@@ -23,6 +23,7 @@ class BackgroundPost extends StatelessWidget {
         ThemeData.localize(ThemeData.dark(), Theme.of(context).textTheme);
 
     return Theme(
+      data: theme,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
@@ -35,7 +36,6 @@ class BackgroundPost extends StatelessWidget {
           ),
         ],
       ),
-      data: theme,
     );
   }
 
@@ -44,27 +44,18 @@ class BackgroundPost extends StatelessWidget {
         RegExp(r'<span class="metaBbCode meta-thread_background_url">.+'
             r'<a href="([^"]+)"[^>]+>([^<]+)</a>'
             r'</span></span>');
-    final postBodyHtml = post.postBodyHtml ?? '';
-    final m = regExp.firstMatch(postBodyHtml);
+    final postBodyHtml0 = post.postBodyHtml ?? '';
+    final m = regExp.firstMatch(postBodyHtml0);
     final href = m?.group(1);
     final text = m?.group(2);
     final threadBackgroundUrl = href == text ? href : null;
-    final _postBodyHtml = threadBackgroundUrl != null
-        ? postBodyHtml.replaceAll(m!.group(0)!, '')
-        : postBodyHtml;
+    final postBodyHtml = threadBackgroundUrl != null
+        ? postBodyHtml0.replaceAll(m!.group(0)!, '')
+        : postBodyHtml0;
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(kPaddingHorizontal),
       child: Container(
-        child: ConstrainedBox(
-          child: Center(
-            child: TinhteHtmlWidget(
-              "<center>$_postBodyHtml</center>",
-              textStyle: theme.textTheme.headline6,
-            ),
-          ),
-          constraints: BoxConstraints(minHeight: 300),
-        ),
         decoration: threadBackgroundUrl != null
             ? BoxDecoration(
                 image: DecorationImage(
@@ -73,6 +64,15 @@ class BackgroundPost extends StatelessWidget {
                 ),
               )
             : null,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: 300),
+          child: Center(
+            child: TinhteHtmlWidget(
+              "<center>$postBodyHtml</center>",
+              textStyle: theme.textTheme.headline6,
+            ),
+          ),
+        ),
       ),
     );
   }

@@ -17,10 +17,10 @@ import 'package:the_app/src/push_notification.dart';
 int _subscribedUserId = 0;
 
 class NotificationsWidget extends StatefulWidget {
-  NotificationsWidget({Key? key}) : super(key: key);
+  const NotificationsWidget({Key? key}) : super(key: key);
 
   @override
-  _NotificationsState createState() => _NotificationsState();
+  State<NotificationsWidget> createState() => _NotificationsState();
 }
 
 class _NotificationsState extends State<NotificationsWidget> {
@@ -41,7 +41,7 @@ class _NotificationsState extends State<NotificationsWidget> {
   }
 
   @override
-  Widget build(BuildContext _) => Consumer2<PushNotificationToken, User>(
+  Widget build(BuildContext context) => Consumer2<PushNotificationToken, User>(
         builder: (context, pnt, user, __) {
           if (user.userId > 0 && user.userId != _subscribedUserId) {
             final fcmToken = pnt.value;
@@ -114,11 +114,11 @@ class _NotificationsState extends State<NotificationsWidget> {
     if (icon == null) return timestamp;
 
     return Wrap(
+      spacing: 5,
       children: <Widget>[
         Icon(icon, color: style?.color, size: style?.fontSize),
         timestamp,
       ],
-      spacing: 5,
     );
   }
 
@@ -128,7 +128,7 @@ class _NotificationsState extends State<NotificationsWidget> {
       fc.items.addAll(list.map((j) => api.Notification.fromJson(j)));
     }
 
-    if (fc.id == FetchContextId.FetchInitial) {
+    if (fc.id == FetchContextId.fetchInitial) {
       apiPost(ApiCaller.stateless(fc.state.context), 'notifications/read');
     }
   }

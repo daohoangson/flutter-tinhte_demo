@@ -9,10 +9,11 @@ import 'package:the_app/src/widgets/tag/follow_button.dart';
 class MemberViewHeader extends StatelessWidget {
   final User user;
 
-  MemberViewHeader(this.user);
+  const MemberViewHeader(this.user, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) => Padding(
+        padding: const EdgeInsets.all(10),
         child: Column(
           children: <Widget>[
             Row(
@@ -21,7 +22,7 @@ class MemberViewHeader extends StatelessWidget {
                 _buildStats(context),
               ],
             ),
-            Divider(),
+            const Divider(),
             Row(
               children: <Widget>[
                 Expanded(child: FollowButton(user)),
@@ -30,7 +31,6 @@ class MemberViewHeader extends StatelessWidget {
             ),
           ],
         ),
-        padding: const EdgeInsets.all(10),
       );
 
   Widget _buildInfo(BuildContext context) {
@@ -46,6 +46,7 @@ class MemberViewHeader extends StatelessWidget {
         ),
         Expanded(
           child: Padding(
+            padding: const EdgeInsets.all(5),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -60,7 +61,6 @@ class MemberViewHeader extends StatelessWidget {
                 ),
               ],
             ),
-            padding: const EdgeInsets.all(5),
           ),
         ),
       ],
@@ -108,7 +108,7 @@ class MemberViewHeader extends StatelessWidget {
 class _IgnoreButton extends StatefulWidget {
   final User user;
 
-  _IgnoreButton(this.user);
+  const _IgnoreButton(this.user);
 
   @override
   State<StatefulWidget> createState() => _IgnoreButtonState();
@@ -122,9 +122,6 @@ class _IgnoreButtonState extends State<_IgnoreButton> {
   @override
   Widget build(BuildContext context) => user.links?.ignore?.isNotEmpty == true
       ? TextButton(
-          child: Text(user.userIsIgnored
-              ? l(context).userUnignore
-              : l(context).userIgnore),
           onPressed: user.permissions?.ignore == true
               ? (_isRequesting
                   ? null
@@ -132,6 +129,9 @@ class _IgnoreButtonState extends State<_IgnoreButton> {
                       ? _unignore
                       : _ignore)
               : null,
+          child: Text(user.userIsIgnored
+              ? l(context).userUnignore
+              : l(context).userIgnore),
         )
       : const SizedBox.shrink();
 

@@ -45,21 +45,21 @@ class _YouTubeState extends State<YouTubeWidget> {
               Positioned.fill(child: _buildYouTubeLogo(bc.biggest.width / 2))
             ],
           ),
-          onTap: () => launch(videoUrl),
+          onTap: () => launchUrl(Uri.parse(videoUrl)),
         ),
       );
 
   Widget _buildThumbnail() => AspectRatio(
         aspectRatio: _aspectRatio,
         child: Container(
+          decoration: const BoxDecoration(color: Colors.black),
           child: Opacity(
+            opacity: .8,
             child: Image(
               image: CachedNetworkImageProvider(_thumbnailUrl),
               fit: BoxFit.cover,
             ),
-            opacity: .8,
           ),
-          decoration: BoxDecoration(color: Colors.black),
         ),
       );
 
@@ -70,7 +70,7 @@ class _YouTubeState extends State<YouTubeWidget> {
 
     return Container(
       alignment: Alignment.topLeft,
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,

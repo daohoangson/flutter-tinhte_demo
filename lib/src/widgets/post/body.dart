@@ -9,16 +9,17 @@ class _PostBodyWidget extends StatelessWidget {
   Widget build(BuildContext context) => AnimatedBuilder(
         animation: post,
         builder: (context, _) {
-          if (post.postIsDeleted)
+          if (post.postIsDeleted) {
             return Padding(
+              padding: const EdgeInsets.all(kPostBodyPadding),
               child: Text(
                 l(context).postDeleted,
                 style: Theme.of(context).textTheme.caption?.copyWith(
                       decoration: TextDecoration.lineThrough,
                     ),
               ),
-              padding: const EdgeInsets.all(kPostBodyPadding),
             );
+          }
 
           Widget built = const SizedBox(height: 10);
 
@@ -30,7 +31,7 @@ class _PostBodyWidget extends StatelessWidget {
           final style =
               _getPostBodyTextStyle(context, post.postIsFirstPost == true);
           if (style != null) {
-            built = DefaultTextStyle(child: built, style: style);
+            built = DefaultTextStyle(style: style, child: built);
           }
 
           return built;

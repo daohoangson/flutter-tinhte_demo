@@ -32,11 +32,11 @@ part 'post/list.dart';
 part 'post/replies.dart';
 part 'post/stickers.dart';
 
-List<_PostListItem> decodePostsAndTheirReplies(List jsonPosts) {
+List<_PostListItem> _decodePostsAndTheirReplies(List jsonPosts) {
   final items = <_PostListItem>[];
   final Map<int, _PostListItem> postReplyItemById = {};
 
-  jsonPosts.forEach((jsonPost) {
+  for (var jsonPost in jsonPosts) {
     final Map<String, dynamic> map = jsonPost;
     final post = Post.fromJson(map);
     final postReplies = post.postReplies.map((postReply) {
@@ -48,20 +48,20 @@ List<_PostListItem> decodePostsAndTheirReplies(List jsonPosts) {
     if (post.postReplyTo == null) {
       items.add(_PostListItem.post(post));
       items.addAll(postReplies);
-      return;
+      continue;
     }
 
     final postReplyItem = postReplyItemById[post.postId];
     if (postReplyItem == null) {
-      print("Unexpected reply-to post #${post.postId}");
-      return;
+      debugPrint("Unexpected reply-to post #${post.postId}");
+      continue;
     }
     postReplyItem.post = post;
 
     final index = items.indexOf(postReplyItem);
     assert(index != -1);
     items.insertAll(index + 1, postReplies);
-  });
+  }
 
   return items;
 }

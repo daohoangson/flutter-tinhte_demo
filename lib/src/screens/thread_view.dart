@@ -19,7 +19,7 @@ class ThreadViewScreen extends StatefulWidget {
   final Map? initialJson;
   final Thread thread;
 
-  ThreadViewScreen(
+  const ThreadViewScreen(
     this.thread, {
     this.enablePostEditor = false,
     this.initialJson,
@@ -43,8 +43,9 @@ class _ThreadViewState extends State<ThreadViewScreen> {
     super.initState();
     _ped = PostEditorData(thread);
 
-    if (widget.enablePostEditor)
+    if (widget.enablePostEditor) {
       WidgetsBinding.instance.addPostFrameCallback((_) => _ped.enable(context));
+    }
   }
 
   @override
@@ -58,7 +59,7 @@ class _ThreadViewState extends State<ThreadViewScreen> {
         appBar: AppBar(
           title: _buildAppBarTitle(context),
           actions: <Widget>[
-            FontControlWidget(),
+            const FontControlWidget(),
             ThreadBookmarkWidget(widget.thread),
             _buildAppBarPopupMenuButton(),
           ],
@@ -75,12 +76,12 @@ class _ThreadViewState extends State<ThreadViewScreen> {
     return PopupMenuButton<String>(
       itemBuilder: (context) => <PopupMenuEntry<String>>[
         PopupMenuItem(
-          child: Text(l(context).openInBrowser),
           value: _kPopupActionOpenInBrowser,
+          child: Text(l(context).openInBrowser),
         ),
         PopupMenuItem(
-          child: Text(l(context).share),
           value: _kPopupActionShare,
+          child: Text(l(context).share),
         ),
       ],
       onSelected: (value) {
@@ -120,7 +121,7 @@ class _ThreadViewState extends State<ThreadViewScreen> {
                   formatTimestamp(context, thread.threadCreateDate),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(fontSize: (kToolbarHeight - 10) / 4),
+                  style: const TextStyle(fontSize: (kToolbarHeight - 10) / 4),
                   textScaleFactor: 1,
                 ),
               ],
@@ -142,13 +143,13 @@ class _ThreadViewState extends State<ThreadViewScreen> {
   }
 
   Widget _buildAppBarUsername() {
-    final fontSize = (kToolbarHeight - 10) / 2;
+    const fontSize = (kToolbarHeight - 10) / 2;
     final buffer = StringBuffer(thread.creatorUsername ?? '');
     final inlineSpans = <InlineSpan>[];
 
     if (thread.creatorHasVerifiedBadge == true) {
       buffer.write(' ');
-      inlineSpans.add(WidgetSpan(
+      inlineSpans.add(const WidgetSpan(
         alignment: PlaceholderAlignment.middle,
         child: Icon(
           FontAwesomeIcons.solidCircleCheck,
@@ -172,6 +173,9 @@ class _ThreadViewState extends State<ThreadViewScreen> {
   }
 
   Widget _buildBody() => MultiProvider(
+        providers: [
+          ChangeNotifierProvider<PostEditorData>.value(value: _ped),
+        ],
         child: Column(
           children: <Widget>[
             Expanded(
@@ -183,21 +187,18 @@ class _ThreadViewState extends State<ThreadViewScreen> {
               ),
             ),
             Container(
-              child: PostEditorWidget(
-                callback: (p) => _postsKey.currentState?.insertNewPost(p),
-                paddingHorizontal: kPaddingHorizontal,
-                paddingVertical: kPaddingHorizontal / 2,
-              ),
               decoration: BoxDecoration(
                 border: Border(
                   top: BorderSide(color: Theme.of(context).dividerColor),
                 ),
               ),
+              child: PostEditorWidget(
+                callback: (p) => _postsKey.currentState?.insertNewPost(p),
+                paddingHorizontal: kPaddingHorizontal,
+                paddingVertical: kPaddingHorizontal / 2,
+              ),
             ),
           ],
         ),
-        providers: [
-          ChangeNotifierProvider<PostEditorData>.value(value: _ped),
-        ],
       );
 }

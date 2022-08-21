@@ -44,11 +44,12 @@ class TinhteHtmlWidget extends StatelessWidget {
   final double textPadding;
   final TextStyle? textStyle;
 
-  TinhteHtmlWidget(
+  const TinhteHtmlWidget(
     this.html, {
+    Key? key,
     this.textPadding = kPostBodyPadding,
     this.textStyle,
-  });
+  }) : super(key: key);
 
   bool get enableCaching {
     var skipCaching = false;
@@ -57,7 +58,7 @@ class TinhteHtmlWidget extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext _) => LayoutBuilder(
+  Widget build(BuildContext context) => LayoutBuilder(
         builder: (c, bc) => HtmlWidget(
           "<html><body>$html</body></html>",
           baseUrl: Uri.parse(config.siteRoot),
@@ -99,8 +100,8 @@ class TinhteWidgetFactory extends WidgetFactory {
       onWidgets: (meta, widgets) {
         final column = buildColumnPlaceholder(meta, widgets)?.wrapWith(
           (context, child) => Padding(
+            padding: EdgeInsets.all(textPadding),
             child: DecoratedBox(
-              child: child,
               decoration: BoxDecoration(
                 border: Border(
                   left: BorderSide(
@@ -109,8 +110,8 @@ class TinhteWidgetFactory extends WidgetFactory {
                   ),
                 ),
               ),
+              child: child,
             ),
-            padding: EdgeInsets.all(textPadding),
           ),
         );
 
@@ -180,34 +181,34 @@ class TinhteWidgetFactory extends WidgetFactory {
   @override
   Widget buildBodyWidget(BuildContext context, Widget child) {
     child = Padding(
-      child: child,
       padding: EdgeInsets.symmetric(vertical: textPadding),
+      child: child,
     );
 
     return super.buildBodyWidget(context, child);
   }
 
   @override
-  Widget? buildImageWidget(BuildMetadata meta, ImageSource source) {
+  Widget? buildImageWidget(BuildMetadata meta, ImageSource src) {
     String? resizedUrl;
-    final width = source.width;
-    final height = source.height;
+    final width = src.width;
+    final height = src.height;
     if (width != null && height != null) {
       resizedUrl = getResizedUrl(
-        apiUrl: source.url,
+        apiUrl: src.url,
         boxWidth: devicePixelRatio * deviceWidth,
         imageHeight: height,
         imageWidth: width,
       );
     }
 
-    ImageSource src = source;
+    ImageSource src2 = src;
     if (resizedUrl != null) {
       // TODO: switch to `ImageSource.copyWith` when it's available
-      src = ImageSource(resizedUrl, height: src.height, width: src.width);
+      src2 = ImageSource(resizedUrl, height: src.height, width: src.width);
     }
 
-    return super.buildImageWidget(meta, src);
+    return super.buildImageWidget(meta, src2);
   }
 
   @override
@@ -216,8 +217,8 @@ class TinhteWidgetFactory extends WidgetFactory {
 
     if (built != null) {
       built = Padding(
-        child: built,
         padding: EdgeInsets.symmetric(horizontal: textPadding),
+        child: built,
       );
     }
 
@@ -314,7 +315,7 @@ class TinhteWidgetFactory extends WidgetFactory {
 
   @override
   void reset(State state) {
-    this._lbTrigger = null;
+    _lbTrigger = null;
 
     super.reset(state);
   }

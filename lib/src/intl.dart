@@ -453,7 +453,7 @@ String formatTimestamp(BuildContext context, int? timestamp) {
   if (timestamp == null) return '';
 
   final d = secondsToDateTime(timestamp);
-  if (DateTime.now().subtract(Duration(days: 30)).isBefore(d)) {
+  if (DateTime.now().subtract(const Duration(days: 30)).isBefore(d)) {
     final locale = Localizations.localeOf(context).languageCode;
     return timeago.format(d, locale: locale);
   }

@@ -136,7 +136,7 @@ void _setupApiCompleter<T>(
 
 void _setupApiJsonHandlers(
   ApiCaller caller,
-  ApiFetch fetch,
+  _ApiFetch fetch,
   ApiOnJsonMap? onSuccess,
   ApiOnError? onError,
   VoidCallback? onComplete,
@@ -150,7 +150,7 @@ void _setupApiJsonHandlers(
     completer,
     onSuccess != null
         ? (json) {
-            if (json is! Map) throw new ApiErrorUnexpectedResponse(json);
+            if (json is! Map) throw ApiErrorUnexpectedResponse(json);
             return onSuccess(json);
           }
         : null,
@@ -159,17 +159,17 @@ void _setupApiJsonHandlers(
   );
 }
 
-typedef Future ApiFetch(_ApiAppState aas);
-typedef void ApiMethod(
+typedef _ApiFetch = Future Function(_ApiAppState aas);
+typedef ApiMethod = void Function(
   ApiCaller caller,
   String path, {
   VoidCallback? onComplete,
   ApiOnError? onError,
   ApiOnJsonMap? onSuccess,
 });
-typedef T ApiOnSuccess<T>(T data);
-typedef void ApiOnJsonMap(Map jsonMap);
-typedef void ApiOnError(error);
+typedef ApiOnSuccess<T> = T Function(T data);
+typedef ApiOnJsonMap = void Function(Map jsonMap);
+typedef ApiOnError = void Function(dynamic error);
 
 class ApiApp extends StatefulWidget {
   final Api api;
@@ -188,7 +188,7 @@ class ApiApp extends StatefulWidget {
 }
 
 class _ApiAppState extends State<ApiApp> {
-  final secureStorage = new FlutterSecureStorage();
+  final secureStorage = const FlutterSecureStorage();
   final visitor = User.zero();
 
   var _isRefreshingToken = false;
@@ -221,7 +221,7 @@ class _ApiAppState extends State<ApiApp> {
   @override
   Widget build(BuildContext context) => MultiProvider(
         providers: [
-          Provider<ApiAuth>.value(value: ApiAuth(this)),
+          Provider<ApiAuth>.value(value: ApiAuth._(this)),
           ChangeNotifierProvider<User>.value(value: visitor),
           Provider<_ApiAppState>.value(value: this),
         ],
@@ -248,18 +248,18 @@ class _ApiAppState extends State<ApiApp> {
     if (token == null) return;
     if (token.hasExpired) return _refreshToken(token);
 
-    final __callbacks = _queue;
+    final callbacks = _queue;
     _queue = null;
-    if (__callbacks == null || __callbacks.isEmpty) return;
-    if (__callbacks.length == 1) return __callbacks.first();
+    if (callbacks == null || callbacks.isEmpty) return;
+    if (callbacks.length == 1) return callbacks.first();
 
     final batch = api.newBatch(path: _appendOauthToken('batch'));
-    for (final __callback in __callbacks) {
+    for (final callback in callbacks) {
       try {
-        __callback();
+        callback();
       } catch (e) {
         // print and ignore to avoid affecting other callbacks in the same batch
-        print(e);
+        debugPrint('callback error: $e');
       }
     }
     batch.fetch();
@@ -276,7 +276,7 @@ class _ApiAppState extends State<ApiApp> {
         } on ApiError catch (ae) {
           debugPrint("_fetchUser encountered an api error: ${ae.message}");
         } catch (e) {
-          print(e);
+          debugPrint('api error: $e');
         }
       }, scheduleDequeue: false);
 
@@ -318,16 +318,16 @@ class _ApiAppState extends State<ApiApp> {
 }
 
 class ApiAuth {
-  final _ApiAppState aas;
+  final _ApiAppState _aas;
 
-  ApiAuth(this.aas);
+  ApiAuth._(this._aas);
 
-  Api get api => aas.api;
+  Api get api => _aas.api;
 
-  bool get hasToken => aas._token != null;
-  OauthToken? get token => aas._token;
+  bool get hasToken => _aas._token != null;
+  OauthToken? get token => _aas._token;
 
-  void setToken(OauthToken? token) => aas._setToken(token);
+  void setToken(OauthToken? token) => _aas._setToken(token);
 
   static ApiAuth of(BuildContext context, {bool listen = true}) =>
       Provider.of<ApiAuth>(context, listen: listen);
@@ -347,14 +347,18 @@ class _ApiCallerStateful extends ApiCaller {
 
   _ApiCallerStateful(this._state);
 
+  @override
   bool get canReceiveCallback => _state.mounted;
+  @override
   BuildContext get context => _state.context;
 }
 
 class _ApiCallerStateless extends ApiCaller {
+  @override
   final BuildContext context;
 
   _ApiCallerStateless(this.context);
 
+  @override
   bool get canReceiveCallback => true;
 }

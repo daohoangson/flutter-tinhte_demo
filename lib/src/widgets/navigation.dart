@@ -13,7 +13,7 @@ class NavigationWidget extends StatelessWidget {
   final bool? progressIndicator;
   final bool? shrinkWrap;
 
-  NavigationWidget({
+  const NavigationWidget({
     this.footer,
     this.header,
     this.initialElements = const [],

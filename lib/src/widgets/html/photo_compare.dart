@@ -47,7 +47,7 @@ class _PhotoCompareWidget extends StatefulWidget {
   final Widget image0;
   final Widget image1;
 
-  _PhotoCompareWidget({
+  const _PhotoCompareWidget({
     required this.aspectRatio,
     required this.image0,
     required this.image1,
@@ -60,6 +60,7 @@ class _PhotoCompareWidget extends StatefulWidget {
 class _PhotoCompareState extends State<_PhotoCompareWidget> {
   double position = _PhotoCompareHandler.positionZero;
 
+  @override
   Widget build(BuildContext context) {
     final widgets = <Widget>[
       _buildAspectRatio(widget.image0),
@@ -76,28 +77,28 @@ class _PhotoCompareState extends State<_PhotoCompareWidget> {
       Positioned.fill(
         child: FractionallySizedBox(
           alignment: Alignment.topLeft,
+          widthFactor: position,
           child: Stack(
+            clipBehavior: Clip.none,
             children: <Widget>[
               Positioned(
                 bottom: 0,
+                right: _PhotoCompareHandler.dividerSize / -2,
+                top: 0,
                 child: Container(
                   color: _PhotoCompareHandler.color,
                   width: _PhotoCompareHandler.dividerSize,
                 ),
-                right: _PhotoCompareHandler.dividerSize / -2,
-                top: 0,
               ),
               Positioned(
                 bottom: 0,
-                child: _PhotoCompareHandler(
-                    animate: position == _PhotoCompareHandler.positionZero),
                 right: _PhotoCompareHandler.boxSize / -2,
                 top: 0,
+                child: _PhotoCompareHandler(
+                    animate: position == _PhotoCompareHandler.positionZero),
               ),
             ],
-            clipBehavior: Clip.none,
           ),
-          widthFactor: position,
         ),
       ),
     ];
@@ -160,6 +161,7 @@ class _PhotoCompareHandlerState extends State<_PhotoCompareHandler>
     super.dispose();
   }
 
+  @override
   void didUpdateWidget(_PhotoCompareHandler old) {
     super.didUpdateWidget(old);
 
@@ -170,13 +172,13 @@ class _PhotoCompareHandlerState extends State<_PhotoCompareHandler>
 
   @override
   Widget build(BuildContext context) => Container(
-        child: _PhotoCompareAnimation(_controller.view),
         decoration: BoxDecoration(
           border: Border.all(color: _PhotoCompareHandler.color, width: 2),
           shape: BoxShape.circle,
         ),
         height: _PhotoCompareHandler.boxSize,
         width: _PhotoCompareHandler.boxSize,
+        child: _PhotoCompareAnimation(_controller.view),
       );
 }
 
@@ -188,15 +190,15 @@ class _PhotoCompareAnimation extends StatelessWidget {
       : offset = Tween<double>(begin: -.4, end: -.7).animate(
           CurvedAnimation(
             parent: controller,
-            curve: Interval(0, .5, curve: Curves.ease),
+            curve: const Interval(0, .5, curve: Curves.ease),
           ),
         );
 
   @override
-  Widget build(BuildContext _) =>
+  Widget build(BuildContext context) =>
       AnimatedBuilder(builder: _buildAnimation, animation: controller);
 
-  Widget _buildAnimation(BuildContext _, Widget? __) => Stack(
+  Widget _buildAnimation(BuildContext context, Widget? __) => Stack(
         children: <Widget>[
           Positioned.fill(
             left: offset.value * _PhotoCompareHandler.iconSize,

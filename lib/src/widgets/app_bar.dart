@@ -8,10 +8,10 @@ import 'package:the_app/src/api.dart';
 import 'package:the_app/src/link.dart';
 
 class AppBarDrawerHeader extends StatelessWidget {
-  AppBarDrawerHeader({Key? key}) : super(key: key);
+  const AppBarDrawerHeader({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext _) => Consumer<User>(
+  Widget build(BuildContext context) => Consumer<User>(
         builder: (context, user, _) => user.userId > 0
             ? DrawerHeader(
                 decoration: BoxDecoration(
@@ -83,13 +83,14 @@ class AppBarDrawerHeader extends StatelessWidget {
 }
 
 class AppBarDrawerFooter extends StatelessWidget {
-  AppBarDrawerFooter({Key? key}) : super(key: key);
+  const AppBarDrawerFooter({Key? key}) : super(key: key);
 
-  Widget build(BuildContext _) => Consumer<ApiAuth>(
-      builder: (context, apiAuth, __) => apiAuth.hasToken
+  @override
+  Widget build(BuildContext context) => Consumer<ApiAuth>(
+      builder: (context, apiAuth, _) => apiAuth.hasToken
           ? ListTile(
               title: Text(l(context).menuLogout),
               onTap: () => logout(context),
             )
-          : SizedBox.shrink());
+          : const SizedBox.shrink());
 }

@@ -64,11 +64,11 @@ class _ChrState extends State<_ChrWidget> {
 
     return _isFinalUrl
         ? (widget.wf.buildWebView(widget.meta, _url) ??
-            AspectRatio(
+            const AspectRatio(
               aspectRatio: 16 / 9,
               child: widget0,
             ))
-        : AspectRatio(
+        : const AspectRatio(
             aspectRatio: 16 / 9,
             child: CircularProgressIndicator.adaptive(),
           );
@@ -86,7 +86,7 @@ class _ChrState extends State<_ChrWidget> {
           // this works around Android WebView calling our app after 2 redirects
           // (because of the domain association)
           _url = location;
-          print('Unwrapped CHR url: $_url');
+          debugPrint('Unwrapped CHR url: $_url');
         }
 
         setState(() => _isFinalUrl = true);

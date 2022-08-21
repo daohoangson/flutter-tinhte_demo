@@ -11,7 +11,7 @@ class ErrorReportingWidget extends StatelessWidget {
         onChanged: null,
         value: backend != Backend.none,
       ),
-      title: Text('error_reporting'),
+      title: const Text('error_reporting'),
       subtitle: Text('$backend'),
     );
   }

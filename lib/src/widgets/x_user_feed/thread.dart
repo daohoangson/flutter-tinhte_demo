@@ -13,9 +13,9 @@ PopupMenuButton? buildPopupMenuButtonForThread(
   if (data == null) return null;
 
   final entries = <PopupMenuEntry<String>>[];
-  data.sources?.keys.forEach((key) {
+  for (var key in (data.sources?.keys ?? <String>[])) {
     final m = _sourceRegExp.firstMatch(key);
-    if (m == null) return;
+    if (m == null) continue;
     final type = m.group(1);
     final String id = m.group(2)!;
 
@@ -26,8 +26,8 @@ PopupMenuButton? buildPopupMenuButtonForThread(
           final tag = tags[id];
           if (tag != null) {
             entries.add(PopupMenuItem(
-              child: Text("#$tag"),
               value: "tags/$id",
+              child: Text("#$tag"),
             ));
           }
         }
@@ -35,13 +35,13 @@ PopupMenuButton? buildPopupMenuButtonForThread(
       case 'user_follow':
         if (thread.creatorUserId.toString() == id) {
           entries.add(PopupMenuItem(
-            child: Text(thread.creatorUsername ?? '#$id'),
             value: "users/$id",
+            child: Text(thread.creatorUsername ?? '#$id'),
           ));
         }
         break;
     }
-  });
+  }
 
   if (entries.isEmpty) return null;
 

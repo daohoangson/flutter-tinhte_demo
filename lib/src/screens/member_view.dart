@@ -9,7 +9,7 @@ import 'package:the_app/src/api.dart';
 class MemberViewScreen extends StatefulWidget {
   final User user;
 
-  MemberViewScreen(this.user, {Key? key}) : super(key: key);
+  const MemberViewScreen(this.user, {Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _MemberViewScreenState();
@@ -45,12 +45,12 @@ class _MemberViewScreenState extends State<MemberViewScreen> {
         floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
         floatingActionButton: _fabIsVisible
             ? FloatingActionButton(
-                child: Icon(Icons.search),
                 onPressed: () => showSearch(
                   context: context,
                   delegate: ThreadSearchDelegate(user: user),
                 ),
                 tooltip: l(context).searchThisUser,
+                child: const Icon(Icons.search),
               )
             : null,
       );

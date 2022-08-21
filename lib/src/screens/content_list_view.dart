@@ -9,7 +9,7 @@ class ContentListViewScreen extends StatelessWidget {
   final int listId;
   final String title;
 
-  ContentListViewScreen({
+  const ContentListViewScreen({
     Key? key,
     required this.listId,
     required this.title,

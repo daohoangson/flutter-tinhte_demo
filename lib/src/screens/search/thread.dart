@@ -21,7 +21,7 @@ class ThreadSearchDelegate extends SearchDelegate {
   @override
   List<Widget> buildActions(BuildContext context) => [
         IconButton(
-          icon: Icon(Icons.clear),
+          icon: const Icon(Icons.clear),
           onPressed: () => query = '',
           tooltip: lm(context).cancelButtonLabel,
         )
@@ -29,7 +29,7 @@ class ThreadSearchDelegate extends SearchDelegate {
 
   @override
   Widget buildLeading(BuildContext context) => IconButton(
-        icon: BackButtonIcon(),
+        icon: const BackButtonIcon(),
         onPressed: () => close(context, null),
         tooltip: lm(context).cancelButtonLabel,
       );
@@ -68,8 +68,8 @@ class ThreadSearchDelegate extends SearchDelegate {
     sb.write(query.isEmpty ? '...' : '.');
 
     return Padding(
-      child: Text(sb.toString()),
       padding: const EdgeInsets.all(10),
+      child: Text(sb.toString()),
     );
   }
 
@@ -87,6 +87,7 @@ class ThreadSearchDelegate extends SearchDelegate {
 }
 
 class _ApiQuery extends ApiCaller {
+  @override
   final BuildContext context;
   final String query;
 

@@ -8,7 +8,7 @@ class InitialPathScreen extends StatefulWidget {
   final String? fallbackLink;
   final String path;
 
-  InitialPathScreen(this.path,
+  const InitialPathScreen(this.path,
       {this.defaultWidget, this.fallbackLink, Key? key})
       : super(key: key);
 
@@ -44,7 +44,7 @@ class _InitialPathState extends State<InitialPathScreen>
         );
       }
 
-      return Scaffold(body: Center(child: Text('⚡️')));
+      return const Scaffold(body: Center(child: Text('⚡️')));
     });
   }
 
@@ -62,12 +62,12 @@ class _InitialPathState extends State<InitialPathScreen>
   }
 
   @override
-  Widget build(BuildContext _) => _home == _ShouldRender.yes
+  Widget build(BuildContext context) => _home == _ShouldRender.yes
       ? HomeScreen()
       : FutureBuilder<Widget>(
           builder: (__, snapshot) =>
               snapshot.data ??
-              Scaffold(body: Center(child: CircularProgressIndicator())),
+              const Scaffold(body: Center(child: CircularProgressIndicator())),
           future: _future,
         );
 }

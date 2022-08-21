@@ -9,7 +9,7 @@ import 'package:the_app/src/intl.dart';
 class FollowButton extends StatefulWidget {
   final Followable followable;
 
-  FollowButton(this.followable);
+  const FollowButton(this.followable, {Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _FollowState();
@@ -68,16 +68,16 @@ class _FollowState extends State<FollowButton> {
           : _buildButtonFollowing();
 
   Widget _buildButtonFollow() => TextButton(
-        child: Text(l(context).follow),
         onPressed: _isRequesting ? null : () => _follow(_FollowOptions()),
+        child: Text(l(context).follow),
       );
 
   Widget _buildButtonFollowing() => Row(
         children: <Widget>[
           Expanded(
             child: ElevatedButton(
-              child: Text(l(context).followFollowing),
               onPressed: _isRequesting ? null : _unfollow,
+              child: Text(l(context).followFollowing),
             ),
           ),
           IconButton(
@@ -182,6 +182,7 @@ class _FollowOptionsState extends State<_FollowOptionsDialog> {
   Widget build(BuildContext context) => AlertDialog(
         title: Text(l(context).followNotificationChannels),
         content: Column(
+          mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Text(l(context).followNotificationChannelExplainForX(f.name)),
             CheckboxListTile(
@@ -195,7 +196,6 @@ class _FollowOptionsState extends State<_FollowOptionsDialog> {
               value: _email,
             ),
           ],
-          mainAxisSize: MainAxisSize.min,
         ),
         actions: <Widget>[
           TextButton(

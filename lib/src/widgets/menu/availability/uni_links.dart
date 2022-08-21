@@ -11,7 +11,7 @@ class UniLinksWidget extends StatelessWidget {
         onChanged: null,
         value: isSupported,
       ),
-      title: Text('uni_links'),
+      title: const Text('uni_links'),
     );
   }
 }

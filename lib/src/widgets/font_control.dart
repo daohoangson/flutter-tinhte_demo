@@ -29,6 +29,8 @@ class FontScale extends ChangeNotifier {
 }
 
 class FontControlWidget extends StatefulWidget {
+  const FontControlWidget({Key? key}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() => _FontControlState();
 
@@ -85,6 +87,7 @@ class _FontControlState extends State<FontControlWidget> with RouteAware {
             left: left,
             right: right,
             child: Opacity(
+              opacity: .7,
               child: Material(
                 borderRadius: BorderRadius.circular(8),
                 color: theme.dialogBackgroundColor,
@@ -93,37 +96,36 @@ class _FontControlState extends State<FontControlWidget> with RouteAware {
                   final fontSize = style.fontSize;
 
                   return Row(
+                    mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       InkWell(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8),
+                        child: const Padding(
+                          padding: EdgeInsets.all(8),
                           child: Icon(FontAwesomeIcons.minus),
                         ),
                         onTap: () => context.read<FontScale>().value -= .25,
                       ),
                       InkWell(
                         child: SizedBox(
+                          width: fontSize != null ? fontSize * 3 : null,
                           child: Text(
                             '${(context.watch<FontScale>().value * 100).toInt()}%',
                             textAlign: TextAlign.center,
                           ),
-                          width: fontSize != null ? fontSize * 3 : null,
                         ),
                         onTap: () => context.read<FontScale>().value = 1,
                       ),
                       InkWell(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8),
+                        child: const Padding(
+                          padding: EdgeInsets.all(8),
                           child: Icon(FontAwesomeIcons.plus),
                         ),
                         onTap: () => context.read<FontScale>().value += .25,
                       ),
                     ],
-                    mainAxisSize: MainAxisSize.min,
                   );
                 }),
               ),
-              opacity: .7,
             )));
   }
 

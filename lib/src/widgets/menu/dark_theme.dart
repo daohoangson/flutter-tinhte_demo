@@ -29,6 +29,8 @@ class DarkTheme extends ChangeNotifier {
 }
 
 class MenuDarkTheme extends StatelessWidget {
+  const MenuDarkTheme({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) => Consumer<DarkTheme>(
         builder: (_, darkTheme, __) => ListTile(

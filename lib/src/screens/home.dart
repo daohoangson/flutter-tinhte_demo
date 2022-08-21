@@ -12,9 +12,13 @@ import 'package:the_app/src/intl.dart';
 class HomeScreen extends StatelessWidget {
   final superList = GlobalKey<SuperListState>();
 
+  HomeScreen({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) => Scaffold(
         body: SafeArea(
+          top: false,
+          bottom: false,
           child: SuperListView<_HomeListItem>(
             complexItems: config.homeComplexItems,
             fetchPathInitial: config.homePath,
@@ -36,8 +40,6 @@ class HomeScreen extends StatelessWidget {
             itemMaxWidth: 800,
             key: superList,
           ),
-          top: false,
-          bottom: false,
         ),
         bottomNavigationBar: HomeBottomBar(
           onHomeTap: () => superList.currentState?.scrollTo(0),
@@ -45,11 +47,11 @@ class HomeScreen extends StatelessWidget {
         extendBody: true,
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: FloatingActionButton(
-          onPressed: () => Navigator.of(context)
-              .push(MaterialPageRoute(builder: (_) => ThreadCreateScreen())),
+          onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => const ThreadCreateScreen())),
           tooltip: l(context).threadCreateNew,
-          child: Icon(Icons.add),
           elevation: 2.0,
+          child: const Icon(Icons.add),
         ),
       );
 
@@ -60,7 +62,7 @@ class HomeScreen extends StatelessWidget {
 
     final items = fc.items;
     List<SearchResult<Thread>>? top5;
-    if (fc.id == FetchContextId.FetchInitial && l >= 5) {
+    if (fc.id == FetchContextId.fetchInitial && l >= 5) {
       top5 = [];
       items.add(_HomeListItem(top5: top5));
 
@@ -81,13 +83,13 @@ class HomeScreen extends StatelessWidget {
         items.add(_HomeListItem(thread: srt));
       }
 
-      if (fc.id == FetchContextId.FetchInitial && i == l - 4) {
+      if (fc.id == FetchContextId.fetchInitial && i == l - 4) {
         final slot3 = config.homeSlot3NearEndOfPage1;
         if (slot3 != null) items.add(_HomeListItem(widget: slot3));
       }
     }
 
-    if (fc.id == FetchContextId.FetchInitial) {
+    if (fc.id == FetchContextId.fetchInitial) {
       final slot4 = config.homeSlot4EndOfPage1;
       if (slot4 != null) items.add(_HomeListItem(widget: slot4));
     }

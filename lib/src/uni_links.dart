@@ -13,7 +13,7 @@ Future<String?> getInitialLink() async {
     debugPrint('uni_links getInitialLink() -> $initialLink');
     return initialLink;
   } catch (e) {
-    print(e);
+    debugPrint('getInitialLink error: $e');
   }
 
   return null;
@@ -56,5 +56,5 @@ class _UniLinksState extends State<UniLinksApp> {
   }
 
   @override
-  Widget build(BuildContext _) => widget.child;
+  Widget build(BuildContext context) => widget.child;
 }

@@ -11,7 +11,7 @@ class FirebaseWidget extends StatelessWidget {
         onChanged: null,
         value: isSupported,
       ),
-      title: Text('firebase'),
+      title: const Text('firebase'),
     );
   }
 }

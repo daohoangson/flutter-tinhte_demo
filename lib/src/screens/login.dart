@@ -31,7 +31,7 @@ void logout(BuildContext context) {
 }
 
 class LoginForm extends StatefulWidget {
-  LoginForm({Key? key}) : super(key: key);
+  const LoginForm({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _LoginFormState();
@@ -56,11 +56,12 @@ class _LoginFormState extends State<LoginForm> {
   void initState() {
     super.initState();
 
-    if (config.loginWithApple)
+    if (config.loginWithApple) {
       apple_sign_in.isSupported.then((ok) {
         if (!ok || !mounted) return;
         setState(() => _canLoginApple = true);
       });
+    }
   }
 
   @override
@@ -79,12 +80,12 @@ class _LoginFormState extends State<LoginForm> {
       key: formKey,
       child: AutofillGroup(
         child: ListView(
+          padding: const EdgeInsets.all(20.0),
           children: scopedTfa != null
               ? _buildFieldsTfa(scopedTfa)
               : scopedAssociatable != null
                   ? _buildFieldsAssociate(scopedAssociatable)
                   : _buildFieldsLogin(),
-          padding: const EdgeInsets.all(20.0),
         ),
       ),
     );
@@ -104,16 +105,16 @@ class _LoginFormState extends State<LoginForm> {
         children: <Widget>[
           Expanded(
             child: TextButton(
-              child: Text(lm(context).cancelButtonLabel),
               onPressed: _isLoggingIn
                   ? null
                   : () => setState(() => _associatable = null),
+              child: Text(lm(context).cancelButtonLabel),
             ),
           ),
           Expanded(
             child: ElevatedButton(
-              child: Text(l(context).loginAssociate),
               onPressed: _isLoggingIn ? null : _associate,
+              child: Text(l(context).loginAssociate),
             ),
           ),
         ],
@@ -128,17 +129,18 @@ class _LoginFormState extends State<LoginForm> {
           children: <Widget>[
             Expanded(
               child: TextButton(
-                child: Text(l(context).register),
                 onPressed: _isLoggingIn
                     ? null
                     : () => Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(builder: (_) => RegisterScreen())),
+                        MaterialPageRoute(
+                            builder: (_) => const RegisterScreen())),
+                child: Text(l(context).register),
               ),
             ),
             Expanded(
               child: ElevatedButton(
-                child: Text(l(context).login),
                 onPressed: _isLoggingIn ? null : _login,
+                child: Text(l(context).login),
               ),
             ),
           ],
@@ -163,8 +165,7 @@ class _LoginFormState extends State<LoginForm> {
   List<Widget> _buildFieldsTfa(LoginTfa tfa) {
     return [
       Text(l(context).loginTfaMethodPleaseChooseOne),
-    ]
-      ..addAll(tfa.providers
+      ...tfa.providers
           .map((provider) => ElevatedButton.icon(
                 icon: !_isLoggingIn && tfa.triggeredProvider == provider
                     ? Icon(
@@ -181,33 +182,34 @@ class _LoginFormState extends State<LoginForm> {
                             : provider),
                 onPressed: _isLoggingIn ? null : () => _tfaTrigger(provider),
               ))
-          .toList(growable: false))
-      ..add(tfa.triggeredProvider != null
+          .toList(growable: false),
+      tfa.triggeredProvider != null
           ? _buildInputPadding(_buildTfaCode())
-          : const SizedBox.shrink())
-      ..add(tfa.triggeredProvider != null
+          : const SizedBox.shrink(),
+      tfa.triggeredProvider != null
           ? Row(
               children: <Widget>[
                 Expanded(
                   child: TextButton(
-                    child: Text(lm(context).cancelButtonLabel),
                     onPressed:
                         _isLoggingIn ? null : () => setState(() => _tfa = null),
+                    child: Text(lm(context).cancelButtonLabel),
                   ),
                 ),
                 Expanded(
                   child: ElevatedButton(
-                    child: Text(l(context).loginTfaVerify),
                     onPressed: _isLoggingIn ? null : _tfaVerify,
+                    child: Text(l(context).loginTfaVerify),
                   ),
                 ),
               ],
             )
           : TextButton(
-              child: Text(lm(context).cancelButtonLabel),
               onPressed:
                   _isLoggingIn ? null : () => setState(() => _tfa = null),
-            ));
+              child: Text(lm(context).cancelButtonLabel),
+            ),
+    ];
   }
 
   Widget _buildInputPadding(Widget child) => Padding(
@@ -216,7 +218,7 @@ class _LoginFormState extends State<LoginForm> {
       );
 
   Widget _buildPassword({bool autofocus = false}) => TextFormField(
-        autofillHints: [AutofillHints.password],
+        autofillHints: const [AutofillHints.password],
         autofocus: autofocus,
         decoration: InputDecoration(
           hintText: l(context).loginPasswordHint,
@@ -238,7 +240,7 @@ class _LoginFormState extends State<LoginForm> {
       );
 
   Widget _buildUsername() => TextFormField(
-      autofillHints: [AutofillHints.email, AutofillHints.username],
+      autofillHints: const [AutofillHints.email, AutofillHints.username],
       autofocus: true,
       decoration: InputDecoration(
         hintText: l(context).loginUsernameHint,
@@ -418,7 +420,7 @@ class LoginScreenRoute extends MaterialPageRoute {
       : super(
           builder: (context) => Scaffold(
             appBar: AppBar(title: Text(l(context).login)),
-            body: LoginForm(),
+            body: const LoginForm(),
           ),
         );
 }
