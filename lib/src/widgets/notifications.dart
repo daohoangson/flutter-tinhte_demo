@@ -17,16 +17,16 @@ import 'package:the_app/src/push_notification.dart';
 int _subscribedUserId = 0;
 
 class NotificationsWidget extends StatefulWidget {
-  NotificationsWidget({Key key}) : super(key: key);
+  const NotificationsWidget({Key? key}) : super(key: key);
 
   @override
-  _NotificationsState createState() => _NotificationsState();
+  State<NotificationsWidget> createState() => _NotificationsState();
 }
 
 class _NotificationsState extends State<NotificationsWidget> {
   final _slsKey = GlobalKey<SuperListState<api.Notification>>();
 
-  StreamSubscription subscription;
+  late final StreamSubscription subscription;
 
   @override
   initState() {
@@ -41,11 +41,14 @@ class _NotificationsState extends State<NotificationsWidget> {
   }
 
   @override
-  Widget build(BuildContext _) => Consumer2<PushNotificationToken, User>(
+  Widget build(BuildContext context) => Consumer2<PushNotificationToken, User>(
         builder: (context, pnt, user, __) {
           if (user.userId > 0 && user.userId != _subscribedUserId) {
+            final fcmToken = pnt.value;
             final token = ApiAuth.of(context, listen: false).token;
-            _subscribe(context, pnt.value, token, user);
+            if (fcmToken != null && token != null) {
+              _subscribe(context, fcmToken, token, user);
+            }
           }
 
           return SuperListView<api.Notification>(
@@ -81,18 +84,23 @@ class _NotificationsState extends State<NotificationsWidget> {
         ),
       );
 
-  Widget _buildAvatar(api.Notification n) => CircleAvatar(
-        backgroundImage: CachedNetworkImageProvider(n.links.creatorAvatar),
-      );
+  Widget _buildAvatar(api.Notification n) {
+    final avatar = n.links?.creatorAvatar;
+    return CircleAvatar(
+      backgroundImage:
+          avatar != null ? CachedNetworkImageProvider(avatar) : null,
+    );
+  }
 
   Widget _buildHtmlWidget(BuildContext context, api.Notification n) {
-    final w = n.notificationIsUnread ? FontWeight.bold : FontWeight.normal;
+    final html = n.notificationHtml ?? '';
+    if (html.isEmpty) return const SizedBox.shrink();
+
+    final w =
+        n.notificationIsUnread == true ? FontWeight.bold : FontWeight.normal;
     final s = DefaultTextStyle.of(context).style.copyWith(fontWeight: w);
 
-    return TinhteHtmlWidget(
-      n.notificationHtml,
-      textStyle: s,
-    );
+    return TinhteHtmlWidget(html, textStyle: s);
   }
 
   Widget _buildInfo(BuildContext context, api.Notification n) {
@@ -106,11 +114,11 @@ class _NotificationsState extends State<NotificationsWidget> {
     if (icon == null) return timestamp;
 
     return Wrap(
+      spacing: 5,
       children: <Widget>[
-        Icon(icon, color: style.color, size: style.fontSize),
+        Icon(icon, color: style?.color, size: style?.fontSize),
         timestamp,
       ],
-      spacing: 5,
     );
   }
 
@@ -120,30 +128,31 @@ class _NotificationsState extends State<NotificationsWidget> {
       fc.items.addAll(list.map((j) => api.Notification.fromJson(j)));
     }
 
-    if (fc.id == FetchContextId.FetchInitial) {
+    if (fc.id == FetchContextId.fetchInitial) {
       apiPost(ApiCaller.stateless(fc.state.context), 'notifications/read');
     }
   }
 
   void _onNotificationData(int newId) {
     final apiAuth = ApiAuth.of(context, listen: false);
-    if (!apiAuth.hasToken) return;
+    final token = apiAuth.token;
+    if (token == null) return;
 
     apiAuth.api
-        .getJson("notifications?oauth_token=${apiAuth.token.accessToken}")
+        .getJson("notifications?oauth_token=${token.accessToken}")
         .then((json) {
-      if (!json.containsKey('notifications')) return;
-
-      final list = json['notifications'] as List;
-      final j = list.where((j) {
-        if (!(j is Map)) return false;
-        final m = j as Map;
-        return m.containsKey('notification_id') &&
-            m['notification_id'] == newId;
+      final listValue = json['notifications'];
+      final list = listValue is List ? listValue : [];
+      final filtered = list.where((j) {
+        if (j is Map) {
+          return j['notification_id'] == newId;
+        } else {
+          return false;
+        }
       });
-      if (j.length != 1) return;
+      if (filtered.length != 1) return;
 
-      final notification = api.Notification.fromJson(j.first);
+      final notification = api.Notification.fromJson(filtered.first);
       _slsKey.currentState?.itemsInsert(0, notification);
     });
   }
@@ -154,7 +163,7 @@ class _NotificationsState extends State<NotificationsWidget> {
     OauthToken token,
     User user,
   ) async {
-    if (fcmToken?.isNotEmpty != true) return;
+    if (fcmToken.isEmpty) return;
 
     final url = "${config.pushServer}/subscribe";
     final hubTopic = "user_notification_${user.userId}";
@@ -176,7 +185,7 @@ class _NotificationsState extends State<NotificationsWidget> {
     }
   }
 
-  static IconData _getContentActionIcon(String contentAction) {
+  static IconData? _getContentActionIcon(String? contentAction) {
     switch (contentAction) {
       case 'like':
         return FontAwesomeIcons.solidHeart;

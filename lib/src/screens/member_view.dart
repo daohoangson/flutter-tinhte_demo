@@ -9,9 +9,7 @@ import 'package:the_app/src/api.dart';
 class MemberViewScreen extends StatefulWidget {
   final User user;
 
-  MemberViewScreen(this.user, {Key key})
-      : assert(user != null),
-        super(key: key);
+  const MemberViewScreen(this.user, {Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _MemberViewScreenState();
@@ -25,7 +23,7 @@ class _MemberViewScreenState extends State<MemberViewScreen> {
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
-          title: Text(user.username),
+          title: Text(user.username ?? ''),
         ),
         body: NotificationListener<ScrollNotification>(
           child: ThreadsWidget(
@@ -36,7 +34,10 @@ class _MemberViewScreenState extends State<MemberViewScreen> {
           ),
           onNotification: (scrollInfo) {
             if (scrollInfo is ScrollUpdateNotification) {
-              setState(() => _fabIsVisible = scrollInfo.scrollDelta < 0.0);
+              final scrollDelta = scrollInfo.scrollDelta;
+              if (scrollDelta != null) {
+                setState(() => _fabIsVisible = scrollDelta < 0.0);
+              }
             }
             return false;
           },
@@ -44,12 +45,12 @@ class _MemberViewScreenState extends State<MemberViewScreen> {
         floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
         floatingActionButton: _fabIsVisible
             ? FloatingActionButton(
-                child: Icon(Icons.search),
                 onPressed: () => showSearch(
                   context: context,
                   delegate: ThreadSearchDelegate(user: user),
                 ),
                 tooltip: l(context).searchThisUser,
+                child: const Icon(Icons.search),
               )
             : null,
       );

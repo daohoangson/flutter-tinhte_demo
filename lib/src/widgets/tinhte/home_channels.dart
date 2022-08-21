@@ -5,8 +5,10 @@ import 'package:the_app/src/widgets/home/header.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ChannelsWidget extends StatelessWidget {
+  const ChannelsWidget({Key? key}) : super(key: key);
+
   @override
-  Widget build(BuildContext _) => Card(
+  Widget build(BuildContext context) => Card(
         margin: const EdgeInsets.only(bottom: 10.0),
         child: LayoutBuilder(
           builder: (context, bc) => bc.maxWidth < 600
@@ -30,20 +32,23 @@ class ChannelsWidget extends StatelessWidget {
       );
 
   _buildButton({
-    BuildContext context,
-    IconData icon,
-    String label,
-    GestureTapCallback onTap,
+    required BuildContext context,
+    IconData? icon,
+    required String label,
+    GestureTapCallback? onTap,
   }) {
     final style = Theme.of(context).textTheme.caption;
+    final fontSize = style?.fontSize;
 
     return InkWell(
+      onTap: onTap,
       child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 20),
         child: Column(
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.all(10),
-              child: Icon(icon, size: style.fontSize * 2.5),
+              child: Icon(icon, size: fontSize != null ? fontSize * 2.5 : null),
             ),
             Text(
               label,
@@ -53,17 +58,15 @@ class ChannelsWidget extends StatelessWidget {
             ),
           ],
         ),
-        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 20),
       ),
-      onTap: onTap,
     );
   }
 
   _buildContentListViewButton({
-    BuildContext context,
-    IconData icon,
-    String label,
-    int listId,
+    required BuildContext context,
+    required IconData icon,
+    required String label,
+    required int listId,
   }) =>
       _buildButton(
         context: context,
@@ -81,9 +84,10 @@ class ChannelsWidget extends StatelessWidget {
           context: context,
           icon: FontAwesomeIcons.youtube,
           label: 'Video',
-          onTap: () => launch(
-                'https://www.youtube.com/channel/UCyQobySFx_h9oFwsBV0KGdg',
-              ),
+          onTap: () => launchUrl(
+            Uri.parse(
+                'https://www.youtube.com/channel/UCyQobySFx_h9oFwsBV0KGdg'),
+          ),
         ),
         _buildContentListViewButton(
           context: context,
@@ -107,9 +111,9 @@ class ChannelsWidget extends StatelessWidget {
           context: context,
           icon: FontAwesomeIcons.dollarSign,
           label: 'Nhật tảo',
-          onTap: () => launch('https://nhattao.com'),
+          onTap: () => launchUrl(Uri.parse('https://nhattao.com')),
         ),
       ];
 
-  Widget _buildHeader() => HeaderWidget('Các kênh của Tinh tế');
+  Widget _buildHeader() => const HeaderWidget('Các kênh của Tinh tế');
 }

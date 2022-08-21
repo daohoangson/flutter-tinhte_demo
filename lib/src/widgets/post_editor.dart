@@ -15,11 +15,12 @@ class PostEditorWidget extends StatefulWidget {
   final double paddingHorizontal;
   final double paddingVertical;
 
-  PostEditorWidget({
-    this.callback,
-    this.paddingHorizontal,
-    this.paddingVertical,
-  }) : assert(callback != null);
+  const PostEditorWidget({
+    required this.callback,
+    Key? key,
+    required this.paddingHorizontal,
+    required this.paddingVertical,
+  }) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _PostEditorState();
@@ -28,10 +29,10 @@ class PostEditorWidget extends StatefulWidget {
 class _PostEditorState extends State<PostEditorWidget> {
   final _controller = TextEditingController();
 
-  _EmojiSuggestion _emojiSuggestion;
-  Timer _emojiTimer;
+  _EmojiSuggestion? _emojiSuggestion;
+  Timer? _emojiTimer;
 
-  String _sessionId;
+  String? _sessionId;
   bool _isPosting = false;
 
   _PostEditorState();
@@ -54,18 +55,27 @@ class _PostEditorState extends State<PostEditorWidget> {
   }
 
   @override
-  Widget build(BuildContext _) =>
+  Widget build(BuildContext context) =>
       Consumer<PostEditorData>(builder: (context, data, __) {
         if (data.sessionId != _sessionId) {
           _sessionId = data.sessionId;
           _controller.text = '';
         }
 
+        final scopedEmojiSuggestion = _emojiSuggestion;
+
         return Padding(
+          padding: EdgeInsets.fromLTRB(
+            widget.paddingHorizontal,
+            0,
+            widget.paddingHorizontal,
+            widget.paddingVertical,
+          ),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              _emojiSuggestion != null
-                  ? _buildEmojiSuggestion(_emojiSuggestion)
+              scopedEmojiSuggestion != null
+                  ? _buildEmojiSuggestion(scopedEmojiSuggestion)
                   : SizedBox(height: widget.paddingVertical),
               _buildIntro(data),
               Container(
@@ -82,28 +92,22 @@ class _PostEditorState extends State<PostEditorWidget> {
               ),
               AttachmentEditorWidget(key: data._aesKey),
             ],
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-          ),
-          padding: EdgeInsets.fromLTRB(
-            widget.paddingHorizontal,
-            0,
-            widget.paddingHorizontal,
-            widget.paddingVertical,
           ),
         );
       });
 
   Widget _buildEmojiSuggestion(_EmojiSuggestion es) => SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
         child: Row(
           children: es.emojis.entries
               .map<Widget>((entry) => InkWell(
                     child: Tooltip(
+                      message: entry.value,
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 8, vertical: 2),
                         child: Text(entry.key, textScaleFactor: 2),
                       ),
-                      message: entry.value,
                     ),
                     onTap: () {
                       setState(() => _emojiSuggestion = null);
@@ -122,52 +126,59 @@ class _PostEditorState extends State<PostEditorWidget> {
                   ))
               .toList(growable: false),
         ),
-        scrollDirection: Axis.horizontal,
       );
 
   Widget _buildInputs(PostEditorData data) => Row(
         children: <Widget>[
           Expanded(child: _buildTextInputMessage(focusNode: data._focusNode)),
           Tooltip(
+            message: l(context).pickGallery,
             child: InkWell(
-              child: Icon(Icons.image),
+              child: const Icon(Icons.image),
               onTap: () => data._aesKey.currentState?.pickGallery(),
             ),
-            message: l(context).pickGallery,
           ),
           InkWell(
-            child: Padding(
-              child: Icon(Icons.done),
-              padding: const EdgeInsets.symmetric(
+            onTap: _isPosting ? null : () => _post(data),
+            child: const Padding(
+              padding: EdgeInsets.symmetric(
                 vertical: kPaddingHorizontal,
                 horizontal: kPaddingHorizontal,
               ),
+              child: Icon(Icons.done),
             ),
-            onTap: _isPosting ? null : () => _post(data),
           )
         ],
       );
 
   Widget _buildIntro(PostEditorData data) {
     final parentPost = data._parentPost;
-    if (parentPost?.postIsFirstPost != false) return const SizedBox.shrink();
+    if (parentPost == null || parentPost.postIsFirstPost != false) {
+      return const SizedBox.shrink();
+    }
+
+    final posterUsername = parentPost.posterUsername ?? '';
+    final postBodyPlainText = parentPost.postBodyPlainText ?? '';
+
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
     return Padding(
+      padding: const EdgeInsets.only(bottom: kPaddingHorizontal / 2),
       child: RichText(
         text: TextSpan(
           text: l(context).postReplyingToAt,
           style: textTheme.bodyText2,
           children: [
-            TextSpan(
-              text: parentPost.posterUsername + ' ',
-              style: textTheme.bodyText2.copyWith(
-                color: theme.colorScheme.secondary,
-                fontWeight: FontWeight.bold,
+            if (posterUsername.isNotEmpty)
+              TextSpan(
+                text: '$posterUsername ',
+                style: textTheme.bodyText2?.copyWith(
+                  color: theme.colorScheme.secondary,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
             TextSpan(
-              text: parentPost.postBodyPlainText.replaceAll('\n', ' '),
+              text: postBodyPlainText.replaceAll('\n', ' '),
               style: textTheme.caption,
             ),
           ],
@@ -175,7 +186,6 @@ class _PostEditorState extends State<PostEditorWidget> {
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
       ),
-      padding: const EdgeInsets.only(bottom: kPaddingHorizontal / 2),
     );
   }
 
@@ -185,7 +195,7 @@ class _PostEditorState extends State<PostEditorWidget> {
         onTap: () => data.enable(context),
       );
 
-  Widget _buildTextInputMessage({FocusNode focusNode}) => TextFormField(
+  Widget _buildTextInputMessage({FocusNode? focusNode}) => TextFormField(
         controller: focusNode != null ? _controller : null,
         decoration: InputDecoration(
           border: InputBorder.none,
@@ -201,7 +211,7 @@ class _PostEditorState extends State<PostEditorWidget> {
       );
 
   void _onTextChange() {
-    if (_emojiTimer != null) _emojiTimer.cancel();
+    _emojiTimer?.cancel();
     _emojiTimer = Timer(const Duration(milliseconds: 500), _suggestEmoji);
   }
 
@@ -211,7 +221,7 @@ class _PostEditorState extends State<PostEditorWidget> {
     final parentPost = data._parentPost;
     final quotePostId = parentPost?.postIsFirstPost != false
         ? ''
-        : parentPost?.postId?.toString() ?? '';
+        : parentPost?.postId.toString() ?? '';
     final text = _controller.text.trim();
     final threadId = data.thread.threadId.toString();
     if (text.isEmpty) {
@@ -248,7 +258,7 @@ class _PostEditorState extends State<PostEditorWidget> {
       _EmojiSuggestion.suggest(_controller.text, _controller.selection));
 }
 
-typedef void PostEditorCallback(Post post);
+typedef PostEditorCallback = void Function(Post post);
 
 class PostEditorData extends ChangeNotifier {
   final Thread thread;
@@ -258,9 +268,9 @@ class PostEditorData extends ChangeNotifier {
 
   var _counter = 0;
   var _isEnabled = false;
-  Post _parentPost;
+  Post? _parentPost;
 
-  PostEditorData(this.thread) : assert(thread != null);
+  PostEditorData(this.thread);
 
   String get sessionId => "$hashCode-$_counter";
 
@@ -270,7 +280,7 @@ class PostEditorData extends ChangeNotifier {
     _focusNode.dispose();
   }
 
-  void enable(BuildContext context, {Post parentPost}) {
+  void enable(BuildContext context, {Post? parentPost}) {
     _parentPost = parentPost;
 
     _counter++;
@@ -308,13 +318,11 @@ class _EmojiSuggestion {
   static final _regExpBefore = RegExp(r':[a-z]+(:?)$', caseSensitive: false);
   static final _regExpAfter = RegExp(r'^[a-z]*:?', caseSensitive: false);
 
-  _EmojiSuggestion({this.query, this.emojis, this.start})
-      : assert(query != null),
-        assert(emojis != null),
-        assert(start != null),
-        end = start + query.length;
+  _EmojiSuggestion(
+      {required this.query, required this.emojis, required this.start})
+      : end = start + query.length;
 
-  factory _EmojiSuggestion.suggest(String text, TextSelection s) {
+  static _EmojiSuggestion? suggest(String text, TextSelection s) {
     if (!s.isValid) return null;
 
     // get text right before and after carret that is
@@ -326,8 +334,8 @@ class _EmojiSuggestion {
         : null;
 
     // skip suggestion if query is not long enough (avoid rendering too many results)
-    final query =
-        (before.group(0) + (after != null ? after.group(0) : '')).toLowerCase();
+    final query = (before.group(0)! + (after != null ? after.group(0)! : ''))
+        .toLowerCase();
     if (query.length < 3) return null;
 
     final emojis = searchEmojis(query);
@@ -336,7 +344,7 @@ class _EmojiSuggestion {
     return _EmojiSuggestion(
       query: query,
       emojis: emojis,
-      start: s.end - before.group(0).length,
+      start: s.end - before.group(0)!.length,
     );
   }
 }

@@ -5,14 +5,13 @@ import 'package:the_app/src/widgets/threads.dart';
 
 class TagViewScreen extends StatelessWidget {
   final Tag tag;
-  final Map initialJson;
+  final Map? initialJson;
 
-  TagViewScreen(
+  const TagViewScreen(
     this.tag, {
     this.initialJson,
-    Key key,
-  })  : assert(tag != null),
-        super(key: key);
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) => Scaffold(

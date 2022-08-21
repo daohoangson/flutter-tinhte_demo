@@ -23,16 +23,13 @@ class PhotoCompare {
           if (images.length != 2) return widgets;
 
           final a = meta.element.attributes;
-          if (!a.containsKey('data-config')) return widgets;
+          final configJson = a['data-config'] ?? '';
+          if (configJson.isEmpty) return widgets;
 
-          final Map config = json.decode(a['data-config']);
-          if (!config.containsKey('width') ||
-              (config['width'] is! num) ||
-              !config.containsKey('height') ||
-              (config['height'] is! num)) return widgets;
-
-          final width = (config['width'] as num).toDouble();
-          final height = (config['height'] as num).toDouble();
+          final Map config = json.decode(configJson);
+          final width = num.tryParse(config['width'] ?? '')?.toDouble();
+          final height = num.tryParse(config['height'] ?? '')?.toDouble();
+          if (width == null || height == null) return widgets;
 
           return [
             _PhotoCompareWidget(
@@ -50,13 +47,11 @@ class _PhotoCompareWidget extends StatefulWidget {
   final Widget image0;
   final Widget image1;
 
-  _PhotoCompareWidget({
-    this.aspectRatio,
-    this.image0,
-    this.image1,
-  })  : assert(aspectRatio != null),
-        assert(image0 != null),
-        assert(image1 != null);
+  const _PhotoCompareWidget({
+    required this.aspectRatio,
+    required this.image0,
+    required this.image1,
+  });
 
   @override
   _PhotoCompareState createState() => _PhotoCompareState();
@@ -65,6 +60,7 @@ class _PhotoCompareWidget extends StatefulWidget {
 class _PhotoCompareState extends State<_PhotoCompareWidget> {
   double position = _PhotoCompareHandler.positionZero;
 
+  @override
   Widget build(BuildContext context) {
     final widgets = <Widget>[
       _buildAspectRatio(widget.image0),
@@ -81,28 +77,28 @@ class _PhotoCompareState extends State<_PhotoCompareWidget> {
       Positioned.fill(
         child: FractionallySizedBox(
           alignment: Alignment.topLeft,
+          widthFactor: position,
           child: Stack(
+            clipBehavior: Clip.none,
             children: <Widget>[
               Positioned(
                 bottom: 0,
+                right: _PhotoCompareHandler.dividerSize / -2,
+                top: 0,
                 child: Container(
                   color: _PhotoCompareHandler.color,
                   width: _PhotoCompareHandler.dividerSize,
                 ),
-                right: _PhotoCompareHandler.dividerSize / -2,
-                top: 0,
               ),
               Positioned(
                 bottom: 0,
-                child: _PhotoCompareHandler(
-                    animate: position == _PhotoCompareHandler.positionZero),
                 right: _PhotoCompareHandler.boxSize / -2,
                 top: 0,
+                child: _PhotoCompareHandler(
+                    animate: position == _PhotoCompareHandler.positionZero),
               ),
             ],
-            clipBehavior: Clip.none,
           ),
-          widthFactor: position,
         ),
       ),
     ];
@@ -116,12 +112,17 @@ class _PhotoCompareState extends State<_PhotoCompareWidget> {
     );
   }
 
-  Widget _buildAspectRatio(Widget child) => widget.aspectRatio != null
-      ? AspectRatio(aspectRatio: widget.aspectRatio, child: child)
-      : child;
+  Widget _buildAspectRatio(Widget child) => AspectRatio(
+        aspectRatio: widget.aspectRatio,
+        child: child,
+      );
 
-  void _updatePosition(BuildContext context, Offset offset) => setState(() =>
-      position = offset.dx / context.findRenderObject().paintBounds.width);
+  void _updatePosition(BuildContext context, Offset offset) {
+    final renderObject = context.findRenderObject();
+    if (renderObject == null) return;
+
+    setState(() => position = offset.dx / renderObject.paintBounds.width);
+  }
 }
 
 class _PhotoCompareHandler extends StatefulWidget {
@@ -133,7 +134,8 @@ class _PhotoCompareHandler extends StatefulWidget {
 
   final bool animate;
 
-  const _PhotoCompareHandler({Key key, this.animate}) : super(key: key);
+  const _PhotoCompareHandler({Key? key, required this.animate})
+      : super(key: key);
 
   @override
   _PhotoCompareHandlerState createState() => _PhotoCompareHandlerState();
@@ -141,7 +143,7 @@ class _PhotoCompareHandler extends StatefulWidget {
 
 class _PhotoCompareHandlerState extends State<_PhotoCompareHandler>
     with TickerProviderStateMixin {
-  AnimationController _controller;
+  late AnimationController _controller;
 
   @override
   void initState() {
@@ -159,6 +161,7 @@ class _PhotoCompareHandlerState extends State<_PhotoCompareHandler>
     super.dispose();
   }
 
+  @override
   void didUpdateWidget(_PhotoCompareHandler old) {
     super.didUpdateWidget(old);
 
@@ -169,13 +172,13 @@ class _PhotoCompareHandlerState extends State<_PhotoCompareHandler>
 
   @override
   Widget build(BuildContext context) => Container(
-        child: _PhotoCompareAnimation(_controller.view),
         decoration: BoxDecoration(
           border: Border.all(color: _PhotoCompareHandler.color, width: 2),
           shape: BoxShape.circle,
         ),
         height: _PhotoCompareHandler.boxSize,
         width: _PhotoCompareHandler.boxSize,
+        child: _PhotoCompareAnimation(_controller.view),
       );
 }
 
@@ -187,15 +190,15 @@ class _PhotoCompareAnimation extends StatelessWidget {
       : offset = Tween<double>(begin: -.4, end: -.7).animate(
           CurvedAnimation(
             parent: controller,
-            curve: Interval(0, .5, curve: Curves.ease),
+            curve: const Interval(0, .5, curve: Curves.ease),
           ),
         );
 
   @override
-  Widget build(BuildContext _) =>
+  Widget build(BuildContext context) =>
       AnimatedBuilder(builder: _buildAnimation, animation: controller);
 
-  Widget _buildAnimation(BuildContext _, Widget __) => Stack(
+  Widget _buildAnimation(BuildContext context, Widget? __) => Stack(
         children: <Widget>[
           Positioned.fill(
             left: offset.value * _PhotoCompareHandler.iconSize,

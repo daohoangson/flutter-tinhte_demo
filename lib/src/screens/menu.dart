@@ -14,24 +14,26 @@ import 'package:the_app/src/widgets/menu/dev_tools.dart';
 import 'package:the_app/src/widgets/menu/package_info.dart';
 
 class MenuScreen extends StatelessWidget {
+  const MenuScreen({Key? key}) : super(key: key);
+
   @override
-  Widget build(BuildContext _) => Consumer<User>(
+  Widget build(BuildContext context) => Consumer<User>(
         builder: (context, user, _) => Scaffold(
           appBar: AppBar(
             title: Text(l(context).menu),
           ),
           body: ListView(
             children: <Widget>[
-              AppBarDrawerHeader(),
+              const AppBarDrawerHeader(),
               _buildRegister(context, user),
-              MenuDarkTheme(),
+              const MenuDarkTheme(),
               _buildBookmarkList(context, user),
               _buildMyFeed(context, user),
               _buildNotifications(context, user),
-              AppBarDrawerFooter(),
+              const AppBarDrawerFooter(),
               _buildPrivacyPolicy(context),
-              DeveloperMenu(),
-              PackageInfoWidget(),
+              const DeveloperMenu(),
+              const PackageInfoWidget(),
             ],
           ),
         ),
@@ -41,8 +43,8 @@ class MenuScreen extends StatelessWidget {
       config.apiBookmarkPath?.isNotEmpty == true && user.userId > 0
           ? ListTile(
               title: Text(l(context).threadBookmarkList),
-              onTap: () => Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => BookmarkListScreen())),
+              onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                  builder: (_) => const BookmarkListScreen())),
             )
           : const SizedBox.shrink();
 
@@ -50,16 +52,16 @@ class MenuScreen extends StatelessWidget {
       config.myFeed == true && user.userId > 0
           ? ListTile(
               title: Text(l(context).myFeed),
-              onTap: () => Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (_) => MyFeedScreen())),
+              onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => const MyFeedScreen())),
             )
           : const SizedBox.shrink();
 
   Widget _buildNotifications(BuildContext context, User user) => user.userId > 0
       ? ListTile(
           title: Text(l(context).notifications),
-          onTap: () => Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => NotificationListScreen())),
+          onTap: () => Navigator.of(context).push(MaterialPageRoute(
+              builder: (_) => const NotificationListScreen())),
         )
       : const SizedBox.shrink();
 
@@ -72,7 +74,7 @@ class MenuScreen extends StatelessWidget {
       ? ListTile(
           title: Text(l(context).register),
           onTap: () => Navigator.of(context)
-              .push(MaterialPageRoute(builder: (_) => RegisterScreen())),
+              .push(MaterialPageRoute(builder: (_) => const RegisterScreen())),
         )
       : const SizedBox.shrink();
 }

@@ -11,14 +11,14 @@ import 'package:the_app/src/widgets/image.dart';
 import 'package:the_app/src/api.dart';
 
 class AttachmentEditorWidget extends StatefulWidget {
-  final String apiPostPath;
+  final String? apiPostPath;
   final double height;
   final bool showPickIcon;
 
-  AttachmentEditorWidget({
+  const AttachmentEditorWidget({
     this.apiPostPath,
     this.height = 50,
-    Key key,
+    Key? key,
     this.showPickIcon = false,
   }) : super(key: key);
 
@@ -30,16 +30,16 @@ class AttachmentEditorState extends State<AttachmentEditorWidget> {
   final _attachments = <_Attachment>[];
   final _imagePicker = ImagePicker();
 
-  String _apiPostPath;
-  String _attachmentHash;
+  String? _apiPostPath;
+  String? _attachmentHash;
 
-  String get attachmentHash => _attachmentHash;
+  String? get attachmentHash => _attachmentHash;
 
   int get itemCount =>
       _attachments.length +
       (widget.showPickIcon &&
               attachmentHash?.isNotEmpty == true &&
-              Provider.of<User>(context)?.userIsVisitor == true
+              Provider.of<User>(context).userIsVisitor == true
           ? 1
           : 0);
 
@@ -54,7 +54,7 @@ class AttachmentEditorState extends State<AttachmentEditorWidget> {
   }
 
   @override
-  Widget build(BuildContext _) => itemCount > 0
+  Widget build(BuildContext context) => itemCount > 0
       ? Padding(
           padding: const EdgeInsets.all(10.0),
           child: SizedBox(
@@ -70,38 +70,41 @@ class AttachmentEditorState extends State<AttachmentEditorWidget> {
         )
       : const SizedBox.shrink();
 
-  Widget _buildAttachment(_Attachment attachment) => Stack(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 5.0),
-            child: AspectRatio(
-              aspectRatio: 1.0,
-              child: Opacity(
-                opacity: attachment.ok ? 1.0 : 0.5,
-                child: attachment.ok
-                    ? buildCachedNetworkImage(
-                        attachment.apiData.links.thumbnail,
-                      )
-                    : Image.file(
-                        attachment.file,
-                        fit: BoxFit.cover,
-                      ),
-              ),
+  Widget _buildAttachment(_Attachment attachment) {
+    final apiData = attachment.apiData;
+    final thumbnail = apiData?.links?.thumbnail;
+    return Stack(
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 5.0),
+          child: AspectRatio(
+            aspectRatio: 1.0,
+            child: Opacity(
+              opacity: apiData != null ? 1.0 : 0.5,
+              child: thumbnail != null
+                  ? buildCachedNetworkImage(thumbnail)
+                  : Image.file(
+                      attachment.file,
+                      fit: BoxFit.cover,
+                    ),
             ),
           ),
-          Align(
-            alignment: Alignment.bottomRight,
-            child: attachment.ok
-                ? Icon(
-                    Icons.cloud_done,
-                    color: Theme.of(context).colorScheme.secondary,
-                  )
-                : _UploadingIcon(),
-          ),
-        ],
-      );
+        ),
+        Align(
+          alignment: Alignment.bottomRight,
+          child: apiData != null
+              ? Icon(
+                  Icons.cloud_done,
+                  color: Theme.of(context).colorScheme.secondary,
+                )
+              : _UploadingIcon(),
+        ),
+      ],
+    );
+  }
 
   Widget _buildPickIcon() => Tooltip(
+        message: l(context).pickGallery,
         child: InkWell(
           child: Container(
             color: Theme.of(context).backgroundColor,
@@ -113,7 +116,6 @@ class AttachmentEditorState extends State<AttachmentEditorWidget> {
           ),
           onTap: () => pickGallery(),
         ),
-        message: l(context).pickGallery,
       );
 
   void pickGallery() async {
@@ -129,8 +131,8 @@ class AttachmentEditorState extends State<AttachmentEditorWidget> {
 
     apiPost(
       ApiCaller.stateful(this),
-      _apiPostPath,
-      bodyFields: {'attachment_hash': _attachmentHash},
+      _apiPostPath!,
+      bodyFields: {'attachment_hash': _attachmentHash!},
       fileFields: {'file': attachment.file},
       onSuccess: (jsonMap) {
         if (jsonMap.containsKey('attachment')) {
@@ -141,7 +143,7 @@ class AttachmentEditorState extends State<AttachmentEditorWidget> {
     );
   }
 
-  void setPath([String path]) => setState(() {
+  void setPath([String? path]) => setState(() {
         _apiPostPath = path;
         _attachmentHash = _generateHash();
 
@@ -153,9 +155,7 @@ class AttachmentEditorState extends State<AttachmentEditorWidget> {
 
 class _Attachment {
   final File file;
-  Attachment apiData;
-
-  bool get ok => apiData != null;
+  Attachment? apiData;
 
   _Attachment(this.file);
 }
@@ -167,8 +167,8 @@ class _UploadingIcon extends StatefulWidget {
 
 class _UploadingIconState extends State<_UploadingIcon>
     with SingleTickerProviderStateMixin {
-  Animation<double> animation;
-  AnimationController controller;
+  late Animation<double> animation;
+  late AnimationController controller;
 
   @override
   initState() {

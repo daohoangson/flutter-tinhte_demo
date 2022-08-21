@@ -11,8 +11,8 @@ import 'availability/push_notification.dart';
 import 'availability/uni_links.dart';
 
 class DevTools extends ChangeNotifier {
-  bool _isDeveloper;
-  bool _showPerformanceOverlay;
+  bool? _isDeveloper;
+  bool? _showPerformanceOverlay;
 
   DevTools._();
 
@@ -22,9 +22,8 @@ class DevTools extends ChangeNotifier {
     _isDeveloper = v;
     notifyListeners();
 
-    SharedPreferences.getInstance().then((prefs) => v == null
-        ? prefs.remove(kPrefKeyDevToolIsDeveloper)
-        : prefs.setBool(kPrefKeyDevToolIsDeveloper, v));
+    SharedPreferences.getInstance()
+        .then((prefs) => prefs.setBool(kPrefKeyDevToolIsDeveloper, v));
   }
 
   bool get showPerformanceOverlay => _showPerformanceOverlay == true;
@@ -33,9 +32,8 @@ class DevTools extends ChangeNotifier {
     _showPerformanceOverlay = v;
     notifyListeners();
 
-    SharedPreferences.getInstance().then((prefs) => v == null
-        ? prefs.remove(kPrefKeyDevToolShowPerformanceOverlay)
-        : prefs.setBool(kPrefKeyDevToolShowPerformanceOverlay, v));
+    SharedPreferences.getInstance().then(
+        (prefs) => prefs.setBool(kPrefKeyDevToolShowPerformanceOverlay, v));
   }
 
   static Future<DevTools> create() async {
@@ -49,19 +47,23 @@ class DevTools extends ChangeNotifier {
 }
 
 class DeveloperMenu extends StatelessWidget {
+  const DeveloperMenu({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) => Consumer<DevTools>(
         builder: (_, developer, __) => developer.isDeveloper
             ? ListTile(
                 title: Text(l(context).menuDeveloper),
                 onTap: () => Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => DeveloperMenuScreen())),
+                    MaterialPageRoute(builder: (_) => const DeveloperMenuScreen())),
               )
             : const SizedBox.shrink(),
       );
 }
 
 class DeveloperMenuScreen extends StatelessWidget {
+  const DeveloperMenuScreen({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
@@ -69,10 +71,10 @@ class DeveloperMenuScreen extends StatelessWidget {
         ),
         body: ListView(
           children: <Widget>[
-            ErrorReportingWidget(),
-            FirebaseWidget(),
-            PushNotificationWidget(),
-            UniLinksWidget(),
+            const ErrorReportingWidget(),
+            const FirebaseWidget(),
+            const PushNotificationWidget(),
+            const UniLinksWidget(),
             _ShowPerformanceOverlayWidget(),
             _CrashTestWidget(),
           ],
@@ -101,7 +103,7 @@ class _ShowPerformanceOverlayWidget extends StatelessWidget {
         ),
       );
 
-  void _updateValue(BuildContext context, [bool value]) {
+  void _updateValue(BuildContext context, [bool? value]) {
     final devTools = context.read<DevTools>();
     devTools.showPerformanceOverlay = value ?? !devTools.showPerformanceOverlay;
   }

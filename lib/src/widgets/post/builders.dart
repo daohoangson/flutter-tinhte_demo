@@ -10,23 +10,24 @@ const kAvatarReplyToRadius = kToolbarHeight / 5;
 Widget buildPostButton(
   BuildContext context,
   String text, {
-  Color color,
+  Color? color,
   int count = 0,
-  GestureTapCallback onTap,
+  GestureTapCallback? onTap,
 }) {
   final theme = Theme.of(context);
+  final fontSize = theme.textTheme.button?.fontSize;
 
   Widget button = TextButton(
+    onPressed: onTap,
     child: Text(
       (count > 0 ? "$count • " : '') + text,
-      style: TextStyle(fontSize: theme.textTheme.button.fontSize - 2),
+      style: fontSize != null ? TextStyle(fontSize: fontSize - 2) : null,
     ),
-    onPressed: onTap,
   );
 
   button = ButtonTheme.fromButtonThemeData(
-    child: button,
     data: ButtonTheme.of(context).copyWith(height: 0, minWidth: 0),
+    child: button,
   );
 
   return button;
@@ -35,13 +36,11 @@ Widget buildPostButton(
 Widget buildPostRow(
   BuildContext context,
   Widget avatar, {
-  List<Widget> box,
-  List<Widget> footer,
+  required List<Widget> box,
+  required List<Widget> footer,
 }) {
-  final children = <Widget>[];
-
-  if (box != null) {
-    children.add(Padding(
+  final children = <Widget>[
+    Padding(
       padding: kEdgeInsetsHorizontal,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(3),
@@ -51,16 +50,13 @@ Widget buildPostRow(
               padding: const EdgeInsets.only(top: 10.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: box.where((widget) => widget != null).toList(),
+                children: box,
               )),
         ),
       ),
-    ));
-  }
-
-  if (footer != null) {
-    children.addAll(footer.where((widget) => widget != null));
-  }
+    ),
+    ...footer,
+  ];
 
   return Padding(
     padding: const EdgeInsets.symmetric(vertical: 5),
@@ -79,7 +75,7 @@ Widget buildPostRow(
   );
 }
 
-Widget buildPosterCircleAvatar(String url, {bool isPostReply = false}) =>
+Widget buildPosterCircleAvatar(String? url, {bool isPostReply = false}) =>
     Padding(
       padding: EdgeInsets.only(
         left: kPaddingHorizontal,
@@ -93,10 +89,10 @@ Widget buildPosterCircleAvatar(String url, {bool isPostReply = false}) =>
 
 Widget buildPosterInfo(
   BuildContext context,
-  String username, {
-  int userId,
-  bool userHasVerifiedBadge,
-  String userRank,
+  String? username, {
+  int? userId,
+  bool? userHasVerifiedBadge,
+  String? userRank,
 }) {
   final theme = Theme.of(context);
   final style = theme.textTheme.caption;
@@ -104,7 +100,7 @@ Widget buildPosterInfo(
     RichText(
       text: TextSpan(
         text: username,
-        style: style.copyWith(
+        style: style?.copyWith(
           color: theme.colorScheme.secondary,
           fontWeight: FontWeight.bold,
         ),
@@ -116,7 +112,7 @@ Widget buildPosterInfo(
     children.add(Icon(
       FontAwesomeIcons.solidCircleCheck,
       color: theme.colorScheme.secondary,
-      size: style.fontSize,
+      size: style?.fontSize,
     ));
   }
 
@@ -124,16 +120,14 @@ Widget buildPosterInfo(
     children.add(RichText(
       text: TextSpan(
         text: userRank,
-        style: style.copyWith(
-          color: theme.hintColor,
-        ),
+        style: style?.copyWith(color: theme.hintColor),
       ),
     ));
   }
 
   Widget built = Wrap(
-    children: children,
     spacing: 5,
+    children: children,
   );
 
   if (userId != null) {

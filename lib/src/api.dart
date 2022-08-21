@@ -16,10 +16,10 @@ import 'package:the_app/src/constants.dart';
 final _oauthTokenRegEx = RegExp(r'oauth_token=.+(&|$)');
 
 void apiDelete(ApiCaller caller, String path,
-        {Map<String, String> bodyFields,
-        VoidCallback onComplete,
-        ApiOnError onError,
-        ApiOnJsonMap onSuccess}) =>
+        {Map<String, String>? bodyFields,
+        VoidCallback? onComplete,
+        ApiOnError? onError,
+        ApiOnJsonMap? onSuccess}) =>
     _setupApiJsonHandlers(
       caller,
       (d) => d.api.deleteJson(
@@ -32,9 +32,9 @@ void apiDelete(ApiCaller caller, String path,
     );
 
 void apiGet(ApiCaller caller, String path,
-        {VoidCallback onComplete,
-        ApiOnError onError,
-        ApiOnJsonMap onSuccess}) =>
+        {VoidCallback? onComplete,
+        ApiOnError? onError,
+        ApiOnJsonMap? onSuccess}) =>
     _setupApiJsonHandlers(
       caller,
       (d) => d.api.getJson(d._appendOauthToken(path)),
@@ -44,11 +44,11 @@ void apiGet(ApiCaller caller, String path,
     );
 
 void apiPost(ApiCaller caller, String path,
-        {Map<String, String> bodyFields,
-        Map<String, File> fileFields,
-        VoidCallback onComplete,
-        ApiOnError onError,
-        ApiOnJsonMap onSuccess}) =>
+        {Map<String, String>? bodyFields,
+        Map<String, File>? fileFields,
+        VoidCallback? onComplete,
+        ApiOnError? onError,
+        ApiOnJsonMap? onSuccess}) =>
     _setupApiJsonHandlers(
       caller,
       (d) => d.api.postJson(
@@ -64,7 +64,7 @@ void apiPost(ApiCaller caller, String path,
 void prepareForApiAction(
   BuildContext context,
   VoidCallback onReady, {
-  VoidCallback onError,
+  VoidCallback? onError,
 }) async {
   final apiAuth = ApiAuth.of(context, listen: false);
 
@@ -82,7 +82,7 @@ void prepareForApiAction(
 Future showApiErrorDialog(
   BuildContext context,
   dynamic error, {
-  String title,
+  String? title,
 }) =>
     showDialog(
       context: context,
@@ -104,17 +104,15 @@ Future showApiErrorDialog(
 void _setupApiCompleter<T>(
   ApiCaller caller,
   Completer<T> completer,
-  ApiOnSuccess<T> onSuccess,
-  ApiOnError onError,
-  VoidCallback onComplete,
+  ApiOnSuccess<T>? onSuccess,
+  ApiOnError? onError,
+  VoidCallback? onComplete,
 ) {
   var f = completer.future;
 
   if (onSuccess != null) {
     f = f.then(
-      (data) => (caller.canReceiveCallback && onSuccess != null)
-          ? onSuccess(data)
-          : null,
+      (data) => (caller.canReceiveCallback) ? onSuccess(data) : data,
     );
   }
 
@@ -131,7 +129,6 @@ void _setupApiCompleter<T>(
   if (onComplete != null) {
     f.whenComplete(() {
       if (!caller.canReceiveCallback) return;
-      if (onComplete == null) return;
       onComplete();
     });
   }
@@ -139,10 +136,10 @@ void _setupApiCompleter<T>(
 
 void _setupApiJsonHandlers(
   ApiCaller caller,
-  ApiFetch fetch,
-  ApiOnJsonMap onSuccess,
-  ApiOnError onError,
-  VoidCallback onComplete,
+  _ApiFetch fetch,
+  ApiOnJsonMap? onSuccess,
+  ApiOnError? onError,
+  VoidCallback? onComplete,
 ) {
   final aas = Provider.of<_ApiAppState>(caller.context, listen: false);
   final completer = Completer();
@@ -153,7 +150,7 @@ void _setupApiJsonHandlers(
     completer,
     onSuccess != null
         ? (json) {
-            if (json is! Map) throw new ApiErrorUnexpectedResponse(json);
+            if (json is! Map) throw ApiErrorUnexpectedResponse(json);
             return onSuccess(json);
           }
         : null,
@@ -162,27 +159,26 @@ void _setupApiJsonHandlers(
   );
 }
 
-typedef Future ApiFetch(_ApiAppState aas);
-typedef void ApiMethod(
+typedef _ApiFetch = Future Function(_ApiAppState aas);
+typedef ApiMethod = void Function(
   ApiCaller caller,
   String path, {
-  VoidCallback onComplete,
-  ApiOnError onError,
-  ApiOnJsonMap onSuccess,
+  VoidCallback? onComplete,
+  ApiOnError? onError,
+  ApiOnJsonMap? onSuccess,
 });
-typedef T ApiOnSuccess<T>(T data);
-typedef void ApiOnJsonMap(Map jsonMap);
-typedef void ApiOnError(error);
+typedef ApiOnSuccess<T> = T Function(T data);
+typedef ApiOnJsonMap = void Function(Map jsonMap);
+typedef ApiOnError = void Function(dynamic error);
 
 class ApiApp extends StatefulWidget {
   final Api api;
   final Widget child;
 
   ApiApp({
-    @required this.child,
-    Key key,
-  })  : assert(child != null),
-        api = Api(config.apiRoot, config.clientId, config.clientSecret)
+    required this.child,
+    Key? key,
+  })  : api = Api(config.apiRoot, config.clientId, config.clientSecret)
           ..httpHeaders['Api-Bb-Code-Chr'] = '1'
           ..httpHeaders['Api-Post-Tree'] = '1',
         super(key: key);
@@ -192,24 +188,24 @@ class ApiApp extends StatefulWidget {
 }
 
 class _ApiAppState extends State<ApiApp> {
-  final secureStorage = new FlutterSecureStorage();
+  final secureStorage = const FlutterSecureStorage();
   final visitor = User.zero();
 
   var _isRefreshingToken = false;
-  List<VoidCallback> _queue;
-  OauthToken _token;
+  List<VoidCallback>? _queue;
+  OauthToken? _token;
   var _tokenHasBeenSet = false;
 
   Api get api => widget.api;
 
   String get _secureStorageKeyToken =>
-      kSecureStorageKeyPrefixToken + (api.clientId ?? '');
+      kSecureStorageKeyPrefixToken + api.clientId;
 
   @override
   void initState() {
     super.initState();
 
-    secureStorage.read(key: _secureStorageKeyToken).then<OauthToken>(
+    secureStorage.read(key: _secureStorageKeyToken).then<OauthToken?>(
       (value) {
         try {
           final json = jsonDecode(value ?? '');
@@ -225,7 +221,7 @@ class _ApiAppState extends State<ApiApp> {
   @override
   Widget build(BuildContext context) => MultiProvider(
         providers: [
-          Provider<ApiAuth>.value(value: ApiAuth(this)),
+          Provider<ApiAuth>.value(value: ApiAuth._(this)),
           ChangeNotifierProvider<User>.value(value: visitor),
           Provider<_ApiAppState>.value(value: this),
         ],
@@ -241,26 +237,29 @@ class _ApiAppState extends State<ApiApp> {
   void _enqueue(VoidCallback callback, {bool scheduleDequeue = true}) {
     if (scheduleDequeue) Timer.run(_dequeue);
 
-    _queue ??= [];
-    _queue.add(callback);
+    final queue = _queue ??= [];
+    queue.add(callback);
   }
 
   void _dequeue() {
     if (!_tokenHasBeenSet) return;
-    if (_token?.hasExpired == true) return _refreshToken();
 
-    final __callbacks = _queue;
+    final token = _token;
+    if (token == null) return;
+    if (token.hasExpired) return _refreshToken(token);
+
+    final callbacks = _queue;
     _queue = null;
-    if (__callbacks?.isNotEmpty != true) return;
-    if (__callbacks.length == 1) return __callbacks.first();
+    if (callbacks == null || callbacks.isEmpty) return;
+    if (callbacks.length == 1) return callbacks.first();
 
     final batch = api.newBatch(path: _appendOauthToken('batch'));
-    for (final __callback in __callbacks) {
+    for (final callback in callbacks) {
       try {
-        __callback();
+        callback();
       } catch (e) {
         // print and ignore to avoid affecting other callbacks in the same batch
-        print(e);
+        debugPrint('callback error: $e');
       }
     }
     batch.fetch();
@@ -277,22 +276,22 @@ class _ApiAppState extends State<ApiApp> {
         } on ApiError catch (ae) {
           debugPrint("_fetchUser encountered an api error: ${ae.message}");
         } catch (e) {
-          print(e);
+          debugPrint('api error: $e');
         }
       }, scheduleDequeue: false);
 
-  void _refreshToken() {
+  void _refreshToken(OauthToken token) {
     if (_isRefreshingToken) return;
     _isRefreshingToken = true;
 
     api
-        .refreshToken(_token)
+        .refreshToken(token)
         .then((refreshedToken) => _setToken(refreshedToken))
         .catchError((_) => _setToken(null))
         .whenComplete(() => _isRefreshingToken = false);
   }
 
-  void _setToken(OauthToken value, {bool savePref = true}) async {
+  void _setToken(OauthToken? value, {bool savePref = true}) async {
     if (savePref) {
       try {
         await secureStorage.write(
@@ -319,16 +318,16 @@ class _ApiAppState extends State<ApiApp> {
 }
 
 class ApiAuth {
-  final _ApiAppState aas;
+  final _ApiAppState _aas;
 
-  ApiAuth(this.aas);
+  ApiAuth._(this._aas);
 
-  Api get api => aas.api;
+  Api get api => _aas.api;
 
-  bool get hasToken => aas._token != null;
-  OauthToken get token => aas._token;
+  bool get hasToken => _aas._token != null;
+  OauthToken? get token => _aas._token;
 
-  void setToken(OauthToken token) => aas._setToken(token);
+  void setToken(OauthToken? token) => _aas._setToken(token);
 
   static ApiAuth of(BuildContext context, {bool listen = true}) =>
       Provider.of<ApiAuth>(context, listen: listen);
@@ -348,14 +347,18 @@ class _ApiCallerStateful extends ApiCaller {
 
   _ApiCallerStateful(this._state);
 
+  @override
   bool get canReceiveCallback => _state.mounted;
+  @override
   BuildContext get context => _state.context;
 }
 
 class _ApiCallerStateless extends ApiCaller {
+  @override
   final BuildContext context;
 
   _ApiCallerStateless(this.context);
 
+  @override
   bool get canReceiveCallback => true;
 }

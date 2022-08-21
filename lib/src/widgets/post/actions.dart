@@ -8,12 +8,11 @@ class _PostActionsWidget extends StatefulWidget {
   final Post post;
   final bool showPostCreateDate;
 
-  _PostActionsWidget({
-    Key key,
-    @required this.post,
+  const _PostActionsWidget({
+    Key? key,
+    required this.post,
     this.showPostCreateDate = true,
-  })  : assert(post != null),
-        super(key: key);
+  }) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _PostActionsWidgetState();
@@ -35,7 +34,7 @@ class _PostActionsWidgetState extends State<_PostActionsWidget> {
               buttons.add(buildPostButton(
                 context,
                 post.postIsLiked ? l(context).postUnlike : l(context).postLike,
-                count: post.postLikeCount,
+                count: post.postLikeCount ?? 0,
                 onTap: _isLiking
                     ? null
                     : () => (post.postIsLiked
@@ -71,11 +70,11 @@ class _PostActionsWidgetState extends State<_PostActionsWidget> {
           );
 
           final row = Padding(
+            padding: const EdgeInsets.only(left: kPaddingHorizontal / 2),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: buttons,
             ),
-            padding: const EdgeInsets.only(left: kPaddingHorizontal / 2),
           );
 
           return row;
@@ -108,7 +107,10 @@ class _PostActionsWidgetState extends State<_PostActionsWidget> {
             if (reason != null) _deletePost(post, reason);
             break;
           case _kPopupActionOpenInBrowser:
-            launchLink(context, post.links?.permalink, forceWebView: true);
+            final permalink = post.links?.permalink;
+            if (permalink != null) {
+              launchLink(context, permalink, forceWebView: true);
+            }
             break;
           case _kPopupActionReport:
             final message = await showDialog(
@@ -127,24 +129,25 @@ class _PostActionsWidgetState extends State<_PostActionsWidget> {
 
   List<PopupMenuEntry<String>> _buildPopupMenuItems(Post post) {
     final entries = <PopupMenuEntry<String>>[
-      PopupMenuItem(
-        child: Text(l(context).openInBrowser),
-        value: _kPopupActionOpenInBrowser,
-      ),
+      if (post.links?.permalink != null)
+        PopupMenuItem(
+          value: _kPopupActionOpenInBrowser,
+          child: Text(l(context).openInBrowser),
+        ),
     ];
 
     if (post.links?.report?.isNotEmpty == true) {
       entries.add(PopupMenuItem(
-        child: Text(l(context).postReport),
         enabled: post.permissions?.report == true,
         value: _kPopupActionReport,
+        child: Text(l(context).postReport),
       ));
     }
 
     if (post.permissions?.delete == true) {
       entries.add(PopupMenuItem(
-        child: Text(l(context).postDelete),
         value: _kPopupActionDelete,
+        child: Text(l(context).postDelete),
       ));
     }
 
@@ -153,7 +156,7 @@ class _PostActionsWidgetState extends State<_PostActionsWidget> {
 
   void _deletePost(Post post, String reason) => apiDelete(
         ApiCaller.stateful(this),
-        post.links.detail,
+        post.links?.detail ?? '',
         bodyFields: {'reason': reason},
         onSuccess: (_) => post.postIsDeleted = true,
       );
@@ -164,7 +167,7 @@ class _PostActionsWidgetState extends State<_PostActionsWidget> {
 
         apiPost(
           ApiCaller.stateful(this),
-          post.links.likes,
+          post.links?.likes ?? '',
           onSuccess: (_) => post.postIsLiked = true,
           onComplete: () => setState(() => _isLiking = false),
         );
@@ -174,7 +177,7 @@ class _PostActionsWidgetState extends State<_PostActionsWidget> {
         context,
         () => apiPost(
           ApiCaller.stateful(this),
-          post.links.report,
+          post.links?.report ?? '',
           bodyFields: {'message': message},
           onSuccess: (_) => ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(l(context).postReportedThanks)),
@@ -188,7 +191,7 @@ class _PostActionsWidgetState extends State<_PostActionsWidget> {
 
         apiDelete(
           ApiCaller.stateful(this),
-          post.links.likes,
+          post.links?.likes ?? '',
           onSuccess: (_) => post.postIsLiked = false,
           onComplete: () => setState(() => _isLiking = false),
         );
@@ -201,9 +204,8 @@ class _PostActionsDialogReason extends StatelessWidget {
 
   final _controller = TextEditingController();
 
-  _PostActionsDialogReason({this.button, this.hint, Key key})
-      : assert(button != null),
-        super(key: key);
+  _PostActionsDialogReason({required this.button, required this.hint, Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) => AlertDialog(

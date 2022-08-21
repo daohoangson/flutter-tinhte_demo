@@ -12,8 +12,8 @@ class YouTubeWidget extends StatefulWidget {
 
   const YouTubeWidget(
     this.id, {
-    Key key,
-    this.lowresThumbnailUrl,
+    Key? key,
+    required this.lowresThumbnailUrl,
   }) : super(key: key);
 
   @override
@@ -24,8 +24,8 @@ class _YouTubeState extends State<YouTubeWidget> {
   String get videoUrl => "https://www.youtube.com/watch?v=${widget.id}";
 
   double _aspectRatio = 16 / 9;
-  String _thumbnailUrl;
-  String _title;
+  late String _thumbnailUrl;
+  String? _title;
 
   @override
   void initState() {
@@ -41,54 +41,56 @@ class _YouTubeState extends State<YouTubeWidget> {
           child: Stack(
             children: <Widget>[
               _buildThumbnail(),
-              _title != null
-                  ? Align(
-                      alignment: Alignment.topLeft,
-                      child: _buildTitle(bc.biggest.width / 24),
-                    )
-                  : const SizedBox.shrink(),
+              _buildTitle(bc),
               Positioned.fill(child: _buildYouTubeLogo(bc.biggest.width / 2))
             ],
           ),
-          onTap: () => launch(videoUrl),
+          onTap: () => launchUrl(Uri.parse(videoUrl)),
         ),
       );
 
   Widget _buildThumbnail() => AspectRatio(
         aspectRatio: _aspectRatio,
         child: Container(
+          decoration: const BoxDecoration(color: Colors.black),
           child: Opacity(
+            opacity: .8,
             child: Image(
               image: CachedNetworkImageProvider(_thumbnailUrl),
               fit: BoxFit.cover,
             ),
-            opacity: .8,
           ),
-          decoration: BoxDecoration(color: Colors.black),
         ),
       );
 
-  Widget _buildTitle(double fontSize) => Container(
-        child: Text(
-          _title,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: TextStyle(
-            color: const Color.fromRGBO(241, 241, 241, 1),
-            fontSize: fontSize,
-          ),
-          textScaleFactor: 1,
+  Widget _buildTitle(BoxConstraints bc) {
+    final fontSize = bc.biggest.width / 24.0;
+    final scopedTitle = _title;
+    if (scopedTitle == null) return widget0;
+
+    return Container(
+      alignment: Alignment.topLeft,
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [Colors.black, Colors.transparent],
         ),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Colors.black, Colors.transparent],
-          ),
+      ),
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 48),
+      width: double.infinity,
+      child: Text(
+        scopedTitle,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: TextStyle(
+          color: const Color.fromRGBO(241, 241, 241, 1),
+          fontSize: fontSize,
         ),
-        padding: const EdgeInsets.fromLTRB(16, 16, 16, 48),
-        width: double.infinity,
-      );
+        textScaleFactor: 1,
+      ),
+    );
+  }
 
   Widget _buildYouTubeLogo(double width) => Center(
         child: Image.asset(
@@ -101,15 +103,15 @@ class _YouTubeState extends State<YouTubeWidget> {
     final file = await DefaultCacheManager().getSingleFile(videoUrl);
     final html = await file.readAsString();
     final unescape = HtmlUnescape();
-    final metaTags = Map.fromEntries(_kMetaTag.allMatches(html).map(
-        (match) => MapEntry(match.group(1), unescape.convert(match.group(2)))));
+    final metaTags = Map.fromEntries(_kMetaTag.allMatches(html).map((match) =>
+        MapEntry(match.group(1), unescape.convert(match.group(2)!))));
     if (!metaTags.containsKey(_kOgImage)) return;
 
     double aspectRatio = _aspectRatio;
     if (metaTags.containsKey(_kOgImageWidth) &&
         metaTags.containsKey(_kOgImageHeight)) {
-      final width = double.tryParse(metaTags[_kOgImageWidth]);
-      final height = double.tryParse(metaTags[_kOgImageHeight]);
+      final width = double.tryParse(metaTags[_kOgImageWidth] ?? '');
+      final height = double.tryParse(metaTags[_kOgImageHeight] ?? '');
       if (width != null && height != null) {
         aspectRatio = width / height;
       }
@@ -122,6 +124,8 @@ class _YouTubeState extends State<YouTubeWidget> {
     });
 
     final thumbnailUrl = metaTags[_kOgImage];
+    if (thumbnailUrl == null) return;
+
     await precacheImage(CachedNetworkImageProvider(thumbnailUrl), context);
     if (!mounted) return;
     setState(() => _thumbnailUrl = thumbnailUrl);

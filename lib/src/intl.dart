@@ -5,7 +5,7 @@ import 'package:timeago/timeago.dart' as timeago;
 
 final _numberFormatCompact = NumberFormat.compact();
 
-L10n l(BuildContext context) => Localizations.of<L10n>(context, L10n);
+L10n l(BuildContext context) => Localizations.of<L10n>(context, L10n)!;
 
 MaterialLocalizations lm(BuildContext context) =>
     MaterialLocalizations.of(context);
@@ -423,7 +423,7 @@ class L10n {
 
   static Future<L10n> load(Locale locale) {
     final localeName = Intl.canonicalizedLocale(
-        locale.countryCode.isEmpty ? locale.languageCode : locale.toString());
+        locale.countryCode!.isEmpty ? locale.languageCode : locale.toString());
     return initializeMessages(localeName).then((_) => L10n(localeName));
   }
 }
@@ -449,11 +449,11 @@ DateTime secondsToDateTime(int secondsSinceEpoch) =>
 
 String formatNumber(dynamic value) => _numberFormatCompact.format(value);
 
-String formatTimestamp(BuildContext context, int timestamp) {
+String formatTimestamp(BuildContext context, int? timestamp) {
   if (timestamp == null) return '';
 
   final d = secondsToDateTime(timestamp);
-  if (DateTime.now().subtract(Duration(days: 30)).isBefore(d)) {
+  if (DateTime.now().subtract(const Duration(days: 30)).isBefore(d)) {
     final locale = Localizations.localeOf(context).languageCode;
     return timeago.format(d, locale: locale);
   }

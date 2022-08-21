@@ -6,7 +6,7 @@ import 'package:the_app/src/intl.dart';
 class TagViewHeader extends StatelessWidget {
   final Tag tag;
 
-  TagViewHeader(this.tag) : assert(tag != null);
+  const TagViewHeader(this.tag, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) => Row(
@@ -20,7 +20,7 @@ class TagViewHeader extends StatelessWidget {
         ],
       );
 
-  Widget _buildStats(BuildContext context, int value, String label) =>
+  Widget? _buildStats(BuildContext context, int? value, String label) =>
       value != null
           ? Text.rich(
               TextSpan(

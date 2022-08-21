@@ -20,10 +20,11 @@ void configurePushNotification() {
   abstraction.addListeners(_onMessage, _onMessageOpenedApp);
 }
 
-StreamSubscription<int> listenToNotification(void onData(int notificationId)) =>
+StreamSubscription<int> listenToNotification(
+        void Function(int notificationId) onData) =>
     _notifController.stream.listen(onData);
 
-Future<String> getInitialPath() async {
+Future<String?> getInitialPath() async {
   try {
     final data = await abstraction.getInitialMessage();
     if (data == null) return null;
@@ -35,18 +36,20 @@ Future<String> getInitialPath() async {
 
     return path;
   } catch (e) {
-    print(e);
+    debugPrint('getInitialPath error: $e');
   }
 
   return null;
 }
 
-String _getContentLink(Map<String, dynamic> message) {
+String? _getContentLink(Map<String, dynamic> message) {
   final Map d = message.containsKey('data') ? message['data'] : message;
-  if (!d.containsKey('notification_id')) return null;
+
+  final id = d['notification_id'];
+  if (id == null) return null;
 
   // TODO: use message.data.links.content when it is available
-  return "notifications/content?notification_id=${d['notification_id']}";
+  return "notifications/content?notification_id=$id";
 }
 
 void _notifControllerAddFromFcmMessage(Map data) {
@@ -63,8 +66,9 @@ Future<bool> _onMessage(Map<String, dynamic> message) async {
   _notifControllerAddFromFcmMessage(data);
 
   final pnas = _key.currentState;
-  if (pnas == null || !data.containsKey('user_unread_notification_count'))
+  if (pnas == null || !data.containsKey('user_unread_notification_count')) {
     return false;
+  }
 
   final value = int.tryParse(data['user_unread_notification_count']);
   if (value == null) return false;
@@ -87,9 +91,7 @@ Future<bool> _onMessageOpenedApp(Map<String, dynamic> message) async {
 class PushNotificationApp extends StatefulWidget {
   final Widget child;
 
-  PushNotificationApp({@required this.child})
-      : assert(child != null),
-        super(key: _key);
+  PushNotificationApp({required this.child}) : super(key: _key);
 
   @override
   State<StatefulWidget> createState() => _PushNotificationAppState();
@@ -98,24 +100,25 @@ class PushNotificationApp extends StatefulWidget {
 class _PushNotificationAppState extends State<PushNotificationApp> {
   final _pnt = PushNotificationToken();
 
-  User _user;
+  User? _user;
 
-  var _unread = 0;
+  int _unread = 0;
   var _unreadIsVisible = false;
   final _unreadDismissibleKey = UniqueKey();
 
   @override
-  Widget build(BuildContext _) => Consumer<User>(
+  Widget build(BuildContext context) => Consumer<User>(
         builder: (_, user, __) {
           final existingUserId = _user?.userId ?? 0;
-          final newUserId = user?.userId ?? 0;
+          final newUserId = user.userId;
           if (newUserId != existingUserId) {
             if (existingUserId > 0 && user.userId == 0) {
               _unread = 0;
               _unregister();
             } else {
-              if (user.userUnreadNotificationCount != null) {
-                _unread = user.userUnreadNotificationCount;
+              final unread = user.userUnreadNotificationCount;
+              if (unread != null) {
+                _unread = unread;
                 _unreadIsVisible = _unread > 0;
               }
             }
@@ -123,7 +126,9 @@ class _PushNotificationAppState extends State<PushNotificationApp> {
           _user = user;
 
           return ChangeNotifierProvider<PushNotificationToken>.value(
+            value: _pnt,
             child: Directionality(
+              textDirection: TextDirection.ltr,
               child: Stack(
                 children: <Widget>[
                   widget.child,
@@ -136,33 +141,31 @@ class _PushNotificationAppState extends State<PushNotificationApp> {
                       : const SizedBox.shrink(),
                 ],
               ),
-              textDirection: TextDirection.ltr,
             ),
-            value: _pnt,
           );
         },
       );
 
   Widget _buildUnreadIcon() => Dismissible(
+        key: _unreadDismissibleKey,
+        onDismissed: (_) => setState(() => _unreadIsVisible = false),
         child: GestureDetector(
           child: Container(
-            child: _UnreadIcon(),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(_kUnreadIconBoxSize),
               color: Colors.redAccent,
             ),
             height: _kUnreadIconBoxSize,
             width: _kUnreadIconBoxSize,
+            child: _UnreadIcon(),
           ),
           onTap: () {
             primaryNavKey.currentState?.push(
-              MaterialPageRoute(builder: (_) => NotificationListScreen()),
+              MaterialPageRoute(builder: (_) => const NotificationListScreen()),
             );
             setState(() => _unreadIsVisible = false);
           },
         ),
-        key: _unreadDismissibleKey,
-        onDismissed: (_) => setState(() => _unreadIsVisible = false),
       );
 
   bool _setUnread(int value) {
@@ -179,30 +182,30 @@ class _PushNotificationAppState extends State<PushNotificationApp> {
   }
 
   void _unregister() async {
-    final _fcmToken = _pnt._value;
-    if (_fcmToken?.isNotEmpty != true) return;
+    final fcmToken = _pnt._value;
+    if (fcmToken?.isNotEmpty != true) return;
 
     final url = "${config.pushServer}/unregister";
     final response = await http.post(
       Uri.parse(url),
-      body: {'registration_token': _fcmToken},
+      body: {'registration_token': fcmToken},
     );
 
     if (response.statusCode == 202) {
-      debugPrint("Unregistered $_fcmToken at $url...");
+      debugPrint("Unregistered $fcmToken at $url...");
     } else {
-      debugPrint("Failed unregistering $_fcmToken: "
+      debugPrint("Failed unregistering $fcmToken: "
           "status=${response.statusCode}, body=${response.body}");
     }
   }
 }
 
 class PushNotificationToken extends ChangeNotifier {
-  String _value;
+  String? _value;
 
   PushNotificationToken();
 
-  String get value {
+  String? get value {
     if (_value != null) return _value;
 
     abstraction.getToken().then((token) {
@@ -221,7 +224,7 @@ class _UnreadIcon extends StatefulWidget {
 
 class _UnreadIconState extends State<_UnreadIcon>
     with TickerProviderStateMixin {
-  AnimationController _controller;
+  late final AnimationController _controller;
 
   @override
   void initState() {
@@ -244,7 +247,7 @@ class _UnreadIconState extends State<_UnreadIcon>
   @override
   Widget build(BuildContext context) => RotationTransition(
         turns: _controller,
-        child: Icon(
+        child: const Icon(
           Icons.notifications_none,
           color: Colors.white70,
           size: _kUnreadIconSize,

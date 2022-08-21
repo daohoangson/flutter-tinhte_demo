@@ -7,7 +7,7 @@ import 'package:the_app/src/intl.dart';
 class FpHeader extends StatelessWidget {
   final FeaturePage fp;
 
-  FpHeader(this.fp) : assert(fp != null);
+  const FpHeader(this.fp, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) =>
@@ -39,17 +39,20 @@ class FpHeader extends StatelessWidget {
         )
       ]);
 
-  Widget _buildImage() => fp.links?.image?.isNotEmpty == true
-      ? AspectRatio(
-          aspectRatio: 114 / 44,
-          child: Image(
-            image: CachedNetworkImageProvider(fp.links.image),
-            fit: BoxFit.cover,
-          ),
-        )
-      : null;
+  Widget? _buildImage() {
+    final imageUrl = fp.links?.image ?? '';
+    return imageUrl.isNotEmpty
+        ? AspectRatio(
+            aspectRatio: 114 / 44,
+            child: Image(
+              image: CachedNetworkImageProvider(imageUrl),
+              fit: BoxFit.cover,
+            ),
+          )
+        : null;
+  }
 
-  Widget _buildStats(BuildContext context, int value, String label) =>
+  Widget? _buildStats(BuildContext context, int? value, String label) =>
       value != null
           ? Column(
               children: <Widget>[

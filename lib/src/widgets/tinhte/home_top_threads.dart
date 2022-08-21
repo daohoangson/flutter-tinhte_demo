@@ -12,22 +12,26 @@ const _kTopThreadHeight = 200.0;
 const _kTopThreadPadding = 5.0;
 
 class TopThreadsWidget extends StatelessWidget {
+  const TopThreadsWidget({Key? key}) : super(key: key);
+
   @override
-  Widget build(BuildContext _) => Consumer<_TopThreadsData>(
+  Widget build(BuildContext context) => Consumer<_TopThreadsData>(
         builder: (context, data, __) {
           if (data.threads == null) {
             data.threads = [];
             _fetch(context, data);
           }
-          return _build(data.threads);
+          return _build(data.threads!);
         },
       );
 
   Widget _build(List<Thread> threads) => LayoutBuilder(
         builder: (context, bc) {
           final isWide = bc.maxWidth > 600;
+          final style = DefaultTextStyle.of(context).style;
+          final fontSize = style.fontSize;
           final height = _kTopThreadHeight +
-              (isWide ? DefaultTextStyle.of(context).style.fontSize * 2 : 0);
+              (isWide && fontSize != null ? fontSize * 2 : 0);
           final width = height * .75;
 
           return Column(
@@ -35,23 +39,23 @@ class TopThreadsWidget extends StatelessWidget {
             children: <Widget>[
               HeaderWidget(l(context).topThreads),
               Padding(
+                padding: const EdgeInsets.all(_kTopThreadPadding),
                 child: SizedBox(
+                  height: height + 2 * _kTopThreadPadding,
                   child: ListView.builder(
                     itemBuilder: (_, i) => Padding(
+                      padding: const EdgeInsets.all(_kTopThreadPadding),
                       child: _ThreadWidget(
                         threads[i],
                         height: height,
                         isWide: isWide,
                         width: width,
                       ),
-                      padding: const EdgeInsets.all(_kTopThreadPadding),
                     ),
                     itemCount: threads.length,
                     scrollDirection: Axis.horizontal,
                   ),
-                  height: height + 2 * _kTopThreadPadding,
                 ),
-                padding: const EdgeInsets.all(_kTopThreadPadding),
               ),
             ],
           );
@@ -86,28 +90,26 @@ class _ThreadWidget extends StatelessWidget {
   final bool isWide;
   final double width;
 
-  _ThreadWidget(
+  const _ThreadWidget(
     this.thread, {
-    @required this.height,
-    @required this.isWide,
-    @required this.width,
-    Key key,
-  })  : assert(thread != null),
-        assert(height != null),
-        assert(isWide != null),
-        assert(width != null),
-        super(key: key);
+    required this.height,
+    required this.isWide,
+    required this.width,
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final thumbnail = thread.threadThumbnail;
+    final viewCount = thread.threadViewCount ?? 0;
     return _buildGestureDetector(
       context,
       _buildBox(
         context,
-        thread.threadThumbnail != null
+        thumbnail != null
             ? Image(
-                image: CachedNetworkImageProvider(thread.threadThumbnail.link),
+                image: CachedNetworkImageProvider(thumbnail.link),
                 fit: BoxFit.cover,
               )
             : null,
@@ -118,8 +120,8 @@ class _ThreadWidget extends StatelessWidget {
                 style: TextStyle(color: theme.colorScheme.secondary),
                 text: thread.creatorUsername,
               ),
-              TextSpan(
-                  text: " ${l(context).statsXViews(thread.threadViewCount)}")
+              if (viewCount > 0)
+                TextSpan(text: " ${l(context).statsXViews(viewCount)}")
             ],
             style: theme.textTheme.caption,
           ),
@@ -127,7 +129,7 @@ class _ThreadWidget extends StatelessWidget {
           overflow: TextOverflow.ellipsis,
         ),
         Text(
-          thread.threadTitle,
+          thread.threadTitle ?? '',
           maxLines: 4,
           overflow: TextOverflow.ellipsis,
         ),
@@ -137,7 +139,7 @@ class _ThreadWidget extends StatelessWidget {
 
   Widget _buildBox(
     BuildContext context,
-    Widget image,
+    Widget? image,
     Widget info,
     Widget title,
   ) {
@@ -153,7 +155,14 @@ class _ThreadWidget extends StatelessWidget {
     body.add(Expanded(child: title));
 
     return Container(
+      decoration: BoxDecoration(
+        color: theme.disabledColor,
+        borderRadius: BorderRadius.circular(5),
+      ),
+      height: height,
+      width: width,
       child: ClipRRect(
+        borderRadius: BorderRadius.circular(5),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -162,29 +171,22 @@ class _ThreadWidget extends StatelessWidget {
               child: image,
             ),
             Padding(
-              child: SizedBox(
-                child: Column(
-                  children: body,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                ),
-                width: width - _kTopThreadPadding * 2,
-                height: height / 2 - _kTopThreadPadding * 4,
-              ),
               padding: const EdgeInsets.symmetric(
                 horizontal: _kTopThreadPadding,
                 vertical: _kTopThreadPadding * 2,
               ),
+              child: SizedBox(
+                width: width - _kTopThreadPadding * 2,
+                height: height / 2 - _kTopThreadPadding * 4,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: body,
+                ),
+              ),
             ),
           ],
         ),
-        borderRadius: BorderRadius.circular(5),
       ),
-      decoration: BoxDecoration(
-        color: theme.disabledColor,
-        borderRadius: BorderRadius.circular(5),
-      ),
-      height: height,
-      width: width,
     );
   }
 
@@ -198,10 +200,10 @@ class _ThreadWidget extends StatelessWidget {
 }
 
 class _TopThreadsData extends ChangeNotifier {
-  List<Thread> threads;
+  List<Thread>? threads;
 
   void update(Iterable<Thread> newThreads) {
-    threads.addAll(newThreads);
+    threads!.addAll(newThreads);
     notifyListeners();
   }
 }

@@ -49,7 +49,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m13(forumTitle) => " in forum \'${forumTitle}\'";
 
-  final messages = _notInlinedMessages(_notInlinedMessages);
+  final Map<String, dynamic> messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function> {
     "_statsXReplies" : m0,
     "_statsXViews" : m1,

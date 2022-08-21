@@ -5,7 +5,7 @@ publish_to: none
 
 environment:
   flutter: 3.0.5
-  sdk: ">=2.3.0 <3.0.0"
+  sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
   # firebase
@@ -19,6 +19,7 @@ dependencies:
   the_api:
     path: ./packages/api
 
+  cached_network_image: ^3.2.1
   chewie: any
   convert: any
   crypto: any
@@ -46,9 +47,11 @@ dependencies:
   the_apple_sign_in: ^1.1.1
   timeago: ^3.0.0
   uni_links: ^0.5.1
+  url_launcher: ^6.1.5
   video_player: any
 
 dev_dependencies:
+  flutter_lints: ^2.0.1
   flutter_test:
     sdk: flutter
   msix: ^3.0.0

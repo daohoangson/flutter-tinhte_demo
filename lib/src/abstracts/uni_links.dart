@@ -5,12 +5,12 @@ import 'package:uni_links/uni_links.dart' as lib;
 
 final isSupported = Platform.isAndroid || Platform.isIOS;
 
-Future<String> getInitialLink() async {
+Future<String?> getInitialLink() async {
   if (!isSupported) return null;
   return lib.getInitialLink();
 }
 
-StreamSubscription<String> listenToLinkStream(void Function(String) onData) {
+StreamSubscription<String?>? listenToLinkStream(void Function(String?) onData) {
   if (!isSupported) return null;
   return lib.linkStream.listen(onData);
 }

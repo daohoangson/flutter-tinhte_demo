@@ -10,20 +10,20 @@ import 'package:the_app/src/widgets/attachment_editor.dart';
 import 'package:the_app/src/widgets/forum/forum_picker.dart';
 
 class ThreadCreateScreen extends StatefulWidget {
-  final Forum forum;
+  final Forum? forum;
 
-  const ThreadCreateScreen({Key key, this.forum}) : super(key: key);
+  const ThreadCreateScreen({Key? key, this.forum}) : super(key: key);
 
   @override
-  _ThreadCreateScreenState createState() => _ThreadCreateScreenState();
+  State<ThreadCreateScreen> createState() => _ThreadCreateScreenState();
 }
 
 class _ThreadCreateScreenState extends State<ThreadCreateScreen> {
   final aesKey = GlobalKey<AttachmentEditorState>();
   final formKey = GlobalKey<FormState>();
 
-  ForumPickerData fpd;
-  _ThreadCreateData tcd;
+  late final ForumPickerData fpd;
+  late final _ThreadCreateData tcd;
 
   @override
   void initState() {
@@ -43,52 +43,54 @@ class _ThreadCreateScreenState extends State<ThreadCreateScreen> {
   }
 
   @override
-  Widget build(BuildContext context) => MultiProvider(
-        child: Scaffold(
-          appBar: AppBar(
-            title: Text(l(context).threadCreateNew),
-            actions: <Widget>[
-              Consumer2<ForumPickerData, _ThreadCreateData>(
-                builder: (_, fpd, tcd, __) => IconButton(
-                  icon: Icon(FontAwesomeIcons.paperPlane),
-                  onPressed: fpd.forum != null && tcd._isPosting == false
-                      ? _post
-                      : null,
-                  tooltip: l(context).threadCreateSubmit,
+  Widget build(BuildContext context) {
+    final forum = widget.forum;
+
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<ForumPickerData>.value(value: fpd),
+        ChangeNotifierProvider<_ThreadCreateData>.value(value: tcd),
+      ],
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(l(context).threadCreateNew),
+          actions: <Widget>[
+            Consumer2<ForumPickerData, _ThreadCreateData>(
+              builder: (_, fpd, tcd, __) => IconButton(
+                icon: const Icon(FontAwesomeIcons.paperPlane),
+                onPressed:
+                    fpd.forum != null && tcd._isPosting == false ? _post : null,
+                tooltip: l(context).threadCreateSubmit,
+              ),
+            ),
+          ],
+        ),
+        body: Form(
+          key: formKey,
+          child: Column(
+            children: <Widget>[
+              Expanded(
+                child: ListView(
+                  children: <Widget>[
+                    const ForumPickerWidget(),
+                    _buildInputPadding(_ThreadCreateTitle()),
+                    _buildInputPadding(_ThreadCreateBody()),
+                  ],
                 ),
+              ),
+              AttachmentEditorWidget(
+                apiPostPath:
+                    forum != null ? _generateAttachmentPath(forum) : null,
+                height: 150,
+                key: aesKey,
+                showPickIcon: true,
               ),
             ],
           ),
-          body: Form(
-            child: Column(
-              children: <Widget>[
-                Expanded(
-                  child: ListView(
-                    children: <Widget>[
-                      ForumPickerWidget(),
-                      _buildInputPadding(_ThreadCreateTitle()),
-                      _buildInputPadding(_ThreadCreateBody()),
-                    ],
-                  ),
-                ),
-                AttachmentEditorWidget(
-                  apiPostPath: widget.forum != null
-                      ? _generateAttachmentPath(widget.forum)
-                      : null,
-                  height: 150,
-                  key: aesKey,
-                  showPickIcon: true,
-                ),
-              ],
-            ),
-            key: formKey,
-          ),
         ),
-        providers: [
-          ChangeNotifierProvider<ForumPickerData>.value(value: fpd),
-          ChangeNotifierProvider<_ThreadCreateData>.value(value: tcd),
-        ],
-      );
+      ),
+    );
+  }
 
   Widget _buildInputPadding(Widget child) => Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -106,8 +108,11 @@ class _ThreadCreateScreenState extends State<ThreadCreateScreen> {
     if (tcd._isPosting) return;
 
     final form = formKey.currentState;
-    if (form?.validate() != true) return;
+    if (form == null || !form.validate()) return;
     form.save();
+
+    final forum = fpd.forum;
+    if (forum == null) return;
 
     prepareForApiAction(context, () {
       if (tcd._isPosting) return;
@@ -118,14 +123,13 @@ class _ThreadCreateScreenState extends State<ThreadCreateScreen> {
         'threads',
         bodyFields: {
           'attachment_hash': aesKey.currentState?.attachmentHash ?? '',
-          'forum_id': '${fpd.forum.forumId}',
+          'forum_id': '${forum.forumId}',
           'post_body': tcd._body,
           'thread_title': tcd._title,
         },
         onSuccess: (jsonMap) {
           if (!jsonMap.containsKey('thread')) return;
           final thread = Thread.fromJson(jsonMap['thread']);
-          if (thread.threadId == null) return;
           Navigator.of(context).pushReplacement(
               MaterialPageRoute(builder: (_) => ThreadViewScreen(thread)));
         },
@@ -143,9 +147,9 @@ class _ThreadCreateScreenState extends State<ThreadCreateScreen> {
 class _ThreadCreateData extends ChangeNotifier {
   final focusNodeBody = FocusNode();
 
-  String _body;
+  String _body = '';
   bool _isPosting = false;
-  String _title;
+  String _title = '';
 
   set body(String v) {
     _body = v;
@@ -171,7 +175,10 @@ class _ThreadCreateData extends ChangeNotifier {
 
 class _ThreadCreateTitle extends StatelessWidget {
   @override
-  Widget build(BuildContext context) => TextFormField(
+  Widget build(BuildContext context) {
+    final data = context.watch<_ThreadCreateData>();
+
+    return TextFormField(
       autofocus: true,
       decoration: InputDecoration(
         hintText: l(context).threadCreateTitleHint,
@@ -179,14 +186,17 @@ class _ThreadCreateTitle extends StatelessWidget {
       ),
       onEditingComplete: () =>
           context.read<_ThreadCreateData>().focusNodeBody.requestFocus(),
-      onSaved: (v) => context.read<_ThreadCreateData>().title = v,
-      validator: (title) {
+      onSaved: (v) => data.title = v!,
+      validator: (value) {
+        final title = (value ?? '').trim();
         if (title.isEmpty) {
           return l(context).threadCreateErrorTitleIsEmpty;
         }
 
         return null;
-      });
+      },
+    );
+  }
 }
 
 class _ThreadCreateBody extends StatelessWidget {
@@ -204,8 +214,9 @@ class _ThreadCreateBody extends StatelessWidget {
       keyboardType: TextInputType.multiline,
       maxLines: null,
       onEditingComplete: () => data,
-      onSaved: (v) => data.body = v,
-      validator: (body) {
+      onSaved: (v) => data.body = v!,
+      validator: (value) {
+        final body = (value ?? '').trim();
         if (body.isEmpty) {
           return l(context).threadCreateErrorBodyIsEmpty;
         }

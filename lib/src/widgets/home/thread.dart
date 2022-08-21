@@ -8,24 +8,25 @@ import 'package:the_app/src/intl.dart';
 import 'package:the_app/src/widgets/image.dart';
 
 class HomeThreadWidget extends StatelessWidget {
-  final ContentListItem item;
+  final ContentListItem? item;
   final Thread thread;
 
   HomeThreadWidget(
     SearchResult<Thread> srt, {
-    Key key,
-  })  : assert(srt?.content != null),
+    Key? key,
+  })  : assert(srt.content != null),
         item = srt.listItem,
-        thread = srt.content,
+        thread = srt.content!,
         super(key: key);
 
   @override
-  Widget build(BuildContext _) => LayoutBuilder(
+  Widget build(BuildContext context) => LayoutBuilder(
         builder: (context, bc) {
           final theme = Theme.of(context);
           final isWide = bc.maxWidth > 480;
 
           return Padding(
+            padding: const EdgeInsets.all(10),
             child: _buildBox(
               context,
               <Widget>[
@@ -33,6 +34,7 @@ class HomeThreadWidget extends StatelessWidget {
                 const SizedBox(width: 10),
                 Expanded(
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       _buildInfo(context, theme),
                       const SizedBox(height: 5),
@@ -40,22 +42,20 @@ class HomeThreadWidget extends StatelessWidget {
                       const SizedBox(height: 5),
                       isWide
                           ? _buildSnippet(theme.textTheme.caption)
-                          : SizedBox.shrink(),
+                          : const SizedBox.shrink(),
                     ],
-                    crossAxisAlignment: CrossAxisAlignment.start,
                   ),
                 ),
               ],
             ),
-            padding: const EdgeInsets.all(10),
           );
         },
       );
 
   Widget _buildBox(BuildContext context, List<Widget> children) => InkWell(
         child: Row(
-          children: children,
           crossAxisAlignment: CrossAxisAlignment.start,
+          children: children,
         ),
         onTap: () => Navigator.of(context).push(
           MaterialPageRoute(builder: (_) => ThreadViewScreen(thread)),
@@ -65,9 +65,9 @@ class HomeThreadWidget extends StatelessWidget {
   Widget _buildImage(double imageScale) => ClipRRect(
         borderRadius: BorderRadius.circular(3),
         child: SizedBox(
+          width: kThreadThumbnailWidth * imageScale,
           child: ThreadImageWidget.small(
               thread, thread.threadThumbnail ?? thread.threadImage),
-          width: kThreadThumbnailWidth * imageScale,
         ),
       );
 
@@ -79,8 +79,9 @@ class HomeThreadWidget extends StatelessWidget {
       text: thread.creatorUsername,
     ));
 
-    if (item?.itemDate != null) {
-      spans.add(TextSpan(text: " ${formatTimestamp(context, item.itemDate)}"));
+    final itemDate = item?.itemDate;
+    if (itemDate != null) {
+      spans.add(TextSpan(text: " ${formatTimestamp(context, itemDate)}"));
     }
 
     return RichText(
@@ -93,12 +94,12 @@ class HomeThreadWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildSnippet(TextStyle style) => Text(
-        thread.firstPost.postBodyPlainText,
+  Widget _buildSnippet(TextStyle? style) => Text(
+        thread.firstPost?.postBodyPlainText ?? '',
         maxLines: 3,
         overflow: TextOverflow.ellipsis,
         style: style,
       );
 
-  Widget _buildTitle() => Text(thread.threadTitle);
+  Widget _buildTitle() => Text(thread.threadTitle ?? '#${thread.threadId}');
 }

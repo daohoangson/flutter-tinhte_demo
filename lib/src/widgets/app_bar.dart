@@ -8,10 +8,10 @@ import 'package:the_app/src/api.dart';
 import 'package:the_app/src/link.dart';
 
 class AppBarDrawerHeader extends StatelessWidget {
-  AppBarDrawerHeader({Key key}) : super(key: key);
+  const AppBarDrawerHeader({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext _) => Consumer<User>(
+  Widget build(BuildContext context) => Consumer<User>(
         builder: (context, user, _) => user.userId > 0
             ? DrawerHeader(
                 decoration: BoxDecoration(
@@ -24,14 +24,16 @@ class AppBarDrawerHeader extends StatelessWidget {
               ),
       );
 
-  Widget _buildAvatar(User user) => AspectRatio(
-        aspectRatio: 1.0,
-        child: CircleAvatar(
-          backgroundImage: CachedNetworkImageProvider(
-            user.links?.avatarBig,
-          ),
-        ),
-      );
+  Widget _buildAvatar(User user) {
+    final avatar = user.links?.avatarBig;
+    return AspectRatio(
+      aspectRatio: 1.0,
+      child: CircleAvatar(
+        backgroundImage:
+            avatar != null ? CachedNetworkImageProvider(avatar) : null,
+      ),
+    );
+  }
 
   Widget _buildVisitorPanel(BuildContext context, User user) {
     Widget built = Column(
@@ -66,7 +68,7 @@ class AppBarDrawerHeader extends StatelessWidget {
 
   TextSpan _compileUserRank(BuildContext context, User user) => TextSpan(
         text: " ${user.rank?.rankName ?? ''}",
-        style: Theme.of(context).textTheme.subtitle1.copyWith(
+        style: Theme.of(context).textTheme.subtitle1?.copyWith(
               color: Theme.of(context).hintColor,
               fontWeight: FontWeight.bold,
             ),
@@ -74,20 +76,21 @@ class AppBarDrawerHeader extends StatelessWidget {
 
   TextSpan _compileUsername(BuildContext context, User user) => TextSpan(
         text: user.username ?? '',
-        style: Theme.of(context).textTheme.headline6.copyWith(
+        style: Theme.of(context).textTheme.headline6?.copyWith(
               color: Theme.of(context).colorScheme.secondary,
             ),
       );
 }
 
 class AppBarDrawerFooter extends StatelessWidget {
-  AppBarDrawerFooter({Key key}) : super(key: key);
+  const AppBarDrawerFooter({Key? key}) : super(key: key);
 
-  Widget build(BuildContext _) => Consumer<ApiAuth>(
-      builder: (context, apiAuth, __) => apiAuth.hasToken
+  @override
+  Widget build(BuildContext context) => Consumer<ApiAuth>(
+      builder: (context, apiAuth, _) => apiAuth.hasToken
           ? ListTile(
               title: Text(l(context).menuLogout),
               onTap: () => logout(context),
             )
-          : SizedBox.shrink());
+          : const SizedBox.shrink());
 }

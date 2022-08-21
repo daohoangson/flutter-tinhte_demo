@@ -8,10 +8,10 @@ import 'package:the_app/src/widgets/threads.dart';
 import 'package:the_app/src/api.dart';
 
 class ThreadSearchDelegate extends SearchDelegate {
-  final Forum forum;
-  final User user;
+  final Forum? forum;
+  final User? user;
 
-  _ApiQuery _apiQuery;
+  _ApiQuery? _apiQuery;
 
   ThreadSearchDelegate({
     this.forum,
@@ -21,7 +21,7 @@ class ThreadSearchDelegate extends SearchDelegate {
   @override
   List<Widget> buildActions(BuildContext context) => [
         IconButton(
-          icon: Icon(Icons.clear),
+          icon: const Icon(Icons.clear),
           onPressed: () => query = '',
           tooltip: lm(context).cancelButtonLabel,
         )
@@ -29,7 +29,7 @@ class ThreadSearchDelegate extends SearchDelegate {
 
   @override
   Widget buildLeading(BuildContext context) => IconButton(
-        icon: BackButtonIcon(),
+        icon: const BackButtonIcon(),
         onPressed: () => close(context, null),
         tooltip: lm(context).cancelButtonLabel,
       );
@@ -55,23 +55,26 @@ class ThreadSearchDelegate extends SearchDelegate {
       sb.write(l(context).searchSubmitToContinue(query));
     }
 
-    if (forum != null) {
-      sb.write(l(context).searchThreadInForum(forum.forumTitle));
+    final scopedForum = forum;
+    if (scopedForum != null) {
+      sb.write(l(context).searchThreadInForum(scopedForum.forumTitle ?? ''));
     }
-    if (user != null) {
-      sb.write(l(context).searchThreadByUser(user.username));
+
+    final scopedUser = user;
+    if (scopedUser != null) {
+      sb.write(l(context).searchThreadByUser(scopedUser.username ?? ''));
     }
 
     sb.write(query.isEmpty ? '...' : '.');
 
     return Padding(
-      child: Text(sb.toString()),
       padding: const EdgeInsets.all(10),
+      child: Text(sb.toString()),
     );
   }
 
   Widget _buildResults(BuildContext context) => FutureBuilder<Map>(
-        future: _apiQuery.future,
+        future: _apiQuery!.future,
         builder: (context, snapshot) => snapshot.hasData
             ? ThreadsWidget(
                 initialJson: snapshot.data,
@@ -84,6 +87,7 @@ class ThreadSearchDelegate extends SearchDelegate {
 }
 
 class _ApiQuery extends ApiCaller {
+  @override
   final BuildContext context;
   final String query;
 

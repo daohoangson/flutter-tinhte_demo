@@ -23,25 +23,25 @@ part 'thread/navigation.dart';
 part 'thread/widget.dart';
 
 class ThreadsWidget extends StatelessWidget {
-  final ApiMethod apiMethod;
-  final Forum forum;
-  final Widget header;
-  final Map initialJson;
-  final String path;
+  final ApiMethod? apiMethod;
+  final Forum? forum;
+  final Widget? header;
+  final Map? initialJson;
+  final String? path;
   final String threadsKey;
 
-  ThreadsWidget({
+  const ThreadsWidget({
     this.apiMethod,
     this.forum,
     this.header,
     this.initialJson,
-    Key key,
+    Key? key,
     this.path,
     this.threadsKey = 'threads',
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext _) => SuperListView<Thread>(
+  Widget build(BuildContext context) => SuperListView<Thread>(
         apiMethodInitial: apiMethod,
         fetchOnSuccess: _fetchOnSuccess,
         fetchPathInitial: path,
@@ -56,7 +56,7 @@ class ThreadsWidget extends StatelessWidget {
     final list = json[threadsKey] as List;
     for (final j in list) {
       final thread = Thread.fromJson(j, forum: forum);
-      if (thread.threadId == null || thread.firstPost == null) continue;
+      if (thread.firstPost == null) continue;
 
       fc.items.add(thread);
     }

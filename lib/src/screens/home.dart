@@ -12,31 +12,34 @@ import 'package:the_app/src/intl.dart';
 class HomeScreen extends StatelessWidget {
   final superList = GlobalKey<SuperListState>();
 
+  HomeScreen({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) => Scaffold(
         body: SafeArea(
+          top: false,
+          bottom: false,
           child: SuperListView<_HomeListItem>(
             complexItems: config.homeComplexItems,
             fetchPathInitial: config.homePath,
             fetchOnSuccess: _fetchOnSuccess,
             itemBuilder: (context, state, item) {
-              if (item.widget != null) return item.widget;
+              if (item.widget != null) return item.widget!;
 
               if (item.top5?.length == 5) {
                 return SuperListItemFullWidth(
-                  child: HomeTop5Widget(item.top5),
+                  child: HomeTop5Widget(item.top5!),
                 );
               }
 
-              if (item.thread != null) return HomeThreadWidget(item.thread);
+              final itemThread = item.thread;
+              if (itemThread != null) return HomeThreadWidget(itemThread);
 
               return null;
             },
             itemMaxWidth: 800,
             key: superList,
           ),
-          top: false,
-          bottom: false,
         ),
         bottomNavigationBar: HomeBottomBar(
           onHomeTap: () => superList.currentState?.scrollTo(0),
@@ -44,11 +47,11 @@ class HomeScreen extends StatelessWidget {
         extendBody: true,
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: FloatingActionButton(
-          onPressed: () => Navigator.of(context)
-              .push(MaterialPageRoute(builder: (_) => ThreadCreateScreen())),
+          onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => const ThreadCreateScreen())),
           tooltip: l(context).threadCreateNew,
-          child: Icon(Icons.add),
           elevation: 2.0,
+          child: const Icon(Icons.add),
         ),
       );
 
@@ -58,8 +61,8 @@ class HomeScreen extends StatelessWidget {
     final l = threadsJson.length;
 
     final items = fc.items;
-    List<SearchResult<Thread>> top5;
-    if (fc.id == FetchContextId.FetchInitial && l >= 5) {
+    List<SearchResult<Thread>>? top5;
+    if (fc.id == FetchContextId.fetchInitial && l >= 5) {
       top5 = [];
       items.add(_HomeListItem(top5: top5));
 
@@ -72,7 +75,7 @@ class HomeScreen extends StatelessWidget {
 
     for (int i = 0; i < l; i++) {
       var srt = config.homeParser(threadsJson[i]);
-      if (srt == null || srt.content == null) continue;
+      if (srt.content == null) continue;
 
       if (top5 != null && top5.length < 5) {
         top5.add(srt);
@@ -80,13 +83,13 @@ class HomeScreen extends StatelessWidget {
         items.add(_HomeListItem(thread: srt));
       }
 
-      if (fc.id == FetchContextId.FetchInitial && i == l - 4) {
+      if (fc.id == FetchContextId.fetchInitial && i == l - 4) {
         final slot3 = config.homeSlot3NearEndOfPage1;
         if (slot3 != null) items.add(_HomeListItem(widget: slot3));
       }
     }
 
-    if (fc.id == FetchContextId.FetchInitial) {
+    if (fc.id == FetchContextId.fetchInitial) {
       final slot4 = config.homeSlot4EndOfPage1;
       if (slot4 != null) items.add(_HomeListItem(widget: slot4));
     }
@@ -98,9 +101,9 @@ class HomeScreenRoute extends MaterialPageRoute {
 }
 
 class _HomeListItem {
-  final SearchResult<Thread> thread;
-  final List<SearchResult<Thread>> top5;
-  final Widget widget;
+  final SearchResult<Thread>? thread;
+  final List<SearchResult<Thread>>? top5;
+  final Widget? widget;
 
   _HomeListItem({
     this.thread,

@@ -2403,22 +2403,25 @@ const _emojis = {
   ":regional_indicator_a:": "\ud83c\udde6",
 };
 
-Map<String, String> searchEmojis(String query) {
-  Map<String, String> result;
+Map<String, String>? searchEmojis(String query) {
+  Map<String, String>? result;
   for (final code in _emojis.keys) {
+    final resultKey = _emojis[code];
+    if (resultKey == null) continue;
+
     // prefix match
     var matches = code.startsWith(query);
 
     if (!matches) {
       // start of word match
       // e.g. `:heel` will match `:high_heel:`
-      matches = code.contains('_' + query.substring(1));
+      matches = code.contains('_${query.substring(1)}');
     }
 
     if (!matches) continue;
 
-    if (result == null) result = Map<String, String>();
-    result[_emojis[code]] = code;
+    result ??= {};
+    result[resultKey] = code;
   }
 
   return result;

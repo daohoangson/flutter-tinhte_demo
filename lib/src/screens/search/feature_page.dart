@@ -11,7 +11,7 @@ class FpSearchDelegate extends SearchDelegate {
   @override
   List<Widget> buildActions(BuildContext context) => [
         IconButton(
-          icon: Icon(Icons.clear),
+          icon: const Icon(Icons.clear),
           onPressed: () => query = '',
           tooltip: lm(context).cancelButtonLabel,
         )
@@ -19,7 +19,7 @@ class FpSearchDelegate extends SearchDelegate {
 
   @override
   Widget buildLeading(BuildContext context) => IconButton(
-        icon: BackButtonIcon(),
+        icon: const BackButtonIcon(),
         onPressed: () => close(context, null),
         tooltip: lm(context).backButtonTooltip,
       );
@@ -32,8 +32,9 @@ class FpSearchDelegate extends SearchDelegate {
       _buildResults(_filterItems());
 
   Widget _buildResults(List<FeaturePage> items) => Padding(
+        padding: const EdgeInsets.all(kTagWidgetPadding),
         child: GridView.builder(
-          gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+          gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
             childAspectRatio: FpWidget.kPreferAspectRatio,
             crossAxisSpacing: 3,
             mainAxisSpacing: 3,
@@ -43,12 +44,14 @@ class FpSearchDelegate extends SearchDelegate {
           itemCount: items.length,
           scrollDirection: Axis.vertical,
         ),
-        padding: const EdgeInsets.all(kTagWidgetPadding),
       );
 
   List<FeaturePage> _filterItems() => query.isEmpty
       ? pages
       : pages
-          .where((p) => p.fullName.toLowerCase().contains(query.toLowerCase()))
+          .where(
+            (p) =>
+                p.fullName?.toLowerCase().contains(query.toLowerCase()) == true,
+          )
           .toList();
 }

@@ -17,15 +17,13 @@ Widget buildCachedNetworkImage(String imageUrl) => CachedNetworkImage(
       fit: BoxFit.cover,
     );
 
-String getResizedUrl({
-  @required String apiUrl,
-  @required double boxWidth,
-  @required double imageHeight,
-  @required double imageWidth,
+String? getResizedUrl({
+  required String apiUrl,
+  required double boxWidth,
+  required double imageHeight,
+  required double imageWidth,
   int proxyPixelsMax = 50000000,
 }) {
-  if (apiUrl == null || boxWidth == null) return null;
-  if (imageHeight == null || imageWidth == null) return null;
   if (!apiUrl.startsWith(_apiUrlAttachments)) return null;
 
   final proxyWidth = (boxWidth / 100).ceil() * 100;
@@ -42,21 +40,21 @@ String getResizedUrl({
 
 class ThreadImageWidget extends StatelessWidget {
   final int threadId;
-  final ThreadImage image;
-  final ThreadImage placeholder;
+  final ThreadImage? image;
+  final ThreadImage? placeholder;
   final bool useImageRatio;
 
   static final _smalls = Expando<ThreadImage>();
 
-  ThreadImageWidget._({
-    @required this.image,
-    Key key,
+  const ThreadImageWidget._({
+    required this.image,
+    Key? key,
     this.placeholder,
-    @required this.threadId,
+    required this.threadId,
     this.useImageRatio = false,
   }) : super(key: key);
 
-  factory ThreadImageWidget.small(Thread thread, ThreadImage image,
+  factory ThreadImageWidget.small(Thread thread, ThreadImage? image,
       {bool useImageRatio = false}) {
     _smalls[thread] = image;
 
@@ -67,7 +65,7 @@ class ThreadImageWidget extends StatelessWidget {
     );
   }
 
-  factory ThreadImageWidget.big(Thread thread, ThreadImage image) =>
+  factory ThreadImageWidget.big(Thread thread, ThreadImage? image) =>
       ThreadImageWidget._(
         image: image,
         placeholder: _smalls[thread],
@@ -82,39 +80,38 @@ class ThreadImageWidget extends StatelessWidget {
     if (link.isEmpty) {
       return DecoratedBox(
         decoration: BoxDecoration(color: Theme.of(context).backgroundColor),
-        child: AspectRatio(aspectRatio: kThreadImageAspectRatio),
+        child: const AspectRatio(aspectRatio: kThreadImageAspectRatio),
       );
     }
 
-    final placeholder =
-        this.placeholder != null && this.placeholder.link != link
-            ? _buildImage(this.placeholder.link)
+    final scopedPlaceholder = placeholder;
+    final placeholderWidget =
+        scopedPlaceholder != null && scopedPlaceholder.link != link
+            ? _buildImage(scopedPlaceholder.link)
             : null;
 
     final img = _buildImage(
       link,
-      frameBuilder: placeholder != null
+      frameBuilder: placeholderWidget != null
           ? (_, child, frame, wasSynchronouslyLoaded) {
               if (wasSynchronouslyLoaded) return child;
-              return frame != null ? child : placeholder;
+              return frame != null ? child : placeholderWidget;
             }
           : null,
     );
 
+    final width = image?.width ?? 0;
+    final height = image?.height ?? 0;
+
     return AspectRatio(
-      aspectRatio: useImageRatio == true &&
-              image.width != null &&
-              image.height != null &&
-              image.height != 0
-          ? image.width / image.height
+      aspectRatio: useImageRatio == true && width > 0 && height > 0
+          ? width / height
           : kThreadImageAspectRatio,
-      child: threadId != null
-          ? Hero(child: img, tag: "threadImageHero--$threadId")
-          : img,
+      child: Hero(tag: "threadImageHero--$threadId", child: img),
     );
   }
 
-  static Widget _buildImage(String url, {ImageFrameBuilder frameBuilder}) =>
+  static Widget _buildImage(String url, {ImageFrameBuilder? frameBuilder}) =>
       Image(
         frameBuilder: frameBuilder,
         image: CachedNetworkImageProvider(url),

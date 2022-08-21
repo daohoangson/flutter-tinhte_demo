@@ -4,13 +4,13 @@ import 'package:the_app/src/link.dart';
 import 'package:the_app/src/screens/home.dart';
 
 class InitialPathScreen extends StatefulWidget {
-  final Widget defaultWidget;
-  final String fallbackLink;
+  final Widget? defaultWidget;
+  final String? fallbackLink;
   final String path;
 
-  InitialPathScreen(this.path, {this.defaultWidget, this.fallbackLink, Key key})
-      : assert(path != null),
-        super(key: key);
+  const InitialPathScreen(this.path,
+      {this.defaultWidget, this.fallbackLink, Key? key})
+      : super(key: key);
 
   @override
   State<InitialPathScreen> createState() => _InitialPathState();
@@ -18,7 +18,7 @@ class InitialPathScreen extends StatefulWidget {
 
 class _InitialPathState extends State<InitialPathScreen>
     with WidgetsBindingObserver {
-  Future<Widget> _future;
+  late final Future<Widget> _future;
   var _home = _ShouldRender.no;
 
   @override
@@ -44,7 +44,7 @@ class _InitialPathState extends State<InitialPathScreen>
         );
       }
 
-      return Scaffold(body: Center(child: Text('⚡️')));
+      return const Scaffold(body: Center(child: Text('⚡️')));
     });
   }
 
@@ -62,12 +62,12 @@ class _InitialPathState extends State<InitialPathScreen>
   }
 
   @override
-  Widget build(BuildContext _) => _home == _ShouldRender.yes
+  Widget build(BuildContext context) => _home == _ShouldRender.yes
       ? HomeScreen()
       : FutureBuilder<Widget>(
           builder: (__, snapshot) =>
               snapshot.data ??
-              Scaffold(body: Center(child: CircularProgressIndicator())),
+              const Scaffold(body: Center(child: CircularProgressIndicator())),
           future: _future,
         );
 }

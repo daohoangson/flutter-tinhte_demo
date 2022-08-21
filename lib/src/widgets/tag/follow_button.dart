@@ -9,17 +9,17 @@ import 'package:the_app/src/intl.dart';
 class FollowButton extends StatefulWidget {
   final Followable followable;
 
-  FollowButton(this.followable) : assert(followable != null);
+  const FollowButton(this.followable, {Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _FollowState();
 }
 
 class _FollowState extends State<FollowButton> {
-  var _alert = false;
-  var _email = false;
-  var _hasOptions = false;
-  var _isRequesting = false;
+  bool _alert = false;
+  bool _email = false;
+  bool _hasOptions = false;
+  bool _isRequesting = false;
 
   Followable get f => widget.followable;
 
@@ -32,24 +32,24 @@ class _FollowState extends State<FollowButton> {
     if (f.isFollowed != true || !hasLink) return;
     apiGet(
       ApiCaller.stateful(this),
-      f.followersLink,
+      f.followersLink!,
       onSuccess: (json) {
-        if (!json.containsKey('users')) return;
-        final List users = json['users'];
+        final usersValue = json['users'];
+        final users = usersValue is List ? usersValue : [];
         if (users.length != 1) return;
-        final Map<String, dynamic> user = users[0];
+        final userValue = users[0];
+        final user = userValue is Map ? userValue : {};
 
-        if (!user.containsKey('user_id')) return;
-        final int userId = user['user_id'];
+        final userId = user['user_id'];
         final visitor = context.read<User>();
         if (visitor.userId != userId) return;
 
-        if (!user.containsKey('follow')) return;
-        final Map<String, dynamic> follow = user['follow'];
+        final followValue = user['follow'];
+        final follow = followValue is Map ? followValue : {};
         var alert = _alert;
         var email = _email;
-        if (follow.containsKey('alert')) alert = follow['alert'];
-        if (follow.containsKey('email')) email = follow['email'];
+        if (follow.containsKey('alert')) alert = follow['alert'] == true;
+        if (follow.containsKey('email')) email = follow['email'] == true;
 
         setState(() {
           _alert = alert;
@@ -68,16 +68,16 @@ class _FollowState extends State<FollowButton> {
           : _buildButtonFollowing();
 
   Widget _buildButtonFollow() => TextButton(
+        onPressed: _isRequesting ? null : () => _follow(_FollowOptions()),
         child: Text(l(context).follow),
-        onPressed: _isRequesting ? null : _follow,
       );
 
   Widget _buildButtonFollowing() => Row(
         children: <Widget>[
           Expanded(
             child: ElevatedButton(
-              child: Text(l(context).followFollowing),
               onPressed: _isRequesting ? null : _unfollow,
+              child: Text(l(context).followFollowing),
             ),
           ),
           IconButton(
@@ -89,25 +89,22 @@ class _FollowState extends State<FollowButton> {
         ],
       );
 
-  void _follow([_FollowOptions options]) {
-    final alert = options?.alert != false;
-    final email = options?.email == true;
-
+  void _follow(_FollowOptions options) {
     prepareForApiAction(context, () {
       if (_isRequesting) return;
       setState(() => _isRequesting = true);
 
       apiPost(
         ApiCaller.stateful(this),
-        f.followersLink,
+        f.followersLink!,
         bodyFields: {
-          'alert': alert ? '1' : '0',
-          'email': email ? '1' : '0',
+          'alert': options.alert ? '1' : '0',
+          'email': options.email ? '1' : '0',
         },
         onSuccess: (_) => setState(() {
           f.isFollowed = true;
-          _alert = alert;
-          _email = email;
+          _alert = options.alert;
+          _email = options.email;
           _hasOptions = true;
         }),
         onComplete: () => setState(() => _isRequesting = false),
@@ -139,7 +136,7 @@ class _FollowState extends State<FollowButton> {
 
     apiDelete(
       ApiCaller.stateful(this),
-      f.followersLink,
+      f.followersLink!,
       onSuccess: (_) => setState(() => f.isFollowed = false),
       onComplete: () => setState(() => _isRequesting = false),
     );
@@ -161,7 +158,7 @@ class _FollowOptionsDialog extends StatefulWidget {
   final _FollowOptions fo;
   final Followable followable;
 
-  const _FollowOptionsDialog(this.followable, this.fo, {Key key})
+  const _FollowOptionsDialog(this.followable, this.fo, {Key? key})
       : super(key: key);
 
   @override
@@ -169,8 +166,8 @@ class _FollowOptionsDialog extends StatefulWidget {
 }
 
 class _FollowOptionsState extends State<_FollowOptionsDialog> {
-  var _alert = false;
-  var _email = false;
+  bool _alert = false;
+  bool _email = false;
 
   Followable get f => widget.followable;
 
@@ -185,20 +182,20 @@ class _FollowOptionsState extends State<_FollowOptionsDialog> {
   Widget build(BuildContext context) => AlertDialog(
         title: Text(l(context).followNotificationChannels),
         content: Column(
+          mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Text(l(context).followNotificationChannelExplainForX(f.name)),
             CheckboxListTile(
-              onChanged: (v) => setState(() => _alert = v),
+              onChanged: (v) => setState(() => _alert = v == true),
               title: Text(l(context).followNotificationChannelAlert),
               value: _alert,
             ),
             CheckboxListTile(
-              onChanged: (v) => setState(() => _email = v),
+              onChanged: (v) => setState(() => _email = v == true),
               title: Text(l(context).followNotificationChannelEmail),
               value: _email,
             ),
           ],
-          mainAxisSize: MainAxisSize.min,
         ),
         actions: <Widget>[
           TextButton(
@@ -220,5 +217,5 @@ class _FollowOptions {
   final bool alert;
   final bool email;
 
-  _FollowOptions({this.alert, this.email});
+  _FollowOptions({this.alert = true, this.email = false});
 }

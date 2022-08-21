@@ -9,8 +9,10 @@ import 'package:the_app/src/link.dart';
 const _kTrendingTagsMax = 6;
 
 class TrendingTagsWidget extends StatelessWidget {
+  const TrendingTagsWidget({Key? key}) : super(key: key);
+
   @override
-  Widget build(BuildContext _) => LayoutBuilder(
+  Widget build(BuildContext context) => LayoutBuilder(
         builder: (_, bc) => Consumer<_TrendingTagsData>(
           builder: (context, data, _) {
             if (data.tags == null) {
@@ -23,10 +25,10 @@ class TrendingTagsWidget extends StatelessWidget {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                HeaderWidget('#tag đang hot'),
+                const HeaderWidget('#tag đang hot'),
                 Padding(
-                  child: _buildGrid(context, data.tags, cols),
                   padding: const EdgeInsets.all(kTagWidgetPadding),
+                  child: _buildGrid(context, data.tags!, cols),
                 ),
               ],
             );
@@ -46,8 +48,8 @@ class TrendingTagsWidget extends StatelessWidget {
         final tag = i < tags.length ? tags[i] : null;
         final built = Expanded(
           child: Padding(
-            child: _buildTagWidget(context, tag),
             padding: const EdgeInsets.all(kTagWidgetPadding),
+            child: _buildTagWidget(context, tag),
           ),
         );
         rowWidgets.add(built);
@@ -59,32 +61,36 @@ class TrendingTagsWidget extends StatelessWidget {
     return Column(children: widgets);
   }
 
-  Widget _buildTagWidget(BuildContext context, _Tag tag) => TagWidget(
-        image: tag?.tagImg,
-        label: tag?.tagName != null ? "#${tag.tagName}" : null,
-        onTap: tag?.tagId != null
-            ? () => parsePath('tags/${tag.tagId}', context: context)
-            : null,
-      );
+  Widget _buildTagWidget(BuildContext context, _Tag? tag) {
+    final id = tag?.tagId;
+    final name = tag?.tagName;
+    return TagWidget(
+      image: tag?.tagImg,
+      label: name != null ? "#$name" : null,
+      onTap: id != null ? () => parsePath('tags/$id', context: context) : null,
+    );
+  }
 
   void _fetch(BuildContext context, _TrendingTagsData data) => apiGet(
         ApiCaller.stateless(context),
         "tinhte/threads-in-trending-tags?limit=$_kTrendingTagsMax",
         onSuccess: (jsonMap) {
-          if (!jsonMap.containsKey('trending_tag_threads')) return;
-
-          final list = jsonMap['trending_tag_threads'] as List;
+          final listValue = jsonMap['trending_tag_threads'];
+          final list = listValue is List ? listValue : [];
           final tags = <_Tag>[];
 
-          for (final Map map in list) {
-            if (!map.containsKey('tag_id')) continue;
-            if (!map.containsKey('tag_img')) continue;
-            if (!map.containsKey('tag_name')) continue;
-            tags.add(_Tag(
-              tagId: map['tag_id'],
-              tagImg: map['tag_img'],
-              tagName: map['tag_name'],
-            ));
+          for (final item in list) {
+            final map = item is Map ? item : {};
+            final tagId = map['tag_id'];
+            final tagImg = map['tag_img'];
+            final tagName = map['tag_name'];
+            if (tagId is int && tagImg is String && tagName is String) {
+              tags.add(_Tag(
+                tagId: tagId,
+                tagImg: tagImg,
+                tagName: tagName,
+              ));
+            }
           }
 
           data.update(tags);
@@ -101,18 +107,18 @@ class TrendingTagsWidget extends StatelessWidget {
 }
 
 class _Tag {
-  final int tagId;
-  final String tagImg;
-  final String tagName;
+  final int? tagId;
+  final String? tagImg;
+  final String? tagName;
 
   _Tag({this.tagId, this.tagImg, this.tagName});
 }
 
 class _TrendingTagsData extends ChangeNotifier {
-  List<_Tag> tags;
+  List<_Tag>? tags;
 
   void update(Iterable<_Tag> newTags) {
-    tags.addAll(newTags);
+    tags!.addAll(newTags);
     notifyListeners();
   }
 }

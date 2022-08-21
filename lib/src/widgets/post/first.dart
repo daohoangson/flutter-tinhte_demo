@@ -4,13 +4,11 @@ class _FirstPostWidget extends StatelessWidget {
   final Post post;
   final Thread thread;
 
-  const _FirstPostWidget({Key key, @required this.post, @required this.thread})
-      : assert(post != null),
-        assert(thread != null),
-        super(key: key);
+  const _FirstPostWidget({Key? key, required this.post, required this.thread})
+      : super(key: key);
 
   @override
-  Widget build(BuildContext _) => AnimatedBuilder(
+  Widget build(BuildContext context) => AnimatedBuilder(
         animation: thread,
         builder: (_, __) => AnimatedBuilder(
           animation: post,
@@ -18,13 +16,14 @@ class _FirstPostWidget extends StatelessWidget {
         ),
       );
 
-  Widget _builder(BuildContext context, Widget _) {
-    final _threadImage = thread.threadPrimaryImage ?? thread.threadImage;
-    final _isBackgroundPost = isBackgroundPost(post);
-    final _isTinhteFact = isTinhteFact(thread);
-    final _isCustomPost = _isBackgroundPost || _isTinhteFact;
-    final _isThreadTitleRedundant =
-        _isCustomPost || thread.isThreadTitleRedundant;
+  Widget _builder(BuildContext context, Widget? _) {
+    final threadImage = thread.threadPrimaryImage ?? thread.threadImage;
+    final threadTitle = thread.threadTitle;
+    final postIsBackground = isBackgroundPost(post);
+    final threadIsTinhteFact = isTinhteFact(thread);
+    final isCustomPost = postIsBackground || threadIsTinhteFact;
+    final isThreadTitleRedundant =
+        isCustomPost || thread.isThreadTitleRedundant;
 
     Widget widget = Padding(
       padding: const EdgeInsets.only(bottom: 20.0),
@@ -32,39 +31,39 @@ class _FirstPostWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           ThreadNavigationWidget(thread),
-          _isThreadTitleRedundant
+          isThreadTitleRedundant || threadTitle == null
               ? widget0
               : Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: kPaddingHorizontal,
                   ),
                   child: Text(
-                    thread.threadTitle,
+                    threadTitle,
                     maxLines: null,
                     style: Theme.of(context).textTheme.headline6,
                   ),
                 ),
-          _isCustomPost
+          isCustomPost
               ? Padding(
-                  child: _isBackgroundPost
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: kPaddingHorizontal,
+                  ),
+                  child: postIsBackground
                       ? BackgroundPost(post)
-                      : (_isTinhteFact
+                      : (threadIsTinhteFact
                           ? TinhteFact(
                               thread,
                               autoPlayVideo: true,
                               post: post,
                             )
                           : widget0),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: kPaddingHorizontal,
-                  ),
                 )
               : _PostBodyWidget(post: post),
-          thread.threadHasPoll == true && thread.links.poll != null
+          thread.threadHasPoll == true && thread.links?.poll != null
               ? PollWidget(thread)
               : widget0,
           _buildTags(context, thread) ?? widget0,
-          _isCustomPost || _threadImage?.displayMode == 'cover'
+          isCustomPost || threadImage?.displayMode == 'cover'
               ? widget0
               : _PostAttachmentsWidget.forPost(post) ?? widget0,
           _PostActionsWidget(post: post, showPostCreateDate: false),
@@ -72,10 +71,10 @@ class _FirstPostWidget extends StatelessWidget {
       ),
     );
 
-    if (!_isCustomPost && _threadImage?.displayMode == 'cover') {
+    if (!isCustomPost && threadImage?.displayMode == 'cover') {
       widget = Column(
         children: <Widget>[
-          ThreadImageWidget.big(thread, _threadImage),
+          ThreadImageWidget.big(thread, threadImage),
           widget,
         ],
       );
@@ -84,18 +83,19 @@ class _FirstPostWidget extends StatelessWidget {
     return widget;
   }
 
-  Widget _buildTags(BuildContext context, Thread thread) {
-    if (thread.threadTags?.isNotEmpty != true) return null;
+  Widget? _buildTags(BuildContext context, Thread thread) {
+    final tags = thread.threadTags ?? const {};
+    if (tags.isEmpty) return null;
 
     return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: kPaddingHorizontal),
       child: Wrap(
-        children: thread.threadTags
+        spacing: 5,
+        children: tags
             .map((tagId, tagText) => MapEntry(tagId, _TagChip(tagId, tagText)))
             .values
             .toList(),
-        spacing: 5,
       ),
-      padding: const EdgeInsets.symmetric(horizontal: kPaddingHorizontal),
     );
   }
 }
@@ -104,11 +104,11 @@ class _TagChip extends StatelessWidget {
   final String tagId;
   final String tagText;
 
-  _TagChip(this.tagId, this.tagText);
+  const _TagChip(this.tagId, this.tagText);
 
   @override
   Widget build(BuildContext context) => ActionChip(
-        label: Text("#$tagText", style: TextStyle(fontSize: 11)),
+        label: Text("#$tagText", style: const TextStyle(fontSize: 11)),
         labelPadding: const EdgeInsets.symmetric(horizontal: 3),
         onPressed: () => parsePath('tags/$tagId', context: context),
       );

@@ -6,12 +6,14 @@ import 'package:the_app/src/intl.dart';
 import 'dev_tools.dart';
 
 class PackageInfoWidget extends StatefulWidget {
+  const PackageInfoWidget({Key? key}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() => _PackageInfoState();
 }
 
 class _PackageInfoState extends State<PackageInfoWidget> {
-  PackageInfo _info;
+  PackageInfo? _info;
   var count = 0;
 
   @override
@@ -23,10 +25,12 @@ class _PackageInfoState extends State<PackageInfoWidget> {
   @override
   Widget build(BuildContext context) {
     final devTools = context.watch<DevTools>();
+    final scopedInfo = _info;
     return ListTile(
       title: Text(l(context).appVersion),
-      subtitle: Text(_info != null
-          ? l(context).appVersionInfo(_info.version, _info.buildNumber)
+      subtitle: Text(scopedInfo != null
+          ? l(context)
+              .appVersionInfo(scopedInfo.version, scopedInfo.buildNumber)
           : l(context).appVersionNotAvailable),
       onTap: devTools.isDeveloper
           ? null

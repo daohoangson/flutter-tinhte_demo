@@ -22,6 +22,8 @@ Future<bool> launchLink(
   String link, {
   bool forceWebView = false,
 }) async {
+  final apiAuth = ApiAuth.of(context, listen: false);
+
   if (link.startsWith(config.siteRoot)) {
     final path = buildToolsParseLinkPath(link);
     if (!forceWebView) {
@@ -33,22 +35,25 @@ Future<bool> launchLink(
       forceWebView = true;
     }
 
-    final apiAuth = ApiAuth.of(context, listen: false);
-    if (apiAuth.hasToken) {
+    final token = apiAuth.token;
+    if (token != null) {
       link = "${config.apiRoot}?tools/login"
-          "&oauth_token=${apiAuth.token.accessToken}"
+          "&oauth_token=${token.accessToken}"
           "&redirect_uri=${Uri.encodeQueryComponent(link)}";
     }
   }
 
-  if (!await canLaunch(link)) return false;
+  final uri = Uri.tryParse(link);
+  if (uri == null) return false;
+  if (!await canLaunchUrl(uri)) return false;
 
-  return launch(
-    link,
-    forceSafariVC: forceWebView,
-    forceWebView: forceWebView,
-    enableDomStorage: true,
-    enableJavaScript: true,
+  return launchUrl(
+    uri,
+    mode: forceWebView ? LaunchMode.inAppWebView : LaunchMode.platformDefault,
+    webViewConfiguration: const WebViewConfiguration(
+      enableDomStorage: true,
+      enableJavaScript: true,
+    ),
   );
 }
 
@@ -57,21 +62,21 @@ void launchMemberView(BuildContext context, int userId) =>
 
 Future<bool> parsePath(
   String path, {
-  BuildContext context,
-  Widget defaultWidget,
-  NavigatorState rootNavigator,
+  BuildContext? context,
+  Widget? defaultWidget,
+  NavigatorState? rootNavigator,
 }) {
-  assert(path != null);
   assert((context == null) != (rootNavigator == null));
-  final navigator = rootNavigator ?? Navigator.of(context);
-  if (context == null) context = navigator.context;
+  final navigator = rootNavigator ?? Navigator.of(context!);
+  final ctx = context ??= navigator.context;
+
   var cancelled = false;
 
   navigator.push(_DialogRoute((_) => AlertDialog(
-        content: Text(l(context).justAMomentEllipsis),
+        content: Text(l(ctx).justAMomentEllipsis),
         actions: <Widget>[
           TextButton(
-            child: Text(lm(context).cancelButtonLabel),
+            child: Text(lm(ctx).cancelButtonLabel),
             onPressed: () {
               cancelled = true;
               navigator.pop();
@@ -80,12 +85,12 @@ Future<bool> parsePath(
         ],
       )));
 
-  final cancelDialog = () {
+  cancelDialog() {
     if (cancelled) return;
 
     navigator.pop();
     cancelled = true;
-  };
+  }
 
   return buildWidget(
     ApiCaller.stateless(context),
@@ -104,17 +109,14 @@ Future<bool> parsePath(
       }
       return true;
     },
-    onError: (error) {
-      print(error);
-      return false;
-    },
+    onError: (_) => false,
   ).whenComplete(() => cancelDialog());
 }
 
-Future<Widget> buildWidget(
+Future<Widget?> buildWidget(
   ApiCaller caller,
   String path, {
-  Widget defaultWidget,
+  Widget? defaultWidget,
 }) {
   final completer = Completer<Widget>();
 
@@ -122,7 +124,7 @@ Future<Widget> buildWidget(
     caller,
     path,
     onSuccess: (json) {
-      Widget widget;
+      Widget? widget;
 
       if (json.containsKey('tag') && json.containsKey('tagged')) {
         widget = _parseTag(json);
@@ -136,11 +138,13 @@ Future<Widget> buildWidget(
         final link = json['link'];
         if (link is String) {
           final uri = Uri.tryParse(link);
-          switch (uri.path) {
-            case '':
-            case '/':
-              widget = HomeScreen();
-              break;
+          if (uri != null) {
+            switch (uri.path) {
+              case '':
+              case '/':
+                widget = HomeScreen();
+                break;
+            }
           }
         }
       }
@@ -154,9 +158,10 @@ Future<Widget> buildWidget(
 }
 
 Widget _parseTag(Map json) {
-  final Map jsonTag = json['tag'];
-  final tag = Tag.fromJson(jsonTag);
-  if (tag.tagId == null) return null;
+  final tagValue = json['tag'];
+  final tagJson =
+      tagValue is Map<String, dynamic> ? tagValue : const <String, dynamic>{};
+  final tag = Tag.fromJson(tagJson);
 
   if (json.containsKey('feature_page')) {
     final fp = FeaturePage.fromJson(json['feature_page']);
@@ -167,17 +172,20 @@ Widget _parseTag(Map json) {
 }
 
 Widget _parseThread(Map json) {
-  final Map jsonThread = json['thread'];
-  final thread = Thread.fromJson(jsonThread);
-  if (thread.threadId == null) return null;
+  final threadValue = json['thread'];
+  final threadJson = threadValue is Map<String, dynamic>
+      ? threadValue
+      : const <String, dynamic>{};
+  final thread = Thread.fromJson(threadJson);
 
   return ThreadViewScreen(thread, initialJson: json);
 }
 
 Widget _parseUser(Map json) {
-  final Map jsonUser = json['user'];
-  final user = User.fromJson(jsonUser);
-  if (user.userId == null) return null;
+  final userValue = json['user'];
+  final userJson =
+      userValue is Map<String, dynamic> ? userValue : const <String, dynamic>{};
+  final user = User.fromJson(userJson);
 
   return MemberViewScreen(user);
 }

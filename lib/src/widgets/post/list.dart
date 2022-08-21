@@ -3,17 +3,16 @@ part of '../posts.dart';
 const _kPageIndicatorHeight = 40.0;
 
 class PostsWidget extends StatefulWidget {
-  final Map initialJson;
-  final String path;
+  final Map? initialJson;
+  final String? path;
   final Thread thread;
 
-  PostsWidget(
+  const PostsWidget(
     this.thread, {
     this.initialJson,
-    Key key,
+    Key? key,
     this.path,
-  })  : assert(thread != null),
-        super(key: key);
+  }) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => PostsState();
@@ -22,7 +21,7 @@ class PostsWidget extends StatefulWidget {
 class PostsState extends State<PostsWidget> {
   final _slsKey = GlobalKey<SuperListState<_PostListItem>>();
 
-  ScaffoldFeatureController<SnackBar, SnackBarClosedReason> _unreadController;
+  ScaffoldFeatureController<SnackBar, SnackBarClosedReason>? _unreadController;
 
   @override
   void dispose() {
@@ -31,17 +30,19 @@ class PostsState extends State<PostsWidget> {
   }
 
   @override
-  Widget build(BuildContext _) => SuperListView<_PostListItem>(
-        enableScrollToIndex: true,
-        fetchPathInitial: widget.path,
-        fetchOnSuccess: _fetchOnSuccess,
-        initialItems: widget.thread.firstPost != null
-            ? [_PostListItem.post(widget.thread.firstPost)]
-            : null,
-        initialJson: widget.initialJson,
-        itemBuilder: _buildItem,
-        key: _slsKey,
-      );
+  Widget build(BuildContext context) {
+    final firstPost = widget.thread.firstPost;
+
+    return SuperListView<_PostListItem>(
+      enableScrollToIndex: true,
+      fetchPathInitial: widget.path,
+      fetchOnSuccess: _fetchOnSuccess,
+      initialItems: firstPost != null ? [_PostListItem.post(firstPost)] : null,
+      initialJson: widget.initialJson,
+      itemBuilder: _buildItem,
+      key: _slsKey,
+    );
+  }
 
   void insertNewPost(Post post) {
     final sls = _slsKey.currentState;
@@ -53,27 +54,26 @@ class PostsState extends State<PostsWidget> {
 
   Widget _buildItem(
     BuildContext context,
-    SuperListState state,
+    SuperListState<_PostListItem> state,
     _PostListItem item,
   ) {
-    if (item.pageCurrent != null)
-      return _buildPageIndicator(context, state, item);
+    final page = item.pageCurrent;
+    if (page != null) {
+      return _buildPageIndicator(context, state, page, item.pageTotal);
+    }
 
     final post = item.post;
     if (post != null) {
-      return post.postIsFirstPost
+      return post.postIsFirstPost == true
           ? _FirstPostWidget(post: post, thread: widget.thread)
           : _PostWidget(post: post);
     }
 
     final postReply = item.postReply;
-    if (postReply?.postReplyCount != null) {
+    if (postReply != null && postReply.postReplyCount != null) {
       final superListIndex = state.indexOf(item);
       assert(superListIndex > -1);
-      return _PostReplyHiddenWidget(
-        postReply,
-        superListIndex,
-      );
+      return _PostReplyHiddenWidget(postReply, superListIndex);
     }
 
     return const SizedBox.shrink();
@@ -81,12 +81,10 @@ class PostsState extends State<PostsWidget> {
 
   Widget _buildPageIndicator(
     BuildContext context,
-    SuperListState state,
-    _PostListItem item,
+    SuperListState<_PostListItem> state,
+    int page,
+    int? total,
   ) {
-    final page = item.pageCurrent;
-    final total = item.pageTotal;
-
     if (state.isFetching) {
       return Stack(children: <Widget>[
         const Divider(height: _kPageIndicatorHeight),
@@ -104,7 +102,8 @@ class PostsState extends State<PostsWidget> {
       ),
     ];
 
-    if (page > state.fetchedPageMin) {
+    final fetchedPageMin = state.fetchedPageMin ?? page;
+    if (page > fetchedPageMin) {
       if (page > 2) {
         children.add(_buildPageIndicatorText(
           context,
@@ -122,7 +121,8 @@ class PostsState extends State<PostsWidget> {
       ));
     }
 
-    if (page < state.fetchedPageMax) {
+    final fetchedPageMax = state.fetchedPageMax ?? page;
+    if (page < fetchedPageMax) {
       children.add(_buildPageIndicatorText(
         context,
         l(context).navLowercaseNext,
@@ -145,7 +145,7 @@ class PostsState extends State<PostsWidget> {
     BuildContext context,
     String text, {
     Alignment alignment = Alignment.center,
-    GestureTapCallback onTap,
+    GestureTapCallback? onTap,
   }) =>
       Positioned.fill(
         child: Align(
@@ -174,15 +174,14 @@ class PostsState extends State<PostsWidget> {
     final firstItemPostId =
         fc.state.items.isEmpty ? null : fc.state.items.first.post?.postId;
     final linksPage = fc.linksPage ?? 1;
-    final pageOfPostId = json.containsKey('page_of_post_id')
-        ? json['page_of_post_id'] as int
-        : null;
+    final pageOfPostIdValue = json['page_of_post_id'];
+    final pageOfPostId = pageOfPostIdValue is int ? pageOfPostIdValue : null;
 
     if (firstItemPostId != null || linksPage != 1) {
       fc.items.add(_PostListItem.page(linksPage, fc.linksPages));
     }
 
-    final items = decodePostsAndTheirReplies(json['posts']);
+    final items = _decodePostsAndTheirReplies(json['posts']);
     for (final item in items) {
       if (firstItemPostId != null && item.postId == firstItemPostId) continue;
 
@@ -190,8 +189,9 @@ class PostsState extends State<PostsWidget> {
         fc.items.add(_PostListItem.page(linksPage, fc.linksPages));
       }
 
-      if (pageOfPostId != null && item.postId == pageOfPostId)
+      if (pageOfPostId != null && item.postId == pageOfPostId) {
         fc.scrollToRelativeIndex = fc.items.length;
+      }
 
       fc.items.add(item);
     }
@@ -200,9 +200,10 @@ class PostsState extends State<PostsWidget> {
       final freshThread = Thread.fromJson(json['thread']);
       final postsUnread = freshThread.links?.postsUnread;
 
-      if (fc.id == FetchContextId.FetchInitial && postsUnread != null)
+      if (fc.id == FetchContextId.fetchInitial && postsUnread != null) {
         WidgetsBinding.instance.addPostFrameCallback(
             (_) => _showSnackBarUnread(fc.state, postsUnread));
+      }
     }
   }
 
@@ -225,7 +226,7 @@ class PostsState extends State<PostsWidget> {
     ));
 
     await controller.closed;
-    if (_unreadController == controller) {
+    if (identical(_unreadController, controller)) {
       _unreadController = null;
     }
   }
@@ -243,19 +244,18 @@ class PostsState extends State<PostsWidget> {
 }
 
 class _PostListItem {
-  int pageCurrent;
-  int pageTotal;
-  Post post;
-  PostReply postReply;
+  int? pageCurrent;
+  int? pageTotal;
+  Post? post;
+  PostReply? postReply;
 
-  _PostListItem.post(this.post) : assert(post != null);
+  _PostListItem.post(Post this.post);
 
-  _PostListItem.postReply(this.postReply) : assert(postReply != null);
+  _PostListItem.postReply(PostReply this.postReply);
 
-  _PostListItem.page(this.pageCurrent, this.pageTotal)
-      : assert(pageCurrent != null);
+  _PostListItem.page(int this.pageCurrent, this.pageTotal);
 
-  int get postId => post?.postId ?? postReply?.postId;
+  int? get postId => post?.postId ?? postReply?.postId;
 
   static int indexOfNewPost(Iterable<_PostListItem> items, Post post) {
     final depth = post.postReplyDepth ?? 0;

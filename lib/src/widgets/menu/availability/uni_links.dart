@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:the_app/src/abstracts/uni_links.dart';
 
 class UniLinksWidget extends StatelessWidget {
-  const UniLinksWidget({Key key}) : super(key: key);
+  const UniLinksWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -11,7 +11,7 @@ class UniLinksWidget extends StatelessWidget {
         onChanged: null,
         value: isSupported,
       ),
-      title: Text('uni_links'),
+      title: const Text('uni_links'),
     );
   }
 }

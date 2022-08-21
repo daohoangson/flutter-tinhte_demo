@@ -1,35 +1,36 @@
 part of '../threads.dart';
 
 const _kThreadWidgetPadding = 10.0;
-const _kThreadWidgetSpacing = const SizedBox(height: _kThreadWidgetPadding);
+const _kThreadWidgetSpacing = SizedBox(height: _kThreadWidgetPadding);
 
 class ThreadWidget extends StatelessWidget {
   final Thread thread;
-  final UserFeedData feedData;
+  final UserFeedData? feedData;
 
-  ThreadWidget(
+  const ThreadWidget(
     this.thread, {
-    Key key,
+    Key? key,
     this.feedData,
-  })  : assert(thread != null),
-        super(key: key);
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    if (thread.userIsIgnored) return const SizedBox.shrink();
+    if (thread.userIsIgnored == true) return const SizedBox.shrink();
 
-    final _isBackgroundPost = isBackgroundPost(thread.firstPost);
-    final _isTinhteFact = isTinhteFact(thread);
-    final _isCustomPost = _isBackgroundPost || _isTinhteFact;
-    final _isThreadTitleRedundant =
-        _isCustomPost || thread.isThreadTitleRedundant;
+    final firstPost = thread.firstPost;
+    final firstPostIsBackground =
+        firstPost != null ? isBackgroundPost(firstPost) : false;
+    final threadIsTinhteFact = isTinhteFact(thread);
+    final isCustomPost = firstPostIsBackground || threadIsTinhteFact;
+    final isThreadTitleRedundant =
+        isCustomPost || thread.isThreadTitleRedundant;
 
     final children = <Widget>[
       _kThreadWidgetSpacing,
       _buildTextPadding(_buildInfo(context)),
     ];
 
-    if (!_isThreadTitleRedundant) {
+    if (!isThreadTitleRedundant) {
       children.addAll([
         _kThreadWidgetSpacing,
         _buildTextPadding(_buildTitle(context)),
@@ -39,14 +40,14 @@ class ThreadWidget extends StatelessWidget {
     children.addAll([
       _kThreadWidgetSpacing,
       _buildTextPadding(
-        _isBackgroundPost
-            ? BackgroundPost(thread.firstPost)
-            : (_isTinhteFact ? TinhteFact(thread) : _buildBody(context)),
+        firstPost != null && firstPostIsBackground
+            ? BackgroundPost(firstPost)
+            : (threadIsTinhteFact ? TinhteFact(thread) : _buildBody(context)),
       ),
     ]);
 
     final image = _buildImage();
-    if (!_isCustomPost && image != null) {
+    if (!isCustomPost && image != null) {
       children.addAll([
         _kThreadWidgetSpacing,
         image,
@@ -61,8 +62,8 @@ class ThreadWidget extends StatelessWidget {
         buildPopupMenuButtonForThread(context, thread, feedData);
     if (popupMenuButton != null) {
       built = _buildPopupMenu(built, popupMenuButton);
-    } else {
-      if (thread.threadIsSticky) built = _buildBanner(context, built);
+    } else if (thread.threadIsSticky == true) {
+      built = _buildBanner(context, built);
     }
 
     return built;
@@ -70,9 +71,9 @@ class ThreadWidget extends StatelessWidget {
 
   Widget _buildBanner(BuildContext context, Widget child) => ClipRect(
         child: Banner(
-          child: child,
           location: BannerLocation.topEnd,
           message: l(context).threadStickyBanner,
+          child: child,
         ),
       );
 
@@ -86,8 +87,8 @@ class ThreadWidget extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: _kThreadWidgetPadding),
         child: GestureDetector(
           child: Column(
-            children: children,
             crossAxisAlignment: CrossAxisAlignment.start,
+            children: children,
           ),
           onTap: () => Navigator.of(context).push(
             MaterialPageRoute(builder: (_) => ThreadViewScreen(thread)),
@@ -95,16 +96,24 @@ class ThreadWidget extends StatelessWidget {
         ),
       );
 
-  Widget _buildImage() {
+  Widget? _buildImage() {
     final image = config.threadWidgetShowCoverImageOnly
         ? thread.threadImageOriginal
         : thread.threadImage;
-    if (config.threadWidgetShowCoverImageOnly && image?.displayMode != 'cover')
+    if (image == null ||
+        (config.threadWidgetShowCoverImageOnly &&
+            image.displayMode != 'cover')) {
+      // skip rendering if there is no thread image
+      // or app has been configured to show cover only and this one is not in cover mode
       return null;
+    }
 
-    if (image.width != null &&
-        image.height != null &&
-        image.height > image.width) return null;
+    final width = image.width;
+    final height = image.height;
+    if (width != null && height != null && height > width) {
+      // skip rendering if image dimensions are available and this is a portrait
+      return null;
+    }
 
     return ThreadImageWidget.small(thread, image, useImageRatio: true);
   }
@@ -135,14 +144,16 @@ class ThreadWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoAvatar() => CircleAvatar(
-        backgroundImage: thread.links?.firstPosterAvatar != null
-            ? CachedNetworkImageProvider(thread.links.firstPosterAvatar)
-            : null,
-        radius: 20,
-      );
+  Widget _buildInfoAvatar() {
+    final avatar = thread.links?.firstPosterAvatar;
+    return CircleAvatar(
+      backgroundImage:
+          avatar != null ? CachedNetworkImageProvider(avatar) : null,
+      radius: 20,
+    );
+  }
 
-  Widget _buildInfoUsername(ThemeData theme, TextStyle style) {
+  Widget _buildInfoUsername(ThemeData theme, TextStyle? style) {
     final buffer = StringBuffer(thread.creatorUsername ?? '');
     final inlineSpans = <InlineSpan>[];
 
@@ -153,7 +164,7 @@ class ThreadWidget extends StatelessWidget {
         child: Icon(
           FontAwesomeIcons.solidCircleCheck,
           color: theme.colorScheme.secondary,
-          size: style.fontSize,
+          size: style?.fontSize,
         ),
       ));
     }
@@ -161,7 +172,7 @@ class ThreadWidget extends StatelessWidget {
     return RichText(
       text: TextSpan(
         children: inlineSpans,
-        style: style.copyWith(fontWeight: FontWeight.bold),
+        style: style?.copyWith(fontWeight: FontWeight.bold),
         text: buffer.toString(),
       ),
       maxLines: 1,
@@ -184,16 +195,14 @@ class ThreadWidget extends StatelessWidget {
 
   Widget _buildTitle(BuildContext context) => Text(
         thread.threadTitle ?? '',
-        style: TextStyle(fontWeight: FontWeight.bold),
+        style: const TextStyle(fontWeight: FontWeight.bold),
       );
 }
 
 class _ThreadWidgetActions extends StatefulWidget {
   final Thread thread;
 
-  _ThreadWidgetActions(this.thread, {Key key})
-      : assert(thread != null),
-        super(key: key);
+  const _ThreadWidgetActions(this.thread, {Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _ThreadWidgetActionsState();
@@ -202,17 +211,17 @@ class _ThreadWidgetActions extends StatefulWidget {
 class _ThreadWidgetActionsState extends State<_ThreadWidgetActions> {
   var _isLiking = false;
 
-  String get linkLikes => post?.links?.likes;
-  String get linkPermalink => thread.links?.permalink;
-  Post get post => thread.firstPost;
+  Post? get post => thread.firstPost;
   Thread get thread => widget.thread;
-  int get threadReplyCount => (thread.threadPostCount ?? 1) - 1;
 
   @override
-  Widget build(BuildContext _) =>
+  Widget build(BuildContext context) =>
       AnimatedBuilder(animation: thread, builder: _builder);
 
-  Widget _builder(BuildContext context, Widget _) => Column(children: <Widget>[
+  Widget _builder(BuildContext context, Widget? _) {
+    final permalink = thread.links?.permalink ?? '';
+    return Column(
+      children: <Widget>[
         InkWell(
           child: Padding(
             padding: const EdgeInsets.all(_kThreadWidgetPadding),
@@ -222,7 +231,7 @@ class _ThreadWidgetActionsState extends State<_ThreadWidgetActions> {
             MaterialPageRoute(builder: (_) => ThreadViewScreen(thread)),
           ),
         ),
-        Divider(
+        const Divider(
           height: 0,
           indent: _kThreadWidgetPadding,
           endIndent: _kThreadWidgetPadding,
@@ -234,7 +243,7 @@ class _ThreadWidgetActionsState extends State<_ThreadWidgetActions> {
               Expanded(child: _buildButtonLike()),
               Expanded(
                 child: TextButton.icon(
-                  icon: Icon(FontAwesomeIcons.message),
+                  icon: const Icon(FontAwesomeIcons.message),
                   label: Text(l(context).postReply),
                   onPressed: () => Navigator.of(context).push(
                     MaterialPageRoute(
@@ -248,39 +257,49 @@ class _ThreadWidgetActionsState extends State<_ThreadWidgetActions> {
               ),
               Expanded(
                 child: TextButton.icon(
-                  icon: Icon(FontAwesomeIcons.shareNodes),
+                  icon: const Icon(FontAwesomeIcons.shareNodes),
                   label: Text(l(context).share),
-                  onPressed: linkPermalink?.isNotEmpty == true
-                      ? () => Share.share(linkPermalink)
+                  onPressed: permalink.isNotEmpty
+                      ? () => Share.share(permalink)
                       : null,
                 ),
               ),
             ],
           ),
         ),
-      ]);
+      ],
+    );
+  }
 
-  Widget _buildButtonLike() => AnimatedBuilder(
-        animation: post,
-        builder: (_, __) => TextButton.icon(
-          icon: post.postIsLiked
-              ? const Icon(FontAwesomeIcons.solidHeart)
-              : const Icon(FontAwesomeIcons.heart),
-          label: post.postIsLiked
-              ? Text(l(context).postUnlike)
-              : Text(l(context).postLike),
-          onPressed: _isLiking
-              ? null
-              : linkLikes?.isNotEmpty != true
-                  ? null
-                  : post.postIsLiked
-                      ? _unlikePost
-                      : _likePost,
-        ),
-      );
+  Widget _buildButtonLike() {
+    final post = this.post;
+    if (post == null) return const SizedBox.shrink();
 
-  Widget _buildCounterLike(TextStyle textStyle) {
-    if (post.postLikeCount == 0) return null;
+    final linkLikes = post.links?.likes ?? '';
+
+    return AnimatedBuilder(
+      animation: post,
+      builder: (_, __) => TextButton.icon(
+        icon: post.postIsLiked
+            ? const Icon(FontAwesomeIcons.solidHeart)
+            : const Icon(FontAwesomeIcons.heart),
+        label: post.postIsLiked
+            ? Text(l(context).postUnlike)
+            : Text(l(context).postLike),
+        onPressed: _isLiking
+            ? null
+            : linkLikes.isEmpty
+                ? null
+                : post.postIsLiked
+                    ? _unlikePost
+                    : _likePost,
+      ),
+    );
+  }
+
+  Widget? _buildCounterLike(Post post, TextStyle? textStyle) {
+    final postLikeCount = post.postLikeCount ?? 0;
+    if (postLikeCount == 0) return null;
 
     final inlineSpans = <InlineSpan>[
       WidgetSpan(
@@ -289,8 +308,8 @@ class _ThreadWidgetActionsState extends State<_ThreadWidgetActions> {
           post.postIsLiked
               ? FontAwesomeIcons.solidHeart
               : FontAwesomeIcons.heart,
-          color: textStyle.color,
-          size: textStyle.fontSize,
+          color: textStyle?.color,
+          size: textStyle?.fontSize,
         ),
       ),
       TextSpan(
@@ -306,20 +325,27 @@ class _ThreadWidgetActionsState extends State<_ThreadWidgetActions> {
     );
   }
 
-  Widget _buildCounterReply(TextStyle textStyle) => threadReplyCount > 0
-      ? Text(
-          l(context).statsXReplies(threadReplyCount),
-          style: textStyle,
-          textScaleFactor: 1,
-        )
-      : null;
+  Widget? _buildCounterReply(TextStyle? textStyle) {
+    final replyCount = (thread.threadPostCount ?? 1) - 1;
 
-  Widget _buildCounters(BuildContext context) {
+    return replyCount > 0
+        ? Text(
+            l(context).statsXReplies(replyCount),
+            style: textStyle,
+            textScaleFactor: 1,
+          )
+        : null;
+  }
+
+  Widget? _buildCounters(BuildContext context) {
+    final post = this.post;
+    if (post == null) return null;
+
     final textStyle = Theme.of(context).textTheme.caption;
     return AnimatedBuilder(
       animation: post,
       builder: (_, __) {
-        final like = _buildCounterLike(textStyle);
+        final like = _buildCounterLike(post, textStyle);
         final reply = _buildCounterReply(textStyle);
         if (like == null && reply == null) {
           return const SizedBox.shrink();
@@ -339,24 +365,32 @@ class _ThreadWidgetActionsState extends State<_ThreadWidgetActions> {
 
   void _likePost() => prepareForApiAction(context, () {
         if (_isLiking) return;
+
+        final linkLikes = post?.links?.likes ?? '';
+        if (linkLikes.isEmpty) return;
+
         setState(() => _isLiking = true);
 
         apiPost(
           ApiCaller.stateful(this),
           linkLikes,
-          onSuccess: (_) => post.postIsLiked = true,
+          onSuccess: (_) => post?.postIsLiked = true,
           onComplete: () => setState(() => _isLiking = false),
         );
       });
 
   void _unlikePost() => prepareForApiAction(context, () {
         if (_isLiking) return;
+
+        final linkLikes = post?.links?.likes ?? '';
+        if (linkLikes.isEmpty) return;
+
         setState(() => _isLiking = true);
 
         apiDelete(
           ApiCaller.stateful(this),
           linkLikes,
-          onSuccess: (_) => post.postIsLiked = false,
+          onSuccess: (_) => post?.postIsLiked = false,
           onComplete: () => setState(() => _isLiking = false),
         );
       });

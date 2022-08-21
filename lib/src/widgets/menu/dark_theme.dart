@@ -5,19 +5,19 @@ import 'package:the_app/src/constants.dart';
 import 'package:the_app/src/intl.dart';
 
 class DarkTheme extends ChangeNotifier {
-  bool _value;
+  bool? _value;
 
-  bool get value => _value;
+  bool? get value => _value;
 
   DarkTheme._();
 
-  set value(bool v) {
+  set value(bool? v) {
     _value = v;
     notifyListeners();
 
     SharedPreferences.getInstance().then((prefs) => v == null
         ? prefs.remove(kPrefKeyDarkTheme)
-        : prefs.setBool(kPrefKeyDarkTheme, _value));
+        : prefs.setBool(kPrefKeyDarkTheme, v));
   }
 
   static Future<DarkTheme> create() async {
@@ -29,6 +29,8 @@ class DarkTheme extends ChangeNotifier {
 }
 
 class MenuDarkTheme extends StatelessWidget {
+  const MenuDarkTheme({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) => Consumer<DarkTheme>(
         builder: (_, darkTheme, __) => ListTile(
@@ -52,6 +54,10 @@ class MenuDarkTheme extends StatelessWidget {
   void _updateValue(BuildContext context) {
     final darkTheme = context.read<DarkTheme>();
     final value = darkTheme.value;
-    darkTheme.value = value == false ? true : value == true ? null : false;
+    darkTheme.value = value == false
+        ? true
+        : value == true
+            ? null
+            : false;
   }
 }

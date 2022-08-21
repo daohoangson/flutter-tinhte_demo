@@ -5,39 +5,43 @@ import 'package:the_app/src/link.dart';
 
 final _sourceRegExp = RegExp(r'^(.+) (.+)$');
 
-PopupMenuButton buildPopupMenuButtonForThread(
+PopupMenuButton? buildPopupMenuButtonForThread(
   BuildContext context,
   Thread thread,
-  UserFeedData data,
+  UserFeedData? data,
 ) {
   if (data == null) return null;
 
   final entries = <PopupMenuEntry<String>>[];
-  data.sources?.keys?.forEach((key) {
+  for (var key in (data.sources?.keys ?? <String>[])) {
     final m = _sourceRegExp.firstMatch(key);
-    if (m == null) return;
+    if (m == null) continue;
     final type = m.group(1);
-    final id = m.group(2);
+    final String id = m.group(2)!;
 
     switch (type) {
       case 'tag_watch':
-        if (thread.threadTags?.containsKey(id) == true) {
-          entries.add(PopupMenuItem(
-            child: Text("#${thread.threadTags[id]}"),
-            value: "tags/$id",
-          ));
+        final tags = thread.threadTags;
+        if (tags != null) {
+          final tag = tags[id];
+          if (tag != null) {
+            entries.add(PopupMenuItem(
+              value: "tags/$id",
+              child: Text("#$tag"),
+            ));
+          }
         }
         break;
       case 'user_follow':
         if (thread.creatorUserId.toString() == id) {
           entries.add(PopupMenuItem(
-            child: Text(thread.creatorUsername),
             value: "users/$id",
+            child: Text(thread.creatorUsername ?? '#$id'),
           ));
         }
         break;
     }
-  });
+  }
 
   if (entries.isEmpty) return null;
 

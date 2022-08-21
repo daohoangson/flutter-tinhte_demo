@@ -11,7 +11,7 @@ final backend =
 void crash() => FirebaseCrashlytics.instance.crash();
 
 // ignore: missing_return
-R runZoned<R>(R Function() body) {
+R? runZoned<R>(R Function() body) {
   switch (backend) {
     case Backend.firebaseCrashlytics:
       FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;

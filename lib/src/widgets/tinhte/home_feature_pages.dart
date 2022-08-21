@@ -8,8 +8,10 @@ import 'package:the_app/src/widgets/super_list.dart';
 import 'package:the_app/src/api.dart';
 
 class FeaturePagesWidget extends StatelessWidget {
+  const FeaturePagesWidget({Key? key}) : super(key: key);
+
   @override
-  Widget build(BuildContext _) => LayoutBuilder(
+  Widget build(BuildContext context) => LayoutBuilder(
         builder: (_, bc) => Consumer<_FeaturePagesData>(
           builder: (context, data, __) {
             if (data.pages == null) {
@@ -19,7 +21,7 @@ class FeaturePagesWidget extends StatelessWidget {
 
             final cols = (bc.maxWidth / FpWidget.kPreferWidth).ceil();
 
-            return _build(context, data.pages, cols);
+            return _build(context, data.pages!, cols);
           },
         ),
       );
@@ -30,14 +32,13 @@ class FeaturePagesWidget extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            HeaderWidget('Cộng đồng'),
+            const HeaderWidget('Cộng đồng'),
             Padding(
-              child: _buildGrid(pages, cols),
               padding: const EdgeInsets.all(kTagWidgetPadding),
+              child: _buildGrid(pages, cols),
             ),
             Center(
               child: TextButton(
-                child: Text('Xem tất cả'),
                 onPressed: () => showSearch(
                   context: context,
                   delegate: FpSearchDelegate(pages),
@@ -45,6 +46,7 @@ class FeaturePagesWidget extends StatelessWidget {
                 style: TextButton.styleFrom(
                   primary: Theme.of(context).colorScheme.secondary,
                 ),
+                child: const Text('Xem tất cả'),
               ),
             )
           ],
@@ -59,8 +61,8 @@ class FeaturePagesWidget extends StatelessWidget {
         final i = row * cols + col;
         final built = Expanded(
           child: Padding(
-            child: FpWidget(i < pages.length ? pages[i] : null),
             padding: const EdgeInsets.all(kTagWidgetPadding),
+            child: FpWidget(i < pages.length ? pages[i] : null),
           ),
         );
         children[row].add(built);
@@ -98,10 +100,10 @@ class FeaturePagesWidget extends StatelessWidget {
 }
 
 class _FeaturePagesData extends ChangeNotifier {
-  List<FeaturePage> pages;
+  List<FeaturePage>? pages;
 
   void update(Iterable<FeaturePage> newPages) {
-    pages.addAll(newPages);
+    pages!.addAll(newPages);
     notifyListeners();
   }
 }

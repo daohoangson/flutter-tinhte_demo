@@ -8,9 +8,7 @@ import 'package:the_app/src/intl.dart';
 class ThreadBookmarkWidget extends StatefulWidget {
   final Thread thread;
 
-  const ThreadBookmarkWidget(this.thread, {Key key})
-      : assert(thread != null),
-        super(key: key);
+  const ThreadBookmarkWidget(this.thread, {Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _ThreadBookmarkState();
@@ -45,7 +43,7 @@ class _ThreadBookmarkState extends State<ThreadBookmarkWidget> {
 
         apiPost(
           ApiCaller.stateful(this),
-          config.apiBookmarkPath,
+          config.apiBookmarkPath!,
           bodyFields: {'thread_id': widget.thread.threadId.toString()},
           onSuccess: (_) => setState(() => thread.threadIsBookmark = true),
           onComplete: () => setState(() => _isBookmarking = false),
@@ -58,7 +56,7 @@ class _ThreadBookmarkState extends State<ThreadBookmarkWidget> {
 
         apiDelete(
           ApiCaller.stateful(this),
-          config.apiBookmarkPath,
+          config.apiBookmarkPath!,
           bodyFields: {'thread_id': widget.thread.threadId.toString()},
           onSuccess: (_) => setState(() => thread.threadIsBookmark = false),
           onComplete: () => setState(() => _isBookmarking = false),

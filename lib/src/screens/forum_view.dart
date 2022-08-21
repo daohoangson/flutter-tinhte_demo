@@ -11,7 +11,7 @@ import 'package:the_app/src/widgets/threads.dart';
 class ForumViewScreen extends StatefulWidget {
   final Forum forum;
 
-  ForumViewScreen(this.forum, {Key key}) : super(key: key);
+  const ForumViewScreen(this.forum, {Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _ForumViewScreenState();
@@ -23,7 +23,7 @@ class _ForumViewScreenState extends State<ForumViewScreen> {
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
-          title: Text(forum.forumTitle),
+          title: Text(forum.forumTitle ?? ''),
         ),
         body: ThreadsWidget(
           forum: forum,
@@ -38,7 +38,7 @@ class _ForumViewScreenState extends State<ForumViewScreen> {
           animatedIcon: AnimatedIcons.menu_close,
           children: [
             SpeedDialChild(
-              child: Icon(Icons.search),
+              child: const Icon(Icons.search),
               label: l(context).searchThisForum,
               onTap: () => showSearch(
                 context: context,
@@ -46,7 +46,7 @@ class _ForumViewScreenState extends State<ForumViewScreen> {
               ),
             ),
             SpeedDialChild(
-              child: Icon(FontAwesomeIcons.penToSquare),
+              child: const Icon(FontAwesomeIcons.penToSquare),
               label: l(context).threadCreateNew,
               onTap: () => Navigator.of(context).push(MaterialPageRoute(
                   builder: (_) => ThreadCreateScreen(forum: forum))),

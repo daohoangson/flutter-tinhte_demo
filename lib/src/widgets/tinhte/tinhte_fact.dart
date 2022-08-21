@@ -9,24 +9,25 @@ import 'package:the_app/src/widgets/video_player.dart';
 
 bool isTinhteFact(Thread thread) =>
     thread.threadImage != null &&
-    (thread.threadTags?.values
-            ?.fold(false, (prev, tagText) => prev || tagText == 'tinhtefact') ??
+    (thread.threadTags?.values.fold<bool>(
+          false,
+          (prev, tagText) => prev || tagText == 'tinhtefact',
+        ) ??
         false);
 
 class TinhteFact extends StatelessWidget {
   final bool autoPlayVideo;
-  final Post post;
+  final Post? post;
   final Thread thread;
 
-  Post get firstPost => post ?? thread.firstPost;
+  Post? get firstPost => post ?? thread.firstPost;
 
   const TinhteFact(
     this.thread, {
     this.autoPlayVideo = false,
-    Key key,
+    Key? key,
     this.post,
-  })  : assert(thread != null),
-        super(key: key);
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +35,7 @@ class TinhteFact extends StatelessWidget {
         ThemeData.localize(ThemeData.dark(), Theme.of(context).textTheme);
 
     return Theme(
+      data: theme,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
@@ -48,9 +50,9 @@ class TinhteFact extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.all(kPaddingHorizontal),
                   child: Text(
-                    thread.threadTitle,
+                    thread.threadTitle ?? '',
                     maxLines: null,
-                    style: theme.textTheme.headline6.copyWith(
+                    style: theme.textTheme.headline6?.copyWith(
                       color: theme.colorScheme.secondary,
                       fontWeight: FontWeight.bold,
                     ),
@@ -59,7 +61,7 @@ class TinhteFact extends StatelessWidget {
                 ),
                 _buildContents(),
                 TinhteHtmlWidget(
-                  "<center>${firstPost.postBodyHtml ?? ''}</center>",
+                  "<center>${firstPost?.postBodyHtml ?? ''}</center>",
                   textStyle: theme.textTheme.bodyText2,
                 ),
               ],
@@ -67,13 +69,12 @@ class TinhteFact extends StatelessWidget {
           ),
         ],
       ),
-      data: theme,
     );
   }
 
   Widget _buildContents() {
-    Attachment threadImageAttachment;
-    final threadImageLink = thread.threadImage.link;
+    Attachment? threadImageAttachment;
+    final threadImageLink = thread.threadImage?.link;
     for (final attachment in firstPost?.attachments ?? const []) {
       if (attachment.links.permalink == threadImageLink ||
           attachment.links.thumbnail == threadImageLink) {
@@ -81,13 +82,17 @@ class TinhteFact extends StatelessWidget {
       }
     }
 
-    if (threadImageAttachment?.isVideo == true) {
+    if (threadImageAttachment != null && threadImageAttachment.isVideo) {
       final video = threadImageAttachment;
-      return VideoPlayer(
-        aspectRatio: video.aspectRatio,
-        autoPlay: autoPlayVideo,
-        url: video.links?.xVideoUrl,
-      );
+      final aspectRatio = video.aspectRatio;
+      final videoUrl = video.links?.xVideoUrl;
+      if (aspectRatio != null && videoUrl != null) {
+        return VideoPlayer(
+          aspectRatio: aspectRatio,
+          autoPlay: autoPlayVideo,
+          url: videoUrl,
+        );
+      }
     }
 
     return ThreadImageWidget.big(thread, thread.threadImage);
