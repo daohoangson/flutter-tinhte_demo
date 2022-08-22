@@ -245,8 +245,7 @@ class _ApiAppState extends State<ApiApp> {
     if (!_tokenHasBeenSet) return;
 
     final token = _token;
-    if (token == null) return;
-    if (token.hasExpired) return _refreshToken(token);
+    if (token != null && token.hasExpired) return _refreshToken(token);
 
     final callbacks = _queue;
     _queue = null;
