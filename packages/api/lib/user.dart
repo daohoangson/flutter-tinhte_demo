@@ -28,7 +28,8 @@ class User extends ChangeNotifier implements _User, Followable {
 
   @Deprecated("Use setters instead of copyWith")
   @override
-  _$UserCopyWith<_User> get copyWith => throw UnimplementedError();
+  // ignore: library_private_types_in_public_api
+  _$$_UserCopyWith<_$_User> get copyWith => throw UnimplementedError();
 
   @override
   String? get followersLink => links?.followers;

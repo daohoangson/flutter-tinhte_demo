@@ -20,6 +20,7 @@ class Post extends ChangeNotifier implements _PostInternal {
 
   @Deprecated("Use setters instead of copyWith")
   @override
+  // ignore: library_private_types_in_public_api
   _$PostInternalCopyWith<_PostInternal> get copyWith =>
       throw UnimplementedError();
 

@@ -27,7 +27,8 @@ class Thread extends ChangeNotifier implements _Thread, PollOwner {
 
   @Deprecated("Use setters instead of copyWith")
   @override
-  _$ThreadCopyWith<_Thread> get copyWith => throw UnimplementedError();
+  // ignore: library_private_types_in_public_api
+  _$$_ThreadCopyWith<_$_Thread> get copyWith => throw UnimplementedError();
 
   @override
   bool? get creatorHasVerifiedBadge => _.creatorHasVerifiedBadge;
