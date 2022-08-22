@@ -16,7 +16,8 @@ class FeaturePage extends ChangeNotifier implements _FeaturePage, Followable {
 
   @Deprecated("Use setters instead of copyWith")
   @override
-  _$FeaturePageCopyWith<_FeaturePage> get copyWith =>
+  // ignore: library_private_types_in_public_api
+  _$$_FeaturePageCopyWith<_$_FeaturePage> get copyWith =>
       throw UnimplementedError();
 
   @override

@@ -13,7 +13,8 @@ class Tag extends ChangeNotifier implements _Tag, Followable {
 
   @Deprecated("Use setters instead of copyWith")
   @override
-  _$TagCopyWith<_Tag> get copyWith => throw UnimplementedError();
+  // ignore: library_private_types_in_public_api
+  _$$_TagCopyWith<_$_Tag> get copyWith => throw UnimplementedError();
 
   @override
   String? get followersLink => links?.followers;
