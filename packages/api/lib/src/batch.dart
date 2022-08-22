@@ -15,8 +15,8 @@ class Batch {
 
   String get bodyJson {
     log('Batch has ${_jobs.length} jobs, ${_uniqueJobs.length} unique');
-    for (final _job in _jobs) {
-      log("Batch job ${_job.id}: ${_job.method} ${_job.uri}");
+    for (final job in _jobs) {
+      log("Batch job ${job.id}: ${job.method} ${job.uri}");
     }
 
     return json.encode(_uniqueJobs.values.toList());
@@ -28,7 +28,7 @@ class Batch {
   Batch({required this.path});
 
   Future newJob(String method, String uri, {Map<String, String>? params}) {
-    final String id = 'job' + (_jobs.length + 1).toString();
+    final String id = 'job${_jobs.length + 1}';
     final String paramsAsString = json.encode(params);
     final String signature = "$method$uri$paramsAsString";
     final String hash = md5(signature);
