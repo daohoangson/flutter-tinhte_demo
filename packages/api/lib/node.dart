@@ -40,7 +40,10 @@ class Node with _$Node {
     String? forumDescription,
     bool? forumIsFollowed,
     int? forumPostCount,
-    @Default([]) List<ThreadPrefix> forumPrefixes,
+    // ignore: invalid_annotation_target
+    @JsonKey(fromJson: threadPrefixesFromJson)
+    @Default([])
+        List<ThreadPrefix> forumPrefixes,
     int? forumThreadCount,
     String? forumTitle,
     ForumLinks? links,

@@ -165,7 +165,7 @@ class Thread extends ChangeNotifier implements _Thread, PollOwner {
   int? get threadPostCount => _.threadPostCount;
 
   @override
-  List<ThreadPrefix> get threadPrefixes => _.threadPrefixes ?? const [];
+  List<ThreadPrefix> get threadPrefixes => _.threadPrefixes;
 
   @override
   ThreadImage? get threadPrimaryImage => _.threadPrimaryImage;
@@ -222,7 +222,9 @@ class _ThreadInternal with _$_ThreadInternal {
     ThreadPermissions? permissions,
     ThreadImage? threadImage,
     ThreadImage? threadPrimaryImage,
-    List<ThreadPrefix>? threadPrefixes,
+    // ignore: invalid_annotation_target
+    @JsonKey(fromJson: threadPrefixesFromJson)
+        List<ThreadPrefix> threadPrefixes,
     ThreadImage? threadThumbnail,
   ) = _Thread;
 
