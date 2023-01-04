@@ -46,8 +46,8 @@ android {
 
     defaultConfig {
         applicationId "com.daohoangson.flutter_ttdemo"
-        minSdkVersion 24
-        targetSdkVersion 31
+        minSdkVersion 26
+        targetSdkVersion 33
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
