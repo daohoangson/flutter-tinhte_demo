@@ -1,6 +1,8 @@
 PODS:
   - audio_session (0.0.1):
     - FlutterMacOS
+  - facebook_auth_desktop (0.0.3):
+    - FlutterMacOS
   - Firebase/CoreOnly (9.6.0):
     - FirebaseCore (= 9.6.0)
   - Firebase/Crashlytics (9.6.0):
@@ -108,6 +110,7 @@ PODS:
 
 DEPENDENCIES:
   - audio_session (from `Flutter/ephemeral/.symlinks/plugins/audio_session/macos`)
+  - facebook_auth_desktop (from `Flutter/ephemeral/.symlinks/plugins/facebook_auth_desktop/macos`)
   - firebase_core (from `Flutter/ephemeral/.symlinks/plugins/firebase_core/macos`)
   - firebase_crashlytics (from `Flutter/ephemeral/.symlinks/plugins/firebase_crashlytics/macos`)
   - firebase_messaging (from `Flutter/ephemeral/.symlinks/plugins/firebase_messaging/macos`)
@@ -140,6 +143,8 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   audio_session:
     :path: Flutter/ephemeral/.symlinks/plugins/audio_session/macos
+  facebook_auth_desktop:
+    :path: Flutter/ephemeral/.symlinks/plugins/facebook_auth_desktop/macos
   firebase_core:
     :path: Flutter/ephemeral/.symlinks/plugins/firebase_core/macos
   firebase_crashlytics:
@@ -169,6 +174,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   audio_session: dea1f41890dbf1718f04a56f1d6150fd50039b72
+  facebook_auth_desktop: 0ec755e3b01669ec14776af18b6945671a788916
   Firebase: 5ae8b7cf8efce559a653aef0ad95bab3f427c351
   firebase_core: 970bc7db019f0985976324d90cdc370527c31461
   firebase_crashlytics: 9db99e3bbdb71d4a1fe34438d9ead1a55139e5fc
