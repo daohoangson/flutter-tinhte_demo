@@ -14,7 +14,7 @@ import 'package:intl/message_lookup_by_library.dart';
 
 final messages = MessageLookup();
 
-typedef String MessageIfAbsent(String messageStr, List<Object> args);
+typedef String MessageIfAbsent(String? messageStr, List<Object>? args);
 
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'messages';
@@ -41,15 +41,15 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m10(number) => "Tap to load ${number} hidden replies...";
 
-  static m14(terms, privacyPolicy) => "I agree to the <a href=\"${terms}\">terms</a> and <a href=\"${privacyPolicy}\">privacy policy</a>.";
+  static m11(privacyPolicy, terms) => "I agree to the <a href=\"${terms}\">terms</a> and <a href=\"${privacyPolicy}\">privacy policy</a>.";
 
-  static m11(query) => "Submit to search for \'${query}\'";
+  static m12(query) => "Submit to search for \'${query}\'";
 
-  static m12(username) => " by user \'${username}\'";
+  static m13(username) => " by user \'${username}\'";
 
-  static m13(forumTitle) => " in forum \'${forumTitle}\'";
+  static m14(forumTitle) => " in forum \'${forumTitle}\'";
 
-  final Map<String, dynamic> messages = _notInlinedMessages(_notInlinedMessages);
+  final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function> {
     "_statsXReplies" : m0,
     "_statsXViews" : m1,
@@ -93,6 +93,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "menuDarkTheme0" : MessageLookupByLibrary.simpleMessage("No, use light theme"),
     "menuDarkTheme1" : MessageLookupByLibrary.simpleMessage("Yes, use dark theme"),
     "menuDarkThemeAuto" : MessageLookupByLibrary.simpleMessage("Use system\'s color scheme"),
+    "menuDeveloper" : MessageLookupByLibrary.simpleMessage("Developer Menu"),
+    "menuDeveloperCrashTest" : MessageLookupByLibrary.simpleMessage("Crash Test"),
+    "menuDeveloperShowPerformanceOverlay" : MessageLookupByLibrary.simpleMessage("Show Performance Overlay"),
     "menuLogout" : MessageLookupByLibrary.simpleMessage("Logout"),
     "myFeed" : MessageLookupByLibrary.simpleMessage("My Feed"),
     "navLowercaseNext" : MessageLookupByLibrary.simpleMessage("next"),
@@ -121,7 +124,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "postUnlike" : MessageLookupByLibrary.simpleMessage("Unlike"),
     "privacyPolicy" : MessageLookupByLibrary.simpleMessage("Privacy Policy"),
     "register" : MessageLookupByLibrary.simpleMessage("Register"),
-    "registerAgreeCheckboxHtml" : m14,
+    "registerAgreeCheckboxHtml" : m11,
     "registerEmail" : MessageLookupByLibrary.simpleMessage("Email"),
     "registerErrorEmailIsEmpty" : MessageLookupByLibrary.simpleMessage("Email cannot be empty"),
     "registerErrorNoAccessToken" : MessageLookupByLibrary.simpleMessage("Cannot register new user account."),
@@ -129,11 +132,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "registerErrorUsernameIsEmpty" : MessageLookupByLibrary.simpleMessage("Username cannot be empty"),
     "search" : MessageLookupByLibrary.simpleMessage("Search"),
     "searchEnterSomething" : MessageLookupByLibrary.simpleMessage("Enter something to search"),
-    "searchSubmitToContinue" : m11,
+    "searchSubmitToContinue" : m12,
     "searchThisForum" : MessageLookupByLibrary.simpleMessage("Search this forum"),
     "searchThisUser" : MessageLookupByLibrary.simpleMessage("Search for this user"),
-    "searchThreadByUser" : m12,
-    "searchThreadInForum" : m13,
+    "searchThreadByUser" : m13,
+    "searchThreadInForum" : m14,
     "share" : MessageLookupByLibrary.simpleMessage("Share"),
     "tagLowercaseDiscussions" : MessageLookupByLibrary.simpleMessage("discussions"),
     "tagLowercaseNews" : MessageLookupByLibrary.simpleMessage("news"),

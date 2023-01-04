@@ -14,7 +14,7 @@ import 'package:intl/message_lookup_by_library.dart';
 
 final messages = MessageLookup();
 
-typedef String MessageIfAbsent(String messageStr, List<Object> args);
+typedef String MessageIfAbsent(String? messageStr, List<Object>? args);
 
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'vi';
@@ -41,13 +41,15 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m10(number) => "Tải thêm ${number} bài ẩn...";
 
-  static m11(query) => "Bấm gửi đi để tìm cho \'${query}\'";
+  static m11(privacyPolicy, terms) => "Tôi đồng ý <a href=\"${terms}\">các điều khoản</a> và <a href=\"${privacyPolicy}\">chính sách quyền riêng tư</a>.";
 
-  static m12(username) => " bởi thành viên \'${username}\'";
+  static m12(query) => "Bấm gửi đi để tìm cho \'${query}\'";
 
-  static m13(forumTitle) => " trong khu vực \'${forumTitle}\'";
+  static m13(username) => " bởi thành viên \'${username}\'";
 
-  final Map<String, dynamic> messages = _notInlinedMessages(_notInlinedMessages);
+  static m14(forumTitle) => " trong khu vực \'${forumTitle}\'";
+
+  final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function> {
     "_statsXReplies" : m0,
     "_statsXViews" : m1,
@@ -91,6 +93,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "menuDarkTheme0" : MessageLookupByLibrary.simpleMessage("Không, dùng giao diện sáng"),
     "menuDarkTheme1" : MessageLookupByLibrary.simpleMessage("Có, dùng giao diện tối"),
     "menuDarkThemeAuto" : MessageLookupByLibrary.simpleMessage("Thay đổi theo hệ điều hành"),
+    "menuDeveloper" : MessageLookupByLibrary.simpleMessage("Cài đặt dev"),
+    "menuDeveloperCrashTest" : MessageLookupByLibrary.simpleMessage("Thử crash app"),
+    "menuDeveloperShowPerformanceOverlay" : MessageLookupByLibrary.simpleMessage("Hiển thị đồ thị hiệu năng"),
     "menuLogout" : MessageLookupByLibrary.simpleMessage("Thoát"),
     "myFeed" : MessageLookupByLibrary.simpleMessage("Cá nhân"),
     "navLowercaseNext" : MessageLookupByLibrary.simpleMessage("tiếp"),
@@ -118,13 +123,20 @@ class MessageLookup extends MessageLookupByLibrary {
     "postReportedThanks" : MessageLookupByLibrary.simpleMessage("Cảm ơn bạn đã báo cáo nội dung xấu!"),
     "postUnlike" : MessageLookupByLibrary.simpleMessage("Bỏ thích"),
     "privacyPolicy" : MessageLookupByLibrary.simpleMessage("Chính sách quyền riêng tư"),
+    "register" : MessageLookupByLibrary.simpleMessage("Đăng ký"),
+    "registerAgreeCheckboxHtml" : m11,
+    "registerEmail" : MessageLookupByLibrary.simpleMessage("Email"),
+    "registerErrorEmailIsEmpty" : MessageLookupByLibrary.simpleMessage("Xin vui lòng nhập email để đăng ký"),
+    "registerErrorNoAccessToken" : MessageLookupByLibrary.simpleMessage("Không thể đăng ký tài khoản mới."),
+    "registerErrorPasswordIsEmpty" : MessageLookupByLibrary.simpleMessage("Xin vui lòng nhập mật khẩu để đăng ký"),
+    "registerErrorUsernameIsEmpty" : MessageLookupByLibrary.simpleMessage("Xin vui lòng nhập tên đăng nhập để đăng ký"),
     "search" : MessageLookupByLibrary.simpleMessage("Tìm kiếm"),
     "searchEnterSomething" : MessageLookupByLibrary.simpleMessage("Nhập nội dung cần tìm kiếm"),
-    "searchSubmitToContinue" : m11,
+    "searchSubmitToContinue" : m12,
     "searchThisForum" : MessageLookupByLibrary.simpleMessage("Tìm trong khu vực này"),
     "searchThisUser" : MessageLookupByLibrary.simpleMessage("Tìm bài viết của thành viên này"),
-    "searchThreadByUser" : m12,
-    "searchThreadInForum" : m13,
+    "searchThreadByUser" : m13,
+    "searchThreadInForum" : m14,
     "share" : MessageLookupByLibrary.simpleMessage("Chia sẻ"),
     "tagLowercaseDiscussions" : MessageLookupByLibrary.simpleMessage("thảo luận"),
     "tagLowercaseNews" : MessageLookupByLibrary.simpleMessage("tin tức"),
