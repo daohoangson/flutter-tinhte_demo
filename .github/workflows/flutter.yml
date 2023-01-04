@@ -26,10 +26,12 @@ jobs:
       - run: flutter pub get
       - run: flutter build apk "--build-name=${BUILD_NAME}" --split-per-abi
 
+      - name: Setup GCP authentication
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.GCP_UPLOADER_SA_KEY }}
       - name: Setup gcloud
         uses: google-github-actions/setup-gcloud@v1
-        with:
-          service_account_key: ${{ secrets.GCP_UPLOADER_SA_KEY }}
       - name: Run gsutil cp
         run: gsutil cp build/app/outputs/apk/release/*.apk "${GCS_PATH}/apk"
 
@@ -86,10 +88,12 @@ jobs:
           flutter build ios "--build-name=${BUILD_NAME}" --no-codesign
           ( cd ios && fastlane ipa )
 
+      - name: Setup GCP authentication
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.GCP_UPLOADER_SA_KEY }}
       - name: Setup gcloud
         uses: google-github-actions/setup-gcloud@v1
-        with:
-          service_account_key: ${{ secrets.GCP_UPLOADER_SA_KEY }}
       - name: Run gsutil cp
         run: |
           set -e
@@ -161,10 +165,12 @@ jobs:
           cd build/linux/x64/release
           zip -r bundle.zip bundle/*
 
+      - name: Setup GCP authentication
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.GCP_UPLOADER_SA_KEY }}
       - name: Setup gcloud
         uses: google-github-actions/setup-gcloud@v1
-        with:
-          service_account_key: ${{ secrets.GCP_UPLOADER_SA_KEY }}
       - name: Run gsutil cp
         run: gsutil cp build/linux/x64/release/bundle.zip "${GCS_PATH}/linux/bundle.zip"
 
@@ -224,10 +230,12 @@ jobs:
           _appBasename=$( basename "${_appPath}" )
           ditto -c -k --keepParent "${_appBasename}" "${_appBasename}.zip"
 
+      - name: Setup GCP authentication
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.GCP_UPLOADER_SA_KEY }}
       - name: Setup gcloud
         uses: google-github-actions/setup-gcloud@v1
-        with:
-          service_account_key: ${{ secrets.GCP_UPLOADER_SA_KEY }}
       - name: Run gsutil cp
         run: gsutil cp build/app/outputs/macos/release/* "${GCS_PATH}/macos"
 
@@ -294,10 +302,12 @@ jobs:
 
           flutter pub run msix:create --install-certificate=false "--version=${_packageVersion}"
 
+      - name: Setup GCP authentication
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.GCP_UPLOADER_SA_KEY }}
       - name: Setup gcloud
         uses: google-github-actions/setup-gcloud@v1
-        with:
-          service_account_key: ${{ secrets.GCP_UPLOADER_SA_KEY }}
       - name: Run gsutil cp
         run: |
           set -e
