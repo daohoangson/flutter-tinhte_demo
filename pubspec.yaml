@@ -4,17 +4,18 @@ version: 2.0.0+27
 publish_to: none
 
 environment:
-  flutter: 3.0.5
-  sdk: ">=2.12.0 <3.0.0"
+  flutter: 3.3.8
+  sdk: ">=2.18.4 <3.0.0"
 
 dependencies:
   # firebase
   firebase_core: ^1.21.0
+  firebase_core_platform_interface: 4.5.1
   firebase_messaging: ^13.0.0
   firebase_crashlytics: ^2.8.8
 
   # ours
-  flutter_widget_from_html: ^0.8.0
+  flutter_widget_from_html: ^0.9.0
   fwfh_webview: any
   the_api:
     path: ./packages/api
@@ -26,10 +27,10 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_cache_manager: any
-  flutter_facebook_auth: ^4.1.2
+  flutter_facebook_auth: ^5.0.0
   flutter_localizations:
     sdk: flutter
-  flutter_secure_storage: ^6.0.0
+  flutter_secure_storage: ^7.0.0
   flutter_speed_dial: ^6.0.0
   font_awesome_flutter: ^10.0.0
   google_sign_in: ^5.0.0
@@ -37,11 +38,11 @@ dependencies:
   http: any
   image_picker: ^0.8.0
   intl: any
-  intl_generator: ^0.3.0
-  package_info_plus: ^1.0.0
+  intl_generator: ^0.4.0
+  package_info_plus: ^3.0.0
   photo_view: ^0.14.0
   provider: ^6.0.0
-  share_plus: ^4.0.0
+  share_plus: ^6.0.0
   shared_preferences: ^2.0.0
   scroll_to_index: ^3.0.0
   the_apple_sign_in: ^1.1.1
