@@ -223,7 +223,7 @@ class _ScreenState extends State<_Screen> {
               ),
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          style: TextButton.styleFrom(primary: kCaptionColor),
+          style: TextButton.styleFrom(foregroundColor: kCaptionColor),
           child: Text(lm(context).okButtonLabel),
         )
       ],

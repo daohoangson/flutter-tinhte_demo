@@ -44,7 +44,7 @@ class FeaturePagesWidget extends StatelessWidget {
                   delegate: FpSearchDelegate(pages),
                 ),
                 style: TextButton.styleFrom(
-                  primary: Theme.of(context).colorScheme.secondary,
+                  foregroundColor: Theme.of(context).colorScheme.secondary,
                 ),
                 child: const Text('Xem tất cả'),
               ),
