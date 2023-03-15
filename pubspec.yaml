@@ -33,7 +33,7 @@ dependencies:
   flutter_secure_storage: ^7.0.0
   flutter_speed_dial: ^6.0.0
   font_awesome_flutter: ^10.0.0
-  google_sign_in: ^5.0.0
+  google_sign_in: ^6.0.0
   html_unescape: ^2.0.0
   http: any
   image_picker: ^0.8.0
