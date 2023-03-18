@@ -30,7 +30,7 @@ dependencies:
   flutter_facebook_auth: ^5.0.0
   flutter_localizations:
     sdk: flutter
-  flutter_secure_storage: ^7.0.0
+  flutter_secure_storage: ^8.0.0
   flutter_speed_dial: ^6.0.0
   font_awesome_flutter: ^10.0.0
   google_sign_in: ^6.0.0
