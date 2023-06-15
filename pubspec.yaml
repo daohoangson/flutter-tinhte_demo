@@ -60,6 +60,7 @@ dev_dependencies:
 flutter:
   assets:
     - assets/
+    - shorebird.yaml
   uses-material-design: true
 
 msix_config:
