@@ -1,6 +1,5 @@
 import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
-import { post, FullResponse } from 'request-promise-native';
 
 import {
   Config,
@@ -23,18 +22,18 @@ export default (config: Config) => functions.https.onRequest(async (req, resp) =
   if (!hubTopic || !registrationToken) { resp.sendStatus(400); return; }
 
   const statusCode = await Promise.all([
-    post(
+    fetch(
       config.getHubUrl(),
       {
-        form: {
+        method: 'POST',
+        body: new URLSearchParams({
           ...extraParams,
           'hub.callback': config.getWebsubUrl(),
           'hub.topic': hubTopic,
           'hub.mode': 'subscribe',
-        },
-        resolveWithFullResponse: true,
+        }),
       }
-    ) as Promise<FullResponse>,
+    ),
     admin.firestore()
       .collection(firestoreCollectionSubscriptions).doc(hubTopic)
       .collection(firestoreCollectionRegistrationTokens).doc(registrationToken).set({
@@ -48,10 +47,10 @@ export default (config: Config) => functions.https.onRequest(async (req, resp) =
       }),
   ]).then<number, number>(
     ([hubResp]) => {
-      const hubRespMessage = `hubTopic=${hubTopic} registrationToken=${registrationToken} hubResp.statusCode=${hubResp.statusCode}`;
-      if (hubResp.statusCode !== 202) {
+      const hubRespMessage = `hubTopic=${hubTopic} registrationToken=${registrationToken} hubResp.statusCode=${hubResp.status}`;
+      if (hubResp.status !== 202) {
         console.error(hubRespMessage);
-        return hubResp.statusCode;
+        return hubResp.status;
       } else {
         console.log(hubRespMessage);
       }
