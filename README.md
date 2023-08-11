@@ -90,6 +90,7 @@ Pick a unique package name across Play Store and App Store then update these fil
 - `macos/fastlane/Matchfile`
 - `windows/runner/Runner.rc`
 - `pubspec.yaml` msix_config>identity_name
+- Re-run `flutterfire configure` to update Firebase apps
 
 You will also need to move the files within `android/app/src/main/java/com/daohoangson/flutter_ttdemo` to another directory to match the new Android package.
 

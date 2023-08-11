@@ -23,41 +23,47 @@ void main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
   await firebase.initializeApp();
+  error_reporting.configureErrorReporting();
   push_notification.configurePushNotification();
 
-  error_reporting.runZoned<Future<void>>(() async {
-    final values = await Future.wait([
-      DarkTheme.create(),
-      FontScale.create(),
-      push_notification.getInitialPath(),
-      uni_links.getInitialLink(),
-      DevTools.create(),
-    ]);
+  DarkTheme? darkTheme;
+  DevTools? devTools;
+  FontScale? fontScale;
+  String? initialLink;
+  String? initialPath;
+  await Future.wait([
+    DarkTheme.create().then((value) => darkTheme = value),
+    FontScale.create().then((value) => fontScale = value),
+    DevTools.create().then((value) => devTools = value),
+    uni_links.getInitialLink().then((value) => initialLink = value),
+    firebase.initializeApp().then((value) async {
+      error_reporting.configureErrorReporting();
+      push_notification.configurePushNotification();
+      initialPath = await push_notification.getInitialPath();
+    }),
+  ]);
 
-    String? initialPath;
-    Widget? defaultWidget;
-    String? fallbackLink;
-    if (values[2] != null) {
-      initialPath = values[2] as String?;
-      defaultWidget = const NotificationListScreen();
-    } else if (values[3] != null) {
-      initialPath = buildToolsParseLinkPath(values[3] as String);
-      fallbackLink = values[3] as String?;
-    }
+  Widget? defaultWidget;
+  String? fallbackLink;
+  if (initialPath != null) {
+    defaultWidget = const NotificationListScreen();
+  } else if (initialLink != null) {
+    initialPath = buildToolsParseLinkPath(initialLink!);
+    fallbackLink = initialLink;
+  }
 
-    runApp(MyApp(
-      darkTheme: values[0] as DarkTheme,
-      devTools: values[4] as DevTools,
-      fontScale: values[1] as FontScale,
-      home: initialPath != null
-          ? InitialPathScreen(
-              initialPath,
-              defaultWidget: defaultWidget,
-              fallbackLink: fallbackLink,
-            )
-          : HomeScreen(),
-    ));
-  });
+  runApp(MyApp(
+    darkTheme: darkTheme!,
+    devTools: devTools!,
+    fontScale: fontScale!,
+    home: initialPath != null
+        ? InitialPathScreen(
+            initialPath!,
+            defaultWidget: defaultWidget,
+            fallbackLink: fallbackLink,
+          )
+        : HomeScreen(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
