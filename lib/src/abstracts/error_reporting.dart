@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 
@@ -8,18 +6,17 @@ import 'firebase.dart' as firebase;
 final backend =
     firebase.isSupported ? Backend.firebaseCrashlytics : Backend.none;
 
-void crash() => FirebaseCrashlytics.instance.crash();
+void configureErrorReporting() {
+  if (backend == Backend.none) return;
 
-// ignore: missing_return
-R? runZoned<R>(R Function() body) {
-  switch (backend) {
-    case Backend.firebaseCrashlytics:
-      FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
-      return runZonedGuarded(body, FirebaseCrashlytics.instance.recordError);
-    case Backend.none:
-      return body();
-  }
+  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
+  PlatformDispatcher.instance.onError = (error, stack) {
+    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+    return true;
+  };
 }
+
+void crash() => FirebaseCrashlytics.instance.crash();
 
 enum Backend {
   firebaseCrashlytics,
