@@ -2,6 +2,7 @@
 <resources>
     <string name="app_name">ttdemo</string>
     <string name="facebook_app_id">566879507102666</string>
+    <string name="facebook_app_name">com.daohoangson.flutter_ttdemo</string>
     <string name="facebook_client_token">bee1edd35d32695d76209b09c46c60dc</string>
     <string name="fb_login_protocol_scheme">fb566879507102666</string>
 </resources>

@@ -21,7 +21,7 @@ upload the apps to GCS (automatically deleted after 30 days).
   - Windows
 - State management with [provider](https://pub.dev/packages/provider)
 - Apple login via [apple_sign_in](https://pub.dev/packages/apple_sign_in)
-- Facebook login via [flutter_facebook_login](https://pub.dev/packages/flutter_facebook_login)
+- Facebook login via [flutter_facebook_auth](https://pub.dev/packages/flutter_facebook_auth)
 - Google login via [google_sign_in](https://pub.dev/packages/google_sign_in)
 - Store authentication token with [flutter_secure_storage](https://pub.dev/packages/flutter_secure_storage)
 - Render HTML with [flutter_widget_from_html](https://pub.dev/packages/flutter_widget_from_html)
@@ -72,7 +72,7 @@ Pick a unique package name across Play Store and App Store then update these fil
 
 - `.github/workflows/flutter.yml` GCS_BUCKET, GCS_URL
 - `android/app/build.gradle` applicationId, signingConfigs.release
-- `android/app/src/main/AndroidManifest.xml` package, android:label
+- `android/app/src/main/AndroidManifest.xml` package, android:label, com.facebook.FacebookContentProvider
 - `android/app/src/main/res/values/strings.xml` app_name, facebook_app_id, facebook_client_token, fb_login_protocol_scheme
 - `android/fastlane/metadata/android/en-US/` title.txt, full_description.txt, short_description.txt
 - `android/fastlane/Appfile`
@@ -82,6 +82,7 @@ Pick a unique package name across Play Store and App Store then update these fil
 - `ios/fastlane/Appfile`
 - `ios/fastlane/Fastfile` xcargs (PROVISIONING_PROFILE_SPECIFIER), manifest (appURL, displayImageURL, fullSizeImageURL)
 - `ios/fastlane/Matchfile`
+- `lib/src/abstracts/facebook_log_in.dart` Facebook appId
 - `linux/CMakeLists.txt` APPLICATION_ID
 - `macos/Runner/Configs/AppInfo.xcconfig`
 - `macos/Runner.xcodeproj/project.pbxproj` PROVISIONING_PROFILE_SPECIFIER x3
