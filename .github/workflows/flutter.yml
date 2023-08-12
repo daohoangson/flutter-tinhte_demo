@@ -85,7 +85,7 @@ jobs:
         run: |
           set -e
 
-          flutter build ios "--build-name=${BUILD_NAME}" --no-codesign
+          flutter build ios "--build-name=${BUILD_NAME}" || true
           ( cd ios && fastlane ipa )
 
       - name: Setup GCP authentication
