@@ -4,7 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:the_app/src/intl.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart' as lib;
 
-final isSupported = Platform.isIOS || Platform.isMacOS;
+final isSupported = Platform.isIOS;
 
 Future<String> signIn(BuildContext context) async {
   final l10n = l(context);
