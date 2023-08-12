@@ -1,7 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart' as lib;
 import 'package:the_app/src/intl.dart';
+
+final isSupported = Platform.isAndroid || Platform.isIOS || Platform.isMacOS;
 
 Future<void> configureFacebookLogin() async {
   if (defaultTargetPlatform == TargetPlatform.macOS) {
