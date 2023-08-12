@@ -269,9 +269,7 @@ jobs:
           fingerprint: <!-- ${{ github.sha }} -->
 
   build_windows:
-    # disable Windows build until msix issue can be fixed
-    # if: ${{ github.ref == 'refs/heads/master' || contains(github.ref, 'windows') }}
-    if: ${{ contains(github.ref, 'windows') }}
+    if: ${{ github.ref == 'refs/heads/master' || contains(github.ref, 'windows') }}
     runs-on: windows-2022
     defaults:
       run:
@@ -314,7 +312,6 @@ jobs:
         run: |
           set -e
 
-          gsutil cp windows/ca.crt "${GCS_PATH}/windows/ca.crt"
           gsutil cp build/windows/runner/Release/the_app.msix "${GCS_PATH}/windows/the_app.msix"
 
       - name: Prepare markdown
@@ -329,7 +326,7 @@ jobs:
             echo "PACKAGE_VERSION=${PACKAGE_VERSION}"; \
             echo '```'; \
             echo; \
-            printf '1. Install [ca.crt](%s) as a trusted root CA\n' "${GCS_URL}/windows/ca.crt"; \
+            printf '1. [Installing a test certificate directly from an MSIX package](https://www.advancedinstaller.com/install-test-certificate-from-msix.html)\n'; \
             printf '1. Then run [the installer](%s)\n' "${GCS_URL}/windows/the_app.msix"; \
           )
 
