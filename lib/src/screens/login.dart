@@ -137,7 +137,7 @@ class _LoginFormState extends State<LoginForm> {
             onPressed: _loginApple,
             text: l(context).loginWithApple,
           ),
-        if (config.loginWithFacebook)
+        if (config.loginWithFacebook && facebook_log_in.isSupported)
           SignInButton.facebook(
             onPressed: _loginFacebook,
             text: l(context).loginWithFacebook,
