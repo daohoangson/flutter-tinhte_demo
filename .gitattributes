@@ -4,6 +4,7 @@
 /android/fastlane/service-account.json filter=git-crypt diff=git-crypt
 /android/release.jks filter=git-crypt diff=git-crypt
 /ios/Runner/GoogleService-Info.plist filter=git-crypt diff=git-crypt
+/ios/fastlane/4TV2PTBPVG.json filter=git-crypt diff=git-crypt
 /ios/firebase_app_id_file.json filter=git-crypt diff=git-crypt
 /ios/gc_keys.json filter=git-crypt diff=git-crypt
 /lib/firebase_options.dart filter=git-crypt diff=git-crypt

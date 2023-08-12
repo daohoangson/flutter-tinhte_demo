@@ -89,7 +89,7 @@ jobs:
           set -e
 
           flutter build ios || true
-          ( cd ios && fastlane ipa )
+          ( cd ios && fastlane build_ipa )
 
       - name: Setup GCP authentication
         uses: google-github-actions/auth@v1
