@@ -23,16 +23,18 @@ if ! command -v yq &>/dev/null; then
     brew install yq
   fi
 fi
+
 _appVersion=$(yq e '.version' pubspec.yaml)
-_appVersionWithoutNumber=$(echo "${_appVersion}" | sed 's/+.*$//')
+echo "_appVersion=${_appVersion}"
+_appVersionWithBuildNumber=$(printf '.version="%s+%d"' "${_appVersion}" "${GITHUB_RUN_NUMBER}${GITHUB_RUN_ATTEMPT}")
+echo "_appVersionWithBuildNumber=${_appVersionWithBuildNumber}"
+yq --inplace e "$_appVersionWithBuildNumber" pubspec.yaml
+cat pubspec.yaml
 
 if command -v wslpath &>/dev/null; then
   _wslGithubEnv=$(wslpath -u "$GITHUB_ENV")
   export "GITHUB_ENV=${_wslGithubEnv}"
 fi
-
-echo "APP_VERSION=${_appVersion}" | tee -a $GITHUB_ENV
-echo "BUILD_NAME=${_appVersionWithoutNumber}-${GITHUB_SHA:0:7}" | tee -a $GITHUB_ENV
 
 _flutterVersion=$(yq e '.environment.flutter' pubspec.yaml)
 echo "FLUTTER_VERSION=${_flutterVersion}" | tee -a $GITHUB_ENV
