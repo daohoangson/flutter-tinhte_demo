@@ -5,13 +5,13 @@ import 'package:video_player/video_player.dart';
 class VideoPlayer extends StatefulWidget {
   final double aspectRatio;
   final bool autoPlay;
-  final String url;
+  final Uri uri;
 
   const VideoPlayer({
     required this.aspectRatio,
     required this.autoPlay,
     Key? key,
-    required this.url,
+    required this.uri,
   }) : super(key: key);
 
   @override
@@ -29,7 +29,7 @@ class _VideoState extends State<VideoPlayer> {
   }
 
   void initializePlayer() async {
-    _videoPlayerController = VideoPlayerController.network(widget.url);
+    _videoPlayerController = VideoPlayerController.networkUrl(widget.uri);
 
     await _videoPlayerController.initialize();
 

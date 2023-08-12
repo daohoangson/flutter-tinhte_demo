@@ -15,7 +15,7 @@ Widget buildPostButton(
   GestureTapCallback? onTap,
 }) {
   final theme = Theme.of(context);
-  final fontSize = theme.textTheme.button?.fontSize;
+  final fontSize = theme.textTheme.labelLarge?.fontSize;
 
   Widget button = TextButton(
     onPressed: onTap,
@@ -95,7 +95,7 @@ Widget buildPosterInfo(
   String? userRank,
 }) {
   final theme = Theme.of(context);
-  final style = theme.textTheme.caption;
+  final style = theme.textTheme.bodySmall;
   final children = <Widget>[
     RichText(
       text: TextSpan(

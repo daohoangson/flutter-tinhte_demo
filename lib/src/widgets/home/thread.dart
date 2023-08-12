@@ -41,7 +41,7 @@ class HomeThreadWidget extends StatelessWidget {
                       _buildTitle(),
                       const SizedBox(height: 5),
                       isWide
-                          ? _buildSnippet(theme.textTheme.caption)
+                          ? _buildSnippet(theme.textTheme.bodySmall)
                           : const SizedBox.shrink(),
                     ],
                   ),
@@ -89,7 +89,7 @@ class HomeThreadWidget extends StatelessWidget {
       overflow: TextOverflow.ellipsis,
       text: TextSpan(
         children: spans,
-        style: theme.textTheme.caption,
+        style: theme.textTheme.bodySmall,
       ),
     );
   }

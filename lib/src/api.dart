@@ -108,10 +108,10 @@ void _setupApiCompleter<T>(
   ApiOnError? onError,
   VoidCallback? onComplete,
 ) {
-  var f = completer.future;
+  Future<void> f = completer.future;
 
   if (onSuccess != null) {
-    f = f.then(
+    f = completer.future.then(
       (data) => (caller.canReceiveCallback) ? onSuccess(data) : data,
     );
   }

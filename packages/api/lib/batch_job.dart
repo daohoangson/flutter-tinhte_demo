@@ -10,10 +10,10 @@ class BatchJob {
   final String uri;
   final Map<String, String>? params;
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeToJson: false)
   final Completer completer = Completer();
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeToJson: false)
   Future get future => completer.future;
 
   BatchJob(this.id, this.method, this.uri, this.params);

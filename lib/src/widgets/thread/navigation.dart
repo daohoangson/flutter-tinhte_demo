@@ -53,7 +53,7 @@ class _ThreadNavigationState extends State<ThreadNavigationWidget> {
         child: Icon(
           FontAwesomeIcons.caretRight,
           size: _kThreadNavigationFontSize,
-          color: Theme.of(context).textTheme.caption?.color,
+          color: Theme.of(context).textTheme.bodySmall?.color,
         ),
       );
 
@@ -84,7 +84,7 @@ class _ThreadNavigationState extends State<ThreadNavigationWidget> {
       child: Center(
         child: Text(
           data,
-          style: Theme.of(context).textTheme.caption?.copyWith(
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 height: 1,
                 fontSize: _kThreadNavigationFontSize,
               ),

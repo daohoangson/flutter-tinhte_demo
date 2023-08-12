@@ -218,7 +218,7 @@ class _ScreenState extends State<_Screen> {
                 l(context).navXOfY(index + 1, widget.sources.length),
                 style: Theme.of(context)
                     .textTheme
-                    .caption
+                    .bodySmall
                     ?.copyWith(color: kCaptionColor),
               ),
         TextButton(
@@ -241,11 +241,14 @@ class _ScreenState extends State<_Screen> {
 
     Widget child = const SizedBox.shrink();
     if (source is _LbTriggerVideo) {
-      child = VideoPlayer(
-        aspectRatio: source.aspectRatio,
-        autoPlay: true,
-        url: source.url,
-      );
+      final sourceUri = Uri.tryParse(source.url);
+      if (sourceUri != null) {
+        child = VideoPlayer(
+          aspectRatio: source.aspectRatio,
+          autoPlay: true,
+          uri: sourceUri,
+        );
+      }
     }
 
     return PhotoViewGalleryPageOptions.customChild(child: child);

@@ -167,19 +167,19 @@ class _PostEditorState extends State<PostEditorWidget> {
       child: RichText(
         text: TextSpan(
           text: l(context).postReplyingToAt,
-          style: textTheme.bodyText2,
+          style: textTheme.bodyMedium,
           children: [
             if (posterUsername.isNotEmpty)
               TextSpan(
                 text: '$posterUsername ',
-                style: textTheme.bodyText2?.copyWith(
+                style: textTheme.bodyMedium?.copyWith(
                   color: theme.colorScheme.secondary,
                   fontWeight: FontWeight.bold,
                 ),
               ),
             TextSpan(
               text: postBodyPlainText.replaceAll('\n', ' '),
-              style: textTheme.caption,
+              style: textTheme.bodySmall,
             ),
           ],
         ),

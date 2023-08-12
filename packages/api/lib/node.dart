@@ -76,6 +76,7 @@ class Node with _$Node {
         linkforum: (_) => _.linkDescription,
       );
 
+  @override
   NodeLinks? get links => map(
         (_) => _.links,
         category: (_) => _.links,

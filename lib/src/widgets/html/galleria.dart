@@ -81,7 +81,7 @@ class _GalleriaItem {
                 style: p
                     .getDependency<ThemeData>()
                     .textTheme
-                    .caption
+                    .bodySmall
                     ?.copyWith(color: kCaptionColor)));
             _description = wf.buildColumnPlaceholder(meta, widgets);
             return [];

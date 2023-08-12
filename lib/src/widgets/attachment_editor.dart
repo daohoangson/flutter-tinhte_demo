@@ -107,7 +107,7 @@ class AttachmentEditorState extends State<AttachmentEditorWidget> {
         message: l(context).pickGallery,
         child: InkWell(
           child: Container(
-            color: Theme.of(context).backgroundColor,
+            color: Theme.of(context).colorScheme.background,
             padding: const EdgeInsets.symmetric(horizontal: 5.0),
             child: AspectRatio(
               aspectRatio: 1.0,
