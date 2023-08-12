@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:the_app/src/abstracts/error_reporting.dart' as error_reporting;
+import 'package:the_app/src/abstracts/facebook_log_in.dart' as facebook_log_in;
 import 'package:the_app/src/abstracts/firebase.dart' as firebase;
 import 'package:the_app/src/intl.dart';
 import 'package:the_app/src/link.dart';
@@ -21,20 +22,17 @@ import 'package:timeago/timeago.dart' as timeago;
 void main() async {
   timeago.setLocaleMessages('vi', timeago.ViMessages());
 
-  WidgetsFlutterBinding.ensureInitialized();
-  await firebase.initializeApp();
-  error_reporting.configureErrorReporting();
-  push_notification.configurePushNotification();
-
   DarkTheme? darkTheme;
   DevTools? devTools;
   FontScale? fontScale;
   String? initialLink;
   String? initialPath;
+  WidgetsFlutterBinding.ensureInitialized();
   await Future.wait([
     DarkTheme.create().then((value) => darkTheme = value),
     FontScale.create().then((value) => fontScale = value),
     DevTools.create().then((value) => devTools = value),
+    facebook_log_in.configureFacebookLogin(),
     uni_links.getInitialLink().then((value) => initialLink = value),
     firebase.initializeApp().then((value) async {
       error_reporting.configureErrorReporting();
