@@ -50,7 +50,7 @@ platform :ios do
     )
 
     upload_to_testflight(
-      api_key_path: "fastlane/4TV2PTBPVG.json"
+      api_key_path: "fastlane/4TV2PTBPVG.json",
       distribute_external: true,
       groups: "Public group"
     )
