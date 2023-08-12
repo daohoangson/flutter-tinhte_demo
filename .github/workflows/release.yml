@@ -29,6 +29,8 @@ jobs:
           set -e
 
           flutter build appbundle
+
+          git log -1 --pretty=%B | tee android/fastlane/metadata/android/en-US/changelogs/default.txt
           ( cd android && fastlane upload_beta )
 
   upload_to_testflight:

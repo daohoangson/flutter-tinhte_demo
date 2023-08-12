@@ -49,8 +49,10 @@ platform :ios do
       xcargs: "PROVISIONING_PROFILE_SPECIFIER='match AppStore com.daohoangson.flutterttdemo'"
     )
 
+    commit = last_git_commit
     upload_to_testflight(
       api_key_path: "fastlane/4TV2PTBPVG.json",
+      changelog: commit[:message],
       distribute_external: true,
       groups: "Public group"
     )
