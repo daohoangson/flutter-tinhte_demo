@@ -25,8 +25,11 @@ if ! command -v yq &>/dev/null; then
 fi
 
 _appVersion=$(yq e '.version' pubspec.yaml)
+echo "_appVersion=${_appVersion}"
 _appVersionWithBuildNumber=$(printf '.version="%s+%d"' "${_appVersion}" "${GITHUB_RUN_NUMBER}${GITHUB_RUN_ATTEMPT}")
+echo "_appVersionWithBuildNumber=${_appVersionWithBuildNumber}"
 yq --inplace e "$_appVersionWithBuildNumber" pubspec.yaml
+cat pubspec.yaml
 
 if command -v wslpath &>/dev/null; then
   _wslGithubEnv=$(wslpath -u "$GITHUB_ENV")
