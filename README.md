@@ -20,14 +20,14 @@ upload the apps to GCS (automatically deleted after 30 days).
   - macOS
   - Windows
 - State management with [provider](https://pub.dev/packages/provider)
-- Apple login via [apple_sign_in](https://pub.dev/packages/apple_sign_in)
+- Apple login via [sign_in_with_apple](https://pub.dev/packages/sign_in_with_apple)
 - Facebook login via [flutter_facebook_auth](https://pub.dev/packages/flutter_facebook_auth)
 - Google login via [google_sign_in](https://pub.dev/packages/google_sign_in)
 - Store authentication token with [flutter_secure_storage](https://pub.dev/packages/flutter_secure_storage)
 - Render HTML with [flutter_widget_from_html](https://pub.dev/packages/flutter_widget_from_html)
 - Push notification via [firebase_messaging](https://pub.dev/packages/firebase_messaging)
 - Dark mode: on / off / auto
-- Developer menu
+- Developer hidden menu (tap "Version" thrice)
 
 ## FAQ
 

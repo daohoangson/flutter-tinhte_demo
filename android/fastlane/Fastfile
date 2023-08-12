@@ -1,14 +1,11 @@
 default_platform(:android)
 
 platform :android do
-  lane :beta do
-    desc "Deploy a new beta to Google Play"
-
+  lane :upload_beta do
+    desc "Upload a beta build to Google Play"
     upload_to_play_store(
-      track: 'beta',
-      aab: '../build/app/outputs/bundle/release/app.aab',
-      skip_upload_screenshots: true,
-      skip_upload_images: true
+      aab: '../build/app/outputs/bundle/release/app-release.aab',
+      track: 'beta'
     )
   end
 end

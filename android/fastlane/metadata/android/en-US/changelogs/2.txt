@@ -1,4 +1,0 @@
-Update home UI
-Update thread view UI
-Add support for photo gallery 
-Add login with Facebook/Google

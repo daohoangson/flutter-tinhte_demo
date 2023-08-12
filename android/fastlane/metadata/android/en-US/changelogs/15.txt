@@ -1,5 +1,0 @@
-9c07b11: Support searching in forum
-2773d3a: Support searching in user profile
-0779d97: Add All Communities screen
-f81c0ef: Redesign thread widgets
-Bug fixes and improvements

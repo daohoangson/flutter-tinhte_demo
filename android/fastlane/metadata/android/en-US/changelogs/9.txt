@@ -1,3 +1,0 @@
-8fd4561: add Crashlytics
-35cf2e8: use Font Awesome for user verified badge
-Bug fixes

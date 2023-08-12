@@ -1,2 +1,0 @@
-735de36: Fix `parseLink` for push notification
-adf3015: Fix web view redirection

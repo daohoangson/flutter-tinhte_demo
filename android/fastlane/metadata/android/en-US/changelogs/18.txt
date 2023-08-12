@@ -1,7 +1,0 @@
-Add dark theme, redesign screens
-Dismiss read notifications (#7)
-a3988d3: Update html rendering
-909422b: Fix WebView
-8183b11: Fix reply without parent being rendered as root post
-a173120: Fix bug refeshing token multiple times at once
-f594e72: Fix bug thread_view `AppBar` being overflowed
