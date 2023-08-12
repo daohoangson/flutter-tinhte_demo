@@ -50,6 +50,7 @@ class SignInButton extends StatelessWidget {
     return MaterialButton(
       key: key,
       color: backgroundColor,
+      materialTapTargetSize: MaterialTapTargetSize.padded,
       onPressed: onPressed,
       splashColor: Colors.white30,
       highlightColor: Colors.white30,
