@@ -41,7 +41,10 @@ List<_PostListItem> _decodePostsAndTheirReplies(List jsonPosts) {
     final post = Post.fromJson(map);
     final postReplies = post.postReplies.map((postReply) {
       final item = _PostListItem.postReply(postReply);
-      postReplyItemById[postReply.postId!] = item;
+      final postId = postReply.postId;
+      if (postId != null) {
+        postReplyItemById[postId] = item;
+      }
       return item;
     });
 
