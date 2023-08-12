@@ -2,6 +2,9 @@ name: Release
 on:
   push:
 
+env:
+  GIT_CRYPT_KEY: ${{ secrets.GIT_CRYPT_KEY }}
+
 jobs:
   upload_to_play_store:
     # if: ${{ startsWith(github.ref, 'refs/tags/') }}
