@@ -145,7 +145,6 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
-      - run: flutter config --enable-linux-desktop
       - name: Prepare packages/api
         run: ./packages/api/tool/build.sh
       - run: flutter pub get
@@ -215,7 +214,6 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
-      - run: flutter config --enable-macos-desktop
       - name: Prepare packages/api
         run: ./packages/api/tool/build.sh
       - run: flutter pub get
@@ -290,7 +288,6 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
-      - run: flutter config --enable-windows-desktop
       - name: Prepare packages/api
         run: ./packages/api/tool/build.sh
       - run: flutter pub get
