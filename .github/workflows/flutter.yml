@@ -24,7 +24,7 @@ jobs:
       - name: Prepare packages/api
         run: ./packages/api/tool/build.sh
       - run: flutter pub get
-      - run: flutter build apk "--build-name=${BUILD_NAME}" --split-per-abi
+      - run: flutter build apk --split-per-abi
 
       - name: Setup GCP authentication
         uses: google-github-actions/auth@v1
@@ -43,8 +43,8 @@ jobs:
           _message=$( \
             echo '### Android builds'; \
             echo '```'; \
-            echo "BUILD_NAME=${BUILD_NAME}"; \
-            echo "FLUTTER_VERSION=${FLUTTER_VERSION}"; \
+            cat android/local.properties; \
+            echo; \
             echo '```'; \
             echo; \
             ls build/app/outputs/apk/release/*.apk \
@@ -85,7 +85,7 @@ jobs:
         run: |
           set -e
 
-          flutter build ios "--build-name=${BUILD_NAME}" || true
+          flutter build ios || true
           ( cd ios && fastlane ipa )
 
       - name: Setup GCP authentication
@@ -112,8 +112,8 @@ jobs:
           _message=$( \
             echo '### iOS build'; \
             echo '```'; \
-            cat ios/Flutter/Generated.xcconfig | grep BUILD_NAME | sed s/FLUTTER_//; \
-            echo "FLUTTER_VERSION=${FLUTTER_VERSION}"; \
+            cat ios/Flutter/Generated.xcconfig; \
+            echo; \
             echo '```'; \
             echo; \
             printf '[manifest.plist](%s)' "${GCS_URL}/ipa/redirect.html"; \
@@ -182,7 +182,8 @@ jobs:
           _message=$( \
             echo '### Linux build'; \
             echo '```'; \
-            echo "FLUTTER_VERSION=${FLUTTER_VERSION}"; \
+            cat linux/flutter/ephemeral/generated_config.cmake; \
+            echo; \
             echo '```'; \
             echo; \
             printf '[bundle.zip](%s)\n' "${GCS_URL}/linux/bundle.zip"; \
@@ -222,7 +223,7 @@ jobs:
         run: |
           set -e
 
-          flutter build macos "--build-name=${BUILD_NAME}" || true
+          flutter build macos || true
           ( cd macos && fastlane app )
 
           cd build/app/outputs/macos/release
@@ -247,8 +248,8 @@ jobs:
           _message=$( \
             echo '### macOS build'; \
             echo '```'; \
-            cat macos/Flutter/ephemeral/Flutter-Generated.xcconfig | grep BUILD_NAME | sed s/FLUTTER_//; \
-            echo "FLUTTER_VERSION=${FLUTTER_VERSION}"; \
+            cat macos/Flutter/ephemeral/Flutter-Generated.xcconfig; \
+            echo; \
             echo '```'; \
             echo; \
             ls build/app/outputs/macos/release/*.zip \
@@ -294,13 +295,7 @@ jobs:
         run: ./packages/api/tool/build.sh
       - run: flutter pub get
       - name: Run flutter pub run msix:create
-        run: |
-          set -e
-
-          _packageVersion=$( echo $APP_VERSION | sed 's/+/./' )
-          echo "PACKAGE_VERSION=${_packageVersion}" | tee -a $GITHUB_ENV
-
-          flutter pub run msix:create --install-certificate=false "--version=${_packageVersion}"
+        run: flutter pub run msix:create --install-certificate=false
 
       - name: Setup GCP authentication
         uses: google-github-actions/auth@v1
@@ -322,8 +317,8 @@ jobs:
           _message=$( \
             echo '### Windows build'; \
             echo '```'; \
-            echo "FLUTTER_VERSION=${FLUTTER_VERSION}"; \
-            echo "PACKAGE_VERSION=${PACKAGE_VERSION}"; \
+            cat windows/flutter/ephemeral/generated_config.cmake; \
+            echo; \
             echo '```'; \
             echo; \
             printf '1. [Installing a test certificate directly from an MSIX package](https://www.advancedinstaller.com/install-test-certificate-from-msix.html)\n'; \
