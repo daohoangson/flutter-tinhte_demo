@@ -132,7 +132,7 @@ class _PostReplyHiddenWidgetState extends State<_PostReplyHiddenWidget> {
         data,
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
-        style: Theme.of(context).textTheme.caption,
+        style: Theme.of(context).textTheme.bodySmall,
       );
 }
 

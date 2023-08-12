@@ -147,7 +147,7 @@ class _HomeTop5WidgetThread extends StatelessWidget {
       overflow: TextOverflow.ellipsis,
       text: TextSpan(
         children: spans,
-        style: theme.textTheme.caption,
+        style: theme.textTheme.bodySmall,
       ),
     );
   }

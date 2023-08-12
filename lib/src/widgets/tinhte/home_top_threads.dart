@@ -123,7 +123,7 @@ class _ThreadWidget extends StatelessWidget {
               if (viewCount > 0)
                 TextSpan(text: " ${l(context).statsXViews(viewCount)}")
             ],
-            style: theme.textTheme.caption,
+            style: theme.textTheme.bodySmall,
           ),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,

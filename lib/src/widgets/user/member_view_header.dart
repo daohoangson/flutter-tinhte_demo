@@ -52,12 +52,12 @@ class MemberViewHeader extends StatelessWidget {
               children: <Widget>[
                 Text(
                   user.username ?? '#${user.userId}',
-                  style: theme.textTheme.subtitle1
+                  style: theme.textTheme.titleMedium
                       ?.copyWith(fontWeight: FontWeight.bold),
                 ),
                 Text(
                   "${l(context).userRegisterDate}: ${formatTimestamp(context, user.userRegisterDate)}",
-                  style: theme.textTheme.caption,
+                  style: theme.textTheme.bodySmall,
                 ),
               ],
             ),
@@ -69,7 +69,7 @@ class MemberViewHeader extends StatelessWidget {
 
   Widget _buildStats(BuildContext context) {
     final theme = Theme.of(context);
-    final style = theme.textTheme.caption;
+    final style = theme.textTheme.bodySmall;
     return Column(
       children: <Widget>[
         Row(

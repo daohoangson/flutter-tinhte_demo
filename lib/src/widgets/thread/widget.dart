@@ -120,7 +120,7 @@ class ThreadWidget extends StatelessWidget {
 
   Widget _buildInfo(BuildContext context) {
     final theme = Theme.of(context);
-    final style = theme.textTheme.subtitle1;
+    final style = theme.textTheme.titleMedium;
 
     return Row(
       children: <Widget>[
@@ -134,7 +134,7 @@ class ThreadWidget extends StatelessWidget {
               const SizedBox(height: _kThreadWidgetPadding / 4),
               Text(
                 formatTimestamp(context, thread.threadCreateDate),
-                style: theme.textTheme.caption,
+                style: theme.textTheme.bodySmall,
                 textScaleFactor: 1,
               ),
             ],
@@ -341,7 +341,7 @@ class _ThreadWidgetActionsState extends State<_ThreadWidgetActions> {
     final post = this.post;
     if (post == null) return null;
 
-    final textStyle = Theme.of(context).textTheme.caption;
+    final textStyle = Theme.of(context).textTheme.bodySmall;
     return AnimatedBuilder(
       animation: post,
       builder: (_, __) {

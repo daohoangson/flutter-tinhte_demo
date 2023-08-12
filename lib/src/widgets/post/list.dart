@@ -161,7 +161,7 @@ class PostsState extends State<PostsWidget> {
                       ? (TapGestureRecognizer()..onTap = onTap)
                       : null,
                 ),
-                style: Theme.of(context).textTheme.caption,
+                style: Theme.of(context).textTheme.bodySmall,
               ),
             ),
           ),

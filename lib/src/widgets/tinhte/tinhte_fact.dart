@@ -52,7 +52,7 @@ class TinhteFact extends StatelessWidget {
                   child: Text(
                     thread.threadTitle ?? '',
                     maxLines: null,
-                    style: theme.textTheme.headline6?.copyWith(
+                    style: theme.textTheme.titleLarge?.copyWith(
                       color: theme.colorScheme.secondary,
                       fontWeight: FontWeight.bold,
                     ),
@@ -62,7 +62,7 @@ class TinhteFact extends StatelessWidget {
                 _buildContents(),
                 TinhteHtmlWidget(
                   "<center>${firstPost?.postBodyHtml ?? ''}</center>",
-                  textStyle: theme.textTheme.bodyText2,
+                  textStyle: theme.textTheme.bodyMedium,
                 ),
               ],
             ),
@@ -87,11 +87,14 @@ class TinhteFact extends StatelessWidget {
       final aspectRatio = video.aspectRatio;
       final videoUrl = video.links?.xVideoUrl;
       if (aspectRatio != null && videoUrl != null) {
-        return VideoPlayer(
-          aspectRatio: aspectRatio,
-          autoPlay: autoPlayVideo,
-          url: videoUrl,
-        );
+        final videoUri = Uri.tryParse(videoUrl);
+        if (videoUri != null) {
+          return VideoPlayer(
+            aspectRatio: aspectRatio,
+            autoPlay: autoPlayVideo,
+            uri: videoUri,
+          );
+        }
       }
     }
 

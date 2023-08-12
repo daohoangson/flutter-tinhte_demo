@@ -14,7 +14,7 @@ class _PostBodyWidget extends StatelessWidget {
               padding: const EdgeInsets.all(kPostBodyPadding),
               child: Text(
                 l(context).postDeleted,
-                style: Theme.of(context).textTheme.caption?.copyWith(
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       decoration: TextDecoration.lineThrough,
                     ),
               ),
@@ -40,7 +40,7 @@ class _PostBodyWidget extends StatelessWidget {
 }
 
 TextStyle? _getPostBodyTextStyle(BuildContext context, bool isFirstPost) {
-  final themeStyle = Theme.of(context).textTheme.bodyText2;
+  final themeStyle = Theme.of(context).textTheme.bodyMedium;
   if (themeStyle == null) return null;
 
   final size = themeStyle.fontSize;

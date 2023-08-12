@@ -37,7 +37,7 @@ class ChannelsWidget extends StatelessWidget {
     required String label,
     GestureTapCallback? onTap,
   }) {
-    final style = Theme.of(context).textTheme.caption;
+    final style = Theme.of(context).textTheme.bodySmall;
     final fontSize = style?.fontSize;
 
     return InkWell(

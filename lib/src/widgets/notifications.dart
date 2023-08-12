@@ -104,7 +104,7 @@ class _NotificationsState extends State<NotificationsWidget> {
   }
 
   Widget _buildInfo(BuildContext context, api.Notification n) {
-    final style = Theme.of(context).textTheme.caption;
+    final style = Theme.of(context).textTheme.bodySmall;
     final timestamp = Text(
       formatTimestamp(context, n.notificationCreateDate),
       style: style,

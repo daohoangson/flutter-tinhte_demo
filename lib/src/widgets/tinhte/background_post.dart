@@ -69,7 +69,7 @@ class BackgroundPost extends StatelessWidget {
           child: Center(
             child: TinhteHtmlWidget(
               "<center>$postBodyHtml</center>",
-              textStyle: theme.textTheme.headline6,
+              textStyle: theme.textTheme.titleLarge,
             ),
           ),
         ),

@@ -137,7 +137,7 @@ class _FontControlState extends State<FontControlWidget> with RouteAware {
 
   void _menuOpen() {
     final overlayEntry = _overlayEntry = _buildOverlayEntry();
-    Overlay.of(context)?.insert(overlayEntry);
+    Overlay.of(context).insert(overlayEntry);
     _isMenuOpen = true;
   }
 }

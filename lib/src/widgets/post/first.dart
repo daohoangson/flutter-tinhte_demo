@@ -40,7 +40,7 @@ class _FirstPostWidget extends StatelessWidget {
                   child: Text(
                     threadTitle,
                     maxLines: null,
-                    style: Theme.of(context).textTheme.headline6,
+                    style: Theme.of(context).textTheme.titleLarge,
                   ),
                 ),
           isCustomPost

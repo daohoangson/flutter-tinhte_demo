@@ -79,7 +79,9 @@ class ThreadImageWidget extends StatelessWidget {
 
     if (link.isEmpty) {
       return DecoratedBox(
-        decoration: BoxDecoration(color: Theme.of(context).backgroundColor),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.background,
+        ),
         child: const AspectRatio(aspectRatio: kThreadImageAspectRatio),
       );
     }

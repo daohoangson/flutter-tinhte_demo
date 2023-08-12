@@ -46,7 +46,7 @@ class _PollState extends State<PollWidget> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text(poll.pollQuestion ?? '', style: theme.textTheme.headline6),
+          Text(poll.pollQuestion ?? '', style: theme.textTheme.titleLarge),
           _PollResponsesWidget(
             canVote: canVote,
             hasResults: poll.permissions?.result == true,

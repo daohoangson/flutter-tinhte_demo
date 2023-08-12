@@ -32,6 +32,7 @@ class _InitialPathState extends State<InitialPathScreen>
       defaultWidget: widget.defaultWidget,
     ).catchError((error) async {
       await showApiErrorDialog(context, error);
+      return const SizedBox.shrink();
     }).then((built) {
       if (built != null) return built;
 
