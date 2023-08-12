@@ -20,6 +20,7 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
+          cache: true
           flutter-version: ${{ env.FLUTTER_VERSION }}
       - name: Prepare packages/api
         run: ./packages/api/tool/build.sh
@@ -77,6 +78,7 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
+          cache: true
           flutter-version: ${{ env.FLUTTER_VERSION }}
       - name: Prepare packages/api
         run: ./packages/api/tool/build.sh
@@ -144,6 +146,7 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
+          cache: true
           flutter-version: ${{ env.FLUTTER_VERSION }}
       - name: Prepare packages/api
         run: ./packages/api/tool/build.sh
@@ -213,6 +216,7 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
+          cache: true
           flutter-version: ${{ env.FLUTTER_VERSION }}
       - name: Prepare packages/api
         run: ./packages/api/tool/build.sh
@@ -287,6 +291,7 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
+          cache: true
           flutter-version: ${{ env.FLUTTER_VERSION }}
       - name: Prepare packages/api
         run: ./packages/api/tool/build.sh
