@@ -272,7 +272,7 @@ jobs:
     # disable Windows build until msix issue can be fixed
     # if: ${{ github.ref == 'refs/heads/master' || contains(github.ref, 'windows') }}
     if: ${{ contains(github.ref, 'windows') }}
-    runs-on: windows-2019
+    runs-on: windows-2022
     defaults:
       run:
         shell: bash
