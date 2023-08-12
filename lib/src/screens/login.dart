@@ -43,7 +43,6 @@ class _LoginFormState extends State<LoginForm> {
 
   LoginAssociatable? _associatable;
   LoginTfa? _tfa;
-  bool _canLoginApple = false;
   bool _isLoggingIn = false;
 
   String _username = '';
@@ -51,18 +50,6 @@ class _LoginFormState extends State<LoginForm> {
   String _tfaCode = '';
 
   _LoginFormState();
-
-  @override
-  void initState() {
-    super.initState();
-
-    if (config.loginWithApple) {
-      apple_sign_in.isSupported.then((ok) {
-        if (!ok || !mounted) return;
-        setState(() => _canLoginApple = true);
-      });
-    }
-  }
 
   @override
   void dispose() {
@@ -145,7 +132,7 @@ class _LoginFormState extends State<LoginForm> {
             ),
           ],
         ),
-        if (_canLoginApple)
+        if (config.loginWithApple && apple_sign_in.isSupported)
           SignInButton.apple(
             onPressed: _loginApple,
             text: l(context).loginWithApple,

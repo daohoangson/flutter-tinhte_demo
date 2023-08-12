@@ -16,7 +16,11 @@ Future<void> configureFacebookLogin() async {
 
 Future<String> logIn(BuildContext context) async {
   final l10n = l(context);
-  final result = await lib.FacebookAuth.instance.login();
+  final result = await lib.FacebookAuth.instance.login(
+    permissions: const [
+      'email',
+    ],
+  );
   switch (result.status) {
     case lib.LoginStatus.success:
       return result.accessToken!.token;
