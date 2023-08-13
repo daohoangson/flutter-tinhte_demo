@@ -7,7 +7,7 @@ env:
 
 jobs:
   upload_to_play_store:
-    # if: ${{ startsWith(github.ref, 'refs/tags/') }}
+    if: ${{ startsWith(github.ref, 'refs/tags/') }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -34,7 +34,7 @@ jobs:
           ( cd android && fastlane upload_beta )
 
   upload_to_testflight:
-    # if: ${{ startsWith(github.ref, 'refs/tags/') }}
+    if: ${{ startsWith(github.ref, 'refs/tags/') }}
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v3
