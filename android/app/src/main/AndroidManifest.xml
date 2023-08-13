@@ -91,11 +91,6 @@
             </intent-filter>
         </activity>
 
-        <provider
-            android:name="com.facebook.FacebookContentProvider"
-            android:authorities="com.facebook.app.FacebookContentProvider566879507102666"
-            android:exported="true" />
-
         <service
             android:name=".FcmService"
             android:exported="false">

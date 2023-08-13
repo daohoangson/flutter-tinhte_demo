@@ -413,7 +413,7 @@ class L10nDelegate extends LocalizationsDelegate<L10n> {
 DateTime secondsToDateTime(int secondsSinceEpoch) =>
     DateTime.fromMillisecondsSinceEpoch(secondsSinceEpoch * 1000);
 
-String formatNumber(dynamic value) => _numberFormatCompact.format(value);
+String formatNumber(num value) => _numberFormatCompact.format(value);
 
 String formatTimestamp(BuildContext context, int? timestamp) {
   if (timestamp == null) return '';
