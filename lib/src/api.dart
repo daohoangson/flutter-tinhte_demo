@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
+import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:the_api/api.dart';
 import 'package:the_api/oauth_token.dart';
@@ -172,22 +173,16 @@ typedef ApiOnJsonMap = void Function(Map jsonMap);
 typedef ApiOnError = void Function(dynamic error);
 
 class ApiApp extends StatefulWidget {
-  final Api api;
   final Widget child;
 
-  ApiApp({
-    required this.child,
-    Key? key,
-  })  : api = Api(config.apiRoot, config.clientId, config.clientSecret)
-          ..httpHeaders['Api-Bb-Code-Chr'] = '1'
-          ..httpHeaders['Api-Post-Tree'] = '1',
-        super(key: key);
+  const ApiApp({required this.child, Key? key}) : super(key: key);
 
   @override
   State<ApiApp> createState() => _ApiAppState();
 }
 
 class _ApiAppState extends State<ApiApp> {
+  late final Api api;
   final secureStorage = const FlutterSecureStorage();
   final visitor = User.zero();
 
@@ -196,14 +191,23 @@ class _ApiAppState extends State<ApiApp> {
   OauthToken? _token;
   var _tokenHasBeenSet = false;
 
-  Api get api => widget.api;
-
   String get _secureStorageKeyToken =>
       kSecureStorageKeyPrefixToken + api.clientId;
 
   @override
   void initState() {
     super.initState();
+
+    api = Api(
+      context.read<http.Client>(),
+      apiRoot: config.apiRoot,
+      clientId: config.clientId,
+      clientSecret: config.clientSecret,
+      httpHeaders: const {
+        'Api-Bb-Code-Chr': '1',
+        'Api-Post-Tree': '1',
+      },
+    );
 
     secureStorage.read(key: _secureStorageKeyToken).then<OauthToken?>(
       (value) {

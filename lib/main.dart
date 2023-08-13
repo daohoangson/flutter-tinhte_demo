@@ -4,6 +4,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:the_app/src/abstracts/error_reporting.dart' as error_reporting;
 import 'package:the_app/src/abstracts/firebase.dart' as firebase;
+import 'package:the_app/src/abstracts/http.dart' as http;
 import 'package:the_app/src/intl.dart';
 import 'package:the_app/src/link.dart';
 import 'package:the_app/src/screens/home.dart';
@@ -74,6 +75,7 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider<DarkTheme>.value(value: darkTheme),
           ChangeNotifierProvider<DevTools>.value(value: devTools),
           ChangeNotifierProvider<FontScale>.value(value: fontScale),
+          Provider(create: (_) => http.configureHttpClient()),
         ],
         child: Builder(builder: (context) => _buildApp(context)),
       );
