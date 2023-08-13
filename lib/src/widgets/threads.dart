@@ -5,7 +5,6 @@ import 'package:share_plus/share_plus.dart';
 import 'package:the_api/node.dart';
 import 'package:the_api/post.dart';
 import 'package:the_api/thread.dart';
-import 'package:the_api/x_user_feed.dart';
 import 'package:the_app/src/screens/forum_view.dart';
 import 'package:the_app/src/screens/node_view.dart';
 import 'package:the_app/src/screens/thread_view.dart';

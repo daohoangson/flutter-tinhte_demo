@@ -1,20 +1,17 @@
 import 'thread.dart';
 import 'x_content_list.dart';
-import 'x_user_feed.dart';
 
 class SearchResult<T> {
   final String contentType;
   final int contentId;
 
   final T? content;
-  final UserFeedData? feedData;
   final ContentListItem? listItem;
 
   SearchResult(
     this.contentType,
     this.contentId, {
     this.content,
-    this.feedData,
     this.listItem,
   });
 
@@ -36,9 +33,6 @@ class SearchResult<T> {
       contentType,
       contentId,
       content: content,
-      feedData: json.containsKey('feed_data')
-          ? UserFeedData.fromJson(json['feed_data'])
-          : null,
       listItem: json.containsKey('list_item')
           ? ContentListItem.fromJson(json['list_item'])
           : null,

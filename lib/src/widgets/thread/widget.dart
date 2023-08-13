@@ -5,13 +5,8 @@ const _kThreadWidgetSpacing = SizedBox(height: _kThreadWidgetPadding);
 
 class ThreadWidget extends StatelessWidget {
   final Thread thread;
-  final UserFeedData? feedData;
 
-  const ThreadWidget(
-    this.thread, {
-    Key? key,
-    this.feedData,
-  }) : super(key: key);
+  const ThreadWidget(this.thread, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
