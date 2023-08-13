@@ -282,7 +282,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: Vampire/setup-wsl@v2
         with:
-          additional-packages: ca-certificates file git git-crypt yq
+          additional-packages: bash file git-crypt yq
           distribution: Alpine
       - name: Prepare repo
         run: bash ./.github/workflows/prepare.sh
