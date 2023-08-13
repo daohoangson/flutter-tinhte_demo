@@ -137,11 +137,6 @@
       "method": {}
     }
   },
-  "loginErrorNoAccessTokenAutoRegister": "Không thể đăng ký mới.",
-  "@loginErrorNoAccessTokenAutoRegister": {
-    "type": "text",
-    "placeholders": {}
-  },
   "loginErrorPasswordIsEmpty": "Xin vui lòng nhập mật khẩu để đăng nhập",
   "@loginErrorPasswordIsEmpty": {
     "type": "text",
@@ -381,45 +376,6 @@
   },
   "privacyPolicy": "Chính sách quyền riêng tư",
   "@privacyPolicy": {
-    "type": "text",
-    "placeholders": {}
-  },
-  "register": "Đăng ký",
-  "@register": {
-    "type": "text",
-    "placeholders": {}
-  },
-  "registerAgreeCheckboxHtml": "Tôi đồng ý <a href=\"{terms}\">các điều khoản</a> và <a href=\"{privacyPolicy}\">chính sách quyền riêng tư</a>.",
-  "@registerAgreeCheckboxHtml": {
-    "type": "text",
-    "placeholders": {
-      "privacyPolicy": {},
-      "terms": {}
-    }
-  },
-  "registerEmail": "Email",
-  "@registerEmail": {
-    "description": "Label text for email field",
-    "type": "text",
-    "placeholders": {}
-  },
-  "registerErrorEmailIsEmpty": "Xin vui lòng nhập email để đăng ký",
-  "@registerErrorEmailIsEmpty": {
-    "type": "text",
-    "placeholders": {}
-  },
-  "registerErrorNoAccessToken": "Không thể đăng ký tài khoản mới.",
-  "@registerErrorNoAccessToken": {
-    "type": "text",
-    "placeholders": {}
-  },
-  "registerErrorPasswordIsEmpty": "Xin vui lòng nhập mật khẩu để đăng ký",
-  "@registerErrorPasswordIsEmpty": {
-    "type": "text",
-    "placeholders": {}
-  },
-  "registerErrorUsernameIsEmpty": "Xin vui lòng nhập tên đăng nhập để đăng ký",
-  "@registerErrorUsernameIsEmpty": {
     "type": "text",
     "placeholders": {}
   },

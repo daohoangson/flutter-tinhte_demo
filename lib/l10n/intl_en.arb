@@ -137,11 +137,6 @@
       "method": {}
     }
   },
-  "loginErrorNoAccessTokenAutoRegister": "Cannot register new user account.",
-  "@loginErrorNoAccessTokenAutoRegister": {
-    "type": "text",
-    "placeholders": {}
-  },
   "loginErrorPasswordIsEmpty": "Please enter your password to login",
   "@loginErrorPasswordIsEmpty": {
     "type": "text",
@@ -381,45 +376,6 @@
   },
   "privacyPolicy": "Privacy Policy",
   "@privacyPolicy": {
-    "type": "text",
-    "placeholders": {}
-  },
-  "register": "Register",
-  "@register": {
-    "type": "text",
-    "placeholders": {}
-  },
-  "registerAgreeCheckboxHtml": "I agree to the <a href=\"{terms}\">terms</a> and <a href=\"{privacyPolicy}\">privacy policy</a>.",
-  "@registerAgreeCheckboxHtml": {
-    "type": "text",
-    "placeholders": {
-      "privacyPolicy": {},
-      "terms": {}
-    }
-  },
-  "registerEmail": "Email",
-  "@registerEmail": {
-    "description": "Label text for email field",
-    "type": "text",
-    "placeholders": {}
-  },
-  "registerErrorEmailIsEmpty": "Email cannot be empty",
-  "@registerErrorEmailIsEmpty": {
-    "type": "text",
-    "placeholders": {}
-  },
-  "registerErrorNoAccessToken": "Cannot register new user account.",
-  "@registerErrorNoAccessToken": {
-    "type": "text",
-    "placeholders": {}
-  },
-  "registerErrorPasswordIsEmpty": "Password cannot be empty",
-  "@registerErrorPasswordIsEmpty": {
-    "type": "text",
-    "placeholders": {}
-  },
-  "registerErrorUsernameIsEmpty": "Username cannot be empty",
-  "@registerErrorUsernameIsEmpty": {
     "type": "text",
     "placeholders": {}
   },
