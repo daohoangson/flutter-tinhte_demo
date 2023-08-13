@@ -57,7 +57,7 @@ jobs:
           _message="${_message//'%'/'%25'}"
           _message="${_message//$'\n'/'%0A'}"
           _message="${_message//$'\r'/'%0D'}"
-          echo "::set-output name=MESSAGE::${_message}"
+          echo "MESSAGE=${_message}" >> $GITHUB_OUTPUT
       - name: Post GitHub comment
         uses: daohoangson/comment-on-github@v2
         env:
@@ -125,7 +125,7 @@ jobs:
           _message="${_message//'%'/%25}"
           _message="${_message//$'\n'/%0A}"
           _message="${_message//$'\r'/%0D}"
-          echo "::set-output name=MESSAGE::${_message}"
+          echo "MESSAGE=${_message}" >> $GITHUB_OUTPUT
       - name: Post GitHub comment
         uses: daohoangson/comment-on-github@v2
         env:
@@ -195,7 +195,7 @@ jobs:
           _message="${_message//'%'/'%25'}"
           _message="${_message//$'\n'/'%0A'}"
           _message="${_message//$'\r'/'%0D'}"
-          echo "::set-output name=MESSAGE::${_message}"
+          echo "MESSAGE=${_message}" >> $GITHUB_OUTPUT
       - name: Post GitHub comment
         uses: daohoangson/comment-on-github@v2
         env:
@@ -263,7 +263,7 @@ jobs:
           _message="${_message//'%'/%25}"
           _message="${_message//$'\n'/%0A}"
           _message="${_message//$'\r'/%0D}"
-          echo "::set-output name=MESSAGE::${_message}"
+          echo "MESSAGE=${_message}" >> $GITHUB_OUTPUT
       - name: Post GitHub comment
         uses: daohoangson/comment-on-github@v2
         env:
@@ -331,7 +331,7 @@ jobs:
           _message="${_message//'%'/'%25'}"
           _message="${_message//$'\n'/'%0A'}"
           _message="${_message//$'\r'/'%0D'}"
-          echo "::set-output name=MESSAGE::${_message}"
+          echo "MESSAGE=${_message}" >> $GITHUB_OUTPUT
       - name: Post GitHub comment
         uses: daohoangson/comment-on-github@v2
         env:
