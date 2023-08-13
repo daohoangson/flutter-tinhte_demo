@@ -92,7 +92,6 @@ class MyApp extends StatelessWidget {
         GlobalWidgetsLocalizations.delegate,
       ],
       navigatorKey: push_notification.primaryNavKey,
-      navigatorObservers: [FontControlWidget.routeObserver],
       onGenerateTitle: (context) => l(context).appTitle,
       onGenerateInitialRoutes: (initialRoute) {
         if (initialRoute == '/') {

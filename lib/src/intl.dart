@@ -63,6 +63,12 @@ class L10n {
   String followUnfollowXQuestion(String tag) => Intl.message('Unfollow $tag?',
       args: [tag], locale: localeName, name: 'followUnfollowXQuestion');
 
+  String get fontControlTooltip => Intl.message('Adjust font',
+      locale: localeName, name: 'fontControlTooltip');
+
+  String get fontScaleAdjust => Intl.message('Adjust font size',
+      locale: localeName, name: 'fontScaleAdjust');
+
   String get forums => Intl.message('Forums',
       desc: 'Forum list appbar title', locale: localeName, name: 'forums');
 
