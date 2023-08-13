@@ -28,7 +28,6 @@ abstract class ConfigBase {
   String get homeThreadsKey => 'data';
 
   bool get loginWithApple => false;
-  bool get loginWithFacebook => false;
   bool get loginWithGoogle => false;
 
   bool get myFeed => false;
