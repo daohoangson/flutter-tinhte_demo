@@ -17,7 +17,6 @@ import 'package:the_app/src/api.dart';
 import 'package:the_app/src/config.dart';
 import 'package:the_app/src/intl.dart';
 import 'package:the_app/src/link.dart';
-import 'package:the_app/src/widgets/x_user_feed/thread.dart';
 
 part 'thread/navigation.dart';
 part 'thread/widget.dart';
