@@ -95,7 +95,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "menuDeveloperCrashTest" : MessageLookupByLibrary.simpleMessage("Thử crash app"),
     "menuDeveloperShowPerformanceOverlay" : MessageLookupByLibrary.simpleMessage("Hiển thị đồ thị hiệu năng"),
     "menuLogout" : MessageLookupByLibrary.simpleMessage("Thoát"),
-    "myFeed" : MessageLookupByLibrary.simpleMessage("Cá nhân"),
     "navLowercaseNext" : MessageLookupByLibrary.simpleMessage("tiếp"),
     "navLowercasePrevious" : MessageLookupByLibrary.simpleMessage("trước"),
     "navPageX" : m7,

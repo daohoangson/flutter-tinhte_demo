@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2023-08-13T21:27:18.604523",
+  "@@last_modified": "2023-08-13T22:12:24.149517",
   "@@locale": "messages",
   "appTitle": "tinhte.vn Demo",
   "@appTitle": {
@@ -295,13 +295,6 @@
   },
   "menuLogout": "Logout",
   "@menuLogout": {
-    "type": "text",
-    "placeholders_order": [],
-    "placeholders": {}
-  },
-  "myFeed": "My Feed",
-  "@myFeed": {
-    "description": "My feed appbar title",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}

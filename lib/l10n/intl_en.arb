@@ -299,13 +299,6 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "myFeed": "My Feed",
-  "@myFeed": {
-    "description": "My feed appbar title",
-    "type": "text",
-    "placeholders_order": [],
-    "placeholders": {}
-  },
   "navLowercaseNext": "next",
   "@navLowercaseNext": {
     "type": "text",
