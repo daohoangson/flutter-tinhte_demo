@@ -41,13 +41,11 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m10(number) => "Tải thêm ${number} bài ẩn...";
 
-  static m11(privacyPolicy, terms) => "Tôi đồng ý <a href=\"${terms}\">các điều khoản</a> và <a href=\"${privacyPolicy}\">chính sách quyền riêng tư</a>.";
+  static m11(query) => "Bấm gửi đi để tìm cho \'${query}\'";
 
-  static m12(query) => "Bấm gửi đi để tìm cho \'${query}\'";
+  static m12(username) => " bởi thành viên \'${username}\'";
 
-  static m13(username) => " bởi thành viên \'${username}\'";
-
-  static m14(forumTitle) => " trong khu vực \'${forumTitle}\'";
+  static m13(forumTitle) => " trong khu vực \'${forumTitle}\'";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function> {
@@ -75,7 +73,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "loginAssociateEnterPassword" : MessageLookupByLibrary.simpleMessage("Tìm thấy tài khoản có sẵn, xin vui lòng nhập mật khẩu để kết nối cho lần đăng nhập tiếp theo."),
     "loginErrorCancelled" : m5,
     "loginErrorNoAccessToken" : m6,
-    "loginErrorNoAccessTokenAutoRegister" : MessageLookupByLibrary.simpleMessage("Không thể đăng ký mới."),
     "loginErrorPasswordIsEmpty" : MessageLookupByLibrary.simpleMessage("Xin vui lòng nhập mật khẩu để đăng nhập"),
     "loginErrorUsernameIsEmpty" : MessageLookupByLibrary.simpleMessage("Xin vui lòng nhập tên hoặc email để đăng nhập"),
     "loginGoogleErrorAccountIsNull" : MessageLookupByLibrary.simpleMessage("Không thể lấy thông tin tài khoản Google."),
@@ -123,20 +120,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "postReportedThanks" : MessageLookupByLibrary.simpleMessage("Cảm ơn bạn đã báo cáo nội dung xấu!"),
     "postUnlike" : MessageLookupByLibrary.simpleMessage("Bỏ thích"),
     "privacyPolicy" : MessageLookupByLibrary.simpleMessage("Chính sách quyền riêng tư"),
-    "register" : MessageLookupByLibrary.simpleMessage("Đăng ký"),
-    "registerAgreeCheckboxHtml" : m11,
-    "registerEmail" : MessageLookupByLibrary.simpleMessage("Email"),
-    "registerErrorEmailIsEmpty" : MessageLookupByLibrary.simpleMessage("Xin vui lòng nhập email để đăng ký"),
-    "registerErrorNoAccessToken" : MessageLookupByLibrary.simpleMessage("Không thể đăng ký tài khoản mới."),
-    "registerErrorPasswordIsEmpty" : MessageLookupByLibrary.simpleMessage("Xin vui lòng nhập mật khẩu để đăng ký"),
-    "registerErrorUsernameIsEmpty" : MessageLookupByLibrary.simpleMessage("Xin vui lòng nhập tên đăng nhập để đăng ký"),
     "search" : MessageLookupByLibrary.simpleMessage("Tìm kiếm"),
     "searchEnterSomething" : MessageLookupByLibrary.simpleMessage("Nhập nội dung cần tìm kiếm"),
-    "searchSubmitToContinue" : m12,
+    "searchSubmitToContinue" : m11,
     "searchThisForum" : MessageLookupByLibrary.simpleMessage("Tìm trong khu vực này"),
     "searchThisUser" : MessageLookupByLibrary.simpleMessage("Tìm bài viết của thành viên này"),
-    "searchThreadByUser" : m13,
-    "searchThreadInForum" : m14,
+    "searchThreadByUser" : m12,
+    "searchThreadInForum" : m13,
     "share" : MessageLookupByLibrary.simpleMessage("Chia sẻ"),
     "tagLowercaseDiscussions" : MessageLookupByLibrary.simpleMessage("thảo luận"),
     "tagLowercaseNews" : MessageLookupByLibrary.simpleMessage("tin tức"),

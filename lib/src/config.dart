@@ -10,7 +10,6 @@ abstract class ConfigBase {
   String get clientId;
   String get clientSecret;
   String get linkPrivacyPolicy;
-  String get linkTos;
   String get siteRoot;
 
   String? get pushServer => null;

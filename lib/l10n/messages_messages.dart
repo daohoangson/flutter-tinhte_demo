@@ -41,13 +41,11 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m10(number) => "Tap to load ${number} hidden replies...";
 
-  static m11(privacyPolicy, terms) => "I agree to the <a href=\"${terms}\">terms</a> and <a href=\"${privacyPolicy}\">privacy policy</a>.";
+  static m11(query) => "Submit to search for \'${query}\'";
 
-  static m12(query) => "Submit to search for \'${query}\'";
+  static m12(username) => " by user \'${username}\'";
 
-  static m13(username) => " by user \'${username}\'";
-
-  static m14(forumTitle) => " in forum \'${forumTitle}\'";
+  static m13(forumTitle) => " in forum \'${forumTitle}\'";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function> {
@@ -75,7 +73,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "loginAssociateEnterPassword" : MessageLookupByLibrary.simpleMessage("An existing account has been found, please enter your password to associate it for future logins."),
     "loginErrorCancelled" : m5,
     "loginErrorNoAccessToken" : m6,
-    "loginErrorNoAccessTokenAutoRegister" : MessageLookupByLibrary.simpleMessage("Cannot register new user account."),
     "loginErrorPasswordIsEmpty" : MessageLookupByLibrary.simpleMessage("Please enter your password to login"),
     "loginErrorUsernameIsEmpty" : MessageLookupByLibrary.simpleMessage("Please enter your username or email"),
     "loginGoogleErrorAccountIsNull" : MessageLookupByLibrary.simpleMessage("Cannot get Google account information."),
@@ -123,20 +120,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "postReportedThanks" : MessageLookupByLibrary.simpleMessage("Thank you for your report!"),
     "postUnlike" : MessageLookupByLibrary.simpleMessage("Unlike"),
     "privacyPolicy" : MessageLookupByLibrary.simpleMessage("Privacy Policy"),
-    "register" : MessageLookupByLibrary.simpleMessage("Register"),
-    "registerAgreeCheckboxHtml" : m11,
-    "registerEmail" : MessageLookupByLibrary.simpleMessage("Email"),
-    "registerErrorEmailIsEmpty" : MessageLookupByLibrary.simpleMessage("Email cannot be empty"),
-    "registerErrorNoAccessToken" : MessageLookupByLibrary.simpleMessage("Cannot register new user account."),
-    "registerErrorPasswordIsEmpty" : MessageLookupByLibrary.simpleMessage("Password cannot be empty"),
-    "registerErrorUsernameIsEmpty" : MessageLookupByLibrary.simpleMessage("Username cannot be empty"),
     "search" : MessageLookupByLibrary.simpleMessage("Search"),
     "searchEnterSomething" : MessageLookupByLibrary.simpleMessage("Enter something to search"),
-    "searchSubmitToContinue" : m12,
+    "searchSubmitToContinue" : m11,
     "searchThisForum" : MessageLookupByLibrary.simpleMessage("Search this forum"),
     "searchThisUser" : MessageLookupByLibrary.simpleMessage("Search for this user"),
-    "searchThreadByUser" : m13,
-    "searchThreadInForum" : m14,
+    "searchThreadByUser" : m12,
+    "searchThreadInForum" : m13,
     "share" : MessageLookupByLibrary.simpleMessage("Share"),
     "tagLowercaseDiscussions" : MessageLookupByLibrary.simpleMessage("discussions"),
     "tagLowercaseNews" : MessageLookupByLibrary.simpleMessage("news"),

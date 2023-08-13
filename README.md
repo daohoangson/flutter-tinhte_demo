@@ -13,12 +13,7 @@ upload the apps to GCS (automatically deleted after 30 days).
 
 ## Features
 
-- Supported platforms:
-  - Android
-  - iOS
-  - Linux
-  - macOS
-  - Windows
+- Supported platforms: Android, iOS, Linux, macOS, Windows
 - State management with [provider](https://pub.dev/packages/provider)
 - Apple login via [sign_in_with_apple](https://pub.dev/packages/sign_in_with_apple)
 - Facebook login via [flutter_facebook_auth](https://pub.dev/packages/flutter_facebook_auth)

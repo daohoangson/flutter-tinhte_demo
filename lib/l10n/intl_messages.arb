@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2023-01-04T13:39:35.279188",
+  "@@last_modified": "2023-08-13T08:41:53.802790",
   "appTitle": "tinhte.vn Demo",
   "@appTitle": {
     "type": "text",
@@ -171,12 +171,6 @@
     "placeholders": {
       "method": {}
     }
-  },
-  "loginErrorNoAccessTokenAutoRegister": "Cannot register new user account.",
-  "@loginErrorNoAccessTokenAutoRegister": {
-    "type": "text",
-    "placeholders_order": [],
-    "placeholders": {}
   },
   "loginErrorPasswordIsEmpty": "Please enter your password to login",
   "@loginErrorPasswordIsEmpty": {
@@ -470,55 +464,6 @@
   },
   "privacyPolicy": "Privacy Policy",
   "@privacyPolicy": {
-    "type": "text",
-    "placeholders_order": [],
-    "placeholders": {}
-  },
-  "register": "Register",
-  "@register": {
-    "type": "text",
-    "placeholders_order": [],
-    "placeholders": {}
-  },
-  "registerAgreeCheckboxHtml": "I agree to the <a href=\"{terms}\">terms</a> and <a href=\"{privacyPolicy}\">privacy policy</a>.",
-  "@registerAgreeCheckboxHtml": {
-    "type": "text",
-    "placeholders_order": [
-      "privacyPolicy",
-      "terms"
-    ],
-    "placeholders": {
-      "privacyPolicy": {},
-      "terms": {}
-    }
-  },
-  "registerEmail": "Email",
-  "@registerEmail": {
-    "description": "Label text for email field",
-    "type": "text",
-    "placeholders_order": [],
-    "placeholders": {}
-  },
-  "registerErrorEmailIsEmpty": "Email cannot be empty",
-  "@registerErrorEmailIsEmpty": {
-    "type": "text",
-    "placeholders_order": [],
-    "placeholders": {}
-  },
-  "registerErrorNoAccessToken": "Cannot register new user account.",
-  "@registerErrorNoAccessToken": {
-    "type": "text",
-    "placeholders_order": [],
-    "placeholders": {}
-  },
-  "registerErrorPasswordIsEmpty": "Password cannot be empty",
-  "@registerErrorPasswordIsEmpty": {
-    "type": "text",
-    "placeholders_order": [],
-    "placeholders": {}
-  },
-  "registerErrorUsernameIsEmpty": "Username cannot be empty",
-  "@registerErrorUsernameIsEmpty": {
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
