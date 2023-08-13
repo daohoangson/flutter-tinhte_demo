@@ -47,6 +47,8 @@
 	<string>bee1edd35d32695d76209b09c46c60dc</string>
 	<key>FacebookDisplayName</key>
 	<string>com.daohoangson.flutter_ttdemo</string>
+	<key>FlutterDeepLinkingEnabled</key>
+	<true/>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>LSApplicationQueriesSchemes</key>

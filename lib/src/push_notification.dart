@@ -11,9 +11,13 @@ import 'package:the_app/src/link.dart';
 const _kUnreadIconSize = 30.0;
 const _kUnreadIconBoxSize = 50.0;
 
-final primaryNavKey = GlobalKey<NavigatorState>();
+final primaryNavKey = GlobalKey<NavigatorState>(
+  debugLabel: 'push_notification.primaryNavKey',
+);
 
-final _key = GlobalKey<_PushNotificationAppState>();
+final _key = GlobalKey<_PushNotificationAppState>(
+  debugLabel: 'push_notification._key',
+);
 final StreamController<int> _notifController = StreamController.broadcast();
 
 void configurePushNotification() {
