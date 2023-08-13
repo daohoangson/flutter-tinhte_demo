@@ -1,3 +1,4 @@
+import 'package:http/http.dart' as http;
 import 'package:test/test.dart';
 import 'package:the_api/api.dart';
 
@@ -11,7 +12,14 @@ void main() {
     const email = 'api-tester@xfrocks.com';
     const password = '@pi-T3st3r';
     const userId = 2394;
-    setUp(() => api = Api(apiRoot, clientId, clientSecret));
+    setUp(() {
+      api = Api(
+        http.Client(),
+        apiRoot: apiRoot,
+        clientId: clientId,
+        clientSecret: clientSecret,
+      );
+    });
     tearDown(() => api.close());
 
     group('grant_type=password', () {

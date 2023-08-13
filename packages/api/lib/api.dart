@@ -15,14 +15,14 @@ part 'src/api_internal.dart';
 part 'src/api_login.dart';
 
 class Api {
-  final Client httpClient = Client();
-  final httpHeaders = <String, String>{};
-
   final String _apiRoot;
   final String _clientId;
   final String _clientSecret;
+  final Client _httpClient;
+  final Map<String, String> _httpHeaders;
 
   Batch? _batch;
+  var _requestCount = 0;
 
   String get apiRoot => _apiRoot;
   String get clientId => _clientId;
@@ -30,8 +30,16 @@ class Api {
   Response? get latestResponse => _latestResponse;
   int get requestCount => _requestCount;
 
-  Api(String apiRoot, this._clientId, this._clientSecret)
-      : _apiRoot = apiRoot.replaceAll(RegExp(r'/$'), '');
+  Api(
+    this._httpClient, {
+    required String apiRoot,
+    String clientId = '',
+    String clientSecret = '',
+    Map<String, String> httpHeaders = const {},
+  })  : _apiRoot = apiRoot.replaceAll(RegExp(r'/$'), ''),
+        _clientId = clientId,
+        _clientSecret = clientSecret,
+        _httpHeaders = httpHeaders;
 
   String buildUrl(String path) {
     if (path.startsWith('http')) {
@@ -55,7 +63,7 @@ class Api {
   }
 
   close() {
-    httpClient.close();
+    _httpClient.close();
   }
 
   BatchController newBatch({String path = 'batch'}) {
@@ -110,13 +118,17 @@ class Api {
     if (batch == _batch) _batch = null;
     if (batch.length == 0) return false;
 
-    final json = await sendRequest(
-      'POST',
-      batch.path,
-      bodyJson: batch.bodyJson,
-      parseJson: true,
-    );
-    return batch.handleResponse(json);
+    try {
+      final json = await sendRequest(
+        'POST',
+        batch.path,
+        bodyJson: batch.bodyJson,
+        parseJson: true,
+      );
+      return batch.handleResponse(json);
+    } catch (error, stackTrace) {
+      return batch.handleError(error, stackTrace);
+    }
   }
 
   Future sendRequest(String method, String path,
@@ -129,11 +141,12 @@ class Api {
       return batch.newJob(method, path, params: bodyFields);
     }
 
-    return _sendRequest(httpClient, method, buildUrl(path),
+    _requestCount++;
+    return _sendRequest(_httpClient, method, buildUrl(path),
         bodyFields: bodyFields,
         bodyJson: bodyJson,
         fileFields: fileFields,
-        headers: httpHeaders,
+        headers: _httpHeaders,
         parseJson: parseJson);
   }
 }

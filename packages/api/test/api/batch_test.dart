@@ -1,37 +1,67 @@
-import 'dart:async';
+import 'package:http/http.dart' as http;
+import 'package:http/testing.dart' as http;
 import 'package:test/test.dart';
 import 'package:the_api/api.dart';
-import 'package:the_api/post.dart';
-
-Future<Post> _getPostById(Api api, int postId) async {
-  final json = await api.getJson("posts/$postId");
-  return Post.fromJson(json['post']);
-}
 
 void main() {
   group('batch', () {
-    late Api api;
-    setUp(() => api = Api('https://xfrocks.com/api/index.php', '', ''));
-    tearDown(() => api.close());
-
     test('does nothing if no fetches', () async {
-      final requestCountBefore = api.requestCount;
+      final httpClient = http.MockClient((_) async => http.Response('', 404));
+      final api = Api(httpClient, apiRoot: '');
+
+      expect(api.requestCount, equals(0));
       final batch = api.newBatch();
       final fetched = await batch.fetch();
-      expect(fetched, equals(false));
-      expect(api.requestCount, equals(requestCountBefore));
+      expect(fetched, isFalse);
+      expect(api.requestCount, equals(0));
     });
 
-    test('sends all requests at once', () async {
-      final requestCountBefore = api.requestCount;
+    test('handles responses', () async {
+      final httpClient = http.MockClient((_) async => http.Response('''
+{
+  "jobs": {
+    "job1": {
+      "_job_result": "ok",
+      "hello": "foo"
+    },
+    "job2": {
+      "_job_error": "sorry bar"
+    }
+  }      
+}''', 200));
+
+      final api = Api(httpClient, apiRoot: '');
       final batch = api.newBatch();
-      _getPostById(api, 4)
-          .then(expectAsync1((Post post) => expect(post.postId, equals(4))));
-      _getPostById(api, 5)
-          .then(expectAsync1((Post post) => expect(post.postId, equals(5))));
+      expect(api.requestCount, equals(0));
+
+      api.getJson("foo").then(
+          expectAsync1((json) => expect(json, containsPair("hello", "foo"))));
+
+      expectLater(
+          api.getJson("bar"),
+          throwsA(isA<ApiErrorSingle>().having(
+            (error) => error.message,
+            'message',
+            equals('sorry bar'),
+          )));
+
       final fetched = await batch.fetch();
-      expect(fetched, equals(true));
-      expect(api.requestCount - requestCountBefore, equals(1));
+      expect(fetched, isTrue);
+      expect(api.requestCount, equals(1));
+    });
+
+    test('handles batch error', () async {
+      final httpClient = http.MockClient((_) async => http.Response('', 404));
+      final api = Api(httpClient, apiRoot: '');
+      final batch = api.newBatch();
+      expect(api.requestCount, equals(0));
+
+      expectLater(api.getJson("foo"), throwsA(isA<FormatException>()));
+      expectLater(api.getJson("bar"), throwsA(isA<FormatException>()));
+
+      final fetched = await batch.fetch();
+      expect(fetched, isFalse);
+      expect(api.requestCount, equals(1));
     });
   });
 }

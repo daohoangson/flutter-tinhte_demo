@@ -2,8 +2,6 @@ part of '../api.dart';
 
 Response? _latestResponse;
 
-int _requestCount = 0;
-
 Future _sendRequest(Client client, String method, String url,
     {Map<String, String>? bodyFields,
     String? bodyJson,
@@ -11,7 +9,6 @@ Future _sendRequest(Client client, String method, String url,
     bool followRedirects = false,
     Map<String, String>? headers,
     bool parseJson = false}) async {
-  _requestCount++;
   final uri = Uri.parse(url);
   final request =
       fileFields == null ? Request(method, uri) : MultipartRequest(method, uri);

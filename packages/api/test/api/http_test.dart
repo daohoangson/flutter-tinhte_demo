@@ -1,10 +1,11 @@
+import 'package:http/http.dart' as http;
 import 'package:test/test.dart';
 import 'package:the_api/api.dart';
 
 void main() {
   group('http', () {
     late Api api;
-    setUp(() => api = Api('', '', ''));
+    setUp(() => api = Api(http.Client(), apiRoot: ''));
     tearDown(() => api.close());
 
     test('deletes ok', () async {

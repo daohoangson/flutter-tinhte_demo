@@ -48,6 +48,13 @@ class Batch {
     return newJob.future;
   }
 
+  bool handleError(Object error, StackTrace stackTrace) {
+    for (final job in _jobs) {
+      job.completer.completeError(error, stackTrace);
+    }
+    return false;
+  }
+
   bool handleResponse(json) {
     Map<String, dynamic> jsonAsMap = json is Map<String, dynamic> ? json : {};
     Map<String, dynamic> jsonJobs = jsonAsMap['jobs'] ?? {};
