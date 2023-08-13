@@ -64,6 +64,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "followNotificationChannelExplainForX" : m3,
     "followNotificationChannels" : MessageLookupByLibrary.simpleMessage("Kênh thông tin"),
     "followUnfollowXQuestion" : m4,
+    "fontControlTooltip" : MessageLookupByLibrary.simpleMessage("Điều chỉnh hiển thị"),
+    "fontScaleAdjust" : MessageLookupByLibrary.simpleMessage("Điều chỉnh cỡ chữ"),
     "forums" : MessageLookupByLibrary.simpleMessage("Diễn đàn"),
     "home" : MessageLookupByLibrary.simpleMessage("Trang chủ"),
     "justAMomentEllipsis" : MessageLookupByLibrary.simpleMessage("Chờ một xíu..."),
