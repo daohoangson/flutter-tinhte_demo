@@ -98,7 +98,7 @@ class MyApp extends StatelessWidget {
       navigatorObservers: [FontControlWidget.routeObserver],
       onGenerateTitle: (context) => l(context).appTitle,
       onGenerateInitialRoutes: (initialRoute) {
-        if (initialRoute == PlatformDispatcher.instance.defaultRouteName) {
+        if (initialRoute == '/') {
           // user (1) launches Android/iOS app
           // or (4a) opens link when iOS app is killed
           // (the actual route will trigger onGenerateRoute after a few ms)
@@ -107,8 +107,10 @@ class MyApp extends StatelessWidget {
           // (3) user opens link when Android app is killed
           return [
             MaterialPageRoute(
-              builder: (_) =>
-                  InitialPathScreen(initialRoute, defaultWidget: home),
+              builder: (_) => InitialPathScreen(
+                buildToolsParseLinkPath(initialRoute),
+                defaultWidget: home,
+              ),
             ),
           ];
         }
