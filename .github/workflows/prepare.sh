@@ -15,13 +15,7 @@ rm ./git-crypt-key
 
 # Extract config from pubspec.yaml
 if ! command -v yq &>/dev/null; then
-  if ! command -v brew &>/dev/null; then
-    _os=$(uname -s | tr '[:upper:]' '[:lower:]')
-    _arch=amd64
-    wget "https://github.com/mikefarah/yq/releases/download/v4.12.1/yq_${_os}_${_arch}" --quiet -O /usr/bin/yq && chmod +x /usr/bin/yq
-  else
-    brew install yq
-  fi
+  brew install yq
 fi
 
 _appVersion=$(yq e '.version' pubspec.yaml)
