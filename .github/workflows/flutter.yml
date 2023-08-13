@@ -280,9 +280,10 @@ jobs:
         shell: bash
     steps:
       - uses: actions/checkout@v3
-      - uses: Vampire/setup-wsl@v1
+      - uses: Vampire/setup-wsl@v2
         with:
-          additional-packages: ca-certificates file git git-crypt gettext wget
+          additional-packages: ca-certificates file git git-crypt yq
+          distribution: Alpine
       - name: Prepare repo
         run: bash ./.github/workflows/prepare.sh
         shell: wsl-bash {0}
