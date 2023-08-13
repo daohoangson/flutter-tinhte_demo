@@ -1,18 +1,25 @@
 {
-  "@@last_modified": "2021-09-03T00:46:44.814800",
+  "@@last_modified": "2023-08-13T21:27:18.604523",
+  "@@locale": "en",
   "appTitle": "tinhte.vn Demo",
   "@appTitle": {
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "appVersion": "Version",
   "@appVersion": {
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "appVersionInfo": "{version} (build number: {buildNumber})",
   "@appVersionInfo": {
     "type": "text",
+    "placeholders_order": [
+      "version",
+      "buildNumber"
+    ],
     "placeholders": {
       "version": {},
       "buildNumber": {}
@@ -21,42 +28,52 @@
   "appVersionNotAvailable": "N/A",
   "@appVersionNotAvailable": {
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "apiError": "API Error",
   "@apiError": {
     "description": "Default dialog title for API error",
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "apiUnexpectedResponse": "Unexpected API response",
   "@apiUnexpectedResponse": {
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "follow": "Follow",
   "@follow": {
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "followFollowing": "Following",
   "@followFollowing": {
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "followNotificationChannelAlert": "Alert",
   "@followNotificationChannelAlert": {
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "followNotificationChannelEmail": "Email",
   "@followNotificationChannelEmail": {
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "followNotificationChannelExplainForX": "Choose how you want to be notified when new contents are available in {tag}:",
   "@followNotificationChannelExplainForX": {
     "type": "text",
+    "placeholders_order": [
+      "tag"
+    ],
     "placeholders": {
       "tag": {}
     }
@@ -64,58 +81,84 @@
   "followNotificationChannels": "Notification channels",
   "@followNotificationChannels": {
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "followUnfollowXQuestion": "Unfollow {tag}?",
   "@followUnfollowXQuestion": {
     "type": "text",
+    "placeholders_order": [
+      "tag"
+    ],
     "placeholders": {
       "tag": {}
     }
+  },
+  "fontControlTooltip": "Adjust font",
+  "@fontControlTooltip": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "fontScaleAdjust": "Adjust font size",
+  "@fontScaleAdjust": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
   },
   "forums": "Forums",
   "@forums": {
     "description": "Forum list appbar title",
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "home": "Home",
   "@home": {
     "description": "Home bottom navigation item title",
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "justAMomentEllipsis": "Just a moment...",
   "@justAMomentEllipsis": {
     "description": "Placeholder text for link parsing",
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "loadingEllipsis": "Loading...",
   "@loadingEllipsis": {
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "login": "Login",
   "@login": {
     "description": "Login screen appbar title",
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "loginAssociate": "Associate",
   "@loginAssociate": {
     "description": "Label for \"Associate\" button",
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "loginAssociateEnterPassword": "An existing account has been found, please enter your password to associate it for future logins.",
   "@loginAssociateEnterPassword": {
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "loginErrorCancelled": "{method} has been cancelled.",
   "@loginErrorCancelled": {
     "type": "text",
+    "placeholders_order": [
+      "method"
+    ],
     "placeholders": {
       "method": {}
     }
@@ -123,16 +166,21 @@
   "loginGoogleErrorAccountIsNull": "Cannot get Google account information.",
   "@loginGoogleErrorAccountIsNull": {
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "loginGoogleErrorTokenIsEmpty": "Cannot get Google authentication info.",
   "@loginGoogleErrorTokenIsEmpty": {
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "loginErrorNoAccessToken": "Cannot login with {method}.",
   "@loginErrorNoAccessToken": {
     "type": "text",
+    "placeholders_order": [
+      "method"
+    ],
     "placeholders": {
       "method": {}
     }
@@ -140,118 +188,142 @@
   "loginErrorPasswordIsEmpty": "Please enter your password to login",
   "@loginErrorPasswordIsEmpty": {
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "loginErrorUsernameIsEmpty": "Please enter your username or email",
   "@loginErrorUsernameIsEmpty": {
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "loginPassword": "Password",
   "@loginPassword": {
     "description": "Label text for password field",
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "loginPasswordHint": "hunter2",
   "@loginPasswordHint": {
     "description": "Hint text for password field",
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "loginUsername": "Username",
   "@loginUsername": {
     "description": "Label text for username field",
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "loginUsernameHint": "keyboard_warrior",
   "@loginUsernameHint": {
     "description": "Hint text for username field",
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "loginUsernameOrEmail": "Username / email",
   "@loginUsernameOrEmail": {
     "description": "Label text for username / email field",
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "loginWithApple": "Sign in with Apple",
   "@loginWithApple": {
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "loginWithGoogle": "Sign in with Google",
   "@loginWithGoogle": {
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "menu": "Menu",
   "@menu": {
     "description": "Menu screen appbar title",
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "menuDarkTheme": "Dark theme",
   "@menuDarkTheme": {
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "menuDarkTheme0": "No, use light theme",
   "@menuDarkTheme0": {
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "menuDarkTheme1": "Yes, use dark theme",
   "@menuDarkTheme1": {
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "menuDarkThemeAuto": "Use system's color scheme",
   "@menuDarkThemeAuto": {
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "menuDeveloper": "Developer Menu",
   "@menuDeveloper": {
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "menuDeveloperCrashTest": "Crash Test",
   "@menuDeveloperCrashTest": {
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "menuDeveloperShowPerformanceOverlay": "Show Performance Overlay",
   "@menuDeveloperShowPerformanceOverlay": {
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "menuLogout": "Logout",
   "@menuLogout": {
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "myFeed": "My Feed",
   "@myFeed": {
     "description": "My feed appbar title",
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "navLowercaseNext": "next",
   "@navLowercaseNext": {
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "navLowercasePrevious": "previous",
   "@navLowercasePrevious": {
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "navPageX": "Page {page}",
   "@navPageX": {
     "type": "text",
+    "placeholders_order": [
+      "page"
+    ],
     "placeholders": {
       "page": {}
     }
@@ -259,6 +331,10 @@
   "navXOfY": "{x} of {y}",
   "@navXOfY": {
     "type": "text",
+    "placeholders_order": [
+      "x",
+      "y"
+    ],
     "placeholders": {
       "x": {},
       "y": {}
@@ -268,21 +344,27 @@
   "@notifications": {
     "description": "Notification list appbar title",
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "openInBrowser": "Open in browser",
   "@openInBrowser": {
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "pickGallery": "Select image to upload",
   "@pickGallery": {
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "pollErrorTooManyVotes": "{howMany,plural, =1{You can only choose one.}other{You can only select up to {howMany} choices.}}",
   "@pollErrorTooManyVotes": {
     "type": "text",
+    "placeholders_order": [
+      "howMany"
+    ],
     "placeholders": {
       "howMany": {}
     }
@@ -290,46 +372,57 @@
   "pollVote": "Vote",
   "@pollVote": {
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "postDelete": "Delete",
   "@postDelete": {
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "postDeleteReasonHint": "Reason to delete post.",
   "@postDeleteReasonHint": {
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "postDeleted": "Deleted post.",
   "@postDeleted": {
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "postError": "Post error",
   "@postError": {
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "postGoUnreadQuestion": "Continue reading?",
   "@postGoUnreadQuestion": {
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "postGoUnreadYes": "YES",
   "@postGoUnreadYes": {
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "postLike": "Like",
   "@postLike": {
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "postLoadXHidden": "Tap to load {number} hidden replies...",
   "@postLoadXHidden": {
     "type": "text",
+    "placeholders_order": [
+      "number"
+    ],
     "placeholders": {
       "number": {}
     }
@@ -337,66 +430,81 @@
   "postReport": "Report",
   "@postReport": {
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "postReportReasonHint": "Problem to be reported.",
   "@postReportReasonHint": {
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "postReportedThanks": "Thank you for your report!",
   "@postReportedThanks": {
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "postUnlike": "Unlike",
   "@postUnlike": {
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "postReply": "Reply",
   "@postReply": {
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "postReplyMessageHint": "Enter your message to post",
   "@postReplyMessageHint": {
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "postReplyingToAt": "Replying to @",
   "@postReplyingToAt": {
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "privacyPolicy": "Privacy Policy",
   "@privacyPolicy": {
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "search": "Search",
   "@search": {
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "searchEnterSomething": "Enter something to search",
   "@searchEnterSomething": {
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "searchThisUser": "Search for this user",
   "@searchThisUser": {
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "searchThisForum": "Search this forum",
   "@searchThisForum": {
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "searchSubmitToContinue": "Submit to search for '{query}'",
   "@searchSubmitToContinue": {
     "type": "text",
+    "placeholders_order": [
+      "query"
+    ],
     "placeholders": {
       "query": {}
     }
@@ -404,6 +512,9 @@
   "searchThreadByUser": " by user '{username}'",
   "@searchThreadByUser": {
     "type": "text",
+    "placeholders_order": [
+      "username"
+    ],
     "placeholders": {
       "username": {}
     }
@@ -411,6 +522,9 @@
   "searchThreadInForum": " in forum '{forumTitle}'",
   "@searchThreadInForum": {
     "type": "text",
+    "placeholders_order": [
+      "forumTitle"
+    ],
     "placeholders": {
       "forumTitle": {}
     }
@@ -418,11 +532,16 @@
   "share": "Share",
   "@share": {
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "_statsXReplies": "{howMany,plural, =1{{howMany} reply}other{{formatted} replies}}",
   "@_statsXReplies": {
     "type": "text",
+    "placeholders_order": [
+      "howMany",
+      "formatted"
+    ],
     "placeholders": {
       "howMany": {},
       "formatted": {}
@@ -431,6 +550,10 @@
   "_statsXViews": "{howMany,plural, =1{{howMany} view}other{{formatted} views}}",
   "@_statsXViews": {
     "type": "text",
+    "placeholders_order": [
+      "howMany",
+      "formatted"
+    ],
     "placeholders": {
       "howMany": {},
       "formatted": {}
@@ -439,102 +562,122 @@
   "tagLowercaseDiscussions": "discussions",
   "@tagLowercaseDiscussions": {
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "tagLowercaseNews": "news",
   "@tagLowercaseNews": {
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "threadBookmark": "Bookmark",
   "@threadBookmark": {
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "threadBookmarkList": "Bookmarks",
   "@threadBookmarkList": {
     "description": "Bookmark list appbar title",
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "threadBookmarkUndo": "Unbookmark",
   "@threadBookmarkUndo": {
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "threadCreateBody": "Post body",
   "@threadCreateBody": {
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "threadCreateBodyHint": "",
   "@threadCreateBodyHint": {
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "threadCreateChooseAForum": "Choose a forum",
   "@threadCreateChooseAForum": {
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "threadCreateError": "Creating thread error",
   "@threadCreateError": {
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "threadCreateErrorBodyIsEmpty": "Please enter a post body to create thread",
   "@threadCreateErrorBodyIsEmpty": {
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "threadCreateErrorTitleIsEmpty": "Please enter a title to create thread",
   "@threadCreateErrorTitleIsEmpty": {
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "threadCreateNew": "Create new thread",
   "@threadCreateNew": {
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "threadCreateSubmit": "Submit",
   "@threadCreateSubmit": {
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "threadCreateTitle": "Thread title",
   "@threadCreateTitle": {
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "threadCreateTitleHint": "Something interesting",
   "@threadCreateTitleHint": {
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "threadStickyBanner": "Sticky",
   "@threadStickyBanner": {
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "topThreads": "Top Threads",
   "@topThreads": {
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "userIgnore": "Ignore",
   "@userIgnore": {
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "userRegisterDate": "Joined",
   "@userRegisterDate": {
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   },
   "userUnignore": "Unignore",
   "@userUnignore": {
     "type": "text",
+    "placeholders_order": [],
     "placeholders": {}
   }
 }

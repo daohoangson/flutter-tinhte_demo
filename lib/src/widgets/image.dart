@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:the_api/thread.dart';
 import 'package:the_app/src/config.dart';
 
-const kThreadImageAspectRatio = 594 / 368;
+const _kThreadImageAspectRatio = 594 / 368;
 
 final String _apiUrlAttachments = "${config.apiRoot}?attachments";
 
@@ -82,7 +82,7 @@ class ThreadImageWidget extends StatelessWidget {
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.background,
         ),
-        child: const AspectRatio(aspectRatio: kThreadImageAspectRatio),
+        child: const AspectRatio(aspectRatio: _kThreadImageAspectRatio),
       );
     }
 
@@ -108,7 +108,7 @@ class ThreadImageWidget extends StatelessWidget {
     return AspectRatio(
       aspectRatio: useImageRatio == true && width > 0 && height > 0
           ? width / height
-          : kThreadImageAspectRatio,
+          : _kThreadImageAspectRatio,
       child: Hero(tag: "threadImageHero--$threadId", child: img),
     );
   }

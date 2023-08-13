@@ -1,8 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:the_api/post.dart';
+import 'package:the_app/src/constants.dart';
 import 'package:the_app/src/widgets/html.dart';
-import 'package:the_app/src/widgets/posts.dart';
+
+// try to match the paddings for a smooth curve
+const _kBorderRadius = kPadding;
 
 bool isBackgroundPost(Post post) =>
     post.postBodyHtml
@@ -29,7 +32,7 @@ class BackgroundPost extends StatelessWidget {
         children: <Widget>[
           Container(
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(kPaddingHorizontal),
+              borderRadius: BorderRadius.circular(_kBorderRadius),
               color: theme.primaryColorDark,
             ),
             child: _buildWithBackground(theme),
@@ -54,7 +57,7 @@ class BackgroundPost extends StatelessWidget {
         : postBodyHtml0;
 
     return ClipRRect(
-      borderRadius: BorderRadius.circular(kPaddingHorizontal),
+      borderRadius: BorderRadius.circular(_kBorderRadius),
       child: Container(
         decoration: threadBackgroundUrl != null
             ? BoxDecoration(

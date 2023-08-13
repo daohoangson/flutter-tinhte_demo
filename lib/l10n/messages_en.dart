@@ -64,6 +64,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "followNotificationChannelExplainForX" : m3,
     "followNotificationChannels" : MessageLookupByLibrary.simpleMessage("Notification channels"),
     "followUnfollowXQuestion" : m4,
+    "fontControlTooltip" : MessageLookupByLibrary.simpleMessage("Adjust font"),
+    "fontScaleAdjust" : MessageLookupByLibrary.simpleMessage("Adjust font size"),
     "forums" : MessageLookupByLibrary.simpleMessage("Forums"),
     "home" : MessageLookupByLibrary.simpleMessage("Home"),
     "justAMomentEllipsis" : MessageLookupByLibrary.simpleMessage("Just a moment..."),

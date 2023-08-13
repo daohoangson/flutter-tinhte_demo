@@ -1,5 +1,6 @@
 {
-  "@@last_modified": "2023-08-13T17:16:55.316783",
+  "@@last_modified": "2023-08-13T21:27:18.604523",
+  "@@locale": "messages",
   "appTitle": "tinhte.vn Demo",
   "@appTitle": {
     "type": "text",
@@ -92,6 +93,18 @@
     "placeholders": {
       "tag": {}
     }
+  },
+  "fontControlTooltip": "Adjust font",
+  "@fontControlTooltip": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "fontScaleAdjust": "Adjust font size",
+  "@fontScaleAdjust": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
   },
   "forums": "Forums",
   "@forums": {

@@ -1,5 +1,6 @@
 {
   "@@last_modified": "2021-09-03T00:46:44.814800",
+  "@@locale": "vi",
   "appTitle": "Tinh tế Demo",
   "@appTitle": {
     "type": "text",
@@ -72,6 +73,16 @@
     "placeholders": {
       "tag": {}
     }
+  },
+  "fontControlTooltip": "Điều chỉnh hiển thị",
+  "@fontControlTooltip": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "fontScaleAdjust": "Điều chỉnh cỡ chữ",
+  "@fontScaleAdjust": {
+    "type": "text",
+    "placeholders": {}
   },
   "forums": "Diễn đàn",
   "@forums": {

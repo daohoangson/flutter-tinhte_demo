@@ -4,8 +4,6 @@ import 'package:the_api/feature_page.dart';
 import 'package:the_app/src/intl.dart';
 import 'package:the_app/src/screens/fp_view.dart';
 
-const kTagWidgetPadding = 2.5;
-
 class FpWidget extends StatelessWidget {
   static const kPreferAspectRatio = 1.3;
   static const kPreferWidth = 150.0;

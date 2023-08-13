@@ -3,8 +3,13 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:the_app/src/constants.dart';
+import 'package:the_app/src/intl.dart';
+import 'package:the_app/src/widgets/menu/dark_theme.dart';
 
 class FontScale extends ChangeNotifier {
+  static var min = .5;
+  static var max = 3.0;
+
   double? _value;
 
   double get value => _value ?? 1.0;
@@ -12,7 +17,7 @@ class FontScale extends ChangeNotifier {
   FontScale._();
 
   set value(double v) {
-    if (v < .5 || v > 3) return;
+    if (v < min || v > max) return;
     _value = v;
     notifyListeners();
 
@@ -28,116 +33,69 @@ class FontScale extends ChangeNotifier {
   }
 }
 
-class FontControlWidget extends StatefulWidget {
+class FontControlWidget extends StatelessWidget {
   const FontControlWidget({Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _FontControlState();
-
-  static final routeObserver = RouteObserver<ModalRoute<void>>();
+  Widget build(BuildContext context) {
+    return IconButton(
+      icon: const Icon(FontAwesomeIcons.font),
+      onPressed: () {
+        showModalBottomSheet(
+          context: context,
+          builder: (_) => _FontControlBottomSheet(),
+          showDragHandle: true,
+        );
+      },
+      tooltip: l(context).fontControlTooltip,
+    );
+  }
 }
 
-class _FontControlState extends State<FontControlWidget> with RouteAware {
-  final _key = GlobalKey();
-
-  bool _isMenuOpen = false;
-  OverlayEntry? _overlayEntry;
-
+class _FontControlBottomSheet extends StatelessWidget {
   @override
-  Widget build(BuildContext context) => IconButton(
-        icon: Icon(FontAwesomeIcons.font, key: _key),
-        onPressed: () => _isMenuOpen ? _menuClose() : _menuOpen(),
-      );
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    FontControlWidget.routeObserver.subscribe(this, ModalRoute.of(context)!);
-  }
-
-  @override
-  void didPushNext() {
-    if (_isMenuOpen) _menuClose();
-  }
-
-  @override
-  void dispose() {
-    if (_isMenuOpen) _menuClose();
-    FontControlWidget.routeObserver.unsubscribe(this);
-    super.dispose();
-  }
-
-  OverlayEntry _buildOverlayEntry() {
-    final renderBox = _key.currentContext?.findRenderObject() as RenderBox;
-    final buttonSize = renderBox.size;
-    final buttonPosition = renderBox.localToGlobal(Offset.zero);
-    final screenWidth = MediaQuery.of(context).size.width;
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    final direction = Directionality.of(context);
-    final top = buttonPosition.dy + buttonSize.height;
-    final right = direction == TextDirection.ltr
-        ? screenWidth - (buttonPosition.dx + buttonSize.width)
-        : null;
-    final left = direction == TextDirection.rtl ? buttonPosition.dx : null;
-
-    return OverlayEntry(
-        builder: (_) => Positioned(
-            top: top,
-            left: left,
-            right: right,
-            child: Opacity(
-              opacity: .7,
-              child: Material(
-                borderRadius: BorderRadius.circular(8),
-                color: theme.dialogBackgroundColor,
-                child: Builder(builder: (context) {
-                  final style = DefaultTextStyle.of(context).style;
-                  final fontSize = style.fontSize;
-
-                  return Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      InkWell(
-                        child: const Padding(
-                          padding: EdgeInsets.all(8),
-                          child: Icon(FontAwesomeIcons.minus),
-                        ),
-                        onTap: () => context.read<FontScale>().value -= .25,
-                      ),
-                      InkWell(
-                        child: SizedBox(
-                          width: fontSize != null ? fontSize * 3 : null,
-                          child: Text(
-                            '${(context.watch<FontScale>().value * 100).toInt()}%',
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                        onTap: () => context.read<FontScale>().value = 1,
-                      ),
-                      InkWell(
-                        child: const Padding(
-                          padding: EdgeInsets.all(8),
-                          child: Icon(FontAwesomeIcons.plus),
-                        ),
-                        onTap: () => context.read<FontScale>().value += .25,
-                      ),
-                    ],
-                  );
-                }),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const MenuDarkTheme(),
+        Padding(
+          padding: const EdgeInsets.all(kPadding),
+          child: Text(
+            l(context).fontScaleAdjust,
+            style: theme.textTheme.titleLarge,
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(kPadding),
+          child: Row(
+            children: [
+              const Padding(
+                padding: EdgeInsets.all(kPadding),
+                child: Text('a'),
               ),
-            )));
-  }
-
-  void _menuClose() {
-    _overlayEntry?.remove();
-    _isMenuOpen = false;
-    _overlayEntry = null;
-  }
-
-  void _menuOpen() {
-    final overlayEntry = _overlayEntry = _buildOverlayEntry();
-    Overlay.of(context).insert(overlayEntry);
-    _isMenuOpen = true;
+              Expanded(
+                child: Consumer<FontScale>(
+                  builder: (context, fontScale, _) => Slider.adaptive(
+                    divisions: (FontScale.max - FontScale.min) ~/ .25,
+                    min: FontScale.min,
+                    max: FontScale.max,
+                    onChanged: (newValue) => fontScale.value = newValue,
+                    value: fontScale.value,
+                  ),
+                ),
+              ),
+              const Padding(
+                padding: EdgeInsets.all(kPadding),
+                child: Text('A'),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
   }
 }
