@@ -2,10 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:the_api/attachment.dart';
 import 'package:the_api/post.dart';
 import 'package:the_api/thread.dart';
+import 'package:the_app/src/constants.dart';
 import 'package:the_app/src/widgets/html.dart';
 import 'package:the_app/src/widgets/image.dart';
-import 'package:the_app/src/widgets/posts.dart';
 import 'package:the_app/src/widgets/video_player.dart';
+
+// try to match the paddings for a smooth curve
+const _kPadding = kPadding;
+const _kBorderRadius = _kPadding;
 
 bool isTinhteFact(Thread thread) =>
     thread.threadImage != null &&
@@ -41,14 +45,14 @@ class TinhteFact extends StatelessWidget {
         children: <Widget>[
           Container(
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(kPaddingHorizontal),
+              borderRadius: BorderRadius.circular(_kBorderRadius),
               color: theme.primaryColorDark,
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 Padding(
-                  padding: const EdgeInsets.all(kPaddingHorizontal),
+                  padding: const EdgeInsets.all(_kPadding),
                   child: Text(
                     thread.threadTitle ?? '',
                     maxLines: null,

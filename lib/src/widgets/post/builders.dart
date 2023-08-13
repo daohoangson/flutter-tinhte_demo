@@ -1,11 +1,7 @@
 part of '../posts.dart';
 
-const kPaddingHorizontal = 10.0;
-const kEdgeInsetsHorizontal = EdgeInsets.symmetric(
-  horizontal: kPaddingHorizontal,
-);
-const kAvatarRootRadius = kToolbarHeight / 4;
-const kAvatarReplyToRadius = kToolbarHeight / 5;
+const _kAvatarRootRadius = kToolbarHeight / 4;
+const _kAvatarReplyToRadius = kToolbarHeight / 5;
 
 Widget buildPostButton(
   BuildContext context,
@@ -41,7 +37,7 @@ Widget buildPostRow(
 }) {
   final children = <Widget>[
     Padding(
-      padding: kEdgeInsetsHorizontal,
+      padding: const EdgeInsets.symmetric(horizontal: kPadding),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(3),
         child: DecoratedBox(
@@ -78,12 +74,12 @@ Widget buildPostRow(
 Widget buildPosterCircleAvatar(String? url, {bool isPostReply = false}) =>
     Padding(
       padding: EdgeInsets.only(
-        left: kPaddingHorizontal,
-        top: isPostReply ? (kAvatarRootRadius - kAvatarReplyToRadius) : 0,
+        left: kPadding,
+        top: isPostReply ? (_kAvatarRootRadius - _kAvatarReplyToRadius) : 0,
       ),
       child: CircleAvatar(
         backgroundImage: url != null ? CachedNetworkImageProvider(url) : null,
-        radius: isPostReply ? kAvatarReplyToRadius : kAvatarRootRadius,
+        radius: isPostReply ? _kAvatarReplyToRadius : _kAvatarRootRadius,
       ),
     );
 
@@ -138,7 +134,7 @@ Widget buildPosterInfo(
   }
 
   return Padding(
-    padding: kEdgeInsetsHorizontal,
+    padding: const EdgeInsets.symmetric(horizontal: kPadding),
     child: built,
   );
 }

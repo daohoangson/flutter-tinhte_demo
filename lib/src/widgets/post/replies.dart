@@ -33,7 +33,7 @@ class _PostWidget extends StatelessWidget {
       ],
       footer: <Widget>[
         Padding(
-          padding: const EdgeInsets.only(left: kPaddingHorizontal),
+          padding: const EdgeInsets.only(left: kPadding),
           child: _PostActionsWidget(post: post),
         ),
       ],
@@ -77,8 +77,8 @@ class _PostReplyHiddenWidgetState extends State<_PostReplyHiddenWidget> {
 
     built = Padding(
       padding: const EdgeInsets.symmetric(
-        vertical: 7.5,
-        horizontal: kPaddingHorizontal,
+        horizontal: kPadding,
+        vertical: kPaddingThreeQuarters,
       ),
       child: built,
     );
@@ -140,11 +140,10 @@ Widget _buildReplyToPadding(Widget child, int depth) => depth == 0
     ? child
     : Padding(
         padding: EdgeInsets.only(
-          left: 2 * kPaddingHorizontal +
-              kAvatarRootRadius +
+          left: 2 * kPadding +
+              _kAvatarRootRadius +
               (depth > 1
-                  ? (depth - 1) *
-                      (2 * kPaddingHorizontal + kAvatarReplyToRadius)
+                  ? (depth - 1) * (2 * kPadding + _kAvatarReplyToRadius)
                   : 0),
         ),
         child: child,

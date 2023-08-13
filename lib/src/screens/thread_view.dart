@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:the_api/thread.dart';
+import 'package:the_app/src/constants.dart';
 import 'package:the_app/src/widgets/font_control.dart';
 import 'package:the_app/src/widgets/post_editor.dart';
 import 'package:the_app/src/widgets/posts.dart';
@@ -194,8 +195,8 @@ class _ThreadViewState extends State<ThreadViewScreen> {
               ),
               child: PostEditorWidget(
                 callback: (p) => _postsKey.currentState?.insertNewPost(p),
-                paddingHorizontal: kPaddingHorizontal,
-                paddingVertical: kPaddingHorizontal / 2,
+                paddingHorizontal: kPadding,
+                paddingVertical: kPadding / 2,
               ),
             ),
           ],

@@ -70,7 +70,7 @@ class _PostActionsWidgetState extends State<_PostActionsWidget> {
           );
 
           final row = Padding(
-            padding: const EdgeInsets.only(left: kPaddingHorizontal / 2),
+            padding: const EdgeInsets.only(left: kPaddingHalf),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: buttons,
@@ -84,7 +84,7 @@ class _PostActionsWidgetState extends State<_PostActionsWidget> {
   Widget _buildPopupMenu(BuildContext context, Post post) {
     return PopupMenuButton<String>(
       child: Padding(
-        padding: const EdgeInsets.all(kPaddingHorizontal),
+        padding: const EdgeInsets.all(kPadding),
         child: Text(
           '•••',
           style: TextStyle(

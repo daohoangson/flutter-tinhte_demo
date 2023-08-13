@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:the_api/post.dart';
 import 'package:the_api/thread.dart';
+import 'package:the_app/src/constants.dart';
 import 'package:the_app/src/intl.dart';
 import 'package:the_app/src/widgets/attachment_editor.dart';
-import 'package:the_app/src/widgets/posts.dart';
 import 'package:the_app/src/data/emojis.dart';
 import 'package:the_app/src/api.dart';
 
@@ -141,10 +141,7 @@ class _PostEditorState extends State<PostEditorWidget> {
           InkWell(
             onTap: _isPosting ? null : () => _post(data),
             child: const Padding(
-              padding: EdgeInsets.symmetric(
-                vertical: kPaddingHorizontal,
-                horizontal: kPaddingHorizontal,
-              ),
+              padding: EdgeInsets.all(kPadding),
               child: Icon(Icons.done),
             ),
           )
@@ -163,7 +160,7 @@ class _PostEditorState extends State<PostEditorWidget> {
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
     return Padding(
-      padding: const EdgeInsets.only(bottom: kPaddingHorizontal / 2),
+      padding: const EdgeInsets.only(bottom: kPaddingHalf),
       child: RichText(
         text: TextSpan(
           text: l(context).postReplyingToAt,

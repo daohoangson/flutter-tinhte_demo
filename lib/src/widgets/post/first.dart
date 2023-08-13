@@ -34,9 +34,7 @@ class _FirstPostWidget extends StatelessWidget {
           isThreadTitleRedundant || threadTitle == null
               ? widget0
               : Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: kPaddingHorizontal,
-                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: kPadding),
                   child: Text(
                     threadTitle,
                     maxLines: null,
@@ -45,9 +43,7 @@ class _FirstPostWidget extends StatelessWidget {
                 ),
           isCustomPost
               ? Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: kPaddingHorizontal,
-                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: kPadding),
                   child: postIsBackground
                       ? BackgroundPost(post)
                       : (threadIsTinhteFact
@@ -88,7 +84,7 @@ class _FirstPostWidget extends StatelessWidget {
     if (tags.isEmpty) return null;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: kPaddingHorizontal),
+      padding: const EdgeInsets.symmetric(horizontal: kPadding),
       child: Wrap(
         spacing: 5,
         children: tags
