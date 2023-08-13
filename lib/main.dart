@@ -15,7 +15,6 @@ import 'package:the_app/src/widgets/menu/dark_theme.dart';
 import 'package:the_app/src/widgets/dismiss_keyboard.dart';
 import 'package:the_app/src/api.dart';
 import 'package:the_app/src/push_notification.dart' as push_notification;
-import 'package:the_app/src/uni_links.dart' as uni_links;
 import 'package:the_app/src/widgets/menu/dev_tools.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -25,7 +24,6 @@ void main() async {
   DarkTheme? darkTheme;
   DevTools? devTools;
   FontScale? fontScale;
-  String? initialLink;
   String? initialPath;
   WidgetsFlutterBinding.ensureInitialized();
   await Future.wait([
@@ -33,7 +31,6 @@ void main() async {
     FontScale.create().then((value) => fontScale = value),
     DevTools.create().then((value) => devTools = value),
     facebook_log_in.configureFacebookLogin(),
-    uni_links.getInitialLink().then((value) => initialLink = value),
     firebase.initializeApp().then((value) async {
       error_reporting.configureErrorReporting();
       push_notification.configurePushNotification();
@@ -41,26 +38,21 @@ void main() async {
     }),
   ]);
 
-  Widget? defaultWidget;
-  String? fallbackLink;
+  Widget home;
   if (initialPath != null) {
-    defaultWidget = const NotificationListScreen();
-  } else if (initialLink != null) {
-    initialPath = buildToolsParseLinkPath(initialLink!);
-    fallbackLink = initialLink;
+    home = InitialPathScreen(
+      initialPath!,
+      defaultWidget: const NotificationListScreen(),
+    );
+  } else {
+    home = HomeScreen();
   }
 
   runApp(MyApp(
     darkTheme: darkTheme!,
     devTools: devTools!,
     fontScale: fontScale!,
-    home: initialPath != null
-        ? InitialPathScreen(
-            initialPath!,
-            defaultWidget: defaultWidget,
-            fallbackLink: fallbackLink,
-          )
-        : HomeScreen(),
+    home: home,
   ));
 }
 
@@ -95,7 +87,6 @@ class MyApp extends StatelessWidget {
 
     Widget app = MaterialApp(
       darkTheme: _theme(_themeDark),
-      home: home,
       localizationsDelegates: const [
         L10nDelegate(),
         GlobalCupertinoLocalizations.delegate,
@@ -105,6 +96,39 @@ class MyApp extends StatelessWidget {
       navigatorKey: push_notification.primaryNavKey,
       navigatorObservers: [FontControlWidget.routeObserver],
       onGenerateTitle: (context) => l(context).appTitle,
+      onGenerateInitialRoutes: (initialRoute) {
+        if (initialRoute == '/') {
+          // user (1) launches Android/iOS app
+          // or (4a) opens link when iOS app is killed
+          // (the actual route will trigger onGenerateRoute after a few ms)
+          return [MaterialPageRoute(builder: (_) => home)];
+        } else {
+          // (3) user opens link when Android app is killed
+          return [
+            MaterialPageRoute(
+              builder: (_) => InitialPathScreen(
+                buildToolsParseLinkPath(initialRoute),
+                defaultWidget: home,
+              ),
+            ),
+          ];
+        }
+      },
+      onGenerateRoute: (settings) {
+        // user opens link when: (2) Android/iOS app is in background
+        // or (4b) iOS app is killed
+        final name = settings.name;
+        if (name == null) {
+          debugPrint('onGenerateRoute -> $settings without name');
+          return null;
+        }
+
+        parsePath(
+          buildToolsParseLinkPath(name),
+          rootNavigator: push_notification.primaryNavKey.currentState,
+        );
+        return null;
+      },
       showPerformanceOverlay: showPerformanceOverlay,
       supportedLocales: const [
         Locale('en', ''),
@@ -114,7 +138,6 @@ class MyApp extends StatelessWidget {
     );
 
     app = DismissKeyboard(app);
-    app = uni_links.UniLinksApp(child: app);
     app = push_notification.PushNotificationApp(child: app);
     app = ApiApp(child: app);
 

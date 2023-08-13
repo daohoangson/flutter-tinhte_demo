@@ -22,7 +22,7 @@
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
             android:exported="true"
             android:hardwareAccelerated="true"
-            android:launchMode="singleTop"
+            android:launchMode="singleInstance"
             android:theme="@style/LaunchTheme"
             android:windowSoftInputMode="adjustResize">
             <!-- Specifies an Android theme to apply to this Activity as soon as
@@ -32,6 +32,11 @@
             <meta-data
                 android:name="io.flutter.embedding.android.NormalTheme"
                 android:resource="@style/NormalTheme" />
+
+            <!-- https://docs.flutter.dev/cookbook/navigation/set-up-app-links -->
+            <meta-data
+                android:name="flutter_deeplinking_enabled"
+                android:value="true" />
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
