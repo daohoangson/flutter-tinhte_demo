@@ -81,7 +81,7 @@ class MemberViewHeader extends StatelessWidget {
             ),
             const SizedBox(width: 5),
             Text(
-              formatNumber(user.userMessageCount),
+              formatNumber(user.userMessageCount ?? 0),
               style: style,
             ),
           ],
@@ -95,7 +95,7 @@ class MemberViewHeader extends StatelessWidget {
             ),
             const SizedBox(width: 5),
             Text(
-              formatNumber(user.userLikeCount),
+              formatNumber(user.userLikeCount ?? 0),
               style: style,
             ),
           ],

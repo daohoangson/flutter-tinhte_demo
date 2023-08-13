@@ -313,7 +313,7 @@ class _ThreadWidgetActionsState extends State<_ThreadWidgetActions> {
         ),
       ),
       TextSpan(
-        text: " ${formatNumber(post.postLikeCount)}",
+        text: " ${formatNumber(postLikeCount)}",
         style: textStyle,
       ),
     ];
