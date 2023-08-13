@@ -195,9 +195,6 @@ class L10n {
   String get menuLogout =>
       Intl.message('Logout', locale: localeName, name: 'menuLogout');
 
-  String get myFeed => Intl.message('My Feed',
-      desc: 'My feed appbar title', locale: localeName, name: 'myFeed');
-
   String get navLowercaseNext =>
       Intl.message('next', locale: localeName, name: 'navLowercaseNext');
 

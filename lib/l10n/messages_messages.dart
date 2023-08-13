@@ -95,7 +95,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "menuDeveloperCrashTest" : MessageLookupByLibrary.simpleMessage("Crash Test"),
     "menuDeveloperShowPerformanceOverlay" : MessageLookupByLibrary.simpleMessage("Show Performance Overlay"),
     "menuLogout" : MessageLookupByLibrary.simpleMessage("Logout"),
-    "myFeed" : MessageLookupByLibrary.simpleMessage("My Feed"),
     "navLowercaseNext" : MessageLookupByLibrary.simpleMessage("next"),
     "navLowercasePrevious" : MessageLookupByLibrary.simpleMessage("previous"),
     "navPageX" : m7,

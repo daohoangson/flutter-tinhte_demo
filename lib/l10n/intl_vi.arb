@@ -244,12 +244,6 @@
     "type": "text",
     "placeholders": {}
   },
-  "myFeed": "Cá nhân",
-  "@myFeed": {
-    "description": "My feed appbar title",
-    "type": "text",
-    "placeholders": {}
-  },
   "navLowercaseNext": "tiếp",
   "@navLowercaseNext": {
     "type": "text",
