@@ -54,10 +54,7 @@ jobs:
               | xargs -n 1 -I {} printf -- "- [%s](${GCS_URL}/apk/%s)\n" {} {}; \
           )
 
-          _message="${_message//'%'/'%25'}"
-          _message="${_message//$'\n'/'%0A'}"
-          _message="${_message//$'\r'/'%0D'}"
-          echo "::set-output name=MESSAGE::${_message}"
+          printf 'MESSAGE<<EOF\n%s\nEOF\n' "${_message}" >> $GITHUB_OUTPUT
       - name: Post GitHub comment
         uses: daohoangson/comment-on-github@v2
         env:
@@ -122,10 +119,7 @@ jobs:
             printf '[manifest.plist](%s)' "${GCS_URL}/ipa/redirect.html"; \
           )
 
-          _message="${_message//'%'/%25}"
-          _message="${_message//$'\n'/%0A}"
-          _message="${_message//$'\r'/%0D}"
-          echo "::set-output name=MESSAGE::${_message}"
+          printf 'MESSAGE<<EOF\n%s\nEOF\n' "${_message}" >> $GITHUB_OUTPUT
       - name: Post GitHub comment
         uses: daohoangson/comment-on-github@v2
         env:
@@ -192,10 +186,7 @@ jobs:
             printf '[bundle.zip](%s)\n' "${GCS_URL}/linux/bundle.zip"; \
           )
 
-          _message="${_message//'%'/'%25'}"
-          _message="${_message//$'\n'/'%0A'}"
-          _message="${_message//$'\r'/'%0D'}"
-          echo "::set-output name=MESSAGE::${_message}"
+          printf 'MESSAGE<<EOF\n%s\nEOF\n' "${_message}" >> $GITHUB_OUTPUT
       - name: Post GitHub comment
         uses: daohoangson/comment-on-github@v2
         env:
@@ -260,10 +251,7 @@ jobs:
               | xargs -n 1 -I {} printf -- "- [%s](${GCS_URL}/macos/%s)\n" {} {}; \
           )
 
-          _message="${_message//'%'/%25}"
-          _message="${_message//$'\n'/%0A}"
-          _message="${_message//$'\r'/%0D}"
-          echo "::set-output name=MESSAGE::${_message}"
+          printf 'MESSAGE<<EOF\n%s\nEOF\n' "${_message}" >> $GITHUB_OUTPUT
       - name: Post GitHub comment
         uses: daohoangson/comment-on-github@v2
         env:
@@ -328,10 +316,7 @@ jobs:
             printf '1. Then run [the installer](%s)\n' "${GCS_URL}/windows/the_app.msix"; \
           )
 
-          _message="${_message//'%'/'%25'}"
-          _message="${_message//$'\n'/'%0A'}"
-          _message="${_message//$'\r'/'%0D'}"
-          echo "::set-output name=MESSAGE::${_message}"
+          printf 'MESSAGE<<EOF\n%s\nEOF\n' "${_message}" >> $GITHUB_OUTPUT
       - name: Post GitHub comment
         uses: daohoangson/comment-on-github@v2
         env:
