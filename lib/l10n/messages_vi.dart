@@ -83,7 +83,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "loginUsernameHint" : MessageLookupByLibrary.simpleMessage("anh_hung_ban_phim"),
     "loginUsernameOrEmail" : MessageLookupByLibrary.simpleMessage("Tên / email"),
     "loginWithApple" : MessageLookupByLibrary.simpleMessage("Đăng nhập tài khoản Apple"),
-    "loginWithFacebook" : MessageLookupByLibrary.simpleMessage("Đăng nhập tài khoản Facebook"),
     "loginWithGoogle" : MessageLookupByLibrary.simpleMessage("Đăng nhập tài khoản Google"),
     "menu" : MessageLookupByLibrary.simpleMessage("Cài đặt"),
     "menuDarkTheme" : MessageLookupByLibrary.simpleMessage("Giao diện tối"),

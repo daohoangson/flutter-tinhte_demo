@@ -13,13 +13,6 @@ class SignInButton extends StatelessWidget {
   })  : _type = _SignInButtonType.apple,
         super(key: key);
 
-  const SignInButton.facebook({
-    Key? key,
-    required this.onPressed,
-    required this.text,
-  })  : _type = _SignInButtonType.facebook,
-        super(key: key);
-
   const SignInButton.google({
     Key? key,
     required this.onPressed,
@@ -36,10 +29,6 @@ class SignInButton extends StatelessWidget {
       case _SignInButtonType.apple:
         backgroundColor = const Color(0xFF000000);
         icon = FontAwesomeIcons.apple;
-        break;
-      case _SignInButtonType.facebook:
-        backgroundColor = const Color(0xFF3B5998);
-        icon = FontAwesomeIcons.facebookF;
         break;
       case _SignInButtonType.google:
         backgroundColor = const Color(0xFF4285F4);
@@ -77,6 +66,5 @@ class SignInButton extends StatelessWidget {
 
 enum _SignInButtonType {
   apple,
-  facebook,
   google,
 }

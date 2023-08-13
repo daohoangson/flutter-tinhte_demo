@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2023-08-13T08:41:53.802790",
+  "@@last_modified": "2023-08-13T17:16:55.316783",
   "appTitle": "tinhte.vn Demo",
   "@appTitle": {
     "type": "text",
@@ -221,12 +221,6 @@
   },
   "loginWithApple": "Sign in with Apple",
   "@loginWithApple": {
-    "type": "text",
-    "placeholders_order": [],
-    "placeholders": {}
-  },
-  "loginWithFacebook": "Sign in with Facebook",
-  "@loginWithFacebook": {
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}

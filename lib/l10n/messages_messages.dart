@@ -83,7 +83,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "loginUsernameHint" : MessageLookupByLibrary.simpleMessage("keyboard_warrior"),
     "loginUsernameOrEmail" : MessageLookupByLibrary.simpleMessage("Username / email"),
     "loginWithApple" : MessageLookupByLibrary.simpleMessage("Sign in with Apple"),
-    "loginWithFacebook" : MessageLookupByLibrary.simpleMessage("Sign in with Facebook"),
     "loginWithGoogle" : MessageLookupByLibrary.simpleMessage("Sign in with Google"),
     "menu" : MessageLookupByLibrary.simpleMessage("Menu"),
     "menuDarkTheme" : MessageLookupByLibrary.simpleMessage("Dark theme"),

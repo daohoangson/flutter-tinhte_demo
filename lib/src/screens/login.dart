@@ -7,7 +7,6 @@ import 'package:the_app/src/api.dart';
 import 'package:the_app/src/config.dart';
 import 'package:the_app/src/intl.dart';
 import 'package:the_app/src/abstracts/apple_sign_in.dart' as apple_sign_in;
-import 'package:the_app/src/abstracts/facebook_log_in.dart' as facebook_log_in;
 import 'package:the_app/src/abstracts/google_sign_in.dart' as google_sign_in;
 import 'package:the_app/src/widgets/sign_in_button.dart';
 
@@ -18,9 +17,6 @@ void logout(BuildContext context) {
   apiData.setToken(null);
 
   switch (token?.obtainMethod) {
-    case ObtainMethod.facebook:
-      facebook_log_in.logOut();
-      break;
     case ObtainMethod.google:
       google_sign_in.signOut();
       break;
@@ -119,11 +115,6 @@ class _LoginFormState extends State<LoginForm> {
           SignInButton.apple(
             onPressed: _loginApple,
             text: l(context).loginWithApple,
-          ),
-        if (config.loginWithFacebook && facebook_log_in.isSupported)
-          SignInButton.facebook(
-            onPressed: _loginFacebook,
-            text: l(context).loginWithFacebook,
           ),
         if (config.loginWithGoogle && google_sign_in.isSupported)
           SignInButton.google(
@@ -289,23 +280,6 @@ class _LoginFormState extends State<LoginForm> {
               'client_id': api.clientId,
               'client_secret': api.clientSecret,
               'apple_token': appleToken,
-            }))
-        .then(_onResult)
-        .catchError(_showError)
-        .whenComplete(() => setState(() => _isLoggingIn = false));
-  }
-
-  void _loginFacebook() {
-    if (_isLoggingIn) return;
-    setState(() => _isLoggingIn = true);
-
-    final api = ApiAuth.of(context, listen: false).api;
-    facebook_log_in
-        .logIn(context)
-        .then((facebookToken) => loginExternal(api, ObtainMethod.facebook, {
-              'client_id': api.clientId,
-              'client_secret': api.clientSecret,
-              'facebook_token': facebookToken,
             }))
         .then(_onResult)
         .catchError(_showError)

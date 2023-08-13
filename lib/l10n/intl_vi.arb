@@ -182,11 +182,6 @@
     "type": "text",
     "placeholders": {}
   },
-  "loginWithFacebook": "Đăng nhập tài khoản Facebook",
-  "@loginWithFacebook": {
-    "type": "text",
-    "placeholders": {}
-  },
   "loginWithGoogle": "Đăng nhập tài khoản Google",
   "@loginWithGoogle": {
     "type": "text",

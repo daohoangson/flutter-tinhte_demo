@@ -52,7 +52,6 @@ class _OauthToken with _$_OauthToken implements OauthToken {
 
 enum ObtainMethod {
   apple,
-  facebook,
   google,
   storage,
   usernamePassword,
