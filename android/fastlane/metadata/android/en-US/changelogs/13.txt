@@ -1,5 +1,0 @@
-2f64f7f: Implement thread full navigation
-bfb5057: Redesign feature pages on home
-09bf189: Perform push unregistration on logout
-f9dc2f3: Improve post body legibility
-ec7fca6: Fix bug processing FCM in foreground

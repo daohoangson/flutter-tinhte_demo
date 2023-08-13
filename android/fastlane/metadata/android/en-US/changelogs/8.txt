@@ -1,3 +1,0 @@
-ea03c55: Improve tinhte.vn link handling 
-b4d0d30: Add support for COMPARE bb code
-190b3dc: Render image and web view without padding

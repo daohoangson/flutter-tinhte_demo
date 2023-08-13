@@ -1,7 +1,0 @@
-c26265b: Add support for thread search
-ab40fbb: Add support for post delete and report actions
-1448d45: Add popup menu for thread view
-bc2b169: Use `Slider` for `PhotoCompare`
-0384038: Render `AppBarNotificationButton` in every screen (almost)
-1590020: Fix LbTrigger duplicate transition + add `x` icon for better UX
-Bug fixes

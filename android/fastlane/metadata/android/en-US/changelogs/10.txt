@@ -1,2 +1,0 @@
-eb11c7e: Add support for push notification tap
-UI improvements

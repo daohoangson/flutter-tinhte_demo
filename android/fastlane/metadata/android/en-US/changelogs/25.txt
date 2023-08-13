@@ -1,8 +1,0 @@
-1ba9f0d: Add popup menu of sources for thread in `MyFeed`
-0764df6: Add support for uppercase when suggesting emoji
-dac16de: Add support for poll (#14)
-1bc8dfa: Enable photo viewer for full attachment
-1fc06b7: Redesign `YouTubeWidget` to match the embed iframe
-b0f5e35: Use image ratio for `TinhteFact`
-4594f73: Skip `HomeScreen` if launching via FCM
-54773e4: Fix `LinkExpander` being CENTER'd in ttf

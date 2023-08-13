@@ -9,6 +9,7 @@ env:
 
 jobs:
   build_apk:
+    if: ${{ startsWith(github.ref, 'refs/heads/') }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -88,7 +89,7 @@ jobs:
           set -e
 
           flutter build ios || true
-          ( cd ios && fastlane ipa )
+          ( cd ios && fastlane build_ipa )
 
       - name: Setup GCP authentication
         uses: google-github-actions/auth@v1

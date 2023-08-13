@@ -1,4 +1,0 @@
-7576927: Use item date for home (instead of thread create date)
-b0f37d4: Render forum link in thread view
-cf05fc6: Render thumbnail with rounded corners
-Bug fixes
