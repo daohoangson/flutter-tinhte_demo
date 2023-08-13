@@ -9,7 +9,6 @@ import 'package:the_app/src/intl.dart';
 import 'package:the_app/src/abstracts/apple_sign_in.dart' as apple_sign_in;
 import 'package:the_app/src/abstracts/facebook_log_in.dart' as facebook_log_in;
 import 'package:the_app/src/abstracts/google_sign_in.dart' as google_sign_in;
-import 'package:the_app/src/screens/register.dart';
 import 'package:the_app/src/widgets/sign_in_button.dart';
 
 void logout(BuildContext context) {
@@ -112,25 +111,9 @@ class _LoginFormState extends State<LoginForm> {
   List<Widget> _buildFieldsLogin() => [
         _buildInputPadding(_buildUsername()),
         _buildInputPadding(_buildPassword()),
-        Row(
-          children: <Widget>[
-            Expanded(
-              child: TextButton(
-                onPressed: _isLoggingIn
-                    ? null
-                    : () => Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(
-                            builder: (_) => const RegisterScreen())),
-                child: Text(l(context).register),
-              ),
-            ),
-            Expanded(
-              child: ElevatedButton(
-                onPressed: _isLoggingIn ? null : _login,
-                child: Text(l(context).login),
-              ),
-            ),
-          ],
+        ElevatedButton(
+          onPressed: _isLoggingIn ? null : _login,
+          child: Text(l(context).login),
         ),
         if (config.loginWithApple && apple_sign_in.isSupported)
           SignInButton.apple(
