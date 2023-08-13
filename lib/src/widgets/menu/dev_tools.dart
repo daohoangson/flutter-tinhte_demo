@@ -8,7 +8,6 @@ import 'package:the_app/src/intl.dart';
 import 'availability/error_reporting.dart';
 import 'availability/firebase.dart';
 import 'availability/push_notification.dart';
-import 'availability/uni_links.dart';
 
 class DevTools extends ChangeNotifier {
   bool? _isDeveloper;
@@ -54,8 +53,8 @@ class DeveloperMenu extends StatelessWidget {
         builder: (_, developer, __) => developer.isDeveloper
             ? ListTile(
                 title: Text(l(context).menuDeveloper),
-                onTap: () => Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => const DeveloperMenuScreen())),
+                onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                    builder: (_) => const DeveloperMenuScreen())),
               )
             : const SizedBox.shrink(),
       );
@@ -74,7 +73,6 @@ class DeveloperMenuScreen extends StatelessWidget {
             const ErrorReportingWidget(),
             const FirebaseWidget(),
             const PushNotificationWidget(),
-            const UniLinksWidget(),
             _ShowPerformanceOverlayWidget(),
             _CrashTestWidget(),
           ],
