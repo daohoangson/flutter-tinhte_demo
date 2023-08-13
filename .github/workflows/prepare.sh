@@ -7,7 +7,7 @@ if ! command -v git-crypt &>/dev/null; then
   brew install git-crypt
 fi
 # https://github.com/sliteteam/github-action-git-crypt-unlock/blob/master/entrypoint.sh
-echo "${GIT_CRYPT_KEY}" | base64 --decode >./git-crypt-key
+echo "${GIT_CRYPT_KEY}" | base64 -d >./git-crypt-key
 file lib/config.encrypted.dart
 git-crypt unlock ./git-crypt-key
 file lib/config.encrypted.dart
