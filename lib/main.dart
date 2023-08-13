@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
@@ -96,15 +97,31 @@ class MyApp extends StatelessWidget {
       navigatorKey: push_notification.primaryNavKey,
       navigatorObservers: [FontControlWidget.routeObserver],
       onGenerateTitle: (context) => l(context).appTitle,
-      onGenerateInitialRoutes: (_) => [MaterialPageRoute(builder: (_) => home)],
+      onGenerateInitialRoutes: (initialRoute) {
+        if (initialRoute == PlatformDispatcher.instance.defaultRouteName) {
+          // user (1) launches Android/iOS app
+          // or (4a) opens link when iOS app is killed
+          // (the actual route will trigger onGenerateRoute after a few ms)
+          return [MaterialPageRoute(builder: (_) => home)];
+        } else {
+          // (3) user opens link when Android app is killed
+          return [
+            MaterialPageRoute(
+              builder: (_) =>
+                  InitialPathScreen(initialRoute, defaultWidget: home),
+            ),
+          ];
+        }
+      },
       onGenerateRoute: (settings) {
+        // user opens link when: (2) Android/iOS app is in background
+        // or (4b) iOS app is killed
         final name = settings.name;
         if (name == null) {
           debugPrint('onGenerateRoute -> $settings without name');
           return null;
         }
 
-        debugPrint('onGenerateRoute -> $settings');
         parsePath(
           buildToolsParseLinkPath(name),
           rootNavigator: push_notification.primaryNavKey.currentState,
