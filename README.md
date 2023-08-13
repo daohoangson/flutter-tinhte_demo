@@ -16,7 +16,6 @@ upload the apps to GCS (automatically deleted after 30 days).
 - Supported platforms: Android, iOS, Linux, macOS, Windows
 - State management with [provider](https://pub.dev/packages/provider)
 - Apple login via [sign_in_with_apple](https://pub.dev/packages/sign_in_with_apple)
-- Facebook login via [flutter_facebook_auth](https://pub.dev/packages/flutter_facebook_auth)
 - Google login via [google_sign_in](https://pub.dev/packages/google_sign_in)
 - Store authentication token with [flutter_secure_storage](https://pub.dev/packages/flutter_secure_storage)
 - Render HTML with [flutter_widget_from_html](https://pub.dev/packages/flutter_widget_from_html)
@@ -68,16 +67,15 @@ Pick a unique package name across Play Store and App Store then update these fil
 - `.github/workflows/flutter.yml` GCS_BUCKET, GCS_URL
 - `android/app/build.gradle` applicationId, signingConfigs.release
 - `android/app/src/main/AndroidManifest.xml` package, android:label
-- `android/app/src/main/res/values/strings.xml` app_name, facebook_app_id, facebook_client_token, fb_login_protocol_scheme
+- `android/app/src/main/res/values/strings.xml` app_name
 - `android/fastlane/metadata/android/en-US/` title.txt, full_description.txt, short_description.txt
 - `android/fastlane/Appfile`
 - `firebase/.firebaserc` projects.default
 - `ios/Runner.xcodeproj/project.pbxproj` PRODUCT_BUNDLE_IDENTIFIER x2, PROVISIONING_PROFILE_SPECIFIER x2
-- `ios/Runner/Info.plist` CFBundleName, CFBundleURLSchemes, FacebookAppID, FacebookDisplayName
+- `ios/Runner/Info.plist` CFBundleName, CFBundleURLSchemes
 - `ios/fastlane/Appfile`
 - `ios/fastlane/Fastfile` xcargs (PROVISIONING_PROFILE_SPECIFIER), manifest (appURL, displayImageURL, fullSizeImageURL)
 - `ios/fastlane/Matchfile`
-- `lib/src/abstracts/facebook_log_in.dart` Facebook appId
 - `linux/CMakeLists.txt` APPLICATION_ID
 - `macos/Runner/Configs/AppInfo.xcconfig`
 - `macos/Runner.xcodeproj/project.pbxproj` PROVISIONING_PROFILE_SPECIFIER x3
