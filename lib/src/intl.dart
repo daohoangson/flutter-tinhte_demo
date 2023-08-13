@@ -158,9 +158,6 @@ class L10n {
   String get loginWithApple => Intl.message('Sign in with Apple',
       locale: localeName, name: 'loginWithApple');
 
-  String get loginWithFacebook => Intl.message('Sign in with Facebook',
-      locale: localeName, name: 'loginWithFacebook');
-
   String get loginWithGoogle => Intl.message('Sign in with Google',
       locale: localeName, name: 'loginWithGoogle');
 

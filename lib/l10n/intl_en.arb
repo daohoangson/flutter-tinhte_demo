@@ -182,11 +182,6 @@
     "type": "text",
     "placeholders": {}
   },
-  "loginWithFacebook": "Sign in with Facebook",
-  "@loginWithFacebook": {
-    "type": "text",
-    "placeholders": {}
-  },
   "loginWithGoogle": "Sign in with Google",
   "@loginWithGoogle": {
     "type": "text",
