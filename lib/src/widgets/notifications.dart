@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart' as http;
@@ -7,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:the_api/notification.dart' as api;
 import 'package:the_api/oauth_token.dart';
 import 'package:the_api/user.dart';
+import 'package:the_app/src/abstracts/cached_network_image.dart' as cached;
 import 'package:the_app/src/widgets/html.dart';
 import 'package:the_app/src/widgets/super_list.dart';
 import 'package:the_app/src/api.dart';
@@ -87,8 +87,7 @@ class _NotificationsState extends State<NotificationsWidget> {
   Widget _buildAvatar(api.Notification n) {
     final avatar = n.links?.creatorAvatar;
     return CircleAvatar(
-      backgroundImage:
-          avatar != null ? CachedNetworkImageProvider(avatar) : null,
+      backgroundImage: avatar != null ? cached.image(avatar) : null,
     );
   }
 

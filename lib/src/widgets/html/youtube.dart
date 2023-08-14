@@ -56,7 +56,7 @@ class _YouTubeState extends State<YouTubeWidget> {
           child: Opacity(
             opacity: .8,
             child: Image(
-              image: CachedNetworkImageProvider(_thumbnailUrl),
+              image: cached.image(_thumbnailUrl),
               fit: BoxFit.cover,
             ),
           ),
@@ -100,7 +100,7 @@ class _YouTubeState extends State<YouTubeWidget> {
       );
 
   void _fetch() async {
-    final file = await DefaultCacheManager().getSingleFile(videoUrl);
+    final file = await cached.manager.getSingleFile(videoUrl);
     final html = await file.readAsString();
     final unescape = HtmlUnescape();
     final metaTags = Map.fromEntries(_kMetaTag.allMatches(html).map((match) =>
@@ -126,7 +126,7 @@ class _YouTubeState extends State<YouTubeWidget> {
     final thumbnailUrl = metaTags[_kOgImage];
     if (thumbnailUrl == null) return;
 
-    await precacheImage(CachedNetworkImageProvider(thumbnailUrl), context);
+    await precacheImage(cached.image(thumbnailUrl), context);
     if (!mounted) return;
     setState(() => _thumbnailUrl = thumbnailUrl);
   }

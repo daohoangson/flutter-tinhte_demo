@@ -1,6 +1,6 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:the_api/post.dart';
+import 'package:the_app/src/abstracts/cached_network_image.dart' as cached;
 import 'package:the_app/src/constants.dart';
 import 'package:the_app/src/widgets/html.dart';
 
@@ -62,7 +62,7 @@ class BackgroundPost extends StatelessWidget {
         decoration: threadBackgroundUrl != null
             ? BoxDecoration(
                 image: DecorationImage(
-                  image: CachedNetworkImageProvider(threadBackgroundUrl),
+                  image: cached.image(threadBackgroundUrl),
                   fit: BoxFit.cover,
                 ),
               )

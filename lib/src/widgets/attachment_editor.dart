@@ -6,8 +6,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:the_api/attachment.dart';
 import 'package:the_api/user.dart';
+import 'package:the_app/src/abstracts/cached_network_image.dart' as cached;
 import 'package:the_app/src/intl.dart';
-import 'package:the_app/src/widgets/image.dart';
 import 'package:the_app/src/api.dart';
 
 class AttachmentEditorWidget extends StatefulWidget {
@@ -82,7 +82,7 @@ class AttachmentEditorState extends State<AttachmentEditorWidget> {
             child: Opacity(
               opacity: apiData != null ? 1.0 : 0.5,
               child: thumbnail != null
-                  ? buildCachedNetworkImage(thumbnail)
+                  ? cached.ImageWidget(thumbnail)
                   : Image.file(
                       attachment.file,
                       fit: BoxFit.cover,

@@ -78,7 +78,7 @@ Widget buildPosterCircleAvatar(String? url, {bool isPostReply = false}) =>
         top: isPostReply ? (_kAvatarRootRadius - _kAvatarReplyToRadius) : 0,
       ),
       child: CircleAvatar(
-        backgroundImage: url != null ? CachedNetworkImageProvider(url) : null,
+        backgroundImage: url != null ? cached.image(url) : null,
         radius: isPostReply ? _kAvatarReplyToRadius : _kAvatarRootRadius,
       ),
     );

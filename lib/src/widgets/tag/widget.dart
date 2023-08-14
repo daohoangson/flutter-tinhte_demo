@@ -1,6 +1,6 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:the_api/feature_page.dart';
+import 'package:the_app/src/abstracts/cached_network_image.dart' as cached;
 import 'package:the_app/src/intl.dart';
 import 'package:the_app/src/screens/fp_view.dart';
 
@@ -49,7 +49,7 @@ class TagWidget extends StatelessWidget {
         context,
         imageUrl.isNotEmpty
             ? Image(
-                image: CachedNetworkImageProvider(imageUrl),
+                image: cached.image(imageUrl),
                 fit: BoxFit.cover,
               )
             : null,
