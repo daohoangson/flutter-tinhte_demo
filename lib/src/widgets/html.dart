@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:fwfh_webview/fwfh_webview.dart';
 import 'package:html_unescape/html_unescape.dart';
@@ -118,6 +119,9 @@ class TinhteWidgetFactory extends WidgetFactory {
       },
     );
   }
+
+  @override
+  BaseCacheManager? get cacheManager => cached.manager;
 
   BuildOp get chrOp {
     return _chrOp ??= Chr(this).op;

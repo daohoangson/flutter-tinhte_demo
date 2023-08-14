@@ -6,17 +6,11 @@ import 'package:the_app/src/screens/node_view.dart';
 import 'package:the_app/src/widgets/super_list.dart';
 
 class NavigationWidget extends StatelessWidget {
-  final Widget? footer;
-  final Widget? header;
-  final List<Node> initialElements;
   final String path;
   final bool? progressIndicator;
   final bool? shrinkWrap;
 
   const NavigationWidget({
-    this.footer,
-    this.header,
-    this.initialElements = const [],
     Key? key,
     required this.path,
     this.progressIndicator,
@@ -27,9 +21,6 @@ class NavigationWidget extends StatelessWidget {
   Widget build(BuildContext context) => SuperListView<Node>(
         fetchOnSuccess: _fetchOnSuccess,
         fetchPathInitial: path,
-        footer: footer,
-        header: header,
-        initialItems: initialElements,
         itemBuilder: (context, __, element) => _buildRow(context, element),
         progressIndicator: progressIndicator,
         shrinkWrap: shrinkWrap,
