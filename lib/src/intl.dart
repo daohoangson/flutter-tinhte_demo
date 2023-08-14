@@ -388,8 +388,9 @@ class L10n {
       Intl.message('Unignore', locale: localeName, name: 'userUnignore');
 
   static Future<L10n> load(Locale locale) {
+    final countryCode = locale.countryCode ?? '';
     final localeName = Intl.canonicalizedLocale(
-        locale.countryCode!.isEmpty ? locale.languageCode : locale.toString());
+        countryCode.isEmpty ? locale.languageCode : locale.toString());
     return initializeMessages(localeName).then((_) => L10n(localeName));
   }
 }
