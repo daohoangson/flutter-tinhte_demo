@@ -6,6 +6,9 @@ import 'package:the_api/links.dart';
 import 'package:the_app/src/api.dart';
 
 class SuperListView<T> extends StatefulWidget {
+  @visibleForTesting
+  static var debugDeterministicProgressIndicator = false;
+
   final ApiMethod? apiMethodInitial;
   final List<SuperListComplexItemRegister>? complexItems;
   final bool? enableRefreshIndicator;
@@ -334,11 +337,13 @@ class SuperListState<T> extends State<SuperListView<T>> {
 
   Widget _buildProgressIndicator(bool visible) =>
       widget.progressIndicator != false && !_isRefreshing && visible
-          ? const Padding(
-              padding: EdgeInsets.all(8.0),
+          ? Padding(
+              padding: const EdgeInsets.all(8.0),
               child: SafeArea(
                 child: Center(
-                  child: CircularProgressIndicator(),
+                  child: SuperListView.debugDeterministicProgressIndicator
+                      ? const Text('Loading...')
+                      : const CircularProgressIndicator(),
                 ),
               ),
             )
