@@ -70,7 +70,7 @@ class _ChrState extends State<_ChrWidget> {
             ))
         : const AspectRatio(
             aspectRatio: 16 / 9,
-            child: CircularProgressIndicator.adaptive(),
+            child: AdaptiveProgressIndicator(),
           );
   }
 

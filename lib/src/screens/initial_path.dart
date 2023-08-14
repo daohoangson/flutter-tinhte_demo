@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:the_app/src/abstracts/progress_indicator.dart';
 import 'package:the_app/src/api.dart';
 import 'package:the_app/src/link.dart';
 import 'package:the_app/src/screens/home.dart';
@@ -68,7 +69,7 @@ class _InitialPathState extends State<InitialPathScreen>
       : FutureBuilder<Widget>(
           builder: (__, snapshot) =>
               snapshot.data ??
-              const Scaffold(body: Center(child: CircularProgressIndicator())),
+              const Scaffold(body: AdaptiveProgressIndicator()),
           future: _future,
         );
 }

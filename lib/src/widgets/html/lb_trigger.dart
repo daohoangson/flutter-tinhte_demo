@@ -183,7 +183,7 @@ class _ScreenState extends State<_Screen> {
                 return Container(
                   decoration: const BoxDecoration(color: Colors.black),
                   child: Center(
-                    child: CircularProgressIndicator(
+                    child: AdaptiveProgressIndicator(
                       value: total == 0 ? null : loaded / total,
                     ),
                   ),

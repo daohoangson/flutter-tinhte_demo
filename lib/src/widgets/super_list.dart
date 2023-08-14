@@ -3,12 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:the_api/links.dart';
+import 'package:the_app/src/abstracts/progress_indicator.dart';
 import 'package:the_app/src/api.dart';
 
 class SuperListView<T> extends StatefulWidget {
-  @visibleForTesting
-  static var debugDeterministicProgressIndicator = false;
-
   final ApiMethod? apiMethodInitial;
   final List<SuperListComplexItemRegister>? complexItems;
   final bool? enableRefreshIndicator;
@@ -337,13 +335,11 @@ class SuperListState<T> extends State<SuperListView<T>> {
 
   Widget _buildProgressIndicator(bool visible) =>
       widget.progressIndicator != false && !_isRefreshing && visible
-          ? Padding(
-              padding: const EdgeInsets.all(8.0),
+          ? const Padding(
+              padding: EdgeInsets.all(8.0),
               child: SafeArea(
                 child: Center(
-                  child: SuperListView.debugDeterministicProgressIndicator
-                      ? const Text('Loading...')
-                      : const CircularProgressIndicator(),
+                  child: AdaptiveProgressIndicator(),
                 ),
               ),
             )

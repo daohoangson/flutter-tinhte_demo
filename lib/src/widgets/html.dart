@@ -8,6 +8,7 @@ import 'package:html_unescape/html_unescape.dart';
 import 'package:http/http.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 import 'package:the_app/src/abstracts/cached_network_image.dart' as cached;
+import 'package:the_app/src/abstracts/progress_indicator.dart';
 import 'package:the_app/src/api.dart';
 import 'package:the_app/src/config.dart';
 import 'package:the_app/src/constants.dart';
@@ -69,6 +70,8 @@ class TinhteHtmlWidget extends StatelessWidget {
             deviceWidth: bc.biggest.width,
             textPadding: textPadding,
           ),
+          onLoadingBuilder: (_, __, value) =>
+              AdaptiveProgressIndicator(value: value),
           onTapUrl: (url) => launchLink(c, url),
           textStyle: textStyle,
         ),

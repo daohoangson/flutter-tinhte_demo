@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:the_api/poll.dart';
+import 'package:the_app/src/abstracts/progress_indicator.dart';
 import 'package:the_app/src/api.dart';
 import 'package:the_app/src/constants.dart';
 import 'package:the_app/src/intl.dart';
@@ -31,7 +32,7 @@ class _PollState extends State<PollWidget> {
   Widget build(BuildContext context) {
     final poll = widget.owner.poll;
     if (poll == null) {
-      return const Center(child: CircularProgressIndicator());
+      return const AdaptiveProgressIndicator();
     }
 
     final canVote = poll.permissions?.vote == true;
