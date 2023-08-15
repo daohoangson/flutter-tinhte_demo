@@ -1,0 +1,19 @@
+name: the_api_test
+
+environment:
+  sdk: ">=2.18.4 <3.0.0"
+
+dependencies:
+  file: ^6.0.0
+  flutter:
+    sdk: flutter
+  flutter_cache_manager: ^3.3.1
+  http: ^1.1.0
+  mocktail: ^1.0.0
+  path: ^1.8.3
+  provider: ^6.0.5
+  the_api:
+    path: ../api
+
+dev_dependencies:
+  flutter_lints: ^2.0.0

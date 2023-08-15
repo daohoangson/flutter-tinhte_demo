@@ -1,0 +1,1114 @@
+{
+  "body": {
+    "elements": [
+      {
+        "forum_id": 10,
+        "forum_title": "Thông tin công nghệ",
+        "forum_description": "Tin tức, sự kiện khắp nơi về thế giới công nghệ.",
+        "forum_thread_count": 71313,
+        "forum_post_count": 2213845,
+        "forum_prefixes": [
+          {
+            "group_title": "Phân loại",
+            "group_prefixes": [
+              {
+                "prefix_id": 120,
+                "prefix_title": "Trên tay"
+              },
+              {
+                "prefix_id": 121,
+                "prefix_title": "Trải nghiệm"
+              },
+              {
+                "prefix_id": 122,
+                "prefix_title": "So sánh"
+              },
+              {
+                "prefix_id": 123,
+                "prefix_title": "Review"
+              },
+              {
+                "prefix_id": 124,
+                "prefix_title": "Breaking news"
+              },
+              {
+                "prefix_id": 125,
+                "prefix_title": "Tổng hợp thông tin"
+              },
+              {
+                "prefix_id": 126,
+                "prefix_title": "Phân tích"
+              },
+              {
+                "prefix_id": 127,
+                "prefix_title": "Thủ thuật"
+              },
+              {
+                "prefix_id": 128,
+                "prefix_title": "Tin tức"
+              },
+              {
+                "prefix_id": 129,
+                "prefix_title": "Tâm sự"
+              },
+              {
+                "prefix_id": 115,
+                "prefix_title": "Hỏi đáp"
+              }
+            ]
+          }
+        ],
+        "thread_default_prefix_id": 0,
+        "thread_prefix_is_required": false,
+        "links": {
+          "permalink": "https://tinhte.vn/forums/thong-tin-cong-nghe.10/",
+          "detail": "https://tinhte.vn/appforo/index.php?forums/10/&oauth_token=0%2C1691988416%2Ce90cf14103bab01cedfd7f1255149cc4%2Cgd2hxqf2cu",
+          "sub-categories": "https://tinhte.vn/appforo/index.php?categories/&parent_forum_id=10&oauth_token=0%2C1691988416%2Ce90cf14103bab01cedfd7f1255149cc4%2Cgd2hxqf2cu",
+          "sub-forums": "https://tinhte.vn/appforo/index.php?forums/&parent_forum_id=10&oauth_token=0%2C1691988416%2Ce90cf14103bab01cedfd7f1255149cc4%2Cgd2hxqf2cu",
+          "threads": "https://tinhte.vn/appforo/index.php?threads/&forum_id=10&oauth_token=0%2C1691988416%2Ce90cf14103bab01cedfd7f1255149cc4%2Cgd2hxqf2cu",
+          "followers": "https://tinhte.vn/appforo/index.php?forums/10/followers&oauth_token=0%2C1691988416%2Ce90cf14103bab01cedfd7f1255149cc4%2Cgd2hxqf2cu"
+        },
+        "permissions": {
+          "view": true,
+          "edit": false,
+          "delete": false,
+          "create_thread": false,
+          "upload_attachment": false,
+          "tag_thread": false,
+          "follow": false
+        },
+        "forum_is_followed": false,
+        "forum_thumbnail_url": "",
+        "navigation_type": "forum",
+        "navigation_id": 10,
+        "navigation_depth": 1,
+        "navigation_parent_id": 619,
+        "has_sub_elements": false
+      },
+      {
+        "forum_id": 636,
+        "forum_title": "Thương mại điện tử",
+        "forum_description": "Diễn đàn thảo luận, chia sẻ kinh nghiệm về thực hiện thương mại điện tử và xây dựng các website thương mại điện tử (e-commerce), thanh toán trực tuyến (online payment, mobile payment).",
+        "forum_thread_count": 4469,
+        "forum_post_count": 64289,
+        "forum_prefixes": [
+          {
+            "group_title": "Phân loại",
+            "group_prefixes": [
+              {
+                "prefix_id": 120,
+                "prefix_title": "Trên tay"
+              },
+              {
+                "prefix_id": 121,
+                "prefix_title": "Trải nghiệm"
+              },
+              {
+                "prefix_id": 122,
+                "prefix_title": "So sánh"
+              },
+              {
+                "prefix_id": 123,
+                "prefix_title": "Review"
+              },
+              {
+                "prefix_id": 124,
+                "prefix_title": "Breaking news"
+              },
+              {
+                "prefix_id": 125,
+                "prefix_title": "Tổng hợp thông tin"
+              },
+              {
+                "prefix_id": 126,
+                "prefix_title": "Phân tích"
+              },
+              {
+                "prefix_id": 127,
+                "prefix_title": "Thủ thuật"
+              },
+              {
+                "prefix_id": 128,
+                "prefix_title": "Tin tức"
+              },
+              {
+                "prefix_id": 129,
+                "prefix_title": "Tâm sự"
+              },
+              {
+                "prefix_id": 115,
+                "prefix_title": "Hỏi đáp"
+              }
+            ]
+          }
+        ],
+        "thread_default_prefix_id": 0,
+        "thread_prefix_is_required": false,
+        "links": {
+          "permalink": "https://tinhte.vn/forums/thuong-mai-dien-tu.636/",
+          "detail": "https://tinhte.vn/appforo/index.php?forums/636/&oauth_token=0%2C1691988416%2Ce90cf14103bab01cedfd7f1255149cc4%2Cgd2hxqf2cu",
+          "sub-categories": "https://tinhte.vn/appforo/index.php?categories/&parent_forum_id=636&oauth_token=0%2C1691988416%2Ce90cf14103bab01cedfd7f1255149cc4%2Cgd2hxqf2cu",
+          "sub-forums": "https://tinhte.vn/appforo/index.php?forums/&parent_forum_id=636&oauth_token=0%2C1691988416%2Ce90cf14103bab01cedfd7f1255149cc4%2Cgd2hxqf2cu",
+          "threads": "https://tinhte.vn/appforo/index.php?threads/&forum_id=636&oauth_token=0%2C1691988416%2Ce90cf14103bab01cedfd7f1255149cc4%2Cgd2hxqf2cu",
+          "followers": "https://tinhte.vn/appforo/index.php?forums/636/followers&oauth_token=0%2C1691988416%2Ce90cf14103bab01cedfd7f1255149cc4%2Cgd2hxqf2cu"
+        },
+        "permissions": {
+          "view": true,
+          "edit": false,
+          "delete": false,
+          "create_thread": false,
+          "upload_attachment": false,
+          "tag_thread": false,
+          "follow": false
+        },
+        "forum_is_followed": false,
+        "forum_thumbnail_url": "",
+        "navigation_type": "forum",
+        "navigation_id": 636,
+        "navigation_depth": 1,
+        "navigation_parent_id": 619,
+        "has_sub_elements": false
+      },
+      {
+        "forum_id": 460,
+        "forum_title": "Đám mây, Dịch vụ trực tuyến",
+        "forum_description": "Ứng dụng trực tuyến, mạng xã hội, điện toán đám mây, facebook, google, gmail, zing, twitter,...",
+        "forum_thread_count": 9091,
+        "forum_post_count": 425028,
+        "forum_prefixes": [
+          {
+            "group_title": "Phân loại",
+            "group_prefixes": [
+              {
+                "prefix_id": 120,
+                "prefix_title": "Trên tay"
+              },
+              {
+                "prefix_id": 121,
+                "prefix_title": "Trải nghiệm"
+              },
+              {
+                "prefix_id": 122,
+                "prefix_title": "So sánh"
+              },
+              {
+                "prefix_id": 123,
+                "prefix_title": "Review"
+              },
+              {
+                "prefix_id": 124,
+                "prefix_title": "Breaking news"
+              },
+              {
+                "prefix_id": 125,
+                "prefix_title": "Tổng hợp thông tin"
+              },
+              {
+                "prefix_id": 126,
+                "prefix_title": "Phân tích"
+              },
+              {
+                "prefix_id": 127,
+                "prefix_title": "Thủ thuật"
+              },
+              {
+                "prefix_id": 128,
+                "prefix_title": "Tin tức"
+              },
+              {
+                "prefix_id": 129,
+                "prefix_title": "Tâm sự"
+              },
+              {
+                "prefix_id": 115,
+                "prefix_title": "Hỏi đáp"
+              }
+            ]
+          }
+        ],
+        "thread_default_prefix_id": 0,
+        "thread_prefix_is_required": false,
+        "links": {
+          "permalink": "https://tinhte.vn/forums/dam-may-dich-vu-truc-tuyen.460/",
+          "detail": "https://tinhte.vn/appforo/index.php?forums/460/&oauth_token=0%2C1691988416%2Ce90cf14103bab01cedfd7f1255149cc4%2Cgd2hxqf2cu",
+          "sub-categories": "https://tinhte.vn/appforo/index.php?categories/&parent_forum_id=460&oauth_token=0%2C1691988416%2Ce90cf14103bab01cedfd7f1255149cc4%2Cgd2hxqf2cu",
+          "sub-forums": "https://tinhte.vn/appforo/index.php?forums/&parent_forum_id=460&oauth_token=0%2C1691988416%2Ce90cf14103bab01cedfd7f1255149cc4%2Cgd2hxqf2cu",
+          "threads": "https://tinhte.vn/appforo/index.php?threads/&forum_id=460&oauth_token=0%2C1691988416%2Ce90cf14103bab01cedfd7f1255149cc4%2Cgd2hxqf2cu",
+          "followers": "https://tinhte.vn/appforo/index.php?forums/460/followers&oauth_token=0%2C1691988416%2Ce90cf14103bab01cedfd7f1255149cc4%2Cgd2hxqf2cu"
+        },
+        "permissions": {
+          "view": true,
+          "edit": false,
+          "delete": false,
+          "create_thread": false,
+          "upload_attachment": false,
+          "tag_thread": false,
+          "follow": false
+        },
+        "forum_is_followed": false,
+        "forum_thumbnail_url": "",
+        "navigation_type": "forum",
+        "navigation_id": 460,
+        "navigation_depth": 1,
+        "navigation_parent_id": 619,
+        "has_sub_elements": false
+      },
+      {
+        "forum_id": 232,
+        "forum_title": "Thăm dò công nghệ",
+        "forum_description": "Thăm dò  bình chọn về công nghệ (khu vực giới hạn).",
+        "forum_thread_count": 496,
+        "forum_post_count": 194989,
+        "forum_prefixes": [
+          {
+            "group_title": "Phân loại",
+            "group_prefixes": [
+              {
+                "prefix_id": 120,
+                "prefix_title": "Trên tay"
+              },
+              {
+                "prefix_id": 121,
+                "prefix_title": "Trải nghiệm"
+              },
+              {
+                "prefix_id": 122,
+                "prefix_title": "So sánh"
+              },
+              {
+                "prefix_id": 123,
+                "prefix_title": "Review"
+              },
+              {
+                "prefix_id": 124,
+                "prefix_title": "Breaking news"
+              },
+              {
+                "prefix_id": 125,
+                "prefix_title": "Tổng hợp thông tin"
+              },
+              {
+                "prefix_id": 126,
+                "prefix_title": "Phân tích"
+              },
+              {
+                "prefix_id": 127,
+                "prefix_title": "Thủ thuật"
+              },
+              {
+                "prefix_id": 128,
+                "prefix_title": "Tin tức"
+              },
+              {
+                "prefix_id": 129,
+                "prefix_title": "Tâm sự"
+              },
+              {
+                "prefix_id": 115,
+                "prefix_title": "Hỏi đáp"
+              }
+            ]
+          }
+        ],
+        "thread_default_prefix_id": 0,
+        "thread_prefix_is_required": false,
+        "links": {
+          "permalink": "https://tinhte.vn/forums/tham-do-cong-nghe.232/",
+          "detail": "https://tinhte.vn/appforo/index.php?forums/232/&oauth_token=0%2C1691988416%2Ce90cf14103bab01cedfd7f1255149cc4%2Cgd2hxqf2cu",
+          "sub-categories": "https://tinhte.vn/appforo/index.php?categories/&parent_forum_id=232&oauth_token=0%2C1691988416%2Ce90cf14103bab01cedfd7f1255149cc4%2Cgd2hxqf2cu",
+          "sub-forums": "https://tinhte.vn/appforo/index.php?forums/&parent_forum_id=232&oauth_token=0%2C1691988416%2Ce90cf14103bab01cedfd7f1255149cc4%2Cgd2hxqf2cu",
+          "threads": "https://tinhte.vn/appforo/index.php?threads/&forum_id=232&oauth_token=0%2C1691988416%2Ce90cf14103bab01cedfd7f1255149cc4%2Cgd2hxqf2cu",
+          "followers": "https://tinhte.vn/appforo/index.php?forums/232/followers&oauth_token=0%2C1691988416%2Ce90cf14103bab01cedfd7f1255149cc4%2Cgd2hxqf2cu"
+        },
+        "permissions": {
+          "view": true,
+          "edit": false,
+          "delete": false,
+          "create_thread": false,
+          "upload_attachment": false,
+          "tag_thread": false,
+          "follow": false
+        },
+        "forum_is_followed": false,
+        "forum_thumbnail_url": "",
+        "navigation_type": "forum",
+        "navigation_id": 232,
+        "navigation_depth": 1,
+        "navigation_parent_id": 619,
+        "has_sub_elements": false
+      },
+      {
+        "forum_id": 763,
+        "forum_title": "Chuyện nghề tech",
+        "forum_description": "",
+        "forum_thread_count": 45,
+        "forum_post_count": 1454,
+        "forum_prefixes": [
+          {
+            "group_title": "Phân loại",
+            "group_prefixes": [
+              {
+                "prefix_id": 120,
+                "prefix_title": "Trên tay"
+              },
+              {
+                "prefix_id": 121,
+                "prefix_title": "Trải nghiệm"
+              },
+              {
+                "prefix_id": 122,
+                "prefix_title": "So sánh"
+              },
+              {
+                "prefix_id": 123,
+                "prefix_title": "Review"
+              },
+              {
+                "prefix_id": 124,
+                "prefix_title": "Breaking news"
+              },
+              {
+                "prefix_id": 125,
+                "prefix_title": "Tổng hợp thông tin"
+              },
+              {
+                "prefix_id": 126,
+                "prefix_title": "Phân tích"
+              },
+              {
+                "prefix_id": 127,
+                "prefix_title": "Thủ thuật"
+              },
+              {
+                "prefix_id": 128,
+                "prefix_title": "Tin tức"
+              },
+              {
+                "prefix_id": 129,
+                "prefix_title": "Tâm sự"
+              },
+              {
+                "prefix_id": 115,
+                "prefix_title": "Hỏi đáp"
+              }
+            ]
+          }
+        ],
+        "thread_default_prefix_id": 0,
+        "thread_prefix_is_required": false,
+        "links": {
+          "permalink": "https://tinhte.vn/forums/chuyen-nghe-tech.763/",
+          "detail": "https://tinhte.vn/appforo/index.php?forums/763/&oauth_token=0%2C1691988416%2Ce90cf14103bab01cedfd7f1255149cc4%2Cgd2hxqf2cu",
+          "sub-categories": "https://tinhte.vn/appforo/index.php?categories/&parent_forum_id=763&oauth_token=0%2C1691988416%2Ce90cf14103bab01cedfd7f1255149cc4%2Cgd2hxqf2cu",
+          "sub-forums": "https://tinhte.vn/appforo/index.php?forums/&parent_forum_id=763&oauth_token=0%2C1691988416%2Ce90cf14103bab01cedfd7f1255149cc4%2Cgd2hxqf2cu",
+          "threads": "https://tinhte.vn/appforo/index.php?threads/&forum_id=763&oauth_token=0%2C1691988416%2Ce90cf14103bab01cedfd7f1255149cc4%2Cgd2hxqf2cu",
+          "followers": "https://tinhte.vn/appforo/index.php?forums/763/followers&oauth_token=0%2C1691988416%2Ce90cf14103bab01cedfd7f1255149cc4%2Cgd2hxqf2cu"
+        },
+        "permissions": {
+          "view": true,
+          "edit": false,
+          "delete": false,
+          "create_thread": false,
+          "upload_attachment": false,
+          "tag_thread": false,
+          "follow": false
+        },
+        "forum_is_followed": false,
+        "forum_thumbnail_url": "",
+        "navigation_type": "forum",
+        "navigation_id": 763,
+        "navigation_depth": 1,
+        "navigation_parent_id": 619,
+        "has_sub_elements": false
+      },
+      {
+        "forum_id": 36,
+        "forum_title": "Cà phê tinh tế",
+        "forum_description": "Chuyện đó ... chuyện đây...",
+        "forum_thread_count": 159540,
+        "forum_post_count": 1839622,
+        "forum_prefixes": [
+          {
+            "group_title": "Phân loại",
+            "group_prefixes": [
+              {
+                "prefix_id": 120,
+                "prefix_title": "Trên tay"
+              },
+              {
+                "prefix_id": 121,
+                "prefix_title": "Trải nghiệm"
+              },
+              {
+                "prefix_id": 122,
+                "prefix_title": "So sánh"
+              },
+              {
+                "prefix_id": 123,
+                "prefix_title": "Review"
+              },
+              {
+                "prefix_id": 124,
+                "prefix_title": "Breaking news"
+              },
+              {
+                "prefix_id": 125,
+                "prefix_title": "Tổng hợp thông tin"
+              },
+              {
+                "prefix_id": 126,
+                "prefix_title": "Phân tích"
+              },
+              {
+                "prefix_id": 127,
+                "prefix_title": "Thủ thuật"
+              },
+              {
+                "prefix_id": 128,
+                "prefix_title": "Tin tức"
+              },
+              {
+                "prefix_id": 129,
+                "prefix_title": "Tâm sự"
+              },
+              {
+                "prefix_id": 115,
+                "prefix_title": "Hỏi đáp"
+              }
+            ]
+          }
+        ],
+        "thread_default_prefix_id": 0,
+        "thread_prefix_is_required": false,
+        "links": {
+          "permalink": "https://tinhte.vn/forums/ca-phe-tinh-te.36/",
+          "detail": "https://tinhte.vn/appforo/index.php?forums/36/&oauth_token=0%2C1691988416%2Ce90cf14103bab01cedfd7f1255149cc4%2Cgd2hxqf2cu",
+          "sub-categories": "https://tinhte.vn/appforo/index.php?categories/&parent_forum_id=36&oauth_token=0%2C1691988416%2Ce90cf14103bab01cedfd7f1255149cc4%2Cgd2hxqf2cu",
+          "sub-forums": "https://tinhte.vn/appforo/index.php?forums/&parent_forum_id=36&oauth_token=0%2C1691988416%2Ce90cf14103bab01cedfd7f1255149cc4%2Cgd2hxqf2cu",
+          "threads": "https://tinhte.vn/appforo/index.php?threads/&forum_id=36&oauth_token=0%2C1691988416%2Ce90cf14103bab01cedfd7f1255149cc4%2Cgd2hxqf2cu",
+          "followers": "https://tinhte.vn/appforo/index.php?forums/36/followers&oauth_token=0%2C1691988416%2Ce90cf14103bab01cedfd7f1255149cc4%2Cgd2hxqf2cu",
+          "sub-elements": "https://tinhte.vn/appforo/index.php?navigation/&parent=36&oauth_token=0%2C1691988416%2Ce90cf14103bab01cedfd7f1255149cc4%2Cgd2hxqf2cu"
+        },
+        "permissions": {
+          "view": true,
+          "edit": false,
+          "delete": false,
+          "create_thread": false,
+          "upload_attachment": false,
+          "tag_thread": false,
+          "follow": false
+        },
+        "forum_is_followed": false,
+        "forum_thumbnail_url": "",
+        "navigation_type": "forum",
+        "navigation_id": 36,
+        "navigation_depth": 1,
+        "navigation_parent_id": 619,
+        "has_sub_elements": true
+      },
+      {
+        "forum_id": 230,
+        "forum_title": "Quảng cáo - Khuyến mãi",
+        "forum_description": "PR, Khuyến mãi, giảm giá từ các cty Công nghệ.",
+        "forum_thread_count": 5984,
+        "forum_post_count": 437156,
+        "forum_prefixes": [
+          {
+            "group_title": "Phân loại",
+            "group_prefixes": [
+              {
+                "prefix_id": 120,
+                "prefix_title": "Trên tay"
+              },
+              {
+                "prefix_id": 121,
+                "prefix_title": "Trải nghiệm"
+              },
+              {
+                "prefix_id": 122,
+                "prefix_title": "So sánh"
+              },
+              {
+                "prefix_id": 123,
+                "prefix_title": "Review"
+              },
+              {
+                "prefix_id": 124,
+                "prefix_title": "Breaking news"
+              },
+              {
+                "prefix_id": 125,
+                "prefix_title": "Tổng hợp thông tin"
+              },
+              {
+                "prefix_id": 126,
+                "prefix_title": "Phân tích"
+              },
+              {
+                "prefix_id": 127,
+                "prefix_title": "Thủ thuật"
+              },
+              {
+                "prefix_id": 128,
+                "prefix_title": "Tin tức"
+              },
+              {
+                "prefix_id": 129,
+                "prefix_title": "Tâm sự"
+              },
+              {
+                "prefix_id": 115,
+                "prefix_title": "Hỏi đáp"
+              }
+            ]
+          }
+        ],
+        "thread_default_prefix_id": 0,
+        "thread_prefix_is_required": false,
+        "links": {
+          "permalink": "https://tinhte.vn/forums/quang-cao-khuyen-mai.230/",
+          "detail": "https://tinhte.vn/appforo/index.php?forums/230/&oauth_token=0%2C1691988416%2Ce90cf14103bab01cedfd7f1255149cc4%2Cgd2hxqf2cu",
+          "sub-categories": "https://tinhte.vn/appforo/index.php?categories/&parent_forum_id=230&oauth_token=0%2C1691988416%2Ce90cf14103bab01cedfd7f1255149cc4%2Cgd2hxqf2cu",
+          "sub-forums": "https://tinhte.vn/appforo/index.php?forums/&parent_forum_id=230&oauth_token=0%2C1691988416%2Ce90cf14103bab01cedfd7f1255149cc4%2Cgd2hxqf2cu",
+          "threads": "https://tinhte.vn/appforo/index.php?threads/&forum_id=230&oauth_token=0%2C1691988416%2Ce90cf14103bab01cedfd7f1255149cc4%2Cgd2hxqf2cu",
+          "followers": "https://tinhte.vn/appforo/index.php?forums/230/followers&oauth_token=0%2C1691988416%2Ce90cf14103bab01cedfd7f1255149cc4%2Cgd2hxqf2cu",
+          "sub-elements": "https://tinhte.vn/appforo/index.php?navigation/&parent=230&oauth_token=0%2C1691988416%2Ce90cf14103bab01cedfd7f1255149cc4%2Cgd2hxqf2cu"
+        },
+        "permissions": {
+          "view": true,
+          "edit": false,
+          "delete": false,
+          "create_thread": false,
+          "upload_attachment": false,
+          "tag_thread": false,
+          "follow": false
+        },
+        "forum_is_followed": false,
+        "forum_thumbnail_url": "",
+        "navigation_type": "forum",
+        "navigation_id": 230,
+        "navigation_depth": 1,
+        "navigation_parent_id": 619,
+        "has_sub_elements": true
+      },
+      {
+        "forum_id": 639,
+        "forum_title": "Chữ Việt Nhanh",
+        "forum_description": "Cuộc thi Gõ nhanh Chữ Việt",
+        "forum_thread_count": 283,
+        "forum_post_count": 3705,
+        "forum_prefixes": [
+          {
+            "group_title": "Phân loại",
+            "group_prefixes": [
+              {
+                "prefix_id": 120,
+                "prefix_title": "Trên tay"
+              },
+              {
+                "prefix_id": 121,
+                "prefix_title": "Trải nghiệm"
+              },
+              {
+                "prefix_id": 122,
+                "prefix_title": "So sánh"
+              },
+              {
+                "prefix_id": 123,
+                "prefix_title": "Review"
+              },
+              {
+                "prefix_id": 124,
+                "prefix_title": "Breaking news"
+              },
+              {
+                "prefix_id": 125,
+                "prefix_title": "Tổng hợp thông tin"
+              },
+              {
+                "prefix_id": 126,
+                "prefix_title": "Phân tích"
+              },
+              {
+                "prefix_id": 127,
+                "prefix_title": "Thủ thuật"
+              },
+              {
+                "prefix_id": 128,
+                "prefix_title": "Tin tức"
+              },
+              {
+                "prefix_id": 129,
+                "prefix_title": "Tâm sự"
+              },
+              {
+                "prefix_id": 115,
+                "prefix_title": "Hỏi đáp"
+              }
+            ]
+          }
+        ],
+        "thread_default_prefix_id": 0,
+        "thread_prefix_is_required": false,
+        "links": {
+          "permalink": "https://tinhte.vn/forums/chu-viet-nhanh.639/",
+          "detail": "https://tinhte.vn/appforo/index.php?forums/639/&oauth_token=0%2C1691988416%2Ce90cf14103bab01cedfd7f1255149cc4%2Cgd2hxqf2cu",
+          "sub-categories": "https://tinhte.vn/appforo/index.php?categories/&parent_forum_id=639&oauth_token=0%2C1691988416%2Ce90cf14103bab01cedfd7f1255149cc4%2Cgd2hxqf2cu",
+          "sub-forums": "https://tinhte.vn/appforo/index.php?forums/&parent_forum_id=639&oauth_token=0%2C1691988416%2Ce90cf14103bab01cedfd7f1255149cc4%2Cgd2hxqf2cu",
+          "threads": "https://tinhte.vn/appforo/index.php?threads/&forum_id=639&oauth_token=0%2C1691988416%2Ce90cf14103bab01cedfd7f1255149cc4%2Cgd2hxqf2cu",
+          "followers": "https://tinhte.vn/appforo/index.php?forums/639/followers&oauth_token=0%2C1691988416%2Ce90cf14103bab01cedfd7f1255149cc4%2Cgd2hxqf2cu"
+        },
+        "permissions": {
+          "view": true,
+          "edit": false,
+          "delete": false,
+          "create_thread": false,
+          "upload_attachment": false,
+          "tag_thread": false,
+          "follow": false
+        },
+        "forum_is_followed": false,
+        "forum_thumbnail_url": "",
+        "navigation_type": "forum",
+        "navigation_id": 639,
+        "navigation_depth": 1,
+        "navigation_parent_id": 619,
+        "has_sub_elements": false
+      },
+      {
+        "forum_id": 690,
+        "forum_title": "Game Tinh Tế",
+        "forum_description": "",
+        "forum_thread_count": 246,
+        "forum_post_count": 68604,
+        "forum_prefixes": [
+          {
+            "group_title": "Phân loại",
+            "group_prefixes": [
+              {
+                "prefix_id": 120,
+                "prefix_title": "Trên tay"
+              },
+              {
+                "prefix_id": 121,
+                "prefix_title": "Trải nghiệm"
+              },
+              {
+                "prefix_id": 122,
+                "prefix_title": "So sánh"
+              },
+              {
+                "prefix_id": 123,
+                "prefix_title": "Review"
+              },
+              {
+                "prefix_id": 124,
+                "prefix_title": "Breaking news"
+              },
+              {
+                "prefix_id": 125,
+                "prefix_title": "Tổng hợp thông tin"
+              },
+              {
+                "prefix_id": 126,
+                "prefix_title": "Phân tích"
+              },
+              {
+                "prefix_id": 127,
+                "prefix_title": "Thủ thuật"
+              },
+              {
+                "prefix_id": 128,
+                "prefix_title": "Tin tức"
+              },
+              {
+                "prefix_id": 129,
+                "prefix_title": "Tâm sự"
+              },
+              {
+                "prefix_id": 115,
+                "prefix_title": "Hỏi đáp"
+              }
+            ]
+          }
+        ],
+        "thread_default_prefix_id": 0,
+        "thread_prefix_is_required": false,
+        "links": {
+          "permalink": "https://tinhte.vn/forums/game-tinh-te.690/",
+          "detail": "https://tinhte.vn/appforo/index.php?forums/690/&oauth_token=0%2C1691988416%2Ce90cf14103bab01cedfd7f1255149cc4%2Cgd2hxqf2cu",
+          "sub-categories": "https://tinhte.vn/appforo/index.php?categories/&parent_forum_id=690&oauth_token=0%2C1691988416%2Ce90cf14103bab01cedfd7f1255149cc4%2Cgd2hxqf2cu",
+          "sub-forums": "https://tinhte.vn/appforo/index.php?forums/&parent_forum_id=690&oauth_token=0%2C1691988416%2Ce90cf14103bab01cedfd7f1255149cc4%2Cgd2hxqf2cu",
+          "threads": "https://tinhte.vn/appforo/index.php?threads/&forum_id=690&oauth_token=0%2C1691988416%2Ce90cf14103bab01cedfd7f1255149cc4%2Cgd2hxqf2cu",
+          "followers": "https://tinhte.vn/appforo/index.php?forums/690/followers&oauth_token=0%2C1691988416%2Ce90cf14103bab01cedfd7f1255149cc4%2Cgd2hxqf2cu"
+        },
+        "permissions": {
+          "view": true,
+          "edit": false,
+          "delete": false,
+          "create_thread": false,
+          "upload_attachment": false,
+          "tag_thread": false,
+          "follow": false
+        },
+        "forum_is_followed": false,
+        "forum_thumbnail_url": "",
+        "navigation_type": "forum",
+        "navigation_id": 690,
+        "navigation_depth": 1,
+        "navigation_parent_id": 619,
+        "has_sub_elements": false
+      },
+      {
+        "forum_id": 665,
+        "forum_title": "App Tinh tế",
+        "forum_description": "Giao lưu, hoạt động, thông báo, báo lỗi và góp ý xây dựng cho các App Tinh tế mới dành cho Android, iOS (phiên bản 5.0 trở đi)",
+        "forum_thread_count": 251,
+        "forum_post_count": 10256,
+        "forum_prefixes": [
+          {
+            "group_title": "OS",
+            "group_prefixes": [
+              {
+                "prefix_id": 109,
+                "prefix_title": "iOS"
+              },
+              {
+                "prefix_id": 110,
+                "prefix_title": "Android"
+              }
+            ]
+          },
+          {
+            "group_title": "Phân loại",
+            "group_prefixes": [
+              {
+                "prefix_id": 120,
+                "prefix_title": "Trên tay"
+              },
+              {
+                "prefix_id": 121,
+                "prefix_title": "Trải nghiệm"
+              },
+              {
+                "prefix_id": 122,
+                "prefix_title": "So sánh"
+              },
+              {
+                "prefix_id": 123,
+                "prefix_title": "Review"
+              },
+              {
+                "prefix_id": 124,
+                "prefix_title": "Breaking news"
+              },
+              {
+                "prefix_id": 125,
+                "prefix_title": "Tổng hợp thông tin"
+              },
+              {
+                "prefix_id": 126,
+                "prefix_title": "Phân tích"
+              },
+              {
+                "prefix_id": 127,
+                "prefix_title": "Thủ thuật"
+              },
+              {
+                "prefix_id": 128,
+                "prefix_title": "Tin tức"
+              },
+              {
+                "prefix_id": 129,
+                "prefix_title": "Tâm sự"
+              },
+              {
+                "prefix_id": 115,
+                "prefix_title": "Hỏi đáp"
+              }
+            ]
+          }
+        ],
+        "thread_default_prefix_id": 0,
+        "thread_prefix_is_required": false,
+        "links": {
+          "permalink": "https://tinhte.vn/forums/app-tinh-te.665/",
+          "detail": "https://tinhte.vn/appforo/index.php?forums/665/&oauth_token=0%2C1691988416%2Ce90cf14103bab01cedfd7f1255149cc4%2Cgd2hxqf2cu",
+          "sub-categories": "https://tinhte.vn/appforo/index.php?categories/&parent_forum_id=665&oauth_token=0%2C1691988416%2Ce90cf14103bab01cedfd7f1255149cc4%2Cgd2hxqf2cu",
+          "sub-forums": "https://tinhte.vn/appforo/index.php?forums/&parent_forum_id=665&oauth_token=0%2C1691988416%2Ce90cf14103bab01cedfd7f1255149cc4%2Cgd2hxqf2cu",
+          "threads": "https://tinhte.vn/appforo/index.php?threads/&forum_id=665&oauth_token=0%2C1691988416%2Ce90cf14103bab01cedfd7f1255149cc4%2Cgd2hxqf2cu",
+          "followers": "https://tinhte.vn/appforo/index.php?forums/665/followers&oauth_token=0%2C1691988416%2Ce90cf14103bab01cedfd7f1255149cc4%2Cgd2hxqf2cu"
+        },
+        "permissions": {
+          "view": true,
+          "edit": false,
+          "delete": false,
+          "create_thread": false,
+          "upload_attachment": false,
+          "tag_thread": false,
+          "follow": false
+        },
+        "forum_is_followed": false,
+        "forum_thumbnail_url": "",
+        "navigation_type": "forum",
+        "navigation_id": 665,
+        "navigation_depth": 1,
+        "navigation_parent_id": 619,
+        "has_sub_elements": false
+      },
+      {
+        "forum_id": 743,
+        "forum_title": "Tinhte Reward Store",
+        "forum_description": "Chương trình tích điểm thành viên của Tinh tế và kho quà Tinhte Reward Store",
+        "forum_thread_count": 505,
+        "forum_post_count": 30660,
+        "forum_prefixes": [
+          {
+            "group_title": "Phân loại",
+            "group_prefixes": [
+              {
+                "prefix_id": 120,
+                "prefix_title": "Trên tay"
+              },
+              {
+                "prefix_id": 121,
+                "prefix_title": "Trải nghiệm"
+              },
+              {
+                "prefix_id": 122,
+                "prefix_title": "So sánh"
+              },
+              {
+                "prefix_id": 123,
+                "prefix_title": "Review"
+              },
+              {
+                "prefix_id": 124,
+                "prefix_title": "Breaking news"
+              },
+              {
+                "prefix_id": 125,
+                "prefix_title": "Tổng hợp thông tin"
+              },
+              {
+                "prefix_id": 126,
+                "prefix_title": "Phân tích"
+              },
+              {
+                "prefix_id": 127,
+                "prefix_title": "Thủ thuật"
+              },
+              {
+                "prefix_id": 128,
+                "prefix_title": "Tin tức"
+              },
+              {
+                "prefix_id": 129,
+                "prefix_title": "Tâm sự"
+              },
+              {
+                "prefix_id": 115,
+                "prefix_title": "Hỏi đáp"
+              }
+            ]
+          }
+        ],
+        "thread_default_prefix_id": 0,
+        "thread_prefix_is_required": false,
+        "links": {
+          "permalink": "https://tinhte.vn/forums/tinhte-reward-store.743/",
+          "detail": "https://tinhte.vn/appforo/index.php?forums/743/&oauth_token=0%2C1691988416%2Ce90cf14103bab01cedfd7f1255149cc4%2Cgd2hxqf2cu",
+          "sub-categories": "https://tinhte.vn/appforo/index.php?categories/&parent_forum_id=743&oauth_token=0%2C1691988416%2Ce90cf14103bab01cedfd7f1255149cc4%2Cgd2hxqf2cu",
+          "sub-forums": "https://tinhte.vn/appforo/index.php?forums/&parent_forum_id=743&oauth_token=0%2C1691988416%2Ce90cf14103bab01cedfd7f1255149cc4%2Cgd2hxqf2cu",
+          "threads": "https://tinhte.vn/appforo/index.php?threads/&forum_id=743&oauth_token=0%2C1691988416%2Ce90cf14103bab01cedfd7f1255149cc4%2Cgd2hxqf2cu",
+          "followers": "https://tinhte.vn/appforo/index.php?forums/743/followers&oauth_token=0%2C1691988416%2Ce90cf14103bab01cedfd7f1255149cc4%2Cgd2hxqf2cu"
+        },
+        "permissions": {
+          "view": true,
+          "edit": false,
+          "delete": false,
+          "create_thread": false,
+          "upload_attachment": false,
+          "tag_thread": false,
+          "follow": false
+        },
+        "forum_is_followed": false,
+        "forum_thumbnail_url": "",
+        "navigation_type": "forum",
+        "navigation_id": 743,
+        "navigation_depth": 1,
+        "navigation_parent_id": 619,
+        "has_sub_elements": false
+      },
+      {
+        "forum_id": 745,
+        "forum_title": "Nhiệm vụ Tinh tế",
+        "forum_description": "Tất cả mọi thứ về Nhiệm vụ trên Tinh tế (Tinhte Quest)",
+        "forum_thread_count": 23443,
+        "forum_post_count": 183673,
+        "forum_prefixes": [
+          {
+            "group_title": "Phân loại",
+            "group_prefixes": [
+              {
+                "prefix_id": 120,
+                "prefix_title": "Trên tay"
+              },
+              {
+                "prefix_id": 121,
+                "prefix_title": "Trải nghiệm"
+              },
+              {
+                "prefix_id": 122,
+                "prefix_title": "So sánh"
+              },
+              {
+                "prefix_id": 123,
+                "prefix_title": "Review"
+              },
+              {
+                "prefix_id": 124,
+                "prefix_title": "Breaking news"
+              },
+              {
+                "prefix_id": 125,
+                "prefix_title": "Tổng hợp thông tin"
+              },
+              {
+                "prefix_id": 126,
+                "prefix_title": "Phân tích"
+              },
+              {
+                "prefix_id": 127,
+                "prefix_title": "Thủ thuật"
+              },
+              {
+                "prefix_id": 128,
+                "prefix_title": "Tin tức"
+              },
+              {
+                "prefix_id": 129,
+                "prefix_title": "Tâm sự"
+              },
+              {
+                "prefix_id": 115,
+                "prefix_title": "Hỏi đáp"
+              }
+            ]
+          }
+        ],
+        "thread_default_prefix_id": 0,
+        "thread_prefix_is_required": false,
+        "links": {
+          "permalink": "https://tinhte.vn/forums/nhiem-vu-tinh-te.745/",
+          "detail": "https://tinhte.vn/appforo/index.php?forums/745/&oauth_token=0%2C1691988416%2Ce90cf14103bab01cedfd7f1255149cc4%2Cgd2hxqf2cu",
+          "sub-categories": "https://tinhte.vn/appforo/index.php?categories/&parent_forum_id=745&oauth_token=0%2C1691988416%2Ce90cf14103bab01cedfd7f1255149cc4%2Cgd2hxqf2cu",
+          "sub-forums": "https://tinhte.vn/appforo/index.php?forums/&parent_forum_id=745&oauth_token=0%2C1691988416%2Ce90cf14103bab01cedfd7f1255149cc4%2Cgd2hxqf2cu",
+          "threads": "https://tinhte.vn/appforo/index.php?threads/&forum_id=745&oauth_token=0%2C1691988416%2Ce90cf14103bab01cedfd7f1255149cc4%2Cgd2hxqf2cu",
+          "followers": "https://tinhte.vn/appforo/index.php?forums/745/followers&oauth_token=0%2C1691988416%2Ce90cf14103bab01cedfd7f1255149cc4%2Cgd2hxqf2cu"
+        },
+        "permissions": {
+          "view": true,
+          "edit": false,
+          "delete": false,
+          "create_thread": false,
+          "upload_attachment": false,
+          "tag_thread": false,
+          "follow": false
+        },
+        "forum_is_followed": false,
+        "forum_thumbnail_url": "",
+        "navigation_type": "forum",
+        "navigation_id": 745,
+        "navigation_depth": 1,
+        "navigation_parent_id": 619,
+        "has_sub_elements": false
+      },
+      {
+        "forum_id": 741,
+        "forum_title": "Việc làm",
+        "forum_description": "Tổng hợp việc làm, nghề nghiệp, trao đổi về kiến thức phát triển bản thân và hướng nghiệp",
+        "forum_thread_count": 4119,
+        "forum_post_count": 11231,
+        "forum_prefixes": [
+          {
+            "group_title": "Phân loại",
+            "group_prefixes": [
+              {
+                "prefix_id": 120,
+                "prefix_title": "Trên tay"
+              },
+              {
+                "prefix_id": 121,
+                "prefix_title": "Trải nghiệm"
+              },
+              {
+                "prefix_id": 122,
+                "prefix_title": "So sánh"
+              },
+              {
+                "prefix_id": 123,
+                "prefix_title": "Review"
+              },
+              {
+                "prefix_id": 124,
+                "prefix_title": "Breaking news"
+              },
+              {
+                "prefix_id": 125,
+                "prefix_title": "Tổng hợp thông tin"
+              },
+              {
+                "prefix_id": 126,
+                "prefix_title": "Phân tích"
+              },
+              {
+                "prefix_id": 127,
+                "prefix_title": "Thủ thuật"
+              },
+              {
+                "prefix_id": 128,
+                "prefix_title": "Tin tức"
+              },
+              {
+                "prefix_id": 129,
+                "prefix_title": "Tâm sự"
+              },
+              {
+                "prefix_id": 115,
+                "prefix_title": "Hỏi đáp"
+              }
+            ]
+          }
+        ],
+        "thread_default_prefix_id": 0,
+        "thread_prefix_is_required": false,
+        "links": {
+          "permalink": "https://tinhte.vn/forums/viec-lam.741/",
+          "detail": "https://tinhte.vn/appforo/index.php?forums/741/&oauth_token=0%2C1691988416%2Ce90cf14103bab01cedfd7f1255149cc4%2Cgd2hxqf2cu",
+          "sub-categories": "https://tinhte.vn/appforo/index.php?categories/&parent_forum_id=741&oauth_token=0%2C1691988416%2Ce90cf14103bab01cedfd7f1255149cc4%2Cgd2hxqf2cu",
+          "sub-forums": "https://tinhte.vn/appforo/index.php?forums/&parent_forum_id=741&oauth_token=0%2C1691988416%2Ce90cf14103bab01cedfd7f1255149cc4%2Cgd2hxqf2cu",
+          "threads": "https://tinhte.vn/appforo/index.php?threads/&forum_id=741&oauth_token=0%2C1691988416%2Ce90cf14103bab01cedfd7f1255149cc4%2Cgd2hxqf2cu",
+          "followers": "https://tinhte.vn/appforo/index.php?forums/741/followers&oauth_token=0%2C1691988416%2Ce90cf14103bab01cedfd7f1255149cc4%2Cgd2hxqf2cu"
+        },
+        "permissions": {
+          "view": true,
+          "edit": false,
+          "delete": false,
+          "create_thread": false,
+          "upload_attachment": false,
+          "tag_thread": false,
+          "follow": false
+        },
+        "forum_is_followed": false,
+        "forum_thumbnail_url": "",
+        "navigation_type": "forum",
+        "navigation_id": 741,
+        "navigation_depth": 1,
+        "navigation_parent_id": 619,
+        "has_sub_elements": false
+      }
+    ],
+    "elements_count": 13
+  }
+}

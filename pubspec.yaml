@@ -19,6 +19,8 @@ dependencies:
   fwfh_webview: any
   the_api:
     path: ./packages/api
+  the_api_test:
+    path: ./packages/api_test
 
   cached_network_image: ^3.2.1
   chewie: ^1.7.0
@@ -53,6 +55,7 @@ dev_dependencies:
   flutter_lints: ^2.0.1
   flutter_test:
     sdk: flutter
+  golden_toolkit: ^0.15.0
   msix: ^3.0.0
 
 flutter:
