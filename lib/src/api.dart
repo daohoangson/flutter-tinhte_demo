@@ -174,8 +174,13 @@ typedef ApiOnError = void Function(dynamic error);
 
 class ApiApp extends StatefulWidget {
   final Widget child;
+  final bool enableBatch;
 
-  const ApiApp({required this.child, Key? key}) : super(key: key);
+  const ApiApp({
+    required this.child,
+    this.enableBatch = true,
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<ApiApp> createState() => _ApiAppState();
@@ -203,6 +208,7 @@ class _ApiAppState extends State<ApiApp> {
       apiRoot: config.apiRoot,
       clientId: config.clientId,
       clientSecret: config.clientSecret,
+      enableBatch: widget.enableBatch,
       httpHeaders: const {
         'Api-Bb-Code-Chr': '1',
         'Api-Post-Tree': '1',

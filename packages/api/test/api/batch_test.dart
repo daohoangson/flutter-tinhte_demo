@@ -16,6 +16,21 @@ void main() {
       expect(api.requestCount, equals(0));
     });
 
+    test('skips batching if disabled', () async {
+      final httpClient = http.MockClient((_) async => http.Response('{}', 200));
+      final api = Api(httpClient, apiRoot: '', enableBatch: false);
+
+      expect(api.requestCount, equals(0));
+      final batch = api.newBatch();
+
+      api.getJson("foo").then(expectAsync1((json) => expect(json, equals({}))));
+      api.getJson("bar").then(expectAsync1((json) => expect(json, equals({}))));
+
+      final fetched = await batch.fetch();
+      expect(fetched, isFalse);
+      expect(api.requestCount, equals(2));
+    });
+
     test('handles responses', () async {
       final httpClient = http.MockClient((_) async => http.Response('''
 {

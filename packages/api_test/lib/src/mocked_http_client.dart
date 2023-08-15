@@ -5,24 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:http/testing.dart';
 import 'package:path/path.dart' as p;
-import 'package:the_api/batch_job.dart';
 import 'package:the_api_test/src/path.dart';
 
 final mockedHttpClient = MockClient(_mockedHttpClientHandler);
 
 Future<Response> _mockedHttpClientHandler(Request request) async {
   try {
-    dynamic body;
-
-    if (request.method == 'POST' &&
-        request.url.queryParameters['batch'] == '') {
-      body = await _mockBatchRequest(request);
-    } else {
-      body = await _mockRequest(
-        path: request.url.path,
-        params: request.url.queryParameters,
-      );
-    }
+    final body = await _mockGetRequest(request);
 
     return Response.bytes(
       utf8.encode(jsonEncode(body)),
@@ -37,12 +26,9 @@ Future<Response> _mockedHttpClientHandler(Request request) async {
   }
 }
 
-Future<Map> _mockRequest({
-  required String path,
-  required Map<String, String> params,
-}) async {
+Future<Map> _mockGetRequest(Request request) async {
   final parts = p
-      .split(path)
+      .split(request.url.path)
       .where(
         (part) =>
             part.isNotEmpty &&
@@ -52,9 +38,10 @@ Future<Map> _mockRequest({
       )
       .toList();
   final queryKeys = <String>[];
-  for (final key in params.keys) {
+  final queryParameters = request.url.queryParameters;
+  for (final key in queryParameters.keys) {
     if (key == 'oauth_token') continue;
-    if (params[key] == '') {
+    if (queryParameters[key] == '') {
       // take empty query as direct part
       parts.add(key);
     } else {
@@ -65,7 +52,7 @@ Future<Map> _mockRequest({
   // sort query keys before building path
   queryKeys.sort();
   for (final key in queryKeys) {
-    parts.add('$key=${params[key]}');
+    parts.add('$key=${queryParameters[key]}');
   }
 
   final lastPart = parts.removeLast();
@@ -74,31 +61,10 @@ Future<Map> _mockRequest({
 
   final file = File(jsonPath);
   if (!file.existsSync()) {
-    throw StateError('$file does not exist');
+    throw StateError('$file does not exist for ${request.url}');
   }
 
   final cachedContents = file.readAsStringSync();
   final decoded = jsonDecode(cachedContents);
   return decoded['body'];
-}
-
-Future<Map> _mockBatchRequest(Request request) async {
-  final jobs = (jsonDecode(request.body) as List)
-      .map((json) => BatchJob.fromJson(json))
-      .toList(growable: false);
-
-  final jobBodies = {};
-  for (final job in jobs) {
-    final uri = Uri.parse(job.uri);
-    final jobBody = await _mockRequest(path: uri.path, params: {
-      ...uri.queryParameters,
-      ...(job.params ?? const {}),
-    });
-    jobBodies[job.id] = {
-      "_job_result": "ok",
-      ...jobBody,
-    };
-  }
-
-  return {"jobs": jobBodies};
 }

@@ -14,6 +14,7 @@ class MockedApiApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MockedHttpClientProvider(
       child: ApiApp(
+        enableBatch: false,
         child: child,
       ),
     );

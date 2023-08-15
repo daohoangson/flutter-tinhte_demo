@@ -24,7 +24,7 @@ class MockedCacheManager extends Mock implements BaseCacheManager {
       if (file.existsSync()) {
         return file.readAsBytesSync();
       } else {
-        return Uint8List(0);
+        throw StateError('$file does not exist for $url');
       }
     });
 
