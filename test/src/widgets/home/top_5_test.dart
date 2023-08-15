@@ -52,14 +52,14 @@ class _HomeTop5TestApp extends StatelessWidget {
     final _Top5 top5 = [];
     for (final threadJson in (json['threads'] as List)) {
       final thread = Thread.fromJson(threadJson);
-      final result = SearchResult<Thread>(
+      final srt = SearchResult<Thread>(
         'thread',
         thread.threadId,
         content: thread,
         listItem: ContentListItem.fromJson(threadJson['list_item']),
       );
       if (top5.length < 5) {
-        top5.add(result);
+        top5.add(srt);
       }
       if (top5.length == 5) {
         fc.items.add(top5);

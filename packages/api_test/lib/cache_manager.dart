@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:file/file.dart' as file;
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
