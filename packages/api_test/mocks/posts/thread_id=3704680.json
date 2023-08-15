@@ -1,0 +1,424 @@
+{
+  "body": {
+    "posts": [
+      {
+        "post_id": 64798393,
+        "thread_id": 3704680,
+        "poster_user_id": 3,
+        "poster_username": "cuhiep",
+        "post_create_date": 1692074524,
+        "post_body": "Hóng gió biển cho hết ghẻ",
+        "post_body_html": "<span class=\"xf-body-paragraph\">Hóng gió biển cho hết ghẻ</span>",
+        "post_body_plain_text": "Hóng gió biển cho hết ghẻ",
+        "signature": "",
+        "signature_html": "",
+        "signature_plain_text": "",
+        "post_like_count": 8,
+        "post_attachment_count": 2,
+        "like_users": [
+          {
+            "user_id": 2726029,
+            "username": "Frozen Cat",
+            "reaction_id": 2
+          },
+          {
+            "user_id": 709644,
+            "username": "Mig cường kích!",
+            "reaction_id": 1
+          },
+          {
+            "user_id": 2845924,
+            "username": "Huy Nguyễn 1995",
+            "reaction_id": 1
+          },
+          {
+            "user_id": 2549422,
+            "username": "CuTeo.",
+            "reaction_id": 1
+          },
+          {
+            "user_id": 130104,
+            "username": "mig29f",
+            "reaction_id": 1
+          }
+        ],
+        "user_is_ignored": false,
+        "post_is_published": true,
+        "post_is_deleted": false,
+        "post_update_date": 1692074524,
+        "post_is_first_post": true,
+        "attachments": [
+          {
+            "attachment_id": 6760712,
+            "attachment_download_count": 0,
+            "filename": "image.jpg",
+            "links": {
+              "permalink": "https://photo2.tinhte.vn/data/attachment-files/2023/08/7231540_image.jpg",
+              "data": "https://tinhte.vn/appforo/index.php?attachments/6760712/data",
+              "thumbnail": "https://imgproxy7.tinhte.vn/2nrjyykN-m4QQbguLhmo9cGE5mTvQtM9CTakQ_Zh5JY/h:400/plain/https://photo2.tinhte.vn/data/attachment-files/2023/08/7231540_image.jpg",
+              "post": "https://tinhte.vn/appforo/index.php?posts/64798393/"
+            },
+            "attachment_width": 899,
+            "attachment_height": 1200,
+            "attachment_is_video": false,
+            "post_id": 64798393,
+            "permissions": {
+              "view": true,
+              "delete": true
+            },
+            "attachment_is_inserted": false
+          },
+          {
+            "attachment_id": 6760711,
+            "attachment_download_count": 0,
+            "filename": "image.jpg",
+            "links": {
+              "permalink": "https://photo2.tinhte.vn/data/attachment-files/2023/08/7231539_image.jpg",
+              "data": "https://tinhte.vn/appforo/index.php?attachments/6760711/data",
+              "thumbnail": "https://imgproxy7.tinhte.vn/TPip87wutaSKwDQXI04Vc7jRBurRsQt9wm_GNg9DNdU/w:400/plain/https://photo2.tinhte.vn/data/attachment-files/2023/08/7231539_image.jpg",
+              "post": "https://tinhte.vn/appforo/index.php?posts/64798393/"
+            },
+            "attachment_width": 1200,
+            "attachment_height": 900,
+            "attachment_is_video": false,
+            "post_id": 64798393,
+            "permissions": {
+              "view": true,
+              "delete": true
+            },
+            "attachment_is_inserted": false
+          }
+        ],
+        "links": {
+          "permalink": "https://tinhte.vn/posts/64798393/",
+          "detail": "https://tinhte.vn/appforo/index.php?posts/64798393/",
+          "thread": "https://tinhte.vn/appforo/index.php?threads/3704680/",
+          "poster": "https://tinhte.vn/appforo/index.php?users/3/",
+          "likes": "https://tinhte.vn/appforo/index.php?posts/64798393/likes",
+          "report": "https://tinhte.vn/appforo/index.php?posts/64798393/report",
+          "attachments": "https://tinhte.vn/appforo/index.php?posts/64798393/attachments",
+          "poster_avatar": "https://photo2.tinhte.vn/data/avatars/m/0/3.jpg?1605149610"
+        },
+        "permissions": {
+          "view": true,
+          "edit": true,
+          "delete": true,
+          "reply": true,
+          "like": true,
+          "report": true,
+          "upload_attachment": true,
+          "vote": false
+        },
+        "poster_rank": {
+          "rank_level": 4,
+          "rank_name": "VIP",
+          "rank_group_id": 60,
+          "rank_points": 3729808.05
+        },
+        "user_is_followed": false,
+        "fp_permissions": {
+          "delete": false
+        },
+        "poster_has_verified_badge": true,
+        "post_reaction_total": 8,
+        "post_reactions": {
+          "1": 6,
+          "2": 2,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "post_visitor_reaction_id": 0,
+        "stickers": []
+      },
+      {
+        "post_id": 64798401,
+        "thread_id": 3704680,
+        "poster_user_id": 2976807,
+        "poster_username": "Canh Rong Biển",
+        "post_create_date": 1692074639,
+        "post_body": "Sếp đi Ô Cấp ạ",
+        "post_body_html": "<span class=\"xf-body-paragraph\">Sếp đi Ô Cấp ạ</span>",
+        "post_body_plain_text": "Sếp đi Ô Cấp ạ",
+        "signature": "",
+        "signature_html": "",
+        "signature_plain_text": "",
+        "post_like_count": 0,
+        "post_attachment_count": 0,
+        "user_is_ignored": false,
+        "post_is_published": true,
+        "post_is_deleted": false,
+        "post_update_date": 1692074639,
+        "post_is_first_post": false,
+        "links": {
+          "permalink": "https://tinhte.vn/posts/64798401/",
+          "detail": "https://tinhte.vn/appforo/index.php?posts/64798401/",
+          "thread": "https://tinhte.vn/appforo/index.php?threads/3704680/",
+          "poster": "https://tinhte.vn/appforo/index.php?users/2976807/",
+          "likes": "https://tinhte.vn/appforo/index.php?posts/64798401/likes",
+          "report": "https://tinhte.vn/appforo/index.php?posts/64798401/report",
+          "attachments": "https://tinhte.vn/appforo/index.php?posts/64798401/attachments",
+          "poster_avatar": "https://photo2.tinhte.vn/data/avatars/m/2976/2976807.jpg?1688987783"
+        },
+        "permissions": {
+          "view": true,
+          "edit": true,
+          "delete": true,
+          "reply": true,
+          "like": true,
+          "report": true,
+          "upload_attachment": true,
+          "vote": true
+        },
+        "poster_rank": {
+          "rank_level": 2,
+          "rank_name": "TÍCH CỰC",
+          "rank_group_id": 58,
+          "rank_points": 15827
+        },
+        "user_is_followed": false,
+        "fp_permissions": {
+          "delete": false
+        },
+        "poster_has_verified_badge": false,
+        "post_reaction_total": 0,
+        "post_reactions": {
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "post_visitor_reaction_id": 0,
+        "stickers": []
+      },
+      {
+        "post_id": 64798422,
+        "thread_id": 3704680,
+        "poster_user_id": 1321921,
+        "poster_username": "Cuong Nb",
+        "post_create_date": 1692074851,
+        "post_body": "Tuyệt vời nhé chủ tịch! :)[STICKER=13][/STICKER]",
+        "post_body_html": "<span class=\"xf-body-paragraph\">Tuyệt vời nhé chủ tịch! <span class=\"smilie\" data-title=\"Smile\">:)</span></span>",
+        "post_body_plain_text": "Tuyệt vời nhé chủ tịch! :)",
+        "signature": "PHỤ NỮ LÀ TRÁI ĐU ĐỦ CÒN ĐÀN ÔNG LÀ NHỮNG HÀM RĂNG VÌ VẬY LẤY RĂNG MÀ CẠP VÀO ĐU ĐỦ THÌ CHUYỆN ĐÓ ẮT HẲN BÌNH THƯỜNG :D",
+        "signature_html": "<span class=\"xf-body-paragraph\">PHỤ NỮ LÀ TRÁI ĐU ĐỦ CÒN ĐÀN ÔNG LÀ NHỮNG HÀM RĂNG VÌ VẬY LẤY RĂNG MÀ CẠP VÀO ĐU ĐỦ THÌ CHUYỆN ĐÓ ẮT HẲN BÌNH THƯỜNG <span class=\"smilie\" data-title=\"Big Grin\">:D</span></span>",
+        "signature_plain_text": "PHỤ NỮ LÀ TRÁI ĐU ĐỦ CÒN ĐÀN ÔNG LÀ NHỮNG HÀM RĂNG VÌ VẬY LẤY RĂNG MÀ CẠP VÀO ĐU ĐỦ THÌ CHUYỆN ĐÓ ẮT HẲN BÌNH THƯỜNG :D",
+        "post_like_count": 0,
+        "post_attachment_count": 0,
+        "user_is_ignored": false,
+        "post_is_published": true,
+        "post_is_deleted": false,
+        "post_update_date": 1692074851,
+        "post_is_first_post": false,
+        "links": {
+          "permalink": "https://tinhte.vn/posts/64798422/",
+          "detail": "https://tinhte.vn/appforo/index.php?posts/64798422/",
+          "thread": "https://tinhte.vn/appforo/index.php?threads/3704680/",
+          "poster": "https://tinhte.vn/appforo/index.php?users/1321921/",
+          "likes": "https://tinhte.vn/appforo/index.php?posts/64798422/likes",
+          "report": "https://tinhte.vn/appforo/index.php?posts/64798422/report",
+          "attachments": "https://tinhte.vn/appforo/index.php?posts/64798422/attachments",
+          "poster_avatar": "https://photo2.tinhte.vn/data/avatars/m/1321/1321921.jpg?1685531370"
+        },
+        "permissions": {
+          "view": true,
+          "edit": true,
+          "delete": true,
+          "reply": true,
+          "like": true,
+          "report": true,
+          "upload_attachment": true,
+          "vote": true
+        },
+        "poster_rank": {
+          "rank_level": 4,
+          "rank_name": "VIP",
+          "rank_group_id": 60,
+          "rank_points": 424576.968
+        },
+        "user_is_followed": false,
+        "fp_permissions": {
+          "delete": false
+        },
+        "poster_has_verified_badge": false,
+        "post_reaction_total": 0,
+        "post_reactions": {
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "post_visitor_reaction_id": 0,
+        "stickers": [
+          {
+            "sticker_id": 13,
+            "sticker_name": "Yêu quá",
+            "description": "",
+            "category_id": 3,
+            "last_used_date": 1692109346,
+            "used_total": 33973,
+            "image_width": 251,
+            "image_height": 251,
+            "sticker_post_id": 320160,
+            "links": {
+              "detail": "https://tinhte.vn/appforo/index.php?tinhte-stickers/13/",
+              "image_url": "https://s3.cloud.cmctelecom.vn/tinhte2/2020/10/5182631_Asset_6.png",
+              "image_data_url": "https://tinhte.vn/appforo/index.php?attachments/4712686/data",
+              "thumbnail_url": "https://imgproxy4.tinhte.vn/ajbHQs-S8QzchZwuYHl12OklKEKeAaG4VPHXZ11zG6w/h:400/plain/https://s3.cloud.cmctelecom.vn/tinhte2/2020/10/5182631_Asset_6.png"
+            },
+            "tinhterewardstore_reward_id": null
+          }
+        ]
+      },
+      {
+        "post_id": 64798967,
+        "thread_id": 3704680,
+        "poster_user_id": 2868586,
+        "poster_username": "anhcom67",
+        "post_create_date": 1692084567,
+        "post_body": "chổ lanrừng hồi xưa giờ thành quán cafe",
+        "post_body_html": "<span class=\"xf-body-paragraph\">chổ lanrừng hồi xưa giờ thành quán cafe</span>",
+        "post_body_plain_text": "chổ lanrừng hồi xưa giờ thành quán cafe",
+        "signature": "",
+        "signature_html": "",
+        "signature_plain_text": "",
+        "post_like_count": 0,
+        "post_attachment_count": 0,
+        "user_is_ignored": false,
+        "post_is_published": true,
+        "post_is_deleted": false,
+        "post_update_date": 1692084567,
+        "post_is_first_post": false,
+        "links": {
+          "permalink": "https://tinhte.vn/posts/64798967/",
+          "detail": "https://tinhte.vn/appforo/index.php?posts/64798967/",
+          "thread": "https://tinhte.vn/appforo/index.php?threads/3704680/",
+          "poster": "https://tinhte.vn/appforo/index.php?users/2868586/",
+          "likes": "https://tinhte.vn/appforo/index.php?posts/64798967/likes",
+          "report": "https://tinhte.vn/appforo/index.php?posts/64798967/report",
+          "attachments": "https://tinhte.vn/appforo/index.php?posts/64798967/attachments",
+          "poster_avatar": "https://tinhte.vn/styles/default/TinhteMods/avatars/avatar_male_8.png"
+        },
+        "permissions": {
+          "view": true,
+          "edit": true,
+          "delete": true,
+          "reply": true,
+          "like": true,
+          "report": true,
+          "upload_attachment": true,
+          "vote": true
+        },
+        "poster_rank": {
+          "rank_level": 3,
+          "rank_name": "CAO CẤP",
+          "rank_group_id": 59,
+          "rank_points": 39125
+        },
+        "user_is_followed": false,
+        "fp_permissions": {
+          "delete": false
+        },
+        "poster_has_verified_badge": false,
+        "post_reaction_total": 0,
+        "post_reactions": {
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "post_visitor_reaction_id": 0,
+        "stickers": []
+      }
+    ],
+    "thread": {
+      "thread_id": 3704680,
+      "forum_id": 36,
+      "thread_title": "Hóng gió biển cho hết ghẻ",
+      "thread_view_count": 508,
+      "creator_user_id": 3,
+      "creator_username": "cuhiep",
+      "thread_create_date": 1692074524,
+      "thread_update_date": 1692084567,
+      "thread_is_new": false,
+      "user_is_ignored": false,
+      "thread_post_count": 4,
+      "thread_is_published": true,
+      "thread_is_deleted": false,
+      "thread_is_sticky": false,
+      "thread_is_followed": false,
+      "thread_prefixes": [],
+      "thread_tags": {
+        "346166": "tinhtefact"
+      },
+      "links": {
+        "permalink": "https://tinhte.vn/thread/hong-gio-bien-cho-het-ghe.3704680/",
+        "detail": "https://tinhte.vn/appforo/index.php?threads/3704680/",
+        "followers": "https://tinhte.vn/appforo/index.php?threads/3704680/followers",
+        "forum": "https://tinhte.vn/appforo/index.php?forums/36/",
+        "posts": "https://tinhte.vn/appforo/index.php?posts/&thread_id=3704680",
+        "first_poster": "https://tinhte.vn/appforo/index.php?users/3/",
+        "first_poster_avatar": "https://photo2.tinhte.vn/data/avatars/m/0/3.jpg?1605149610",
+        "first_post": "https://tinhte.vn/appforo/index.php?posts/64798393/",
+        "last_poster": "https://tinhte.vn/appforo/index.php?users/2868586/",
+        "last_post": "https://tinhte.vn/appforo/index.php?posts/64798967/",
+        "image": "https://photo2.tinhte.vn/data/attachment-files/2023/08/7231539_image.jpg"
+      },
+      "permissions": {
+        "view": true,
+        "delete": true,
+        "follow": true,
+        "post": true,
+        "upload_attachment": true,
+        "tinhtemods_redirect": false,
+        "reply_bans": true,
+        "edit_image": false
+      },
+      "tinhte_adsense_is_blocked": false,
+      "rating_total": null,
+      "rating_count": null,
+      "user_is_followed": false,
+      "user_thread_count": 15007,
+      "user_follower_count": 6104,
+      "user_like_count": 338240,
+      "fp_permissions": {
+        "stick": false,
+        "unstick": false,
+        "delete": false
+      },
+      "thread_tags_extended": [
+        {
+          "tag_id": 346166,
+          "tag": "tinhtefact",
+          "tag_url": "tinhtefact"
+        }
+      ],
+      "creator_is_mod": true,
+      "creator_has_verified_badge": true,
+      "thread_image": {
+        "link": "https://photo2.tinhte.vn/data/attachment-files/2023/08/7231539_image.jpg",
+        "width": 1200,
+        "height": 900
+      },
+      "thread_thumbnail": {
+        "link": "https://imgproxy7.tinhte.vn/czgH2_lJLAUq3m4weC0b51MhsITTCXC-Ac4UcmxTEYM/rs:fill:400:400:0/plain/https://photo2.tinhte.vn/data/attachment-files/2023/08/7231539_image.jpg",
+        "width": 400,
+        "height": 400
+      },
+      "thread_is_bookmark": false,
+      "is_draft": false
+    },
+    "posts_total": 4,
+    "system_info": {
+      "visitor_id": 150172,
+      "time": 1692109654
+    }
+  }
+}

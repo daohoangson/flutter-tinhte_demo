@@ -9,7 +9,7 @@ const _kBorderRadius = kPadding;
 
 bool isBackgroundPost(Post post) =>
     post.postBodyHtml
-        ?.contains('<span class="metaBbCode meta-thread_background_url">') ??
+        ?.contains('<span class="metaBbCode meta-threadbackgroundurl">') ??
     false;
 
 class BackgroundPost extends StatelessWidget {

@@ -6,30 +6,35 @@ import 'package:the_app/src/constants.dart';
 import 'package:the_app/src/intl.dart';
 import 'package:the_app/src/widgets/menu/dark_theme.dart';
 
-class FontScale extends ChangeNotifier {
+abstract class FontScale extends ChangeNotifier {
   static var min = .5;
   static var max = 3.0;
 
+  double get value;
+  set value(double v);
+
+  static Future<FontScale> create() async {
+    final fontScale = _FontScale();
+    final prefs = await SharedPreferences.getInstance();
+    fontScale._value = prefs.getDouble(kPrefKeyFontScale);
+    return fontScale;
+  }
+}
+
+class _FontScale extends ChangeNotifier implements FontScale {
   double? _value;
 
+  @override
   double get value => _value ?? 1.0;
 
-  FontScale._();
-
+  @override
   set value(double v) {
-    if (v < min || v > max) return;
+    if (v < FontScale.min || v > FontScale.max) return;
     _value = v;
     notifyListeners();
 
     SharedPreferences.getInstance()
         .then((prefs) => prefs.setDouble(kPrefKeyFontScale, v));
-  }
-
-  static Future<FontScale> create() async {
-    final fontScale = FontScale._();
-    final prefs = await SharedPreferences.getInstance();
-    fontScale._value = prefs.getDouble(kPrefKeyFontScale);
-    return fontScale;
   }
 }
 
