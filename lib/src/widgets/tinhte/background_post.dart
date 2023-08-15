@@ -44,7 +44,7 @@ class BackgroundPost extends StatelessWidget {
 
   Widget _buildWithBackground(ThemeData theme) {
     final regExp =
-        RegExp(r'<span class="metaBbCode meta-thread_background_url">.+'
+        RegExp(r'<span class="metaBbCode meta-threadbackgroundurl">.+'
             r'<a href="([^"]+)"[^>]+>([^<]+)</a>'
             r'</span></span>');
     final postBodyHtml0 = post.postBodyHtml ?? '';
