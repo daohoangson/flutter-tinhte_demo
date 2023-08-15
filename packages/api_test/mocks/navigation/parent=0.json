@@ -7,10 +7,10 @@
         "category_description": "Khu vực thảo luận về thông tin và các sự kiện về công nghệ",
         "links": {
           "permalink": "https://tinhte.vn/tintuc/",
-          "detail": "https://tinhte.vn/appforo/index.php?categories/619/&oauth_token=0%2C1691982716%2Cd08963d9facf80c591b6f9e72f294e5c%2Cgd2hxqf2cu",
-          "sub-categories": "https://tinhte.vn/appforo/index.php?categories/&parent_category_id=619&oauth_token=0%2C1691982716%2Cd08963d9facf80c591b6f9e72f294e5c%2Cgd2hxqf2cu",
-          "sub-forums": "https://tinhte.vn/appforo/index.php?forums/&parent_category_id=619&oauth_token=0%2C1691982716%2Cd08963d9facf80c591b6f9e72f294e5c%2Cgd2hxqf2cu",
-          "sub-elements": "https://tinhte.vn/appforo/index.php?navigation/&parent=619&oauth_token=0%2C1691982716%2Cd08963d9facf80c591b6f9e72f294e5c%2Cgd2hxqf2cu"
+          "detail": "https://tinhte.vn/appforo/index.php?categories/619/",
+          "sub-categories": "https://tinhte.vn/appforo/index.php?categories/&parent_category_id=619",
+          "sub-forums": "https://tinhte.vn/appforo/index.php?forums/&parent_category_id=619",
+          "sub-elements": "https://tinhte.vn/appforo/index.php?navigation/&parent=619"
         },
         "permissions": {
           "view": true,
@@ -30,10 +30,10 @@
         "category_description": "Thảo luận các loại máy tính, laptop, pc, macbook sử dụng các loại hệ điều hành Windows, Linux, Chrome OS, Mac OS X",
         "links": {
           "permalink": "https://tinhte.vn/maytinh/",
-          "detail": "https://tinhte.vn/appforo/index.php?categories/618/&oauth_token=0%2C1691982716%2Cd08963d9facf80c591b6f9e72f294e5c%2Cgd2hxqf2cu",
-          "sub-categories": "https://tinhte.vn/appforo/index.php?categories/&parent_category_id=618&oauth_token=0%2C1691982716%2Cd08963d9facf80c591b6f9e72f294e5c%2Cgd2hxqf2cu",
-          "sub-forums": "https://tinhte.vn/appforo/index.php?forums/&parent_category_id=618&oauth_token=0%2C1691982716%2Cd08963d9facf80c591b6f9e72f294e5c%2Cgd2hxqf2cu",
-          "sub-elements": "https://tinhte.vn/appforo/index.php?navigation/&parent=618&oauth_token=0%2C1691982716%2Cd08963d9facf80c591b6f9e72f294e5c%2Cgd2hxqf2cu"
+          "detail": "https://tinhte.vn/appforo/index.php?categories/618/",
+          "sub-categories": "https://tinhte.vn/appforo/index.php?categories/&parent_category_id=618",
+          "sub-forums": "https://tinhte.vn/appforo/index.php?forums/&parent_category_id=618",
+          "sub-elements": "https://tinhte.vn/appforo/index.php?navigation/&parent=618"
         },
         "permissions": {
           "view": true,
@@ -53,10 +53,10 @@
         "category_description": "Khu vực thảo luận về các loại điện thoại, điện thoại thông minh và máy tính bảng sử dụng các loại hệ điều hành iOS, Android, Windows Phone, Blackberry, Palm, Linux, Symbian,...",
         "links": {
           "permalink": "https://tinhte.vn/dienthoai/",
-          "detail": "https://tinhte.vn/appforo/index.php?categories/580/&oauth_token=0%2C1691982716%2Cd08963d9facf80c591b6f9e72f294e5c%2Cgd2hxqf2cu",
-          "sub-categories": "https://tinhte.vn/appforo/index.php?categories/&parent_category_id=580&oauth_token=0%2C1691982716%2Cd08963d9facf80c591b6f9e72f294e5c%2Cgd2hxqf2cu",
-          "sub-forums": "https://tinhte.vn/appforo/index.php?forums/&parent_category_id=580&oauth_token=0%2C1691982716%2Cd08963d9facf80c591b6f9e72f294e5c%2Cgd2hxqf2cu",
-          "sub-elements": "https://tinhte.vn/appforo/index.php?navigation/&parent=580&oauth_token=0%2C1691982716%2Cd08963d9facf80c591b6f9e72f294e5c%2Cgd2hxqf2cu"
+          "detail": "https://tinhte.vn/appforo/index.php?categories/580/",
+          "sub-categories": "https://tinhte.vn/appforo/index.php?categories/&parent_category_id=580",
+          "sub-forums": "https://tinhte.vn/appforo/index.php?forums/&parent_category_id=580",
+          "sub-elements": "https://tinhte.vn/appforo/index.php?navigation/&parent=580"
         },
         "permissions": {
           "view": true,
@@ -76,10 +76,10 @@
         "category_description": "Diễn đàn thảo luận Camera, Máy ảnh số,  Máy quay phim, nhiếp ảnh, kỹ thuật và nghệ chụp ảnh đẹp, gửi ảnh, bình ảnh, giao lưu, offline.",
         "links": {
           "permalink": "https://camera.tinhte.vn/",
-          "detail": "https://tinhte.vn/appforo/index.php?categories/70/&oauth_token=0%2C1691982716%2Cd08963d9facf80c591b6f9e72f294e5c%2Cgd2hxqf2cu",
-          "sub-categories": "https://tinhte.vn/appforo/index.php?categories/&parent_category_id=70&oauth_token=0%2C1691982716%2Cd08963d9facf80c591b6f9e72f294e5c%2Cgd2hxqf2cu",
-          "sub-forums": "https://tinhte.vn/appforo/index.php?forums/&parent_category_id=70&oauth_token=0%2C1691982716%2Cd08963d9facf80c591b6f9e72f294e5c%2Cgd2hxqf2cu",
-          "sub-elements": "https://tinhte.vn/appforo/index.php?navigation/&parent=70&oauth_token=0%2C1691982716%2Cd08963d9facf80c591b6f9e72f294e5c%2Cgd2hxqf2cu"
+          "detail": "https://tinhte.vn/appforo/index.php?categories/70/",
+          "sub-categories": "https://tinhte.vn/appforo/index.php?categories/&parent_category_id=70",
+          "sub-forums": "https://tinhte.vn/appforo/index.php?forums/&parent_category_id=70",
+          "sub-elements": "https://tinhte.vn/appforo/index.php?navigation/&parent=70"
         },
         "permissions": {
           "view": true,
@@ -99,10 +99,10 @@
         "category_description": "Diễn đàn thảo luận về các loại xe, máy bay và các phương tiện giao thông, vận chuyển",
         "links": {
           "permalink": "https://xe.tinhte.vn/",
-          "detail": "https://tinhte.vn/appforo/index.php?categories/585/&oauth_token=0%2C1691982716%2Cd08963d9facf80c591b6f9e72f294e5c%2Cgd2hxqf2cu",
-          "sub-categories": "https://tinhte.vn/appforo/index.php?categories/&parent_category_id=585&oauth_token=0%2C1691982716%2Cd08963d9facf80c591b6f9e72f294e5c%2Cgd2hxqf2cu",
-          "sub-forums": "https://tinhte.vn/appforo/index.php?forums/&parent_category_id=585&oauth_token=0%2C1691982716%2Cd08963d9facf80c591b6f9e72f294e5c%2Cgd2hxqf2cu",
-          "sub-elements": "https://tinhte.vn/appforo/index.php?navigation/&parent=585&oauth_token=0%2C1691982716%2Cd08963d9facf80c591b6f9e72f294e5c%2Cgd2hxqf2cu"
+          "detail": "https://tinhte.vn/appforo/index.php?categories/585/",
+          "sub-categories": "https://tinhte.vn/appforo/index.php?categories/&parent_category_id=585",
+          "sub-forums": "https://tinhte.vn/appforo/index.php?forums/&parent_category_id=585",
+          "sub-elements": "https://tinhte.vn/appforo/index.php?navigation/&parent=585"
         },
         "permissions": {
           "view": true,
@@ -177,11 +177,11 @@
         "thread_prefix_is_required": false,
         "links": {
           "permalink": "https://tinhte.vn/forums/may-bay.762/",
-          "detail": "https://tinhte.vn/appforo/index.php?forums/762/&oauth_token=0%2C1691982716%2Cd08963d9facf80c591b6f9e72f294e5c%2Cgd2hxqf2cu",
-          "sub-categories": "https://tinhte.vn/appforo/index.php?categories/&parent_forum_id=762&oauth_token=0%2C1691982716%2Cd08963d9facf80c591b6f9e72f294e5c%2Cgd2hxqf2cu",
-          "sub-forums": "https://tinhte.vn/appforo/index.php?forums/&parent_forum_id=762&oauth_token=0%2C1691982716%2Cd08963d9facf80c591b6f9e72f294e5c%2Cgd2hxqf2cu",
-          "threads": "https://tinhte.vn/appforo/index.php?threads/&forum_id=762&oauth_token=0%2C1691982716%2Cd08963d9facf80c591b6f9e72f294e5c%2Cgd2hxqf2cu",
-          "followers": "https://tinhte.vn/appforo/index.php?forums/762/followers&oauth_token=0%2C1691982716%2Cd08963d9facf80c591b6f9e72f294e5c%2Cgd2hxqf2cu"
+          "detail": "https://tinhte.vn/appforo/index.php?forums/762/",
+          "sub-categories": "https://tinhte.vn/appforo/index.php?categories/&parent_forum_id=762",
+          "sub-forums": "https://tinhte.vn/appforo/index.php?forums/&parent_forum_id=762",
+          "threads": "https://tinhte.vn/appforo/index.php?threads/&forum_id=762",
+          "followers": "https://tinhte.vn/appforo/index.php?forums/762/followers"
         },
         "permissions": {
           "view": true,
@@ -206,10 +206,10 @@
         "category_description": "Diễn đàn thảo luận về kiến thức và trải nghiệm âm thanh",
         "links": {
           "permalink": "https://audio.tinhte.vn/",
-          "detail": "https://tinhte.vn/appforo/index.php?categories/737/&oauth_token=0%2C1691982716%2Cd08963d9facf80c591b6f9e72f294e5c%2Cgd2hxqf2cu",
-          "sub-categories": "https://tinhte.vn/appforo/index.php?categories/&parent_category_id=737&oauth_token=0%2C1691982716%2Cd08963d9facf80c591b6f9e72f294e5c%2Cgd2hxqf2cu",
-          "sub-forums": "https://tinhte.vn/appforo/index.php?forums/&parent_category_id=737&oauth_token=0%2C1691982716%2Cd08963d9facf80c591b6f9e72f294e5c%2Cgd2hxqf2cu",
-          "sub-elements": "https://tinhte.vn/appforo/index.php?navigation/&parent=737&oauth_token=0%2C1691982716%2Cd08963d9facf80c591b6f9e72f294e5c%2Cgd2hxqf2cu"
+          "detail": "https://tinhte.vn/appforo/index.php?categories/737/",
+          "sub-categories": "https://tinhte.vn/appforo/index.php?categories/&parent_category_id=737",
+          "sub-forums": "https://tinhte.vn/appforo/index.php?forums/&parent_category_id=737",
+          "sub-elements": "https://tinhte.vn/appforo/index.php?navigation/&parent=737"
         },
         "permissions": {
           "view": true,
@@ -229,10 +229,10 @@
         "category_description": "Khu vực thảo luận về Khoa học và các loại đồ chơi công nghệ",
         "links": {
           "permalink": "https://tinhte.vn/khcn/",
-          "detail": "https://tinhte.vn/appforo/index.php?categories/591/&oauth_token=0%2C1691982716%2Cd08963d9facf80c591b6f9e72f294e5c%2Cgd2hxqf2cu",
-          "sub-categories": "https://tinhte.vn/appforo/index.php?categories/&parent_category_id=591&oauth_token=0%2C1691982716%2Cd08963d9facf80c591b6f9e72f294e5c%2Cgd2hxqf2cu",
-          "sub-forums": "https://tinhte.vn/appforo/index.php?forums/&parent_category_id=591&oauth_token=0%2C1691982716%2Cd08963d9facf80c591b6f9e72f294e5c%2Cgd2hxqf2cu",
-          "sub-elements": "https://tinhte.vn/appforo/index.php?navigation/&parent=591&oauth_token=0%2C1691982716%2Cd08963d9facf80c591b6f9e72f294e5c%2Cgd2hxqf2cu"
+          "detail": "https://tinhte.vn/appforo/index.php?categories/591/",
+          "sub-categories": "https://tinhte.vn/appforo/index.php?categories/&parent_category_id=591",
+          "sub-forums": "https://tinhte.vn/appforo/index.php?forums/&parent_category_id=591",
+          "sub-elements": "https://tinhte.vn/appforo/index.php?navigation/&parent=591"
         },
         "permissions": {
           "view": true,
@@ -252,10 +252,10 @@
         "category_description": "Các khu vực hỗ trợ thành viên",
         "links": {
           "permalink": "https://tinhte.vn/categories/ho-tro.630/",
-          "detail": "https://tinhte.vn/appforo/index.php?categories/630/&oauth_token=0%2C1691982716%2Cd08963d9facf80c591b6f9e72f294e5c%2Cgd2hxqf2cu",
-          "sub-categories": "https://tinhte.vn/appforo/index.php?categories/&parent_category_id=630&oauth_token=0%2C1691982716%2Cd08963d9facf80c591b6f9e72f294e5c%2Cgd2hxqf2cu",
-          "sub-forums": "https://tinhte.vn/appforo/index.php?forums/&parent_category_id=630&oauth_token=0%2C1691982716%2Cd08963d9facf80c591b6f9e72f294e5c%2Cgd2hxqf2cu",
-          "sub-elements": "https://tinhte.vn/appforo/index.php?navigation/&parent=630&oauth_token=0%2C1691982716%2Cd08963d9facf80c591b6f9e72f294e5c%2Cgd2hxqf2cu"
+          "detail": "https://tinhte.vn/appforo/index.php?categories/630/",
+          "sub-categories": "https://tinhte.vn/appforo/index.php?categories/&parent_category_id=630",
+          "sub-forums": "https://tinhte.vn/appforo/index.php?forums/&parent_category_id=630",
+          "sub-elements": "https://tinhte.vn/appforo/index.php?navigation/&parent=630"
         },
         "permissions": {
           "view": true,
@@ -293,9 +293,9 @@
         "category_description": "",
         "links": {
           "permalink": "https://tinhte.vn/categories/forums.766/",
-          "detail": "https://tinhte.vn/appforo/index.php?categories/766/&oauth_token=0%2C1691982716%2Cd08963d9facf80c591b6f9e72f294e5c%2Cgd2hxqf2cu",
-          "sub-categories": "https://tinhte.vn/appforo/index.php?categories/&parent_category_id=766&oauth_token=0%2C1691982716%2Cd08963d9facf80c591b6f9e72f294e5c%2Cgd2hxqf2cu",
-          "sub-forums": "https://tinhte.vn/appforo/index.php?forums/&parent_category_id=766&oauth_token=0%2C1691982716%2Cd08963d9facf80c591b6f9e72f294e5c%2Cgd2hxqf2cu"
+          "detail": "https://tinhte.vn/appforo/index.php?categories/766/",
+          "sub-categories": "https://tinhte.vn/appforo/index.php?categories/&parent_category_id=766",
+          "sub-forums": "https://tinhte.vn/appforo/index.php?forums/&parent_category_id=766"
         },
         "permissions": {
           "view": true,
