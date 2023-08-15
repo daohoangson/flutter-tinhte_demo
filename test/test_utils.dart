@@ -26,9 +26,13 @@ final builtInWrapper = materialAppWrapper(
 );
 
 extension ApiAppTester on WidgetTester {
-  Future<void> pumpMockedApiApp(Widget widget) async {
+  Future<void> pumpMockedApiApp(
+    Widget widget, {
+    Size surfaceSize = const Size(800, 600),
+  }) async {
     await pumpWidgetBuilder(
       widget,
+      surfaceSize: surfaceSize,
       wrapper: (widget) {
         final built = builtInWrapper(widget);
         return MockedApiApp(child: built);

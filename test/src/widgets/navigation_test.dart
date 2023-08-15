@@ -1,10 +1,13 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
+import 'package:the_app/src/intl.dart';
 import 'package:the_app/src/screens/forum_list.dart';
 
 import '../../test_utils.dart';
 
 void main() {
+  debugClock = DateTime(2023, 8, 15);
+
   group('NavigationWidget', () {
     testGoldens('renders forum list', (tester) async {
       await tester.pumpMockedApiApp(const ForumListScreen());
