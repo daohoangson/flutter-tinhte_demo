@@ -16,7 +16,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Prepare repo
-        run: bash ./.github/workflows/prepare.sh
+        run: |
+          set -e
+
+          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+          bash ./.github/workflows/prepare.sh
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
