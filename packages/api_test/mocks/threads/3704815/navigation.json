@@ -1,0 +1,98 @@
+{
+  "body": {
+    "elements": [
+      {
+        "category_id": 619,
+        "category_title": "Thông tin - Sự kiện",
+        "category_description": "Khu vực thảo luận về thông tin và các sự kiện về công nghệ",
+        "links": {
+          "permalink": "https://tinhte.vn/tintuc/",
+          "detail": "https://tinhte.vn/appforo/index.php?categories/619/",
+          "sub-categories": "https://tinhte.vn/appforo/index.php?categories/&parent_category_id=619",
+          "sub-forums": "https://tinhte.vn/appforo/index.php?forums/&parent_category_id=619",
+          "sub-elements": "https://tinhte.vn/appforo/index.php?navigation/&parent=619"
+        },
+        "permissions": {
+          "view": true,
+          "edit": false,
+          "delete": false
+        },
+        "category_thumbnail_url": "",
+        "navigation_type": "category",
+        "navigation_id": 619,
+        "navigation_depth": 0,
+        "navigation_parent_id": 0,
+        "has_sub_elements": true
+      },
+      {
+        "forum_id": 36,
+        "forum_title": "Cà phê tinh tế",
+        "forum_description": "Chuyện đó ... chuyện đây...",
+        "forum_thread_count": 159856,
+        "forum_post_count": 1841897,
+        "forum_prefixes": [
+          {
+            "group_title": "Phân loại",
+            "group_prefixes": [
+              {
+                "prefix_id": 125,
+                "prefix_title": "Thông tin"
+              },
+              {
+                "prefix_id": 121,
+                "prefix_title": "Trải nghiệm"
+              },
+              {
+                "prefix_id": 115,
+                "prefix_title": "Hỏi đáp"
+              },
+              {
+                "prefix_id": 126,
+                "prefix_title": "Phân tích"
+              },
+              {
+                "prefix_id": 120,
+                "prefix_title": "Trên tay"
+              },
+              {
+                "prefix_id": 123,
+                "prefix_title": "Review"
+              },
+              {
+                "prefix_id": 127,
+                "prefix_title": "Thủ thuật"
+              }
+            ]
+          }
+        ],
+        "thread_default_prefix_id": 0,
+        "thread_prefix_is_required": false,
+        "links": {
+          "permalink": "https://tinhte.vn/forums/ca-phe-tinh-te.36/",
+          "detail": "https://tinhte.vn/appforo/index.php?forums/36/",
+          "sub-categories": "https://tinhte.vn/appforo/index.php?categories/&parent_forum_id=36",
+          "sub-forums": "https://tinhte.vn/appforo/index.php?forums/&parent_forum_id=36",
+          "threads": "https://tinhte.vn/appforo/index.php?threads/&forum_id=36",
+          "followers": "https://tinhte.vn/appforo/index.php?forums/36/followers"
+        },
+        "permissions": {
+          "view": true,
+          "edit": false,
+          "delete": false,
+          "create_thread": false,
+          "upload_attachment": false,
+          "tag_thread": false,
+          "follow": false
+        },
+        "forum_is_followed": false,
+        "forum_thumbnail_url": "",
+        "navigation_type": "forum",
+        "navigation_id": 36,
+        "navigation_depth": 1,
+        "navigation_parent_id": 619,
+        "has_sub_elements": false
+      }
+    ],
+    "elements_count": 2
+  }
+}
