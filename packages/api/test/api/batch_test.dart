@@ -6,8 +6,7 @@ import 'package:the_api/api.dart';
 void main() {
   group('batch', () {
     test('does nothing if no fetches', () async {
-      final httpClient = http.MockClient((_) async => http.Response('', 404));
-      final api = Api(httpClient, apiRoot: '');
+      final api = Api(http.Client(), apiRoot: '');
 
       expect(api.requestCount, equals(0));
       final batch = api.newBatch();
