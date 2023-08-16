@@ -10,3 +10,4 @@ cd ./packages/api_test/mocks
 find attachments -type f -name '*.jpg' -exec sips -Z 100 {} \;
 find data/attachment-files -type f -name '*.jpg' -exec sips -Z 100 {} \;
 find tinhte2 -type f -name '*.jpg' -exec sips -Z 100 {} \;
+find vi -type f -name '*.jpg' -exec sips -Z 100 {} \;

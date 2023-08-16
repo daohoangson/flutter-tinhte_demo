@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
+import 'package:the_app/src/widgets/html.dart';
 
 import '../../test_utils.dart';
 
@@ -24,6 +25,20 @@ void main() {
       await tester.waitForStuff();
 
       await screenMatchesGolden(tester, 'html/compare');
+    });
+
+    testGoldens('renders YouTube', (tester) async {
+      await tester.pumpMockedApiApp(
+        const Center(
+          child: YouTubeWidget(
+            'dQw4w9WgXcQ',
+            lowresThumbnailUrl: 'https://img.youtube.com/vi/dQw4w9WgXcQ/0.jpg',
+          ),
+        ),
+      );
+      await tester.waitForStuff();
+
+      await screenMatchesGolden(tester, 'html/youtube');
     });
   });
 }
