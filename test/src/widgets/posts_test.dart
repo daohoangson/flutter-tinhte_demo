@@ -28,5 +28,18 @@ void main() {
 
       await screenMatchesGolden(tester, 'posts/thread_3704463');
     });
+
+    testGoldens('loads hidden replies', (tester) async {
+      await tester.pumpMockedApiApp(
+        const ThreadViewTestApp(threadId: 3704463),
+        surfaceSize: const Size(800, 5000),
+      );
+      await tester.waitForStuff();
+
+      await tester.tap(find.text('Tap to load 7 hidden replies...'));
+      await tester.waitForStuff();
+
+      await screenMatchesGolden(tester, 'posts/thread_3704463_with_hidden');
+    });
   });
 }
