@@ -31,6 +31,11 @@ jobs:
           ./tool/build.sh
           flutter test --coverage
       - run: flutter test --coverage
+      - uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: failures
+          path: "**/failures/*.png"
       - uses: codecov/codecov-action@v3
 
   build_apk:
