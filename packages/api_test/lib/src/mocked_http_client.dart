@@ -26,11 +26,16 @@ Future<Response> _mockedHttpClientHandler(Request request) async {
 }
 
 Future<List<int>> _mockGetRequest(Request request) async {
-  final zipPath = getFilePath(request.url, suffix: '.json.zip');
+  final jsonPath = getFilePath(request.url, suffix: '.json');
+  final jsonFile = File(jsonPath);
+  if (jsonFile.existsSync()) {
+    return jsonFile.readAsBytesSync();
+  }
 
-  final file = File(zipPath);
-  if (!file.existsSync()) {
-    throw StateError('$file does not exist for ${request.url}');
+  final zipPath = '$jsonPath.zip';
+  final zipFile = File(zipPath);
+  if (!zipFile.existsSync()) {
+    throw StateError('$zipFile does not exist for ${request.url}');
   }
 
   final inputStream = InputFileStream(zipPath);
