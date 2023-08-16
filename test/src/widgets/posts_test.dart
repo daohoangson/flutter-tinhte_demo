@@ -41,5 +41,15 @@ void main() {
 
       await screenMatchesGolden(tester, 'posts/thread_3704463_with_hidden');
     });
+
+    testGoldens('renders poll', (tester) async {
+      await tester.pumpMockedApiApp(
+        const ThreadViewTestApp(threadId: 3441248),
+        surfaceSize: const Size(800, 1000),
+      );
+      await tester.waitForStuff();
+
+      await screenMatchesGolden(tester, 'posts/thread_3441248');
+    });
   });
 }
