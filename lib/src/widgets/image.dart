@@ -1,21 +1,11 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:the_api/thread.dart';
+import 'package:the_app/src/abstracts/cached_network_image.dart' as cached;
 import 'package:the_app/src/config.dart';
 
 const _kThreadImageAspectRatio = 594 / 368;
 
 final String _apiUrlAttachments = "${config.apiRoot}?attachments";
-
-Widget buildCachedNetworkImage(String imageUrl) => CachedNetworkImage(
-      imageUrl: imageUrl,
-      errorWidget: (_, __, ___) => const DecoratedBox(
-        decoration: BoxDecoration(
-          color: Colors.grey,
-        ),
-      ),
-      fit: BoxFit.cover,
-    );
 
 String? getResizedUrl({
   required String apiUrl,
@@ -116,7 +106,7 @@ class ThreadImageWidget extends StatelessWidget {
   static Widget _buildImage(String url, {ImageFrameBuilder? frameBuilder}) =>
       Image(
         frameBuilder: frameBuilder,
-        image: CachedNetworkImageProvider(url),
+        image: cached.image(url),
         fit: BoxFit.cover,
       );
 }

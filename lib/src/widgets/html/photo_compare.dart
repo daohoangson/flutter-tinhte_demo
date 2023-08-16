@@ -1,6 +1,9 @@
 part of '../html.dart';
 
 class PhotoCompare {
+  @visibleForTesting
+  static var debugDeterministicHandler = false;
+
   final TinhteWidgetFactory wf;
 
   PhotoCompare(this.wf);
@@ -27,8 +30,8 @@ class PhotoCompare {
           if (configJson.isEmpty) return widgets;
 
           final Map config = json.decode(configJson);
-          final width = num.tryParse(config['width'] ?? '')?.toDouble();
-          final height = num.tryParse(config['height'] ?? '')?.toDouble();
+          final width = (config['width'] as num?)?.toDouble();
+          final height = (config['height'] as num?)?.toDouble();
           if (width == null || height == null) return widgets;
 
           return [
@@ -152,7 +155,11 @@ class _PhotoCompareHandlerState extends State<_PhotoCompareHandler>
     _controller = AnimationController(
       duration: const Duration(milliseconds: 500),
       vsync: this,
-    )..repeat(reverse: true);
+    );
+
+    if (!PhotoCompare.debugDeterministicHandler) {
+      _controller.repeat(reverse: true);
+    }
   }
 
   @override

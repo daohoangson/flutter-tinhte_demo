@@ -138,8 +138,7 @@ class ThreadWidget extends StatelessWidget {
   Widget _buildInfoAvatar() {
     final avatar = thread.links?.firstPosterAvatar;
     return CircleAvatar(
-      backgroundImage:
-          avatar != null ? CachedNetworkImageProvider(avatar) : null,
+      backgroundImage: avatar != null ? cached.image(avatar) : null,
       radius: 20,
     );
   }

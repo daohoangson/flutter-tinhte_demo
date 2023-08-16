@@ -1,7 +1,7 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:the_api/user.dart';
+import 'package:the_app/src/abstracts/cached_network_image.dart' as cached;
 import 'package:the_app/src/api.dart';
 import 'package:the_app/src/intl.dart';
 import 'package:the_app/src/widgets/tag/follow_button.dart';
@@ -40,8 +40,7 @@ class MemberViewHeader extends StatelessWidget {
     return Row(
       children: <Widget>[
         CircleAvatar(
-          backgroundImage:
-              avatar != null ? CachedNetworkImageProvider(avatar) : null,
+          backgroundImage: avatar != null ? cached.image(avatar) : null,
           radius: 30,
         ),
         Expanded(

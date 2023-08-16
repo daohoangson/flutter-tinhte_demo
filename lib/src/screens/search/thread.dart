@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:the_api/node.dart';
 import 'package:the_api/user.dart';
+import 'package:the_app/src/abstracts/progress_indicator.dart';
 import 'package:the_app/src/intl.dart';
 import 'package:the_app/src/widgets/threads.dart';
 import 'package:the_app/src/api.dart';
@@ -80,9 +81,7 @@ class ThreadSearchDelegate extends SearchDelegate {
                 initialJson: snapshot.data,
                 threadsKey: 'data',
               )
-            : const Center(
-                child: CircularProgressIndicator(),
-              ),
+            : const AdaptiveProgressIndicator(),
       );
 }
 

@@ -1,5 +1,6 @@
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
+import 'package:the_app/src/abstracts/progress_indicator.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoPlayer extends StatefulWidget {
@@ -55,9 +56,7 @@ class _VideoState extends State<VideoPlayer> {
     if (_chewieController?.videoPlayerController.value.isInitialized != true) {
       return AspectRatio(
         aspectRatio: widget.aspectRatio,
-        child: const Center(
-          child: CircularProgressIndicator(),
-        ),
+        child: const AdaptiveProgressIndicator(),
       );
     }
 

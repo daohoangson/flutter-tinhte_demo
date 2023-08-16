@@ -10,8 +10,40 @@ env:
   GIT_CRYPT_KEY: ${{ secrets.GIT_CRYPT_KEY }}
 
 jobs:
-  build_apk:
+  test:
     if: ${{ startsWith(github.ref, 'refs/heads/') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Prepare repo
+        run: |
+          set -e
+
+          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+          bash ./.github/workflows/prepare.sh
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          cache: true
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+
+      - name: Prepare packages/api
+        run: |
+          set -e
+
+          cd ./packages/api
+          ./tool/build.sh
+          flutter test --coverage
+      - run: flutter test --coverage
+      - uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: failures
+          path: "**/failures/*.png"
+      - uses: codecov/codecov-action@v3
+
+  build_apk:
+    if: ${{ github.ref == 'refs/heads/master' || contains(github.ref, 'android') }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3

@@ -1,9 +1,9 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:the_api/thread.dart';
+import 'package:the_app/src/abstracts/cached_network_image.dart' as cached;
 import 'package:the_app/src/constants.dart';
 import 'package:the_app/src/widgets/font_control.dart';
 import 'package:the_app/src/widgets/post_editor.dart';
@@ -104,8 +104,7 @@ class _ThreadViewState extends State<ThreadViewScreen> {
     Widget built = Row(
       children: <Widget>[
         CircleAvatar(
-          backgroundImage:
-              avatar != null ? CachedNetworkImageProvider(avatar) : null,
+          backgroundImage: avatar != null ? cached.image(avatar) : null,
         ),
         Expanded(
           child: Padding(

@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
@@ -9,6 +8,7 @@ import 'package:the_api/attachment.dart';
 import 'package:the_api/post.dart';
 import 'package:the_api/thread.dart';
 import 'package:the_api/x_post_sticker.dart';
+import 'package:the_app/src/abstracts/cached_network_image.dart' as cached;
 import 'package:the_app/src/widgets/font_control.dart';
 import 'package:the_app/src/widgets/tinhte/background_post.dart';
 import 'package:the_app/src/widgets/tinhte/tinhte_fact.dart';

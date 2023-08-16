@@ -32,7 +32,7 @@ class _PostStickersWidget extends StatelessWidget {
       aspectRatio: aspectRatio,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(3),
-        child: buildCachedNetworkImage(sticker.links?.imageUrl ?? ''),
+        child: cached.ImageWidget(sticker.links?.imageUrl ?? ''),
       ),
     );
   }

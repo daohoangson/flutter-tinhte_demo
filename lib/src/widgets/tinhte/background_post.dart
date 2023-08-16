@@ -1,6 +1,6 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:the_api/post.dart';
+import 'package:the_app/src/abstracts/cached_network_image.dart' as cached;
 import 'package:the_app/src/constants.dart';
 import 'package:the_app/src/widgets/html.dart';
 
@@ -9,7 +9,7 @@ const _kBorderRadius = kPadding;
 
 bool isBackgroundPost(Post post) =>
     post.postBodyHtml
-        ?.contains('<span class="metaBbCode meta-thread_background_url">') ??
+        ?.contains('<span class="metaBbCode meta-threadbackgroundurl">') ??
     false;
 
 class BackgroundPost extends StatelessWidget {
@@ -44,7 +44,7 @@ class BackgroundPost extends StatelessWidget {
 
   Widget _buildWithBackground(ThemeData theme) {
     final regExp =
-        RegExp(r'<span class="metaBbCode meta-thread_background_url">.+'
+        RegExp(r'<span class="metaBbCode meta-threadbackgroundurl">.+'
             r'<a href="([^"]+)"[^>]+>([^<]+)</a>'
             r'</span></span>');
     final postBodyHtml0 = post.postBodyHtml ?? '';
@@ -62,7 +62,7 @@ class BackgroundPost extends StatelessWidget {
         decoration: threadBackgroundUrl != null
             ? BoxDecoration(
                 image: DecorationImage(
-                  image: CachedNetworkImageProvider(threadBackgroundUrl),
+                  image: cached.image(threadBackgroundUrl),
                   fit: BoxFit.cover,
                 ),
               )

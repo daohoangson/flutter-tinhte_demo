@@ -3,7 +3,12 @@ import 'package:intl/intl.dart';
 import 'package:the_app/l10n/messages_all.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
+@visibleForTesting
+DateTime? debugClock;
+
 final _numberFormatCompact = NumberFormat.compact();
+
+DateTime get _clock => debugClock ?? DateTime.now();
 
 L10n l(BuildContext context) => Localizations.of<L10n>(context, L10n)!;
 
@@ -388,8 +393,9 @@ class L10n {
       Intl.message('Unignore', locale: localeName, name: 'userUnignore');
 
   static Future<L10n> load(Locale locale) {
+    final countryCode = locale.countryCode ?? '';
     final localeName = Intl.canonicalizedLocale(
-        locale.countryCode!.isEmpty ? locale.languageCode : locale.toString());
+        countryCode.isEmpty ? locale.languageCode : locale.toString());
     return initializeMessages(localeName).then((_) => L10n(localeName));
   }
 }
@@ -419,9 +425,10 @@ String formatTimestamp(BuildContext context, int? timestamp) {
   if (timestamp == null) return '';
 
   final d = secondsToDateTime(timestamp);
-  if (DateTime.now().subtract(const Duration(days: 30)).isBefore(d)) {
+  final clock = _clock;
+  if (clock.subtract(const Duration(days: 30)).isBefore(d)) {
     final locale = Localizations.localeOf(context).languageCode;
-    return timeago.format(d, locale: locale);
+    return timeago.format(d, clock: clock, locale: locale);
   }
 
   // TODO: use date format from device locale

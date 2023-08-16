@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:the_api/links.dart';
+import 'package:the_app/src/abstracts/progress_indicator.dart';
 import 'package:the_app/src/api.dart';
 
 class SuperListView<T> extends StatefulWidget {
@@ -338,7 +339,7 @@ class SuperListState<T> extends State<SuperListView<T>> {
               padding: EdgeInsets.all(8.0),
               child: SafeArea(
                 child: Center(
-                  child: CircularProgressIndicator(),
+                  child: AdaptiveProgressIndicator(),
                 ),
               ),
             )

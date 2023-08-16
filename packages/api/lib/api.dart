@@ -15,23 +15,28 @@ part 'src/api_internal.dart';
 part 'src/api_login.dart';
 
 class Api {
-  final Client httpClient = Client();
-  final httpHeaders = <String, String>{};
-
-  final String _apiRoot;
-  final String _clientId;
-  final String _clientSecret;
+  final String apiRoot;
+  final String clientId;
+  final String clientSecret;
+  final bool enableBatch;
+  final Client _httpClient;
+  final Map<String, String> _httpHeaders;
 
   Batch? _batch;
+  var _requestCount = 0;
 
-  String get apiRoot => _apiRoot;
-  String get clientId => _clientId;
-  String get clientSecret => _clientSecret;
   Response? get latestResponse => _latestResponse;
   int get requestCount => _requestCount;
 
-  Api(String apiRoot, this._clientId, this._clientSecret)
-      : _apiRoot = apiRoot.replaceAll(RegExp(r'/$'), '');
+  Api(
+    this._httpClient, {
+    required String apiRoot,
+    this.clientId = '',
+    this.clientSecret = '',
+    this.enableBatch = true,
+    Map<String, String> httpHeaders = const {},
+  })  : apiRoot = apiRoot.replaceAll(RegExp(r'/$'), ''),
+        _httpHeaders = httpHeaders;
 
   String buildUrl(String path) {
     if (path.startsWith('http')) {
@@ -40,7 +45,7 @@ class Api {
 
     final safePath = path.replaceFirst('?', '&');
 
-    return "$_apiRoot?$safePath";
+    return "$apiRoot?$safePath";
   }
 
   String buildOneTimeToken({
@@ -50,12 +55,12 @@ class Api {
   }) {
     final now = (DateTime.now().millisecondsSinceEpoch / 1000).floor();
     final timestamp = now + ttl;
-    final once = md5("$userId$timestamp$accessToken$_clientSecret");
-    return "$userId,$timestamp,$once,$_clientId";
+    final once = md5("$userId$timestamp$accessToken$clientSecret");
+    return "$userId,$timestamp,$once,$clientId";
   }
 
   close() {
-    httpClient.close();
+    _httpClient.close();
   }
 
   BatchController newBatch({String path = 'batch'}) {
@@ -80,8 +85,8 @@ class Api {
 
     final json = await postJson('oauth/token', bodyFields: {
       "grant_type": "refresh_token",
-      "client_id": _clientId,
-      "client_secret": _clientSecret,
+      "client_id": clientId,
+      "client_secret": clientSecret,
       "refresh_token": refreshToken!,
     });
 
@@ -110,13 +115,17 @@ class Api {
     if (batch == _batch) _batch = null;
     if (batch.length == 0) return false;
 
-    final json = await sendRequest(
-      'POST',
-      batch.path,
-      bodyJson: batch.bodyJson,
-      parseJson: true,
-    );
-    return batch.handleResponse(json);
+    try {
+      final json = await sendRequest(
+        'POST',
+        batch.path,
+        bodyJson: batch.bodyJson,
+        parseJson: true,
+      );
+      return batch.handleResponse(json);
+    } catch (error, stackTrace) {
+      return batch.handleError(error, stackTrace);
+    }
   }
 
   Future sendRequest(String method, String path,
@@ -125,15 +134,20 @@ class Api {
       Map<String, File>? fileFields,
       parseJson = false}) {
     final batch = _batch;
-    if (batch != null && bodyJson == null && fileFields == null && parseJson) {
+    if (enableBatch &&
+        batch != null &&
+        bodyJson == null &&
+        fileFields == null &&
+        parseJson) {
       return batch.newJob(method, path, params: bodyFields);
     }
 
-    return _sendRequest(httpClient, method, buildUrl(path),
+    _requestCount++;
+    return _sendRequest(_httpClient, method, buildUrl(path),
         bodyFields: bodyFields,
         bodyJson: bodyJson,
         fileFields: fileFields,
-        headers: httpHeaders,
+        headers: _httpHeaders,
         parseJson: parseJson);
   }
 }
