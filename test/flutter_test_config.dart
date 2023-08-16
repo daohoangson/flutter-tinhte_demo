@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:the_api_test/cache_manager.dart';
@@ -18,6 +19,9 @@ Future<void> testExecutable(FutureOr<void> Function() testMain) async {
 
       await testMain();
     },
-    config: GoldenToolkitConfiguration(),
+    config: GoldenToolkitConfiguration(
+      // golden tests should only execute on macOS
+      skipGoldenAssertion: () => !Platform.isMacOS,
+    ),
   );
 }

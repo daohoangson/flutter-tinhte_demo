@@ -12,15 +12,11 @@ env:
 jobs:
   test:
     if: ${{ startsWith(github.ref, 'refs/heads/') }}
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v3
       - name: Prepare repo
-        run: |
-          set -e
-
-          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-          bash ./.github/workflows/prepare.sh
+        run: bash ./.github/workflows/prepare.sh
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
