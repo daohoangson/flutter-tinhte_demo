@@ -15,5 +15,15 @@ void main() {
 
       await screenMatchesGolden(tester, 'html/galleria');
     });
+
+    testGoldens('renders compare', (tester) async {
+      await tester.pumpMockedApiApp(
+        const ThreadViewTestApp(threadId: 3682335),
+        surfaceSize: const Size(800, 6000),
+      );
+      await tester.waitForStuff();
+
+      await screenMatchesGolden(tester, 'html/compare');
+    });
   });
 }

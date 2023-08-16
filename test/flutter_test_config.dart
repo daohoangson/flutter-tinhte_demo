@@ -8,10 +8,12 @@ import 'package:the_app/src/abstracts/cached_network_image.dart'
 import 'package:the_app/src/abstracts/progress_indicator.dart'
     as progress_indicator;
 import 'package:the_app/src/intl.dart';
+import 'package:the_app/src/widgets/html.dart';
 
 Future<void> testExecutable(FutureOr<void> Function() testMain) async {
   return GoldenToolkit.runWithConfiguration(
     () async {
+      PhotoCompare.debugDeterministicHandler = true;
       cached_network_image.debugCacheManager = MockedCacheManager();
       progress_indicator.debugDeterministic = true;
       debugClock =
