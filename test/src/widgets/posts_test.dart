@@ -1,13 +1,10 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
-import 'package:the_app/src/intl.dart';
 
 import '../../test_utils.dart';
 
 void main() {
-  debugClock = DateTime.fromMillisecondsSinceEpoch(1692144000000); // 2023-08-16
-
   group('PostsWidget', () {
     testGoldens('renders short thread', (tester) async {
       await tester.pumpMockedApiApp(

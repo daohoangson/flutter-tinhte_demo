@@ -4,15 +4,12 @@ import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:the_api/search.dart';
 import 'package:the_api/thread.dart';
 import 'package:the_api/x_content_list.dart';
-import 'package:the_app/src/intl.dart';
 import 'package:the_app/src/widgets/home/top_5.dart';
 import 'package:the_app/src/widgets/super_list.dart';
 
 import '../../../test_utils.dart';
 
 void main() {
-  debugClock = DateTime.fromMillisecondsSinceEpoch(1692144000000); // 2023-08-16
-
   group('HomeTop5Widget', () {
     testGoldens('renders wide layout', (tester) async {
       await tester.pumpMockedApiApp(const _HomeTop5TestApp());
