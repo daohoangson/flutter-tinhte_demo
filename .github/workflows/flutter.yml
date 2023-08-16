@@ -1,6 +1,8 @@
 name: Flutter
 on:
   push:
+    branches:
+      - "**"
 
 env:
   GCS_PATH: gs://flutterttdemo/${{ github.sha }}
