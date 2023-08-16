@@ -68,5 +68,14 @@ List<String> _cleanUpParts(Iterable<String> parts) {
     ];
   }
 
+  if (cleanedUp.length >= 3 &&
+      cleanedUp[0] == 'data' &&
+      cleanedUp[1] == 'avatars' &&
+      RegExp(r'^\d+$').matchAsPrefix(cleanedUp[3]) != null) {
+    final before3 = cleanedUp.take(3);
+    final after3 = cleanedUp.skip(4);
+    cleanedUp = [...before3, ...after3];
+  }
+
   return cleanedUp;
 }
