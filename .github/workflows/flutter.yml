@@ -12,7 +12,7 @@ env:
 jobs:
   test:
     if: ${{ startsWith(github.ref, 'refs/heads/') }}
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - name: Prepare repo

@@ -14,7 +14,6 @@ Future<void> testExecutable(FutureOr<void> Function() testMain) async {
       cached_network_image.debugCacheManager = MockedCacheManager();
       progress_indicator.debugDeterministic = true;
 
-      await loadAppFonts();
       await testMain();
     },
     config: GoldenToolkitConfiguration(
