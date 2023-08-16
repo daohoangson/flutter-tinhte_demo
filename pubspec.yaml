@@ -4,7 +4,7 @@ version: 2.0.1
 publish_to: none
 
 environment:
-  flutter: 3.10.2
+  flutter: 3.10.6
   sdk: ">=2.18.4 <3.0.0"
 
 dependencies:
@@ -15,7 +15,7 @@ dependencies:
   firebase_messaging: ^14.6.5
 
   # ours
-  flutter_widget_from_html: ^0.9.0
+  flutter_widget_from_html: ^0.10.0
   fwfh_webview: any
   the_api:
     path: ./packages/api
