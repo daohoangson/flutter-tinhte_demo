@@ -17,6 +17,7 @@ Future<void> testExecutable(FutureOr<void> Function() testMain) async {
       debugClock =
           DateTime.fromMillisecondsSinceEpoch(1692144000000); // 2023-08-16
 
+      await loadAppFonts();
       await testMain();
     },
     config: GoldenToolkitConfiguration(
