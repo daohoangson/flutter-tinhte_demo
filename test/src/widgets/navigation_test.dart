@@ -6,7 +6,7 @@ import 'package:the_app/src/screens/forum_list.dart';
 import '../../test_utils.dart';
 
 void main() {
-  debugClock = DateTime(2023, 8, 15);
+  debugClock = DateTime.fromMillisecondsSinceEpoch(1692057600000); // 2023-08-15
 
   group('NavigationWidget', () {
     testGoldens('renders forum list', (tester) async {

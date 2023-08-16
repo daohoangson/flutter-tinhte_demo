@@ -11,7 +11,7 @@ import 'package:the_app/src/widgets/super_list.dart';
 import '../../../test_utils.dart';
 
 void main() {
-  debugClock = DateTime(2023, 8, 16);
+  debugClock = DateTime.fromMillisecondsSinceEpoch(1692144000000); // 2023-08-16
 
   group('HomeTop5Widget', () {
     testGoldens('renders wide layout', (tester) async {
