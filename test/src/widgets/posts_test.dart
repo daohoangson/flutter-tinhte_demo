@@ -18,5 +18,15 @@ void main() {
 
       await screenMatchesGolden(tester, 'posts/thread_3704815');
     });
+
+    testGoldens('renders long thread', (tester) async {
+      await tester.pumpMockedApiApp(
+        const ThreadViewTestApp(threadId: 3704463),
+        surfaceSize: const Size(800, 8000),
+      );
+      await tester.waitForStuff();
+
+      await screenMatchesGolden(tester, 'posts/thread_3704463');
+    });
   });
 }

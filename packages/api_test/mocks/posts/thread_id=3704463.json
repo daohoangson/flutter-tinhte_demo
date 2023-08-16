@@ -1,0 +1,2886 @@
+{
+  "body": {
+    "posts": [
+      {
+        "post_id": 64796568,
+        "thread_id": 3704463,
+        "poster_user_id": 2545886,
+        "poster_username": "Lư Thế Nghĩa",
+        "post_create_date": 1692022269,
+        "post_body": "Không khó để anh em gặp được trường hợp yêu cầu đổi mật khẩu tài khoản hay dịch vụ nào đó sau 1 khoảng thời gian nhất định. Đó có thể là tài khoản ngân hàng điện tử, tài khoản mạng xã hội, hay thậm chí là tài khoản hệ điều hành Windows. Việc đổi mật khẩu định kỳ theo nhiều hướng dẫn là nhằm tăng cường bảo mật, tuy nhiên thực sự có đúng như vậy?\n \nĐầu tiên, mình xác nhận luôn lời khuyên của các chuyên gia bảo mật về việc thay đổi mật khẩu định kỳ là đúng. Trong quá trình sử dụng hàng ngày, chúng ta có thể vô tình để lộ mật khẩu ở đâu đó, do truy cập các trang web xấu, hoặc bất cẩn trong lúc nhập mật khẩu để cho người khác thấy được. Giả sử anh em không bật (hay dịch vụ đó không có) tính năng bảo mật 2 lớp, kẻ xấu có thể đăng nhập tài khoản mà anh em không biết, theo dõi và lấy đi những thông tin quan trọng trong thời gian dài, cho tới khi mật khẩu được đổi. Đây cũng là lý do chính cho lời khuyên đổi password định kỳ.\n \n[ATTACH=full]6758097[/ATTACH]\n \nNăm 2010, nghiên cứu được thực hiện bởi Đại học Bắc Carolina (University of North Carolina) với hơn 10,000 tài khoản cũ và 51,141 mật khẩu. Họ thực hiện các cuộc tấn công ngoại tuyến với kỹ thuật pass the hash, bẻ khóa được 60% thông tin đăng nhập. Trong số 60% đó, có 7752 mật khẩu chưa phải là mật khẩu cuối cùng (chính xác) để đăng nhập tài khoản mà chỉ là mật khẩu cũ. Tuy nhiên khi sử dụng tiếp các dữ liệu đó để đoán mật khẩu đúng, có 17% trường hợp được đoán chính xác trong 5 giây trở lại. Lý do là người ta thường có xu hướng thay đổi rất ít cho mật khẩu của họ nhằm đáp ứng yêu cầu định kỳ, giữ lại cấu trúc cũ để dễ nhớ. Chẳng hạn ví dụ như mật khẩu hiện tại là Tinhte.vn thì đổi thành T1nhte.vn vậy.\n \nNhững quy chuẩn sẽ áp dụng cho số đông, nhưng từng trường hợp đặc thù thì có thể không còn chính xác, hay ít nhất là nó không hiệu quả. Nếu anh em đã có cho mình 1 mật khẩu đủ mạnh, bật bảo mật 2 lớp, việc bị ép thay định kỳ sẽ khiến chúng ta khó chịu, khó nhớ, nhất là khi ngày càng có nhiều thứ phải nhớ, đặc biệt nếu anh em không xài ứng dụng, dịch vụ quản lý mật khẩu. Mật khẩu được xem là đủ mạnh nếu như nó là tổ hợp những chữ cái, chữ số, ký tự đặc biệt, chữ hoa - thường và có độ dài tầm 12 ký tự trở lên.\n \n[preview]https://tinhte.vn/thread/anh-em-co-dang-xai-phan-mem-de-quan-ly-tai-khoan-va-mat-khau-khong.3690818/[/preview]\n \nBản thân mình cũng có 1 vài tổ hợp mật khẩu đặc biệt mạnh để áp dụng cho những tài khoản quan trọng, bên cạnh việc kích hoạt 2 lớp. Mình vẫn nhớ các mật khẩu này, dĩ nhiên đôi khi vẫn nhầm lẫn giữa cũ và mới. Giải pháp của mình là 1 nơi có thể lưu trữ và quản lý mật khẩu, đồng thời kiêm luôn chức năng autofill để không phải gõ lại khi cần. Đảm bảo an toàn cho đống mật khẩu đó sẽ là 1 tài khoản chính, bật tất cả các lớp bảo mật có thể, kèm theo mật khẩu mạnh. Mình ít khi thay đổi mật khẩu định kỳ, trừ khi bị ép buộc, và mình cũng rơi vào trường hợp như trên, đổi 1 vài ký tự nhưng giữ cấu trúc cũ.\n \nAnh em sẽ cần phải thay đổi mật khẩu, hoặc định kỳ hoặc khi có điều kiện cần thiết. Những lúc anh em cần đổi là sau khi nhập mật khẩu (ngân hàng chẳng hạn) và anh em nghi là có người xung quanh nhìn thấy; hoặc sau khi cho mượn tài khoản (game...); hay sau khi máy tính nhiễm mã độc... thì cũng cần đổi. Lưu ý rằng những mật khẩu của những trường hợp này cần phải khác biệt hoàn toàn so với cái cũ, ngoài ra nếu mật khẩu của các tài khoản khác nhau mà có điểm chung thì cũng nên đổi luôn cho chắc.\n \n[ATTACH=full]6758101[/ATTACH]\n \nNhìn chung nếu việc thay đổi mật khẩu định kỳ xuất phát từ ý định cá nhân, tức là anh em chủ đích đổi mật khẩu mới, thì rất nên làm. Lúc này mật khẩu mới sẽ an toàn hơn mật khẩu cũ, đồng thời khi tự muốn đổi, cấu trúc và độ mạnh của mật khẩu thường tăng lên. Còn ngược lại, việc thay đổi mật khẩu do bị ép đa phần không có hiệu quả lắm, vì nó tạo cảm giác phiền phức cho người dùng và họ đổi chỉ để đối phó mà thôi.",
+        "post_body_html": "<!--<link rel=\"stylesheet\" href=\"https://tinhte.vn/css.php?css=bdimage,bdlinkexpander&amp;style=85&amp;dir=LTR&amp;d=1690336507\" />--><span class=\"xf-body-paragraph\">Không khó để anh em gặp được trường hợp yêu cầu đổi <a href=\"https://tinhte.vn/tag/mat-khau\" class=\"Tinhte_XenTag_TagLink\">mật khẩu</a> tài khoản hay dịch vụ nào đó sau 1 khoảng thời gian nhất định. Đó có thể là tài khoản ngân hàng điện tử, tài khoản mạng xã hội, hay thậm chí là tài khoản hệ điều hành Windows. Việc đổi mật khẩu định kỳ theo nhiều hướng dẫn là nhằm tăng cường <a href=\"https://tinhte.vn/tag/bao-mat\" class=\"Tinhte_XenTag_TagLink\">bảo mật</a>, tuy nhiên thực sự có đúng như vậy?<br />\n <br />\nĐầu tiên, mình xác nhận luôn lời khuyên của các chuyên gia bảo mật về việc thay đổi mật khẩu định kỳ là đúng. Trong quá trình sử dụng hàng ngày, chúng ta có thể vô tình để lộ mật khẩu ở đâu đó, do truy cập các trang web xấu, hoặc bất cẩn trong lúc nhập mật khẩu để cho người khác thấy được. Giả sử anh em không bật (hay dịch vụ đó không có) tính năng bảo mật 2 lớp, kẻ xấu có thể đăng nhập tài khoản mà anh em không biết, theo dõi và lấy đi những thông tin quan trọng trong thời gian dài, cho tới khi mật khẩu được đổi. Đây cũng là lý do chính cho lời khuyên đổi <a href=\"https://tinhte.vn/tag/password\" class=\"Tinhte_XenTag_TagLink\">password</a> định kỳ.<br />\n <br />\n</span>\n\t\n\n<span class=\"bdImage_attachImage\" style=\"width:2048px\">\n\t<span class=\"inner\" style=\"padding-bottom:61.914062%\">\n\t\t\n\n\t\t<img src=\"https://tinhte.vn/appforo/index.php?attachments/6758097/data\"\n\t\t\t alt=\"quan-ly-tai-khoan-mat-khau-tinhte.jpg\"\n\t\t\t data-height=\"1268\"\n\t\t\t data-permalink=\"https://photo2.tinhte.vn/data/attachment-files/2023/08/7228925_quan-ly-tai-khoan-mat-khau-tinhte.jpg\"\n\t\t\t data-width=\"2048\" />\n\n\n\t</span>\n</span>\n\n\n\t\n<span class=\"xf-body-paragraph\"><br />\n <br />\nNăm 2010, nghiên cứu được thực hiện bởi Đại học Bắc Carolina (University of North Carolina) với hơn 10,000 tài khoản cũ và 51,141 mật khẩu. Họ thực hiện các cuộc tấn công ngoại tuyến với kỹ thuật pass the hash, bẻ khóa được 60% thông tin đăng nhập. Trong số 60% đó, có 7752 mật khẩu chưa phải là mật khẩu cuối cùng (chính xác) để đăng nhập tài khoản mà chỉ là mật khẩu cũ. Tuy nhiên khi sử dụng tiếp các dữ liệu đó để đoán mật khẩu đúng, có 17% trường hợp được đoán chính xác trong 5 giây trở lại. Lý do là người ta thường có xu hướng thay đổi rất ít cho mật khẩu của họ nhằm đáp ứng yêu cầu định kỳ, giữ lại cấu trúc cũ để dễ nhớ. Chẳng hạn ví dụ như mật khẩu hiện tại là Tinhte.vn thì đổi thành T1nhte.vn vậy.<br />\n <br />\nNhững quy chuẩn sẽ áp dụng cho số đông, nhưng từng trường hợp đặc thù thì có thể không còn chính xác, hay ít nhất là nó không hiệu quả. Nếu anh em đã có cho mình 1 mật khẩu đủ mạnh, bật bảo mật 2 lớp, việc bị ép thay định kỳ sẽ khiến chúng ta khó chịu, khó nhớ, nhất là khi ngày càng có nhiều thứ phải nhớ, đặc biệt nếu anh em không xài ứng dụng, dịch vụ quản lý mật khẩu. Mật khẩu được xem là đủ mạnh nếu như nó là tổ hợp những chữ cái, chữ số, ký tự đặc biệt, chữ hoa - thường và có độ dài tầm 12 ký tự trở lên.<br />\n <br />\n</span><!-- bdLinkExpander (url,1,czoxNDc6ImE6Mjp7czozOiJ1cmwiO3M6MTAwOiJodHRwczovL3Rpbmh0ZS52bi90aHJlYWQvYW5oLWVtLWNvLWRhbmcteGFpLXBoYW4tbWVtLWRlLXF1YW4tbHktdGFpLWtob2FuLXZhLW1hdC1raGF1LWtob25nLjM2OTA4MTgvIjtzOjQ6InR5cGUiO3M6NDoibGluayI7fSI7) --><span class=\"xf-body-paragraph\">\n\t<a href=\"https://tinhte.vn/thread/anh-em-co-dang-xai-phan-mem-de-quan-ly-tai-khoan-va-mat-khau-khong.3690818/\" class=\"LinkExpander expanded internalLink has-thumbnail-cover is-secure\">\n\t<div class=\"block\">\n\t\t<div class=\"thumbnail thumbnail-cover\">\n\t\t\t<img src=\"https://imgproxy7.tinhte.vn/web0ltywsiDMQjKWCYc3HUx9aAkpIBU1v0dAFNxhLKo/rs:fill:480:300:0/plain/https://photo2.tinhte.vn/data/attachment-files/2023/07/6492153_cover-quan-ly-tai-khoan-mat-khau-tinhte.jpg\" width=\"480\" height=\"300\" />\n\t\t</div>\n\n\t\t<div class=\"info\">\n\t\t\t<h2 class=\"title\" title=\"Anh em có đang xài phần mềm để quản lý tài khoản và mật khẩu không?\">Anh em có đang xài phần mềm để quản lý tài khoản và mật khẩu không?</h2>\n\t\t\t<div class=\"description\">Với sự phát triển của công nghệ và các dịch vụ trực tuyến, số lượng tài khoản lẫn mật khẩu mà 1 cá nhân sở hữu ngày càng nhiều. Nếu anh em làm theo các lời khuyên bảo mật, số mật khẩu phức tạp anh em phải nhớ là rất lớn.</div>\n\n\t\t\t<div class=\"extra\">\n\t\t\t\t<span class=\"host\">\n\t\t\t\t\t<i class=\"is-secure-indicator fa fa-lock\"></i> tinhte.vn\n\t\t\t\t</span>\n\t\t\t</div>\n\t\t</div>\n\t</div>\n</a>\n<br />\n <br />\nBản thân mình cũng có 1 vài tổ hợp mật khẩu đặc biệt mạnh để áp dụng cho những tài khoản quan trọng, bên cạnh việc kích hoạt 2 lớp. Mình vẫn nhớ các mật khẩu này, dĩ nhiên đôi khi vẫn nhầm lẫn giữa cũ và mới. Giải pháp của mình là 1 nơi có thể lưu trữ và quản lý mật khẩu, đồng thời kiêm luôn chức năng autofill để không phải gõ lại khi cần. Đảm bảo an toàn cho đống mật khẩu đó sẽ là 1 tài khoản chính, bật tất cả các lớp bảo mật có thể, kèm theo mật khẩu mạnh. Mình ít khi thay đổi mật khẩu định kỳ, trừ khi bị ép buộc, và mình cũng rơi vào trường hợp như trên, đổi 1 vài ký tự nhưng giữ cấu trúc cũ.<br />\n <br />\nAnh em sẽ cần phải thay đổi mật khẩu, hoặc định kỳ hoặc khi có điều kiện cần thiết. Những lúc anh em cần đổi là sau khi nhập mật khẩu (ngân hàng chẳng hạn) và anh em nghi là có người xung quanh nhìn thấy; hoặc sau khi cho mượn tài khoản (game...); hay sau khi máy tính nhiễm mã độc... thì cũng cần đổi. Lưu ý rằng những mật khẩu của những trường hợp này cần phải khác biệt hoàn toàn so với cái cũ, ngoài ra nếu mật khẩu của các tài khoản khác nhau mà có điểm chung thì cũng nên đổi luôn cho chắc.<br />\n <br />\n</span>\n\t\n\n<span class=\"bdImage_attachImage\" style=\"width:1600px\">\n\t<span class=\"inner\" style=\"padding-bottom:62.500000%\">\n\t\t\n\n\t\t<img src=\"https://tinhte.vn/appforo/index.php?attachments/6758101/data\"\n\t\t\t alt=\"doi-mat-khau-dinh-ky-can-thiet-hay-khong-tinhte.jpg\"\n\t\t\t data-height=\"1000\"\n\t\t\t data-permalink=\"https://photo2.tinhte.vn/data/attachment-files/2023/08/7228929_doi-mat-khau-dinh-ky-can-thiet-hay-khong-tinhte.jpg\"\n\t\t\t data-width=\"1600\" />\n\n\n\t</span>\n</span>\n\n\n\t\n<span class=\"xf-body-paragraph\"><br />\n <br />\nNhìn chung nếu việc thay đổi mật khẩu định kỳ xuất phát từ ý định cá nhân, tức là anh em chủ đích đổi mật khẩu mới, thì rất nên làm. Lúc này mật khẩu mới sẽ an toàn hơn mật khẩu cũ, đồng thời khi tự muốn đổi, cấu trúc và độ mạnh của mật khẩu thường tăng lên. Còn ngược lại, việc thay đổi mật khẩu do bị ép đa phần không có hiệu quả lắm, vì nó tạo cảm giác phiền phức cho người dùng và họ đổi chỉ để đối phó mà thôi.</span>",
+        "post_body_plain_text": "Không khó để anh em gặp được trường hợp yêu cầu đổi mật khẩu tài khoản hay dịch vụ nào đó sau 1 khoảng thời gian nhất định. Đó có thể là tài khoản ngân hàng điện tử, tài khoản mạng xã hội, hay thậm chí là tài khoản hệ điều hành Windows. Việc đổi mật khẩu định kỳ theo nhiều hướng dẫn là nhằm tăng cường bảo mật, tuy nhiên thực sự có đúng như vậy?\n \nĐầu tiên, mình xác nhận luôn lời khuyên của các chuyên gia bảo mật về việc thay đổi mật khẩu định kỳ là đúng. Trong quá trình sử dụng hàng ngày, chúng ta có thể vô tình để lộ mật khẩu ở đâu đó, do truy cập các trang web xấu, hoặc bất cẩn trong lúc nhập mật khẩu để cho người khác thấy được. Giả sử anh em không bật (hay dịch vụ đó không có) tính năng bảo mật 2 lớp, kẻ xấu có thể đăng nhập tài khoản mà anh em không biết, theo dõi và lấy đi những thông tin quan trọng trong thời gian dài, cho tới khi mật khẩu được đổi. Đây cũng là lý do chính cho lời khuyên đổi password định kỳ.\n \n\n \nNăm 2010, nghiên cứu được thực hiện bởi Đại học Bắc Carolina (University of North Carolina) với hơn 10,000 tài khoản cũ và 51,141 mật khẩu. Họ thực hiện các cuộc tấn công ngoại tuyến với kỹ thuật pass the hash, bẻ khóa được 60% thông tin đăng nhập. Trong số 60% đó, có 7752 mật khẩu chưa phải là mật khẩu cuối cùng (chính xác) để đăng nhập tài khoản mà chỉ là mật khẩu cũ. Tuy nhiên khi sử dụng tiếp các dữ liệu đó để đoán mật khẩu đúng, có 17% trường hợp được đoán chính xác trong 5 giây trở lại. Lý do là người ta thường có xu hướng thay đổi rất ít cho mật khẩu của họ nhằm đáp ứng yêu cầu định kỳ, giữ lại cấu trúc cũ để dễ nhớ. Chẳng hạn ví dụ như mật khẩu hiện tại là Tinhte.vn thì đổi thành T1nhte.vn vậy.\n \nNhững quy chuẩn sẽ áp dụng cho số đông, nhưng từng trường hợp đặc thù thì có thể không còn chính xác, hay ít nhất là nó không hiệu quả. Nếu anh em đã có cho mình 1 mật khẩu đủ mạnh, bật bảo mật 2 lớp, việc bị ép thay định kỳ sẽ khiến chúng ta khó chịu, khó nhớ, nhất là khi ngày càng có nhiều thứ phải nhớ, đặc biệt nếu anh em không xài ứng dụng, dịch vụ quản lý mật khẩu. Mật khẩu được xem là đủ mạnh nếu như nó là tổ hợp những chữ cái, chữ số, ký tự đặc biệt, chữ hoa - thường và có độ dài tầm 12 ký tự trở lên.\n \nhttps://tinhte.vn/thread/anh-em-co-dang-xai-phan-mem-de-quan-ly-tai-khoan-va-mat-khau-khong.3690818/\n \nBản thân mình cũng có 1 vài tổ hợp mật khẩu đặc biệt mạnh để áp dụng cho những tài khoản quan trọng, bên cạnh việc kích hoạt 2 lớp. Mình vẫn nhớ các mật khẩu này, dĩ nhiên đôi khi vẫn nhầm lẫn giữa cũ và mới. Giải pháp của mình là 1 nơi có thể lưu trữ và quản lý mật khẩu, đồng thời kiêm luôn chức năng autofill để không phải gõ lại khi cần. Đảm bảo an toàn cho đống mật khẩu đó sẽ là 1 tài khoản chính, bật tất cả các lớp bảo mật có thể, kèm theo mật khẩu mạnh. Mình ít khi thay đổi mật khẩu định kỳ, trừ khi bị ép buộc, và mình cũng rơi vào trường hợp như trên, đổi 1 vài ký tự nhưng giữ cấu trúc cũ.\n \nAnh em sẽ cần phải thay đổi mật khẩu, hoặc định kỳ hoặc khi có điều kiện cần thiết. Những lúc anh em cần đổi là sau khi nhập mật khẩu (ngân hàng chẳng hạn) và anh em nghi là có người xung quanh nhìn thấy; hoặc sau khi cho mượn tài khoản (game...); hay sau khi máy tính nhiễm mã độc... thì cũng cần đổi. Lưu ý rằng những mật khẩu của những trường hợp này cần phải khác biệt hoàn toàn so với cái cũ, ngoài ra nếu mật khẩu của các tài khoản khác nhau mà có điểm chung thì cũng nên đổi luôn cho chắc.\n \n\n \nNhìn chung nếu việc thay đổi mật khẩu định kỳ xuất phát từ ý định cá nhân, tức là anh em chủ đích đổi mật khẩu mới, thì rất nên làm. Lúc này mật khẩu mới sẽ an toàn hơn mật khẩu cũ, đồng thời khi tự muốn đổi, cấu trúc và độ mạnh của mật khẩu thường tăng lên. Còn ngược lại, việc thay đổi mật khẩu do bị ép đa phần không có hiệu quả lắm, vì nó tạo cảm giác phiền phức cho người dùng và họ đổi chỉ để đối phó mà thôi.",
+        "signature": "",
+        "signature_html": "",
+        "signature_plain_text": "",
+        "post_like_count": 9,
+        "post_attachment_count": 3,
+        "like_users": [
+          {
+            "user_id": 2002741,
+            "username": "Edge HQ",
+            "reaction_id": 1
+          },
+          {
+            "user_id": 1578441,
+            "username": "dynasty warrior",
+            "reaction_id": 1
+          },
+          {
+            "user_id": 322211,
+            "username": "thanhtung6868",
+            "reaction_id": 1
+          },
+          {
+            "user_id": 239751,
+            "username": "cuongbu",
+            "reaction_id": 4
+          },
+          {
+            "user_id": 32548,
+            "username": "vnnvn",
+            "reaction_id": 1
+          }
+        ],
+        "user_is_ignored": false,
+        "post_is_published": true,
+        "post_is_deleted": false,
+        "post_update_date": 1692024354,
+        "post_is_first_post": true,
+        "post_is_liked": false,
+        "attachments": [
+          {
+            "attachment_id": 6758097,
+            "attachment_download_count": 0,
+            "filename": "quan-ly-tai-khoan-mat-khau-tinhte.jpg",
+            "links": {
+              "permalink": "https://photo2.tinhte.vn/data/attachment-files/2023/08/7228925_quan-ly-tai-khoan-mat-khau-tinhte.jpg",
+              "data": "https://tinhte.vn/appforo/index.php?attachments/6758097/data",
+              "thumbnail": "https://imgproxy7.tinhte.vn/zV1zOulLsqjwZGDXRRfZSG3C_tCUuLBQJc3uz1hxiZM/w:400/plain/https://photo2.tinhte.vn/data/attachment-files/2023/08/7228925_quan-ly-tai-khoan-mat-khau-tinhte.jpg",
+              "post": "https://tinhte.vn/appforo/index.php?posts/64796568/"
+            },
+            "attachment_width": 2048,
+            "attachment_height": 1268,
+            "attachment_is_video": false,
+            "post_id": 64796568,
+            "permissions": {
+              "view": true,
+              "delete": false
+            },
+            "attachment_is_inserted": true
+          },
+          {
+            "attachment_id": 6758101,
+            "attachment_download_count": 0,
+            "filename": "doi-mat-khau-dinh-ky-can-thiet-hay-khong-tinhte.jpg",
+            "links": {
+              "permalink": "https://photo2.tinhte.vn/data/attachment-files/2023/08/7228929_doi-mat-khau-dinh-ky-can-thiet-hay-khong-tinhte.jpg",
+              "data": "https://tinhte.vn/appforo/index.php?attachments/6758101/data",
+              "thumbnail": "https://imgproxy7.tinhte.vn/7_xTkavgJtc3V8VBVbdgLmnAfgDAkqtKbA6T9pLXAqw/w:400/plain/https://photo2.tinhte.vn/data/attachment-files/2023/08/7228929_doi-mat-khau-dinh-ky-can-thiet-hay-khong-tinhte.jpg",
+              "post": "https://tinhte.vn/appforo/index.php?posts/64796568/"
+            },
+            "attachment_width": 1600,
+            "attachment_height": 1000,
+            "attachment_is_video": false,
+            "post_id": 64796568,
+            "permissions": {
+              "view": true,
+              "delete": false
+            },
+            "attachment_is_inserted": true
+          },
+          {
+            "attachment_id": 6760368,
+            "attachment_download_count": 0,
+            "filename": "cover-mat-khau.jpg",
+            "links": {
+              "permalink": "https://photo2.tinhte.vn/data/attachment-files/2023/08/7231196_cover-mat-khau.jpg",
+              "data": "https://tinhte.vn/appforo/index.php?attachments/6760368/data",
+              "thumbnail": "https://imgproxy7.tinhte.vn/N6QE9RD_0zXP6-N_6WEllx7KrLQ0psNjms_NYEc5XNk/w:400/plain/https://photo2.tinhte.vn/data/attachment-files/2023/08/7231196_cover-mat-khau.jpg",
+              "post": "https://tinhte.vn/appforo/index.php?posts/64796568/"
+            },
+            "attachment_width": 2048,
+            "attachment_height": 1365,
+            "attachment_is_video": false,
+            "post_id": 64796568,
+            "permissions": {
+              "view": true,
+              "delete": false
+            },
+            "attachment_is_inserted": false
+          }
+        ],
+        "links": {
+          "permalink": "https://tinhte.vn/posts/64796568/",
+          "detail": "https://tinhte.vn/appforo/index.php?posts/64796568/",
+          "thread": "https://tinhte.vn/appforo/index.php?threads/3704463/",
+          "poster": "https://tinhte.vn/appforo/index.php?users/2545886/",
+          "likes": "https://tinhte.vn/appforo/index.php?posts/64796568/likes",
+          "report": "https://tinhte.vn/appforo/index.php?posts/64796568/report",
+          "attachments": "https://tinhte.vn/appforo/index.php?posts/64796568/attachments",
+          "poster_avatar": "https://photo2.tinhte.vn/data/avatars/m/2545/2545886.jpg?1690891245",
+          "replies": "https://tinhte.vn/appforo/index.php?posts/64796568/replies"
+        },
+        "permissions": {
+          "view": true,
+          "edit": false,
+          "delete": false,
+          "reply": false,
+          "like": false,
+          "report": true,
+          "upload_attachment": false,
+          "vote": false
+        },
+        "poster_rank": {
+          "rank_level": 4,
+          "rank_name": "VIP",
+          "rank_group_id": 60,
+          "rank_points": 155419
+        },
+        "user_is_followed": false,
+        "fp_permissions": {
+          "delete": false
+        },
+        "poster_has_verified_badge": true,
+        "post_reaction_total": 9,
+        "post_reactions": {
+          "1": 8,
+          "2": 0,
+          "3": 0,
+          "4": 1,
+          "5": 0,
+          "6": 0
+        },
+        "post_visitor_reaction_id": 0,
+        "stickers": [],
+        "post_replies": []
+      },
+      {
+        "post_id": 64796655,
+        "thread_id": 3704463,
+        "poster_user_id": 5751,
+        "poster_username": "bestofstrongman",
+        "post_create_date": 1692024078,
+        "post_body": "Câu cuối cùng chính xác.\nTổ cha mấy thằng ngân hàng ép đổi mật khẩu hoài",
+        "post_body_html": "<span class=\"xf-body-paragraph\">Câu cuối cùng chính xác.<br />\nTổ cha mấy thằng ngân hàng ép đổi mật khẩu hoài</span>",
+        "post_body_plain_text": "Câu cuối cùng chính xác.\nTổ cha mấy thằng ngân hàng ép đổi mật khẩu hoài",
+        "signature": "",
+        "signature_html": "",
+        "signature_plain_text": "",
+        "post_like_count": 9,
+        "post_attachment_count": 0,
+        "like_users": [
+          {
+            "user_id": 155514,
+            "username": "trieuluu",
+            "reaction_id": 1
+          },
+          {
+            "user_id": 2421844,
+            "username": "Anonymox",
+            "reaction_id": 1
+          },
+          {
+            "user_id": 1990125,
+            "username": "magez",
+            "reaction_id": 6
+          },
+          {
+            "user_id": 5061,
+            "username": "demen72",
+            "reaction_id": 6
+          },
+          {
+            "user_id": 2766007,
+            "username": "Anpen",
+            "reaction_id": 1
+          }
+        ],
+        "user_is_ignored": false,
+        "post_is_published": true,
+        "post_is_deleted": false,
+        "post_update_date": 1692024078,
+        "post_is_first_post": false,
+        "post_is_liked": false,
+        "links": {
+          "permalink": "https://tinhte.vn/posts/64796655/",
+          "detail": "https://tinhte.vn/appforo/index.php?posts/64796655/",
+          "thread": "https://tinhte.vn/appforo/index.php?threads/3704463/",
+          "poster": "https://tinhte.vn/appforo/index.php?users/5751/",
+          "likes": "https://tinhte.vn/appforo/index.php?posts/64796655/likes",
+          "report": "https://tinhte.vn/appforo/index.php?posts/64796655/report",
+          "attachments": "https://tinhte.vn/appforo/index.php?posts/64796655/attachments",
+          "poster_avatar": "https://tinhte.vn/styles/default/TinhteMods/avatars/avatar_male_1.png",
+          "replies": "https://tinhte.vn/appforo/index.php?posts/64796655/replies"
+        },
+        "permissions": {
+          "view": true,
+          "edit": false,
+          "delete": false,
+          "reply": false,
+          "like": false,
+          "report": true,
+          "upload_attachment": false,
+          "vote": false
+        },
+        "poster_rank": {
+          "rank_level": 2,
+          "rank_name": "TÍCH CỰC",
+          "rank_group_id": 58,
+          "rank_points": 24106
+        },
+        "user_is_followed": false,
+        "fp_permissions": {
+          "delete": false
+        },
+        "poster_has_verified_badge": false,
+        "post_reaction_total": 9,
+        "post_reactions": {
+          "1": 7,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 2
+        },
+        "post_visitor_reaction_id": 0,
+        "stickers": [],
+        "post_replies": [
+          {
+            "from": 64796950,
+            "to": 64800250,
+            "post_reply_to": 64796655,
+            "post_reply_depth": 1,
+            "post_reply_count": 7,
+            "link": "https://tinhte.vn/appforo/index.php?posts/64796655/replies&from=64796950&to=64800250"
+          },
+          {
+            "post_id": 64800340
+          },
+          {
+            "post_id": 64800942
+          },
+          {
+            "post_id": 64800944
+          },
+          {
+            "post_id": 64801348
+          }
+        ],
+        "post_has_other_replies": true
+      },
+      {
+        "post_id": 64796743,
+        "thread_id": 3704463,
+        "poster_user_id": 2353634,
+        "poster_username": "IIIIIIIIIIII",
+        "post_create_date": 1692025979,
+        "post_body": "Lúc đầu việc thay đổi mật khẩu thường xuyên được các chuyên gia bảo mật khuyên với lý do như ở trong bài, nhưng trên thực tế, việc này sẽ khiến người dùng viết mật khẩu ra giấy hoặc đặt mật khẩu dễ nhớ làm cho việc bảo mật còn kém hơn là không đổi mật khẩu. Sau đó họ đã phải thay đổi lời khuyên thành chỉ đổi mật khẩu khi thấy có dấu hiệu của việc hacker xâm nhập tài khoản.",
+        "post_body_html": "<span class=\"xf-body-paragraph\">Lúc đầu việc thay đổi mật khẩu thường xuyên được các chuyên gia bảo mật khuyên với lý do như ở trong bài, nhưng trên thực tế, việc này sẽ khiến người dùng viết mật khẩu ra giấy hoặc đặt mật khẩu dễ nhớ làm cho việc bảo mật còn kém hơn là không đổi mật khẩu. Sau đó họ đã phải thay đổi lời khuyên thành chỉ đổi mật khẩu khi thấy có dấu hiệu của việc hacker xâm nhập tài khoản.</span>",
+        "post_body_plain_text": "Lúc đầu việc thay đổi mật khẩu thường xuyên được các chuyên gia bảo mật khuyên với lý do như ở trong bài, nhưng trên thực tế, việc này sẽ khiến người dùng viết mật khẩu ra giấy hoặc đặt mật khẩu dễ nhớ làm cho việc bảo mật còn kém hơn là không đổi mật khẩu. Sau đó họ đã phải thay đổi lời khuyên thành chỉ đổi mật khẩu khi thấy có dấu hiệu của việc hacker xâm nhập tài khoản.",
+        "signature": "",
+        "signature_html": "",
+        "signature_plain_text": "",
+        "post_like_count": 3,
+        "post_attachment_count": 0,
+        "like_users": [
+          {
+            "user_id": 20034,
+            "username": "tethien",
+            "reaction_id": 1
+          },
+          {
+            "user_id": 2847128,
+            "username": "TQB103",
+            "reaction_id": 1
+          },
+          {
+            "user_id": 1096433,
+            "username": "mushu",
+            "reaction_id": 1
+          }
+        ],
+        "user_is_ignored": false,
+        "post_is_published": true,
+        "post_is_deleted": false,
+        "post_update_date": 1692025979,
+        "post_is_first_post": false,
+        "post_is_liked": false,
+        "links": {
+          "permalink": "https://tinhte.vn/posts/64796743/",
+          "detail": "https://tinhte.vn/appforo/index.php?posts/64796743/",
+          "thread": "https://tinhte.vn/appforo/index.php?threads/3704463/",
+          "poster": "https://tinhte.vn/appforo/index.php?users/2353634/",
+          "likes": "https://tinhte.vn/appforo/index.php?posts/64796743/likes",
+          "report": "https://tinhte.vn/appforo/index.php?posts/64796743/report",
+          "attachments": "https://tinhte.vn/appforo/index.php?posts/64796743/attachments",
+          "poster_avatar": "https://tinhte.vn/styles/default/TinhteMods/avatars/avatar_male_9.png",
+          "replies": "https://tinhte.vn/appforo/index.php?posts/64796743/replies"
+        },
+        "permissions": {
+          "view": true,
+          "edit": false,
+          "delete": false,
+          "reply": false,
+          "like": false,
+          "report": true,
+          "upload_attachment": false,
+          "vote": false
+        },
+        "poster_rank": {
+          "rank_level": 1,
+          "rank_name": "ĐẠI BÀNG",
+          "rank_group_id": 57,
+          "rank_points": 3480
+        },
+        "user_is_followed": false,
+        "fp_permissions": {
+          "delete": false
+        },
+        "poster_has_verified_badge": false,
+        "post_reaction_total": 3,
+        "post_reactions": {
+          "1": 3,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "post_visitor_reaction_id": 0,
+        "stickers": [],
+        "post_replies": [
+          {
+            "post_id": 64798344
+          },
+          {
+            "post_id": 64799364
+          },
+          {
+            "post_id": 64799663
+          },
+          {
+            "post_id": 64801075
+          }
+        ]
+      },
+      {
+        "post_id": 64797858,
+        "thread_id": 3704463,
+        "poster_user_id": 822959,
+        "poster_username": "vanthoan",
+        "post_create_date": 1692068248,
+        "post_body": "Policy công ty là phải đổi mật khẩu mỗi 3 tháng, không đặt mật khẩu mới có phần giống mật khẩu cũ, thành ra sau vài lần đổi mật khẩu là éo biết đặt mật khẩu mới như thế nào. Giải pháp là viết hàm tạo mật khẩu ngẫu nhiên rồi viết ra giấy. Ai đọc được thì kệ tía nó. Biết mật khẩu cũng chẳng đăng nhập được vì đã có xác thực 2 lớp rồi.",
+        "post_body_html": "<span class=\"xf-body-paragraph\">Policy công ty là phải đổi mật khẩu mỗi 3 tháng, không đặt mật khẩu mới có phần giống mật khẩu cũ, thành ra sau vài lần đổi mật khẩu là éo biết đặt mật khẩu mới như thế nào. Giải pháp là viết hàm tạo mật khẩu ngẫu nhiên rồi viết ra giấy. Ai đọc được thì kệ tía nó. Biết mật khẩu cũng chẳng đăng nhập được vì đã có xác thực 2 lớp rồi.</span>",
+        "post_body_plain_text": "Policy công ty là phải đổi mật khẩu mỗi 3 tháng, không đặt mật khẩu mới có phần giống mật khẩu cũ, thành ra sau vài lần đổi mật khẩu là éo biết đặt mật khẩu mới như thế nào. Giải pháp là viết hàm tạo mật khẩu ngẫu nhiên rồi viết ra giấy. Ai đọc được thì kệ tía nó. Biết mật khẩu cũng chẳng đăng nhập được vì đã có xác thực 2 lớp rồi.",
+        "signature": "",
+        "signature_html": "",
+        "signature_plain_text": "",
+        "post_like_count": 0,
+        "post_attachment_count": 0,
+        "user_is_ignored": false,
+        "post_is_published": true,
+        "post_is_deleted": false,
+        "post_update_date": 1692068248,
+        "post_is_first_post": false,
+        "post_is_liked": false,
+        "links": {
+          "permalink": "https://tinhte.vn/posts/64797858/",
+          "detail": "https://tinhte.vn/appforo/index.php?posts/64797858/",
+          "thread": "https://tinhte.vn/appforo/index.php?threads/3704463/",
+          "poster": "https://tinhte.vn/appforo/index.php?users/822959/",
+          "likes": "https://tinhte.vn/appforo/index.php?posts/64797858/likes",
+          "report": "https://tinhte.vn/appforo/index.php?posts/64797858/report",
+          "attachments": "https://tinhte.vn/appforo/index.php?posts/64797858/attachments",
+          "poster_avatar": "https://tinhte.vn/styles/default/TinhteMods/avatars/avatar_8.png",
+          "replies": "https://tinhte.vn/appforo/index.php?posts/64797858/replies"
+        },
+        "permissions": {
+          "view": true,
+          "edit": false,
+          "delete": false,
+          "reply": false,
+          "like": false,
+          "report": true,
+          "upload_attachment": false,
+          "vote": false
+        },
+        "poster_rank": {
+          "rank_level": 2,
+          "rank_name": "TÍCH CỰC",
+          "rank_group_id": 58,
+          "rank_points": 14145.966
+        },
+        "user_is_followed": false,
+        "fp_permissions": {
+          "delete": false
+        },
+        "poster_has_verified_badge": false,
+        "post_reaction_total": 0,
+        "post_reactions": {
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "post_visitor_reaction_id": 0,
+        "stickers": [],
+        "post_replies": [
+          {
+            "post_id": 64798185
+          },
+          {
+            "post_id": 64798541
+          },
+          {
+            "post_id": 64799072
+          },
+          {
+            "post_id": 64799257
+          },
+          {
+            "post_id": 64799378
+          }
+        ]
+      },
+      {
+        "post_id": 64797902,
+        "thread_id": 3704463,
+        "poster_user_id": 87692,
+        "poster_username": "kekk",
+        "post_create_date": 1692068762,
+        "post_body": "Không nhé. Đổi mật khẩu thường xuyên chỉ giúp cho bạn mau quên mật khẩu mà thôi.",
+        "post_body_html": "<span class=\"xf-body-paragraph\">Không nhé. Đổi mật khẩu thường xuyên chỉ giúp cho bạn mau quên mật khẩu mà thôi.</span>",
+        "post_body_plain_text": "Không nhé. Đổi mật khẩu thường xuyên chỉ giúp cho bạn mau quên mật khẩu mà thôi.",
+        "signature": "Phone : 5 inch\nTablet : 10 inch\nLaptop : 15 inch\nDesktop : 20 inch",
+        "signature_html": "<span class=\"xf-body-paragraph\">Phone : 5 inch<br />\nTablet : 10 inch<br />\nLaptop : 15 inch<br />\nDesktop : 20 inch</span>",
+        "signature_plain_text": "Phone : 5 inch\nTablet : 10 inch\nLaptop : 15 inch\nDesktop : 20 inch",
+        "post_like_count": 1,
+        "post_attachment_count": 0,
+        "like_users": [
+          {
+            "user_id": 239751,
+            "username": "cuongbu",
+            "reaction_id": 1
+          }
+        ],
+        "user_is_ignored": false,
+        "post_is_published": true,
+        "post_is_deleted": false,
+        "post_update_date": 1692068762,
+        "post_is_first_post": false,
+        "post_is_liked": false,
+        "links": {
+          "permalink": "https://tinhte.vn/posts/64797902/",
+          "detail": "https://tinhte.vn/appforo/index.php?posts/64797902/",
+          "thread": "https://tinhte.vn/appforo/index.php?threads/3704463/",
+          "poster": "https://tinhte.vn/appforo/index.php?users/87692/",
+          "likes": "https://tinhte.vn/appforo/index.php?posts/64797902/likes",
+          "report": "https://tinhte.vn/appforo/index.php?posts/64797902/report",
+          "attachments": "https://tinhte.vn/appforo/index.php?posts/64797902/attachments",
+          "poster_avatar": "https://photo2.tinhte.vn/data/avatars/m/87/87692.jpg?1394077624",
+          "replies": "https://tinhte.vn/appforo/index.php?posts/64797902/replies"
+        },
+        "permissions": {
+          "view": true,
+          "edit": false,
+          "delete": false,
+          "reply": false,
+          "like": false,
+          "report": true,
+          "upload_attachment": false,
+          "vote": false
+        },
+        "poster_rank": {
+          "rank_level": 4,
+          "rank_name": "VIP",
+          "rank_group_id": 60,
+          "rank_points": 82892
+        },
+        "user_is_followed": false,
+        "fp_permissions": {
+          "delete": false
+        },
+        "poster_has_verified_badge": false,
+        "post_reaction_total": 1,
+        "post_reactions": {
+          "1": 1,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "post_visitor_reaction_id": 0,
+        "stickers": [],
+        "post_replies": [
+          {
+            "post_id": 64797945
+          },
+          {
+            "post_id": 64800492
+          }
+        ]
+      },
+      {
+        "post_id": 64797906,
+        "thread_id": 3704463,
+        "poster_user_id": 2612547,
+        "poster_username": "xecatang",
+        "post_create_date": 1692068805,
+        "post_body": "iphone tạo gì đó có ra mk ngẫn nhiên ngon lành cứ vậy mà phang thôi :grin:",
+        "post_body_html": "<span class=\"xf-body-paragraph\">iphone tạo gì đó có ra mk ngẫn nhiên ngon lành cứ vậy mà phang thôi 😁</span>",
+        "post_body_plain_text": "iphone tạo gì đó có ra mk ngẫn nhiên ngon lành cứ vậy mà phang thôi :grin:",
+        "signature": "",
+        "signature_html": "",
+        "signature_plain_text": "",
+        "post_like_count": 0,
+        "post_attachment_count": 0,
+        "user_is_ignored": false,
+        "post_is_published": true,
+        "post_is_deleted": false,
+        "post_update_date": 1692068805,
+        "post_is_first_post": false,
+        "post_is_liked": false,
+        "links": {
+          "permalink": "https://tinhte.vn/posts/64797906/",
+          "detail": "https://tinhte.vn/appforo/index.php?posts/64797906/",
+          "thread": "https://tinhte.vn/appforo/index.php?threads/3704463/",
+          "poster": "https://tinhte.vn/appforo/index.php?users/2612547/",
+          "likes": "https://tinhte.vn/appforo/index.php?posts/64797906/likes",
+          "report": "https://tinhte.vn/appforo/index.php?posts/64797906/report",
+          "attachments": "https://tinhte.vn/appforo/index.php?posts/64797906/attachments",
+          "poster_avatar": "https://photo2.tinhte.vn/data/avatars/m/2612/2612547.jpg?1686191558",
+          "replies": "https://tinhte.vn/appforo/index.php?posts/64797906/replies"
+        },
+        "permissions": {
+          "view": true,
+          "edit": false,
+          "delete": false,
+          "reply": false,
+          "like": false,
+          "report": true,
+          "upload_attachment": false,
+          "vote": false
+        },
+        "poster_rank": {
+          "rank_level": 4,
+          "rank_name": "VIP",
+          "rank_group_id": 60,
+          "rank_points": 858229
+        },
+        "user_is_followed": false,
+        "fp_permissions": {
+          "delete": false
+        },
+        "poster_has_verified_badge": false,
+        "post_reaction_total": 0,
+        "post_reactions": {
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "post_visitor_reaction_id": 0,
+        "stickers": [],
+        "post_replies": [
+          {
+            "post_id": 64798253
+          },
+          {
+            "post_id": 64798877
+          },
+          {
+            "post_id": 64799350
+          }
+        ]
+      },
+      {
+        "post_id": 64797914,
+        "thread_id": 3704463,
+        "poster_user_id": 189158,
+        "poster_username": "duchaitp",
+        "post_create_date": 1692068875,
+        "post_body": "Mình nghĩ nếu mật khẩu đủ mạnh và tin tưởng ko bị lộ, ko login máy lạ thì ko cần đổi. Mấy ông lớn như GG, Apple đâu có bắt đổi định kỳ đâu.",
+        "post_body_html": "<span class=\"xf-body-paragraph\">Mình nghĩ nếu mật khẩu đủ mạnh và tin tưởng ko bị lộ, ko login máy lạ thì ko cần đổi. Mấy ông lớn như GG, Apple đâu có bắt đổi định kỳ đâu.</span>",
+        "post_body_plain_text": "Mình nghĩ nếu mật khẩu đủ mạnh và tin tưởng ko bị lộ, ko login máy lạ thì ko cần đổi. Mấy ông lớn như GG, Apple đâu có bắt đổi định kỳ đâu.",
+        "signature": "Tất cả đều tương đối.",
+        "signature_html": "<span class=\"xf-body-paragraph\">Tất cả đều tương đối.</span>",
+        "signature_plain_text": "Tất cả đều tương đối.",
+        "post_like_count": 0,
+        "post_attachment_count": 0,
+        "user_is_ignored": false,
+        "post_is_published": true,
+        "post_is_deleted": false,
+        "post_update_date": 1692068875,
+        "post_is_first_post": false,
+        "post_is_liked": false,
+        "links": {
+          "permalink": "https://tinhte.vn/posts/64797914/",
+          "detail": "https://tinhte.vn/appforo/index.php?posts/64797914/",
+          "thread": "https://tinhte.vn/appforo/index.php?threads/3704463/",
+          "poster": "https://tinhte.vn/appforo/index.php?users/189158/",
+          "likes": "https://tinhte.vn/appforo/index.php?posts/64797914/likes",
+          "report": "https://tinhte.vn/appforo/index.php?posts/64797914/report",
+          "attachments": "https://tinhte.vn/appforo/index.php?posts/64797914/attachments",
+          "poster_avatar": "https://photo2.tinhte.vn/data/avatars/m/189/189158.jpg?1587689274",
+          "replies": "https://tinhte.vn/appforo/index.php?posts/64797914/replies"
+        },
+        "permissions": {
+          "view": true,
+          "edit": false,
+          "delete": false,
+          "reply": false,
+          "like": false,
+          "report": true,
+          "upload_attachment": false,
+          "vote": false
+        },
+        "poster_rank": {
+          "rank_level": 4,
+          "rank_name": "VIP",
+          "rank_group_id": 60,
+          "rank_points": 342203
+        },
+        "user_is_followed": false,
+        "fp_permissions": {
+          "delete": false
+        },
+        "poster_has_verified_badge": false,
+        "post_reaction_total": 0,
+        "post_reactions": {
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "post_visitor_reaction_id": 0,
+        "stickers": [],
+        "post_replies": []
+      },
+      {
+        "post_id": 64797919,
+        "thread_id": 3704463,
+        "poster_user_id": 21346,
+        "poster_username": "Nam Air",
+        "post_create_date": 1692068935,
+        "post_body": "rất bực mình một số ứng dụng đòi đổi mật khẩu 6 tháng 1 lần hix,",
+        "post_body_html": "<span class=\"xf-body-paragraph\">rất bực mình một số ứng dụng đòi đổi mật khẩu 6 tháng 1 lần hix,</span>",
+        "post_body_plain_text": "rất bực mình một số ứng dụng đòi đổi mật khẩu 6 tháng 1 lần hix,",
+        "signature": "",
+        "signature_html": "",
+        "signature_plain_text": "",
+        "post_like_count": 2,
+        "post_attachment_count": 0,
+        "like_users": [
+          {
+            "user_id": 2766007,
+            "username": "Anpen",
+            "reaction_id": 1
+          },
+          {
+            "user_id": 5751,
+            "username": "bestofstrongman",
+            "reaction_id": 1
+          }
+        ],
+        "user_is_ignored": false,
+        "post_is_published": true,
+        "post_is_deleted": false,
+        "post_update_date": 1692068935,
+        "post_is_first_post": false,
+        "post_is_liked": false,
+        "links": {
+          "permalink": "https://tinhte.vn/posts/64797919/",
+          "detail": "https://tinhte.vn/appforo/index.php?posts/64797919/",
+          "thread": "https://tinhte.vn/appforo/index.php?threads/3704463/",
+          "poster": "https://tinhte.vn/appforo/index.php?users/21346/",
+          "likes": "https://tinhte.vn/appforo/index.php?posts/64797919/likes",
+          "report": "https://tinhte.vn/appforo/index.php?posts/64797919/report",
+          "attachments": "https://tinhte.vn/appforo/index.php?posts/64797919/attachments",
+          "poster_avatar": "https://photo2.tinhte.vn/data/avatars/m/21/21346.jpg?1516076282",
+          "replies": "https://tinhte.vn/appforo/index.php?posts/64797919/replies"
+        },
+        "permissions": {
+          "view": true,
+          "edit": false,
+          "delete": false,
+          "reply": false,
+          "like": false,
+          "report": true,
+          "upload_attachment": false,
+          "vote": false
+        },
+        "poster_rank": {
+          "rank_level": 4,
+          "rank_name": "VIP",
+          "rank_group_id": 60,
+          "rank_points": 1878288.0180000002
+        },
+        "user_is_followed": false,
+        "fp_permissions": {
+          "delete": false
+        },
+        "poster_has_verified_badge": true,
+        "post_reaction_total": 2,
+        "post_reactions": {
+          "1": 2,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "post_visitor_reaction_id": 0,
+        "stickers": [],
+        "post_replies": []
+      },
+      {
+        "post_id": 64797921,
+        "thread_id": 3704463,
+        "poster_user_id": 59648,
+        "poster_username": "grafixdesign",
+        "post_create_date": 1692069016,
+        "post_body": "Tớ không thích các app ngân hàng ép khách hàng đổi mật khẩu thường xuyên, chán ghét. Nhưng vẫn phải làm và không thể từ chối. Theo tôi mật khẩu đủ mạnh là được rồi.",
+        "post_body_html": "<span class=\"xf-body-paragraph\">Tớ không thích các app ngân hàng ép khách hàng đổi mật khẩu thường xuyên, chán ghét. Nhưng vẫn phải làm và không thể từ chối. Theo tôi mật khẩu đủ mạnh là được rồi.</span>",
+        "post_body_plain_text": "Tớ không thích các app ngân hàng ép khách hàng đổi mật khẩu thường xuyên, chán ghét. Nhưng vẫn phải làm và không thể từ chối. Theo tôi mật khẩu đủ mạnh là được rồi.",
+        "signature": "Send from my phone Blackberry 8700",
+        "signature_html": "<span class=\"xf-body-paragraph\">Send from my phone Blackberry 8700</span>",
+        "signature_plain_text": "Send from my phone Blackberry 8700",
+        "post_like_count": 1,
+        "post_attachment_count": 0,
+        "like_users": [
+          {
+            "user_id": 2766007,
+            "username": "Anpen",
+            "reaction_id": 1
+          }
+        ],
+        "user_is_ignored": false,
+        "post_is_published": true,
+        "post_is_deleted": false,
+        "post_update_date": 1692069016,
+        "post_is_first_post": false,
+        "post_is_liked": false,
+        "links": {
+          "permalink": "https://tinhte.vn/posts/64797921/",
+          "detail": "https://tinhte.vn/appforo/index.php?posts/64797921/",
+          "thread": "https://tinhte.vn/appforo/index.php?threads/3704463/",
+          "poster": "https://tinhte.vn/appforo/index.php?users/59648/",
+          "likes": "https://tinhte.vn/appforo/index.php?posts/64797921/likes",
+          "report": "https://tinhte.vn/appforo/index.php?posts/64797921/report",
+          "attachments": "https://tinhte.vn/appforo/index.php?posts/64797921/attachments",
+          "poster_avatar": "https://photo2.tinhte.vn/data/avatars/m/59/59648.jpg?1691727689",
+          "replies": "https://tinhte.vn/appforo/index.php?posts/64797921/replies"
+        },
+        "permissions": {
+          "view": true,
+          "edit": false,
+          "delete": false,
+          "reply": false,
+          "like": false,
+          "report": true,
+          "upload_attachment": false,
+          "vote": false
+        },
+        "poster_rank": {
+          "rank_level": 3,
+          "rank_name": "CAO CẤP",
+          "rank_group_id": 59,
+          "rank_points": 55835
+        },
+        "user_is_followed": false,
+        "fp_permissions": {
+          "delete": false
+        },
+        "poster_has_verified_badge": false,
+        "post_reaction_total": 1,
+        "post_reactions": {
+          "1": 1,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "post_visitor_reaction_id": 0,
+        "stickers": [],
+        "post_replies": []
+      },
+      {
+        "post_id": 64797925,
+        "thread_id": 3704463,
+        "poster_user_id": 48003,
+        "poster_username": "donquijote",
+        "post_create_date": 1692069053,
+        "post_body": "Không!",
+        "post_body_html": "<span class=\"xf-body-paragraph\">Không!</span>",
+        "post_body_plain_text": "Không!",
+        "signature": "Đi du lịch Trung Quốc, dùng hàng Trung Quốc là góp phần ủng hộ Trung Quốc chiếm Hoàng Sa - Trường Sa!",
+        "signature_html": "<span class=\"xf-body-paragraph\">Đi du lịch Trung Quốc, dùng hàng Trung Quốc là góp phần ủng hộ Trung Quốc chiếm Hoàng Sa - Trường Sa!</span>",
+        "signature_plain_text": "Đi du lịch Trung Quốc, dùng hàng Trung Quốc là góp phần ủng hộ Trung Quốc chiếm Hoàng Sa - Trường Sa!",
+        "post_like_count": 0,
+        "post_attachment_count": 0,
+        "user_is_ignored": false,
+        "post_is_published": true,
+        "post_is_deleted": false,
+        "post_update_date": 1692069053,
+        "post_is_first_post": false,
+        "post_is_liked": false,
+        "links": {
+          "permalink": "https://tinhte.vn/posts/64797925/",
+          "detail": "https://tinhte.vn/appforo/index.php?posts/64797925/",
+          "thread": "https://tinhte.vn/appforo/index.php?threads/3704463/",
+          "poster": "https://tinhte.vn/appforo/index.php?users/48003/",
+          "likes": "https://tinhte.vn/appforo/index.php?posts/64797925/likes",
+          "report": "https://tinhte.vn/appforo/index.php?posts/64797925/report",
+          "attachments": "https://tinhte.vn/appforo/index.php?posts/64797925/attachments",
+          "poster_avatar": "https://photo2.tinhte.vn/data/avatars/m/48/48003.jpg?1394077624",
+          "replies": "https://tinhte.vn/appforo/index.php?posts/64797925/replies"
+        },
+        "permissions": {
+          "view": true,
+          "edit": false,
+          "delete": false,
+          "reply": false,
+          "like": false,
+          "report": true,
+          "upload_attachment": false,
+          "vote": false
+        },
+        "poster_rank": {
+          "rank_level": 2,
+          "rank_name": "TÍCH CỰC",
+          "rank_group_id": 58,
+          "rank_points": 24040.904000000002
+        },
+        "user_is_followed": false,
+        "fp_permissions": {
+          "delete": false
+        },
+        "poster_has_verified_badge": false,
+        "post_reaction_total": 0,
+        "post_reactions": {
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "post_visitor_reaction_id": 0,
+        "stickers": [],
+        "post_replies": []
+      },
+      {
+        "post_id": 64797929,
+        "thread_id": 3704463,
+        "poster_user_id": 2293592,
+        "poster_username": "Bão Sài Gòn!",
+        "post_create_date": 1692069078,
+        "post_body": "Mình có 1 cái mật khẩu xài cho tất cả ứng dụng, icloud, ngân hàng, gmail, vvv :rofl:",
+        "post_body_html": "<span class=\"xf-body-paragraph\">Mình có 1 cái mật khẩu xài cho tất cả ứng dụng, icloud, ngân hàng, gmail, vvv 🤣</span>",
+        "post_body_plain_text": "Mình có 1 cái mật khẩu xài cho tất cả ứng dụng, icloud, ngân hàng, gmail, vvv :rofl:",
+        "signature": "I Lục Lọi Lãi Nhãi Lầy Lụa Lăn Ta Lăn Tăn Long Lanh Lóng Lánh Trong Xanh Lấp Lánh Ám Ảnh 81 Râm Hâm",
+        "signature_html": "<span class=\"xf-body-paragraph\">I Lục Lọi Lãi Nhãi Lầy Lụa Lăn Ta Lăn Tăn Long Lanh Lóng Lánh Trong Xanh Lấp Lánh Ám Ảnh 81 Râm Hâm</span>",
+        "signature_plain_text": "I Lục Lọi Lãi Nhãi Lầy Lụa Lăn Ta Lăn Tăn Long Lanh Lóng Lánh Trong Xanh Lấp Lánh Ám Ảnh 81 Râm Hâm",
+        "post_like_count": 0,
+        "post_attachment_count": 0,
+        "user_is_ignored": false,
+        "post_is_published": true,
+        "post_is_deleted": false,
+        "post_update_date": 1692069078,
+        "post_is_first_post": false,
+        "post_is_liked": false,
+        "links": {
+          "permalink": "https://tinhte.vn/posts/64797929/",
+          "detail": "https://tinhte.vn/appforo/index.php?posts/64797929/",
+          "thread": "https://tinhte.vn/appforo/index.php?threads/3704463/",
+          "poster": "https://tinhte.vn/appforo/index.php?users/2293592/",
+          "likes": "https://tinhte.vn/appforo/index.php?posts/64797929/likes",
+          "report": "https://tinhte.vn/appforo/index.php?posts/64797929/report",
+          "attachments": "https://tinhte.vn/appforo/index.php?posts/64797929/attachments",
+          "poster_avatar": "https://photo2.tinhte.vn/data/avatars/m/2293/2293592.jpg?1691226794",
+          "replies": "https://tinhte.vn/appforo/index.php?posts/64797929/replies"
+        },
+        "permissions": {
+          "view": true,
+          "edit": false,
+          "delete": false,
+          "reply": false,
+          "like": false,
+          "report": true,
+          "upload_attachment": false,
+          "vote": false
+        },
+        "poster_rank": {
+          "rank_level": 4,
+          "rank_name": "VIP",
+          "rank_group_id": 60,
+          "rank_points": 644966.984
+        },
+        "user_is_followed": false,
+        "fp_permissions": {
+          "delete": false
+        },
+        "poster_has_verified_badge": false,
+        "post_reaction_total": 0,
+        "post_reactions": {
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "post_visitor_reaction_id": 0,
+        "stickers": [],
+        "post_replies": []
+      },
+      {
+        "post_id": 64797930,
+        "thread_id": 3704463,
+        "poster_user_id": 2360132,
+        "poster_username": "Johnny Nguyen Pro",
+        "post_create_date": 1692069085,
+        "post_body": "Theo mình thì ko",
+        "post_body_html": "<span class=\"xf-body-paragraph\">Theo mình thì ko</span>",
+        "post_body_plain_text": "Theo mình thì ko",
+        "signature": "",
+        "signature_html": "",
+        "signature_plain_text": "",
+        "post_like_count": 0,
+        "post_attachment_count": 0,
+        "user_is_ignored": false,
+        "post_is_published": true,
+        "post_is_deleted": false,
+        "post_update_date": 1692069085,
+        "post_is_first_post": false,
+        "post_is_liked": false,
+        "links": {
+          "permalink": "https://tinhte.vn/posts/64797930/",
+          "detail": "https://tinhte.vn/appforo/index.php?posts/64797930/",
+          "thread": "https://tinhte.vn/appforo/index.php?threads/3704463/",
+          "poster": "https://tinhte.vn/appforo/index.php?users/2360132/",
+          "likes": "https://tinhte.vn/appforo/index.php?posts/64797930/likes",
+          "report": "https://tinhte.vn/appforo/index.php?posts/64797930/report",
+          "attachments": "https://tinhte.vn/appforo/index.php?posts/64797930/attachments",
+          "poster_avatar": "https://photo2.tinhte.vn/data/avatars/m/2360/2360132.jpg?1677475836",
+          "replies": "https://tinhte.vn/appforo/index.php?posts/64797930/replies"
+        },
+        "permissions": {
+          "view": true,
+          "edit": false,
+          "delete": false,
+          "reply": false,
+          "like": false,
+          "report": true,
+          "upload_attachment": false,
+          "vote": false
+        },
+        "poster_rank": {
+          "rank_level": 1,
+          "rank_name": "ĐẠI BÀNG",
+          "rank_group_id": 57,
+          "rank_points": 8243
+        },
+        "user_is_followed": false,
+        "fp_permissions": {
+          "delete": false
+        },
+        "poster_has_verified_badge": false,
+        "post_reaction_total": 0,
+        "post_reactions": {
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "post_visitor_reaction_id": 0,
+        "stickers": [],
+        "post_replies": []
+      },
+      {
+        "post_id": 64797939,
+        "thread_id": 3704463,
+        "poster_user_id": 671091,
+        "poster_username": "daohoa1012",
+        "post_create_date": 1692069188,
+        "post_body": "Mình ko hay đổi mk lắm, nếu phải đổi thì giữ nguyên phần chính, thay đổi thứ tự mấy con số thôi :))",
+        "post_body_html": "<span class=\"xf-body-paragraph\">Mình ko hay đổi mk lắm, nếu phải đổi thì giữ nguyên phần chính, thay đổi thứ tự mấy con số thôi <span class=\"smilie\" data-title=\"Smile\">:)</span>)</span>",
+        "post_body_plain_text": "Mình ko hay đổi mk lắm, nếu phải đổi thì giữ nguyên phần chính, thay đổi thứ tự mấy con số thôi :))",
+        "signature": "",
+        "signature_html": "",
+        "signature_plain_text": "",
+        "post_like_count": 0,
+        "post_attachment_count": 0,
+        "user_is_ignored": false,
+        "post_is_published": true,
+        "post_is_deleted": false,
+        "post_update_date": 1692069188,
+        "post_is_first_post": false,
+        "post_is_liked": false,
+        "links": {
+          "permalink": "https://tinhte.vn/posts/64797939/",
+          "detail": "https://tinhte.vn/appforo/index.php?posts/64797939/",
+          "thread": "https://tinhte.vn/appforo/index.php?threads/3704463/",
+          "poster": "https://tinhte.vn/appforo/index.php?users/671091/",
+          "likes": "https://tinhte.vn/appforo/index.php?posts/64797939/likes",
+          "report": "https://tinhte.vn/appforo/index.php?posts/64797939/report",
+          "attachments": "https://tinhte.vn/appforo/index.php?posts/64797939/attachments",
+          "poster_avatar": "https://photo2.tinhte.vn/data/avatars/m/671/671091.jpg?1394077624",
+          "replies": "https://tinhte.vn/appforo/index.php?posts/64797939/replies"
+        },
+        "permissions": {
+          "view": true,
+          "edit": false,
+          "delete": false,
+          "reply": false,
+          "like": false,
+          "report": true,
+          "upload_attachment": false,
+          "vote": false
+        },
+        "poster_rank": {
+          "rank_level": 3,
+          "rank_name": "CAO CẤP",
+          "rank_group_id": 59,
+          "rank_points": 37397
+        },
+        "user_is_followed": false,
+        "fp_permissions": {
+          "delete": false
+        },
+        "poster_has_verified_badge": false,
+        "post_reaction_total": 0,
+        "post_reactions": {
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "post_visitor_reaction_id": 0,
+        "stickers": [],
+        "post_replies": []
+      },
+      {
+        "post_id": 64797942,
+        "thread_id": 3704463,
+        "poster_user_id": 387825,
+        "poster_username": "andytran1986",
+        "post_create_date": 1692069196,
+        "post_body": "Tui thấy nó cũng giống như trong mấy phim phá án vậy: càng muốn che đậy, nó lại càng để lại nhiều chứng cứ hơn. Cho nên, có thể chia ra làm ít nhất là hai nhóm mật khẩu (tôi thì có 3): 1 là cực quan trọng, như icloud, GG, FB, các email khôi phục. 2 là ít quan trọng hơn: Zalo, fshare, hoặc các trang web VN. Cuối cùng là không quan trọng gì, như mấy trang tinhte, vnexpress, mấy trang phải đăng ký mới cho tải này kia... và thường rất ít phải thay đổi định kỳ đối với mật khẩu loại 1 và 2. Nếu có, cũng chỉ đổi 1-2 kí tự trong chuỗi mk cũ để dễ nhớ thôi.",
+        "post_body_html": "<span class=\"xf-body-paragraph\">Tui thấy nó cũng giống như trong mấy phim phá án vậy: càng muốn che đậy, nó lại càng để lại nhiều chứng cứ hơn. Cho nên, có thể chia ra làm ít nhất là hai nhóm mật khẩu (tôi thì có 3): 1 là cực quan trọng, như icloud, GG, FB, các email khôi phục. 2 là ít quan trọng hơn: Zalo, fshare, hoặc các trang web VN. Cuối cùng là không quan trọng gì, như mấy trang tinhte, vnexpress, mấy trang phải đăng ký mới cho tải này kia... và thường rất ít phải thay đổi định kỳ đối với mật khẩu loại 1 và 2. Nếu có, cũng chỉ đổi 1-2 kí tự trong chuỗi mk cũ để dễ nhớ thôi.</span>",
+        "post_body_plain_text": "Tui thấy nó cũng giống như trong mấy phim phá án vậy: càng muốn che đậy, nó lại càng để lại nhiều chứng cứ hơn. Cho nên, có thể chia ra làm ít nhất là hai nhóm mật khẩu (tôi thì có 3): 1 là cực quan trọng, như icloud, GG, FB, các email khôi phục. 2 là ít quan trọng hơn: Zalo, fshare, hoặc các trang web VN. Cuối cùng là không quan trọng gì, như mấy trang tinhte, vnexpress, mấy trang phải đăng ký mới cho tải này kia... và thường rất ít phải thay đổi định kỳ đối với mật khẩu loại 1 và 2. Nếu có, cũng chỉ đổi 1-2 kí tự trong chuỗi mk cũ để dễ nhớ thôi.",
+        "signature": "",
+        "signature_html": "",
+        "signature_plain_text": "",
+        "post_like_count": 0,
+        "post_attachment_count": 0,
+        "user_is_ignored": false,
+        "post_is_published": true,
+        "post_is_deleted": false,
+        "post_update_date": 1692069196,
+        "post_is_first_post": false,
+        "post_is_liked": false,
+        "links": {
+          "permalink": "https://tinhte.vn/posts/64797942/",
+          "detail": "https://tinhte.vn/appforo/index.php?posts/64797942/",
+          "thread": "https://tinhte.vn/appforo/index.php?threads/3704463/",
+          "poster": "https://tinhte.vn/appforo/index.php?users/387825/",
+          "likes": "https://tinhte.vn/appforo/index.php?posts/64797942/likes",
+          "report": "https://tinhte.vn/appforo/index.php?posts/64797942/report",
+          "attachments": "https://tinhte.vn/appforo/index.php?posts/64797942/attachments",
+          "poster_avatar": "https://photo2.tinhte.vn/data/avatars/m/387/387825.jpg?1667528387",
+          "replies": "https://tinhte.vn/appforo/index.php?posts/64797942/replies"
+        },
+        "permissions": {
+          "view": true,
+          "edit": false,
+          "delete": false,
+          "reply": false,
+          "like": false,
+          "report": true,
+          "upload_attachment": false,
+          "vote": false
+        },
+        "poster_rank": {
+          "rank_level": 2,
+          "rank_name": "TÍCH CỰC",
+          "rank_group_id": 58,
+          "rank_points": 14551
+        },
+        "user_is_followed": false,
+        "fp_permissions": {
+          "delete": false
+        },
+        "poster_has_verified_badge": false,
+        "post_reaction_total": 0,
+        "post_reactions": {
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "post_visitor_reaction_id": 0,
+        "stickers": [],
+        "post_replies": []
+      },
+      {
+        "post_id": 64797945,
+        "thread_id": 3704463,
+        "poster_user_id": 1841539,
+        "poster_username": "cosmos47",
+        "post_create_date": 1692069228,
+        "post_body": "[QUOTE=\"kekk, post: 64797902, member: 87692\"]Không nhé. Đổi mật khẩu thường xuyên chỉ giúp cho bạn mau quên mật khẩu mà thôi.[/QUOTE]\nThì quá bảo mật rồi, ngay chủ tk còn ko nhớ..",
+        "post_body_html": "<!--<link rel=\"stylesheet\" href=\"https://tinhte.vn/css.php?css=bb_code&amp;style=85&amp;dir=LTR&amp;d=1690336507\" /><script src=\"https://tinhte.vn/js/bdPostTree/script.min.js?_v=60fe4ae3\"></script>--><div class=\"bdPostTree_ParentQuote hash-cf46ae09f044f18eeb64df374401e9b6\">\n\n\n<div class=\"bbCodeBlock bbCodeQuote\" data-author=\"kekk\">\n\t<aside>\n\t\t\n\t\t\t<div class=\"attribution type\">kekk đã nói:\n\t\t\t\t\n\t\t\t\t\t<a href=\"https://tinhte.vn/goto/post?id=64797902#post-64797902\" class=\"AttributionLink\">&uarr;</a>\n\t\t\t\t\n\t\t\t</div>\n\t\t\n\t\t<blockquote class=\"quoteContainer\"><div class=\"quote\">Không nhé. Đổi mật khẩu thường xuyên chỉ giúp cho bạn mau quên mật khẩu mà thôi.</div></blockquote>\n\t</aside>\n</div></div>\n<span class=\"bdPostTree_ParentPoster\" data-hash=\"cf46ae09f044f18eeb64df374401e9b6\"><a href=\"https://tinhte.vn/profile/kekk.87692/\" class=\"username\" data-user=\"87692, @kekk\">@kekk</a></span>\nThì quá bảo mật rồi, ngay chủ tk còn ko nhớ..",
+        "post_body_plain_text": "Thì quá bảo mật rồi, ngay chủ tk còn ko nhớ..",
+        "signature": "IMDB",
+        "signature_html": "<span class=\"xf-body-paragraph\">IMDB</span>",
+        "signature_plain_text": "IMDB",
+        "post_like_count": 1,
+        "post_attachment_count": 0,
+        "like_users": [
+          {
+            "user_id": 87692,
+            "username": "kekk",
+            "reaction_id": 1
+          }
+        ],
+        "user_is_ignored": false,
+        "post_is_published": true,
+        "post_is_deleted": false,
+        "post_update_date": 1692069228,
+        "post_is_first_post": false,
+        "post_is_liked": false,
+        "links": {
+          "permalink": "https://tinhte.vn/posts/64797945/",
+          "detail": "https://tinhte.vn/appforo/index.php?posts/64797945/",
+          "thread": "https://tinhte.vn/appforo/index.php?threads/3704463/",
+          "poster": "https://tinhte.vn/appforo/index.php?users/1841539/",
+          "likes": "https://tinhte.vn/appforo/index.php?posts/64797945/likes",
+          "report": "https://tinhte.vn/appforo/index.php?posts/64797945/report",
+          "attachments": "https://tinhte.vn/appforo/index.php?posts/64797945/attachments",
+          "poster_avatar": "https://photo2.tinhte.vn/data/avatars/m/1841/1841539.jpg?1429757337"
+        },
+        "permissions": {
+          "view": true,
+          "edit": false,
+          "delete": false,
+          "reply": false,
+          "like": false,
+          "report": true,
+          "upload_attachment": false,
+          "vote": false
+        },
+        "poster_rank": {
+          "rank_level": 4,
+          "rank_name": "VIP",
+          "rank_group_id": 60,
+          "rank_points": 178798.032
+        },
+        "user_is_followed": false,
+        "fp_permissions": {
+          "delete": false
+        },
+        "poster_has_verified_badge": false,
+        "post_reaction_total": 1,
+        "post_reactions": {
+          "1": 1,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "post_visitor_reaction_id": 0,
+        "stickers": [],
+        "post_reply_to": 64797902,
+        "post_reply_depth": 1
+      },
+      {
+        "post_id": 64797947,
+        "thread_id": 3704463,
+        "poster_user_id": 146120,
+        "poster_username": "connect",
+        "post_create_date": 1692069232,
+        "post_body": "Nản cái vụ mật khẩu....giở k nhớ nổi có bao nhiêu cái mật khẩu....đành ghi ra giấy...cuối cùng chính tờ giấy là thủ phạm lộ lọt mật khẩu ...\ncứ cho xác thực từ 2 lớp trở lên là ổn, vừa thiết bị vật lý vừa OTP chẳng hạn...",
+        "post_body_html": "<span class=\"xf-body-paragraph\">Nản cái vụ mật khẩu....giở k nhớ nổi có bao nhiêu cái mật khẩu....đành ghi ra giấy...cuối cùng chính tờ giấy là thủ phạm lộ lọt mật khẩu ...<br />\ncứ cho xác thực từ 2 lớp trở lên là ổn, vừa thiết bị vật lý vừa OTP chẳng hạn...</span>",
+        "post_body_plain_text": "Nản cái vụ mật khẩu....giở k nhớ nổi có bao nhiêu cái mật khẩu....đành ghi ra giấy...cuối cùng chính tờ giấy là thủ phạm lộ lọt mật khẩu ...\ncứ cho xác thực từ 2 lớp trở lên là ổn, vừa thiết bị vật lý vừa OTP chẳng hạn...",
+        "signature": "Đam mê công nghệ nhưng \"kinh tế\" không đam mê mình!",
+        "signature_html": "<span class=\"xf-body-paragraph\">Đam mê công nghệ nhưng &quot;kinh tế&quot; không đam mê mình!</span>",
+        "signature_plain_text": "Đam mê công nghệ nhưng \"kinh tế\" không đam mê mình!",
+        "post_like_count": 0,
+        "post_attachment_count": 0,
+        "user_is_ignored": false,
+        "post_is_published": true,
+        "post_is_deleted": false,
+        "post_update_date": 1692069232,
+        "post_is_first_post": false,
+        "post_is_liked": false,
+        "links": {
+          "permalink": "https://tinhte.vn/posts/64797947/",
+          "detail": "https://tinhte.vn/appforo/index.php?posts/64797947/",
+          "thread": "https://tinhte.vn/appforo/index.php?threads/3704463/",
+          "poster": "https://tinhte.vn/appforo/index.php?users/146120/",
+          "likes": "https://tinhte.vn/appforo/index.php?posts/64797947/likes",
+          "report": "https://tinhte.vn/appforo/index.php?posts/64797947/report",
+          "attachments": "https://tinhte.vn/appforo/index.php?posts/64797947/attachments",
+          "poster_avatar": "https://photo2.tinhte.vn/data/avatars/m/146/146120.jpg?1394077624",
+          "replies": "https://tinhte.vn/appforo/index.php?posts/64797947/replies"
+        },
+        "permissions": {
+          "view": true,
+          "edit": false,
+          "delete": false,
+          "reply": false,
+          "like": false,
+          "report": true,
+          "upload_attachment": false,
+          "vote": false
+        },
+        "poster_rank": {
+          "rank_level": 1,
+          "rank_name": "ĐẠI BÀNG",
+          "rank_group_id": 57,
+          "rank_points": 1323
+        },
+        "user_is_followed": false,
+        "fp_permissions": {
+          "delete": false
+        },
+        "poster_has_verified_badge": false,
+        "post_reaction_total": 0,
+        "post_reactions": {
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "post_visitor_reaction_id": 0,
+        "stickers": [],
+        "post_replies": []
+      },
+      {
+        "post_id": 64797982,
+        "thread_id": 3704463,
+        "poster_user_id": 1250513,
+        "poster_username": "anhlucky2",
+        "post_create_date": 1692069529,
+        "post_body": "Tôi mỗi ngày đổi mk 1 lần",
+        "post_body_html": "<span class=\"xf-body-paragraph\">Tôi mỗi ngày đổi mk 1 lần</span>",
+        "post_body_plain_text": "Tôi mỗi ngày đổi mk 1 lần",
+        "signature": "https://www.youtube.com/c/AnhNoRapper/videos",
+        "signature_html": "<span class=\"xf-body-paragraph\">https://www.youtube.com/c/AnhNoRapper/videos</span>",
+        "signature_plain_text": "https://www.youtube.com/c/AnhNoRapper/videos",
+        "post_like_count": 0,
+        "post_attachment_count": 0,
+        "user_is_ignored": false,
+        "post_is_published": true,
+        "post_is_deleted": false,
+        "post_update_date": 1692069529,
+        "post_is_first_post": false,
+        "post_is_liked": false,
+        "links": {
+          "permalink": "https://tinhte.vn/posts/64797982/",
+          "detail": "https://tinhte.vn/appforo/index.php?posts/64797982/",
+          "thread": "https://tinhte.vn/appforo/index.php?threads/3704463/",
+          "poster": "https://tinhte.vn/appforo/index.php?users/1250513/",
+          "likes": "https://tinhte.vn/appforo/index.php?posts/64797982/likes",
+          "report": "https://tinhte.vn/appforo/index.php?posts/64797982/report",
+          "attachments": "https://tinhte.vn/appforo/index.php?posts/64797982/attachments",
+          "poster_avatar": "https://photo2.tinhte.vn/data/avatars/m/1250/1250513.jpg?1645420330",
+          "replies": "https://tinhte.vn/appforo/index.php?posts/64797982/replies"
+        },
+        "permissions": {
+          "view": true,
+          "edit": false,
+          "delete": false,
+          "reply": false,
+          "like": false,
+          "report": true,
+          "upload_attachment": false,
+          "vote": false
+        },
+        "poster_rank": {
+          "rank_level": 4,
+          "rank_name": "VIP",
+          "rank_group_id": 60,
+          "rank_points": 70087
+        },
+        "user_is_followed": false,
+        "fp_permissions": {
+          "delete": false
+        },
+        "poster_has_verified_badge": false,
+        "post_reaction_total": 0,
+        "post_reactions": {
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "post_visitor_reaction_id": 0,
+        "stickers": [],
+        "post_replies": []
+      },
+      {
+        "post_id": 64797999,
+        "thread_id": 3704463,
+        "poster_user_id": 316763,
+        "poster_username": "josep.tinh",
+        "post_create_date": 1692069635,
+        "post_body": "mật khẩu atm mình dùng hơn 10 năm nay còn chả thèm đổi",
+        "post_body_html": "<span class=\"xf-body-paragraph\">mật khẩu atm mình dùng hơn 10 năm nay còn chả thèm đổi</span>",
+        "post_body_plain_text": "mật khẩu atm mình dùng hơn 10 năm nay còn chả thèm đổi",
+        "signature": "NÓI KHÔNG VỚI TRUNG QUỐC",
+        "signature_html": "<span class=\"xf-body-paragraph\">NÓI KHÔNG VỚI TRUNG QUỐC</span>",
+        "signature_plain_text": "NÓI KHÔNG VỚI TRUNG QUỐC",
+        "post_like_count": 0,
+        "post_attachment_count": 0,
+        "user_is_ignored": false,
+        "post_is_published": true,
+        "post_is_deleted": false,
+        "post_update_date": 1692069635,
+        "post_is_first_post": false,
+        "post_is_liked": false,
+        "links": {
+          "permalink": "https://tinhte.vn/posts/64797999/",
+          "detail": "https://tinhte.vn/appforo/index.php?posts/64797999/",
+          "thread": "https://tinhte.vn/appforo/index.php?threads/3704463/",
+          "poster": "https://tinhte.vn/appforo/index.php?users/316763/",
+          "likes": "https://tinhte.vn/appforo/index.php?posts/64797999/likes",
+          "report": "https://tinhte.vn/appforo/index.php?posts/64797999/report",
+          "attachments": "https://tinhte.vn/appforo/index.php?posts/64797999/attachments",
+          "poster_avatar": "https://photo2.tinhte.vn/data/avatars/m/316/316763.jpg?1394077624",
+          "replies": "https://tinhte.vn/appforo/index.php?posts/64797999/replies"
+        },
+        "permissions": {
+          "view": true,
+          "edit": false,
+          "delete": false,
+          "reply": false,
+          "like": false,
+          "report": true,
+          "upload_attachment": false,
+          "vote": false
+        },
+        "poster_rank": {
+          "rank_level": 2,
+          "rank_name": "TÍCH CỰC",
+          "rank_group_id": 58,
+          "rank_points": 11506
+        },
+        "user_is_followed": false,
+        "fp_permissions": {
+          "delete": false
+        },
+        "poster_has_verified_badge": false,
+        "post_reaction_total": 0,
+        "post_reactions": {
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "post_visitor_reaction_id": 0,
+        "stickers": [],
+        "post_replies": []
+      },
+      {
+        "post_id": 64798000,
+        "thread_id": 3704463,
+        "poster_user_id": 1603823,
+        "poster_username": "cabk",
+        "post_create_date": 1692069648,
+        "post_body": "an toàn chứ đối nhiều quá đến chủ nó cũng ko nhớ luôn",
+        "post_body_html": "<span class=\"xf-body-paragraph\">an toàn chứ đối nhiều quá đến chủ nó cũng ko nhớ luôn</span>",
+        "post_body_plain_text": "an toàn chứ đối nhiều quá đến chủ nó cũng ko nhớ luôn",
+        "signature": "",
+        "signature_html": "",
+        "signature_plain_text": "",
+        "post_like_count": 0,
+        "post_attachment_count": 0,
+        "user_is_ignored": false,
+        "post_is_published": true,
+        "post_is_deleted": false,
+        "post_update_date": 1692069648,
+        "post_is_first_post": false,
+        "post_is_liked": false,
+        "links": {
+          "permalink": "https://tinhte.vn/posts/64798000/",
+          "detail": "https://tinhte.vn/appforo/index.php?posts/64798000/",
+          "thread": "https://tinhte.vn/appforo/index.php?threads/3704463/",
+          "poster": "https://tinhte.vn/appforo/index.php?users/1603823/",
+          "likes": "https://tinhte.vn/appforo/index.php?posts/64798000/likes",
+          "report": "https://tinhte.vn/appforo/index.php?posts/64798000/report",
+          "attachments": "https://tinhte.vn/appforo/index.php?posts/64798000/attachments",
+          "poster_avatar": "https://photo2.tinhte.vn/data/avatars/m/1603/1603823.jpg?1578997487",
+          "replies": "https://tinhte.vn/appforo/index.php?posts/64798000/replies"
+        },
+        "permissions": {
+          "view": true,
+          "edit": false,
+          "delete": false,
+          "reply": false,
+          "like": false,
+          "report": true,
+          "upload_attachment": false,
+          "vote": false
+        },
+        "poster_rank": {
+          "rank_level": 2,
+          "rank_name": "TÍCH CỰC",
+          "rank_group_id": 58,
+          "rank_points": 12296
+        },
+        "user_is_followed": false,
+        "fp_permissions": {
+          "delete": false
+        },
+        "poster_has_verified_badge": false,
+        "post_reaction_total": 0,
+        "post_reactions": {
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "post_visitor_reaction_id": 0,
+        "stickers": [],
+        "post_replies": []
+      },
+      {
+        "post_id": 64798006,
+        "thread_id": 3704463,
+        "poster_user_id": 1885465,
+        "poster_username": "thang do",
+        "post_create_date": 1692069717,
+        "post_body": "That's why i nhấn nút techcombank",
+        "post_body_html": "<span class=\"xf-body-paragraph\">That&#039;s why i nhấn nút techcombank</span>",
+        "post_body_plain_text": "That's why i nhấn nút techcombank",
+        "signature": "",
+        "signature_html": "",
+        "signature_plain_text": "",
+        "post_like_count": 0,
+        "post_attachment_count": 0,
+        "user_is_ignored": false,
+        "post_is_published": true,
+        "post_is_deleted": false,
+        "post_update_date": 1692069717,
+        "post_is_first_post": false,
+        "post_is_liked": false,
+        "links": {
+          "permalink": "https://tinhte.vn/posts/64798006/",
+          "detail": "https://tinhte.vn/appforo/index.php?posts/64798006/",
+          "thread": "https://tinhte.vn/appforo/index.php?threads/3704463/",
+          "poster": "https://tinhte.vn/appforo/index.php?users/1885465/",
+          "likes": "https://tinhte.vn/appforo/index.php?posts/64798006/likes",
+          "report": "https://tinhte.vn/appforo/index.php?posts/64798006/report",
+          "attachments": "https://tinhte.vn/appforo/index.php?posts/64798006/attachments",
+          "poster_avatar": "https://photo2.tinhte.vn/data/avatars/m/1885/1885465.jpg?1539788653",
+          "replies": "https://tinhte.vn/appforo/index.php?posts/64798006/replies"
+        },
+        "permissions": {
+          "view": true,
+          "edit": false,
+          "delete": false,
+          "reply": false,
+          "like": false,
+          "report": true,
+          "upload_attachment": false,
+          "vote": false
+        },
+        "poster_rank": {
+          "rank_level": 1,
+          "rank_name": "ĐẠI BÀNG",
+          "rank_group_id": 57,
+          "rank_points": 1920
+        },
+        "user_is_followed": false,
+        "fp_permissions": {
+          "delete": false
+        },
+        "poster_has_verified_badge": false,
+        "post_reaction_total": 0,
+        "post_reactions": {
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "post_visitor_reaction_id": 0,
+        "stickers": [],
+        "post_replies": []
+      },
+      {
+        "post_id": 64798026,
+        "thread_id": 3704463,
+        "poster_user_id": 1991789,
+        "poster_username": "garish",
+        "post_create_date": 1692069939,
+        "post_body": "Theo mình thì 1 mật khẩu đủ mạnh sẽ không cần phải thay đổi",
+        "post_body_html": "<span class=\"xf-body-paragraph\">Theo mình thì 1 mật khẩu đủ mạnh sẽ không cần phải thay đổi</span>",
+        "post_body_plain_text": "Theo mình thì 1 mật khẩu đủ mạnh sẽ không cần phải thay đổi",
+        "signature": "",
+        "signature_html": "",
+        "signature_plain_text": "",
+        "post_like_count": 1,
+        "post_attachment_count": 0,
+        "like_users": [
+          {
+            "user_id": 2421844,
+            "username": "Anonymox",
+            "reaction_id": 1
+          }
+        ],
+        "user_is_ignored": false,
+        "post_is_published": true,
+        "post_is_deleted": false,
+        "post_update_date": 1692069939,
+        "post_is_first_post": false,
+        "post_is_liked": false,
+        "links": {
+          "permalink": "https://tinhte.vn/posts/64798026/",
+          "detail": "https://tinhte.vn/appforo/index.php?posts/64798026/",
+          "thread": "https://tinhte.vn/appforo/index.php?threads/3704463/",
+          "poster": "https://tinhte.vn/appforo/index.php?users/1991789/",
+          "likes": "https://tinhte.vn/appforo/index.php?posts/64798026/likes",
+          "report": "https://tinhte.vn/appforo/index.php?posts/64798026/report",
+          "attachments": "https://tinhte.vn/appforo/index.php?posts/64798026/attachments",
+          "poster_avatar": "https://photo2.tinhte.vn/data/avatars/m/1991/1991789.jpg?1430489796",
+          "replies": "https://tinhte.vn/appforo/index.php?posts/64798026/replies"
+        },
+        "permissions": {
+          "view": true,
+          "edit": false,
+          "delete": false,
+          "reply": false,
+          "like": false,
+          "report": true,
+          "upload_attachment": false,
+          "vote": false
+        },
+        "poster_rank": {
+          "rank_level": 2,
+          "rank_name": "TÍCH CỰC",
+          "rank_group_id": 58,
+          "rank_points": 18855
+        },
+        "user_is_followed": false,
+        "fp_permissions": {
+          "delete": false
+        },
+        "poster_has_verified_badge": false,
+        "post_reaction_total": 1,
+        "post_reactions": {
+          "1": 1,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "post_visitor_reaction_id": 0,
+        "stickers": [],
+        "post_replies": []
+      },
+      {
+        "post_id": 64798185,
+        "thread_id": 3704463,
+        "poster_user_id": 22449,
+        "poster_username": "Gagarose",
+        "post_create_date": 1692071925,
+        "post_body": "[QUOTE=\"vanthoan, post: 64797858, member: 822959\"]Policy công ty là phải đổi mật khẩu mỗi 3 tháng, không đặt mật khẩu mới có phần giống mật khẩu cũ, thành ra sau vài lần đổi mật khẩu là éo biết đặt mật khẩu mới như thế nào. Giải pháp là viết hàm tạo mật khẩu ngẫu nhiên rồi viết ra giấy. Ai đọc được thì kệ tía nó. Biết mật khẩu cũng chẳng đăng nhập được vì đã có xác thực 2 lớp rồi.[/QUOTE]\nDùng tool quản lý mật khẩu nó gen ra cho mình luôn bác lưu vào tool là thoải mái. chỉ cần nhớ 1 cái master password",
+        "post_body_html": "<!--<link rel=\"stylesheet\" href=\"https://tinhte.vn/css.php?css=bb_code&amp;style=85&amp;dir=LTR&amp;d=1690336507\" /><script src=\"https://tinhte.vn/js/bdPostTree/script.min.js?_v=60fe4ae3\"></script>--><div class=\"bdPostTree_ParentQuote hash-30b6eda5edb1aa5741f81ecd11818126\">\n\n\n<div class=\"bbCodeBlock bbCodeQuote\" data-author=\"vanthoan\">\n\t<aside>\n\t\t\n\t\t\t<div class=\"attribution type\">vanthoan đã nói:\n\t\t\t\t\n\t\t\t\t\t<a href=\"https://tinhte.vn/goto/post?id=64797858#post-64797858\" class=\"AttributionLink\">&uarr;</a>\n\t\t\t\t\n\t\t\t</div>\n\t\t\n\t\t<blockquote class=\"quoteContainer\"><div class=\"quote\">Policy công ty là phải đổi mật khẩu mỗi 3 tháng, không đặt mật khẩu mới có phần giống mật khẩu cũ, thành ra sau vài lần đổi mật khẩu là éo biết đặt mật khẩu mới như thế nào. Giải pháp là viết hàm tạo mật khẩu ngẫu nhiên rồi viết ra giấy. Ai đọc được thì kệ tía nó. Biết mật khẩu cũng chẳng đăng nhập được vì đã có xác thực 2 lớp rồi.</div></blockquote>\n\t</aside>\n</div></div>\n<span class=\"bdPostTree_ParentPoster\" data-hash=\"30b6eda5edb1aa5741f81ecd11818126\"><a href=\"https://tinhte.vn/profile/vanthoan.822959/\" class=\"username\" data-user=\"822959, @vanthoan\">@vanthoan</a></span>\nDùng tool quản lý mật khẩu nó gen ra cho mình luôn bác lưu vào tool là thoải mái. chỉ cần nhớ 1 cái master password",
+        "post_body_plain_text": "Dùng tool quản lý mật khẩu nó gen ra cho mình luôn bác lưu vào tool là thoải mái. chỉ cần nhớ 1 cái master password",
+        "signature": "",
+        "signature_html": "",
+        "signature_plain_text": "",
+        "post_like_count": 1,
+        "post_attachment_count": 0,
+        "like_users": [
+          {
+            "user_id": 20034,
+            "username": "tethien",
+            "reaction_id": 1
+          }
+        ],
+        "user_is_ignored": false,
+        "post_is_published": true,
+        "post_is_deleted": false,
+        "post_update_date": 1692071925,
+        "post_is_first_post": false,
+        "post_is_liked": false,
+        "links": {
+          "permalink": "https://tinhte.vn/posts/64798185/",
+          "detail": "https://tinhte.vn/appforo/index.php?posts/64798185/",
+          "thread": "https://tinhte.vn/appforo/index.php?threads/3704463/",
+          "poster": "https://tinhte.vn/appforo/index.php?users/22449/",
+          "likes": "https://tinhte.vn/appforo/index.php?posts/64798185/likes",
+          "report": "https://tinhte.vn/appforo/index.php?posts/64798185/report",
+          "attachments": "https://tinhte.vn/appforo/index.php?posts/64798185/attachments",
+          "poster_avatar": "https://photo2.tinhte.vn/data/avatars/m/22/22449.jpg?1435201638"
+        },
+        "permissions": {
+          "view": true,
+          "edit": false,
+          "delete": false,
+          "reply": false,
+          "like": false,
+          "report": true,
+          "upload_attachment": false,
+          "vote": false
+        },
+        "poster_rank": {
+          "rank_level": 2,
+          "rank_name": "TÍCH CỰC",
+          "rank_group_id": 58,
+          "rank_points": 8720
+        },
+        "user_is_followed": false,
+        "fp_permissions": {
+          "delete": false
+        },
+        "poster_has_verified_badge": false,
+        "post_reaction_total": 1,
+        "post_reactions": {
+          "1": 1,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "post_visitor_reaction_id": 0,
+        "stickers": [],
+        "post_reply_to": 64797858,
+        "post_reply_depth": 1
+      },
+      {
+        "post_id": 64798253,
+        "thread_id": 3704463,
+        "poster_user_id": 1173294,
+        "poster_username": "Blitzwaffen",
+        "post_create_date": 1692072717,
+        "post_body": "[QUOTE=\"xecatang, post: 64797906, member: 2612547\"]iphone tạo gì đó có ra mk ngẫn nhiên ngon lành cứ vậy mà phang thôi :grin:[/QUOTE]\nVí dụ ngân hàng techcombank là ko tạo mật khẩu tự động đc, vì ko đc phép dài hơn n kí tự, và phải chứa x loại kí tự đặc biệt theo ý nó mới đc.",
+        "post_body_html": "<!--<link rel=\"stylesheet\" href=\"https://tinhte.vn/css.php?css=bb_code&amp;style=85&amp;dir=LTR&amp;d=1690336507\" /><script src=\"https://tinhte.vn/js/bdPostTree/script.min.js?_v=60fe4ae3\"></script>--><div class=\"bdPostTree_ParentQuote hash-b59dd9c9b9c836c4f7ec01368025c598\">\n\n\n<div class=\"bbCodeBlock bbCodeQuote\" data-author=\"xecatang\">\n\t<aside>\n\t\t\n\t\t\t<div class=\"attribution type\">xecatang đã nói:\n\t\t\t\t\n\t\t\t\t\t<a href=\"https://tinhte.vn/goto/post?id=64797906#post-64797906\" class=\"AttributionLink\">&uarr;</a>\n\t\t\t\t\n\t\t\t</div>\n\t\t\n\t\t<blockquote class=\"quoteContainer\"><div class=\"quote\">iphone tạo gì đó có ra mk ngẫn nhiên ngon lành cứ vậy mà phang thôi 😁</div></blockquote>\n\t</aside>\n</div></div>\n<span class=\"bdPostTree_ParentPoster\" data-hash=\"b59dd9c9b9c836c4f7ec01368025c598\"><a href=\"https://tinhte.vn/profile/xecatang.2612547/\" class=\"username\" data-user=\"2612547, @xecatang\">@xecatang</a></span>\nVí dụ ngân hàng techcombank là ko tạo mật khẩu tự động đc, vì ko đc phép dài hơn n kí tự, và phải chứa x loại kí tự đặc biệt theo ý nó mới đc.",
+        "post_body_plain_text": "Ví dụ ngân hàng techcombank là ko tạo mật khẩu tự động đc, vì ko đc phép dài hơn n kí tự, và phải chứa x loại kí tự đặc biệt theo ý nó mới đc.",
+        "signature": "",
+        "signature_html": "",
+        "signature_plain_text": "",
+        "post_like_count": 0,
+        "post_attachment_count": 0,
+        "user_is_ignored": false,
+        "post_is_published": true,
+        "post_is_deleted": false,
+        "post_update_date": 1692072717,
+        "post_is_first_post": false,
+        "post_is_liked": false,
+        "links": {
+          "permalink": "https://tinhte.vn/posts/64798253/",
+          "detail": "https://tinhte.vn/appforo/index.php?posts/64798253/",
+          "thread": "https://tinhte.vn/appforo/index.php?threads/3704463/",
+          "poster": "https://tinhte.vn/appforo/index.php?users/1173294/",
+          "likes": "https://tinhte.vn/appforo/index.php?posts/64798253/likes",
+          "report": "https://tinhte.vn/appforo/index.php?posts/64798253/report",
+          "attachments": "https://tinhte.vn/appforo/index.php?posts/64798253/attachments",
+          "poster_avatar": "https://photo2.tinhte.vn/data/avatars/m/1173/1173294.jpg?1444966041"
+        },
+        "permissions": {
+          "view": true,
+          "edit": false,
+          "delete": false,
+          "reply": false,
+          "like": false,
+          "report": true,
+          "upload_attachment": false,
+          "vote": false
+        },
+        "poster_rank": {
+          "rank_level": 3,
+          "rank_name": "CAO CẤP",
+          "rank_group_id": 59,
+          "rank_points": 58358.92
+        },
+        "user_is_followed": false,
+        "fp_permissions": {
+          "delete": false
+        },
+        "poster_has_verified_badge": false,
+        "post_reaction_total": 0,
+        "post_reactions": {
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "post_visitor_reaction_id": 0,
+        "stickers": [],
+        "post_reply_to": 64797906,
+        "post_reply_depth": 1
+      },
+      {
+        "post_id": 64798344,
+        "thread_id": 3704463,
+        "poster_user_id": 318318,
+        "poster_username": "zer0_7",
+        "post_create_date": 1692073856,
+        "post_body": "[QUOTE=\"IIIIIIIIIIII, post: 64796743, member: 2353634\"]Lúc đầu việc thay đổi mật khẩu thường xuyên được các chuyên gia bảo mật khuyên với lý do như ở trong bài, nhưng trên thực tế, việc này sẽ khiến người dùng viết mật khẩu ra giấy hoặc đặt mật khẩu dễ nhớ làm cho việc bảo mật còn kém hơn là không đổi mật khẩu. Sau đó họ đã phải thay đổi lời khuyên thành chỉ đổi mật khẩu khi thấy có dấu hiệu của việc hacker xâm nhập tài khoản.[/QUOTE]\nĐổi mật khẩu thường xuyên chắc chắn tăng cường bảo mật nhé. Ít nhất là tăng cường bảo mật với chính mình vì mỗi lần hỏi nhập mật khẩu là quên cmnr :joy:",
+        "post_body_html": "<!--<link rel=\"stylesheet\" href=\"https://tinhte.vn/css.php?css=bb_code&amp;style=85&amp;dir=LTR&amp;d=1690336507\" /><script src=\"https://tinhte.vn/js/bdPostTree/script.min.js?_v=60fe4ae3\"></script>--><div class=\"bdPostTree_ParentQuote hash-c24deb49ff057cc7868fb5e1f19ab536\">\n\n\n<div class=\"bbCodeBlock bbCodeQuote\" data-author=\"IIIIIIIIIIII\">\n\t<aside>\n\t\t\n\t\t\t<div class=\"attribution type\">IIIIIIIIIIII đã nói:\n\t\t\t\t\n\t\t\t\t\t<a href=\"https://tinhte.vn/goto/post?id=64796743#post-64796743\" class=\"AttributionLink\">&uarr;</a>\n\t\t\t\t\n\t\t\t</div>\n\t\t\n\t\t<blockquote class=\"quoteContainer\"><div class=\"quote\">Lúc đầu việc thay đổi mật khẩu thường xuyên được các chuyên gia bảo mật khuyên với lý do như ở trong bài, nhưng trên thực tế, việc này sẽ khiến người dùng viết mật khẩu ra giấy hoặc đặt mật khẩu dễ nhớ làm cho việc bảo mật còn kém hơn là không đổi mật khẩu. Sau đó họ đã phải thay đổi lời khuyên thành chỉ đổi mật khẩu khi thấy có dấu hiệu của việc hacker xâm nhập tài khoản.</div></blockquote>\n\t</aside>\n</div></div>\n<span class=\"bdPostTree_ParentPoster\" data-hash=\"c24deb49ff057cc7868fb5e1f19ab536\"><a href=\"https://tinhte.vn/profile/iiiiiiiiiiii.2353634/\" class=\"username\" data-user=\"2353634, @IIIIIIIIIIII\">@IIIIIIIIIIII</a></span>\nĐổi mật khẩu thường xuyên chắc chắn tăng cường bảo mật nhé. Ít nhất là tăng cường bảo mật với chính mình vì mỗi lần hỏi nhập mật khẩu là quên cmnr 😂",
+        "post_body_plain_text": "Đổi mật khẩu thường xuyên chắc chắn tăng cường bảo mật nhé. Ít nhất là tăng cường bảo mật với chính mình vì mỗi lần hỏi nhập mật khẩu là quên cmnr :joy:",
+        "signature": " \"Khi sinh ra, bạn khóc trong lúc  mọi người xung quanh mỉm cười\nHãy sống để khi chết đi, bạn mỉm cười trong khi những người xung quanh thì  khóc !\"\n",
+        "signature_html": "<span class=\"xf-body-paragraph\"> &quot;Khi sinh ra, bạn khóc trong lúc  mọi người xung quanh mỉm cười<br />\nHãy sống để khi chết đi, bạn mỉm cười trong khi những người xung quanh thì  khóc !&quot;<br />\n</span>",
+        "signature_plain_text": "\"Khi sinh ra, bạn khóc trong lúc  mọi người xung quanh mỉm cười\nHãy sống để khi chết đi, bạn mỉm cười trong khi những người xung quanh thì  khóc !\"",
+        "post_like_count": 6,
+        "post_attachment_count": 0,
+        "like_users": [
+          {
+            "user_id": 155514,
+            "username": "trieuluu",
+            "reaction_id": 6
+          },
+          {
+            "user_id": 2421844,
+            "username": "Anonymox",
+            "reaction_id": 6
+          },
+          {
+            "user_id": 229406,
+            "username": "borntobemaster",
+            "reaction_id": 6
+          },
+          {
+            "user_id": 239751,
+            "username": "cuongbu",
+            "reaction_id": 1
+          },
+          {
+            "user_id": 2766007,
+            "username": "Anpen",
+            "reaction_id": 6
+          }
+        ],
+        "user_is_ignored": false,
+        "post_is_published": true,
+        "post_is_deleted": false,
+        "post_update_date": 1692073856,
+        "post_is_first_post": false,
+        "post_is_liked": false,
+        "links": {
+          "permalink": "https://tinhte.vn/posts/64798344/",
+          "detail": "https://tinhte.vn/appforo/index.php?posts/64798344/",
+          "thread": "https://tinhte.vn/appforo/index.php?threads/3704463/",
+          "poster": "https://tinhte.vn/appforo/index.php?users/318318/",
+          "likes": "https://tinhte.vn/appforo/index.php?posts/64798344/likes",
+          "report": "https://tinhte.vn/appforo/index.php?posts/64798344/report",
+          "attachments": "https://tinhte.vn/appforo/index.php?posts/64798344/attachments",
+          "poster_avatar": "https://photo2.tinhte.vn/data/avatars/m/318/318318.jpg?1394077624"
+        },
+        "permissions": {
+          "view": true,
+          "edit": false,
+          "delete": false,
+          "reply": false,
+          "like": false,
+          "report": true,
+          "upload_attachment": false,
+          "vote": false
+        },
+        "poster_rank": {
+          "rank_level": 4,
+          "rank_name": "VIP",
+          "rank_group_id": 60,
+          "rank_points": 118813
+        },
+        "user_is_followed": false,
+        "fp_permissions": {
+          "delete": false
+        },
+        "poster_has_verified_badge": false,
+        "post_reaction_total": 6,
+        "post_reactions": {
+          "1": 2,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 4
+        },
+        "post_visitor_reaction_id": 0,
+        "stickers": [],
+        "post_reply_to": 64796743,
+        "post_reply_depth": 1
+      },
+      {
+        "post_id": 64798541,
+        "thread_id": 3704463,
+        "poster_user_id": 11256,
+        "poster_username": "mr.bao",
+        "post_create_date": 1692076743,
+        "post_body": "[QUOTE=\"Gagarose, post: 64798185, member: 22449\"]Dùng tool quản lý mật khẩu nó gen ra cho mình luôn bác lưu vào tool là thoải mái. chỉ cần nhớ 1 cái master password[/QUOTE]\ntool nào vậy bạn?",
+        "post_body_html": "<!--<link rel=\"stylesheet\" href=\"https://tinhte.vn/css.php?css=bb_code&amp;style=85&amp;dir=LTR&amp;d=1690336507\" /><script src=\"https://tinhte.vn/js/bdPostTree/script.min.js?_v=60fe4ae3\"></script>--><div class=\"bdPostTree_ParentQuote hash-164adcb84648e0981448929b2e883745\">\n\n\n<div class=\"bbCodeBlock bbCodeQuote\" data-author=\"Gagarose\">\n\t<aside>\n\t\t\n\t\t\t<div class=\"attribution type\">Gagarose đã nói:\n\t\t\t\t\n\t\t\t\t\t<a href=\"https://tinhte.vn/goto/post?id=64798185#post-64798185\" class=\"AttributionLink\">&uarr;</a>\n\t\t\t\t\n\t\t\t</div>\n\t\t\n\t\t<blockquote class=\"quoteContainer\"><div class=\"quote\">Dùng tool quản lý mật khẩu nó gen ra cho mình luôn bác lưu vào tool là thoải mái. chỉ cần nhớ 1 cái master password</div></blockquote>\n\t</aside>\n</div></div>\n<span class=\"bdPostTree_ParentPoster\" data-hash=\"164adcb84648e0981448929b2e883745\"><a href=\"https://tinhte.vn/profile/gagarose.22449/\" class=\"username\" data-user=\"22449, @Gagarose\">@Gagarose</a></span>\ntool nào vậy bạn?",
+        "post_body_plain_text": "tool nào vậy bạn?",
+        "signature": "",
+        "signature_html": "",
+        "signature_plain_text": "",
+        "post_like_count": 1,
+        "post_attachment_count": 0,
+        "like_users": [
+          {
+            "user_id": 2395963,
+            "username": "hainhumai",
+            "reaction_id": 1
+          }
+        ],
+        "user_is_ignored": false,
+        "post_is_published": true,
+        "post_is_deleted": false,
+        "post_update_date": 1692076743,
+        "post_is_first_post": false,
+        "post_is_liked": false,
+        "links": {
+          "permalink": "https://tinhte.vn/posts/64798541/",
+          "detail": "https://tinhte.vn/appforo/index.php?posts/64798541/",
+          "thread": "https://tinhte.vn/appforo/index.php?threads/3704463/",
+          "poster": "https://tinhte.vn/appforo/index.php?users/11256/",
+          "likes": "https://tinhte.vn/appforo/index.php?posts/64798541/likes",
+          "report": "https://tinhte.vn/appforo/index.php?posts/64798541/report",
+          "attachments": "https://tinhte.vn/appforo/index.php?posts/64798541/attachments",
+          "poster_avatar": "https://photo2.tinhte.vn/data/avatars/m/11/11256.jpg?1394077624"
+        },
+        "permissions": {
+          "view": true,
+          "edit": false,
+          "delete": false,
+          "reply": false,
+          "like": false,
+          "report": true,
+          "upload_attachment": false,
+          "vote": false
+        },
+        "poster_rank": {
+          "rank_level": 1,
+          "rank_name": "ĐẠI BÀNG",
+          "rank_group_id": 57,
+          "rank_points": 7602
+        },
+        "user_is_followed": false,
+        "fp_permissions": {
+          "delete": false
+        },
+        "poster_has_verified_badge": false,
+        "post_reaction_total": 1,
+        "post_reactions": {
+          "1": 1,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "post_visitor_reaction_id": 0,
+        "stickers": [],
+        "post_reply_to": 64797858,
+        "post_reply_depth": 1
+      },
+      {
+        "post_id": 64798877,
+        "thread_id": 3704463,
+        "poster_user_id": 72061,
+        "poster_username": "flower_cutter",
+        "post_create_date": 1692082577,
+        "post_body": "[QUOTE=\"xecatang, post: 64797906, member: 2612547\"]iphone tạo gì đó có ra mk ngẫn nhiên ngon lành cứ vậy mà phang thôi :grin:[/QUOTE]\nCái ý là app nào đó như của GG hay MS. Nó có số thay đổi liên tục nhưng vẫn sau khi nhập pass.",
+        "post_body_html": "<!--<link rel=\"stylesheet\" href=\"https://tinhte.vn/css.php?css=bb_code&amp;style=85&amp;dir=LTR&amp;d=1690336507\" /><script src=\"https://tinhte.vn/js/bdPostTree/script.min.js?_v=60fe4ae3\"></script>--><div class=\"bdPostTree_ParentQuote hash-b59dd9c9b9c836c4f7ec01368025c598\">\n\n\n<div class=\"bbCodeBlock bbCodeQuote\" data-author=\"xecatang\">\n\t<aside>\n\t\t\n\t\t\t<div class=\"attribution type\">xecatang đã nói:\n\t\t\t\t\n\t\t\t\t\t<a href=\"https://tinhte.vn/goto/post?id=64797906#post-64797906\" class=\"AttributionLink\">&uarr;</a>\n\t\t\t\t\n\t\t\t</div>\n\t\t\n\t\t<blockquote class=\"quoteContainer\"><div class=\"quote\">iphone tạo gì đó có ra mk ngẫn nhiên ngon lành cứ vậy mà phang thôi 😁</div></blockquote>\n\t</aside>\n</div></div>\n<span class=\"bdPostTree_ParentPoster\" data-hash=\"b59dd9c9b9c836c4f7ec01368025c598\"><a href=\"https://tinhte.vn/profile/xecatang.2612547/\" class=\"username\" data-user=\"2612547, @xecatang\">@xecatang</a></span>\nCái ý là app nào đó như của GG hay MS. Nó có số thay đổi liên tục nhưng vẫn sau khi nhập pass.",
+        "post_body_plain_text": "Cái ý là app nào đó như của GG hay MS. Nó có số thay đổi liên tục nhưng vẫn sau khi nhập pass.",
+        "signature": "",
+        "signature_html": "",
+        "signature_plain_text": "",
+        "post_like_count": 0,
+        "post_attachment_count": 0,
+        "user_is_ignored": false,
+        "post_is_published": true,
+        "post_is_deleted": false,
+        "post_update_date": 1692082577,
+        "post_is_first_post": false,
+        "post_is_liked": false,
+        "links": {
+          "permalink": "https://tinhte.vn/posts/64798877/",
+          "detail": "https://tinhte.vn/appforo/index.php?posts/64798877/",
+          "thread": "https://tinhte.vn/appforo/index.php?threads/3704463/",
+          "poster": "https://tinhte.vn/appforo/index.php?users/72061/",
+          "likes": "https://tinhte.vn/appforo/index.php?posts/64798877/likes",
+          "report": "https://tinhte.vn/appforo/index.php?posts/64798877/report",
+          "attachments": "https://tinhte.vn/appforo/index.php?posts/64798877/attachments",
+          "poster_avatar": "https://photo2.tinhte.vn/data/avatars/m/72/72061.jpg?1394077624"
+        },
+        "permissions": {
+          "view": true,
+          "edit": false,
+          "delete": false,
+          "reply": false,
+          "like": false,
+          "report": true,
+          "upload_attachment": false,
+          "vote": false
+        },
+        "poster_rank": {
+          "rank_level": 4,
+          "rank_name": "VIP",
+          "rank_group_id": 60,
+          "rank_points": 81896
+        },
+        "user_is_followed": false,
+        "fp_permissions": {
+          "delete": false
+        },
+        "poster_has_verified_badge": false,
+        "post_reaction_total": 0,
+        "post_reactions": {
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "post_visitor_reaction_id": 0,
+        "stickers": [],
+        "post_reply_to": 64797906,
+        "post_reply_depth": 1
+      },
+      {
+        "post_id": 64799072,
+        "thread_id": 3704463,
+        "poster_user_id": 2085917,
+        "poster_username": "riruan",
+        "post_create_date": 1692086099,
+        "post_body": "[QUOTE=\"mr.bao, post: 64798541, member: 11256\"]tool nào vậy bạn?[/QUOTE]\nBitwarden",
+        "post_body_html": "<!--<link rel=\"stylesheet\" href=\"https://tinhte.vn/css.php?css=bb_code&amp;style=85&amp;dir=LTR&amp;d=1690336507\" /><script src=\"https://tinhte.vn/js/bdPostTree/script.min.js?_v=60fe4ae3\"></script>--><div class=\"bdPostTree_ParentQuote hash-5e4e9bc817015fa75db75e2ccba7f0eb\">\n\n\n<div class=\"bbCodeBlock bbCodeQuote\" data-author=\"mr.bao\">\n\t<aside>\n\t\t\n\t\t\t<div class=\"attribution type\">mr.bao đã nói:\n\t\t\t\t\n\t\t\t\t\t<a href=\"https://tinhte.vn/goto/post?id=64798541#post-64798541\" class=\"AttributionLink\">&uarr;</a>\n\t\t\t\t\n\t\t\t</div>\n\t\t\n\t\t<blockquote class=\"quoteContainer\"><div class=\"quote\">tool nào vậy bạn?</div></blockquote>\n\t</aside>\n</div></div>\n<span class=\"bdPostTree_ParentPoster\" data-hash=\"5e4e9bc817015fa75db75e2ccba7f0eb\"><a href=\"https://tinhte.vn/profile/mr-bao.11256/\" class=\"username\" data-user=\"11256, @mr.bao\">@mr.bao</a></span>\nBitwarden",
+        "post_body_plain_text": "Bitwarden",
+        "signature": "",
+        "signature_html": "",
+        "signature_plain_text": "",
+        "post_like_count": 0,
+        "post_attachment_count": 0,
+        "user_is_ignored": false,
+        "post_is_published": true,
+        "post_is_deleted": false,
+        "post_update_date": 1692086099,
+        "post_is_first_post": false,
+        "post_is_liked": false,
+        "links": {
+          "permalink": "https://tinhte.vn/posts/64799072/",
+          "detail": "https://tinhte.vn/appforo/index.php?posts/64799072/",
+          "thread": "https://tinhte.vn/appforo/index.php?threads/3704463/",
+          "poster": "https://tinhte.vn/appforo/index.php?users/2085917/",
+          "likes": "https://tinhte.vn/appforo/index.php?posts/64799072/likes",
+          "report": "https://tinhte.vn/appforo/index.php?posts/64799072/report",
+          "attachments": "https://tinhte.vn/appforo/index.php?posts/64799072/attachments",
+          "poster_avatar": "https://photo2.tinhte.vn/data/avatars/m/2085/2085917.jpg?1632035203"
+        },
+        "permissions": {
+          "view": true,
+          "edit": false,
+          "delete": false,
+          "reply": false,
+          "like": false,
+          "report": true,
+          "upload_attachment": false,
+          "vote": false
+        },
+        "poster_rank": {
+          "rank_level": 2,
+          "rank_name": "TÍCH CỰC",
+          "rank_group_id": 58,
+          "rank_points": 29208
+        },
+        "user_is_followed": false,
+        "fp_permissions": {
+          "delete": false
+        },
+        "poster_has_verified_badge": false,
+        "post_reaction_total": 0,
+        "post_reactions": {
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "post_visitor_reaction_id": 0,
+        "stickers": [],
+        "post_reply_to": 64797858,
+        "post_reply_depth": 1
+      },
+      {
+        "post_id": 64799257,
+        "thread_id": 3704463,
+        "poster_user_id": 208066,
+        "poster_username": "trungmum",
+        "post_create_date": 1692089291,
+        "post_body": "[QUOTE=\"vanthoan, post: 64797858, member: 822959\"]Policy công ty là phải đổi mật khẩu mỗi 3 tháng, không đặt mật khẩu mới có phần giống mật khẩu cũ, thành ra sau vài lần đổi mật khẩu là éo biết đặt mật khẩu mới như thế nào. Giải pháp là viết hàm tạo mật khẩu ngẫu nhiên rồi viết ra giấy. Ai đọc được thì kệ tía nó. Biết mật khẩu cũng chẳng đăng nhập được vì đã có xác thực 2 lớp rồi.[/QUOTE]\ndùng password keeper của Blackberry là xong. nó cho mình lưu pass hoặc là tự tạo pass cho mình. nhớ cái pass login thôi hoặc dùng vân tay cũng tiện",
+        "post_body_html": "<!--<link rel=\"stylesheet\" href=\"https://tinhte.vn/css.php?css=bb_code&amp;style=85&amp;dir=LTR&amp;d=1690336507\" /><script src=\"https://tinhte.vn/js/bdPostTree/script.min.js?_v=60fe4ae3\"></script>--><div class=\"bdPostTree_ParentQuote hash-30b6eda5edb1aa5741f81ecd11818126\">\n\n\n<div class=\"bbCodeBlock bbCodeQuote\" data-author=\"vanthoan\">\n\t<aside>\n\t\t\n\t\t\t<div class=\"attribution type\">vanthoan đã nói:\n\t\t\t\t\n\t\t\t\t\t<a href=\"https://tinhte.vn/goto/post?id=64797858#post-64797858\" class=\"AttributionLink\">&uarr;</a>\n\t\t\t\t\n\t\t\t</div>\n\t\t\n\t\t<blockquote class=\"quoteContainer\"><div class=\"quote\">Policy công ty là phải đổi mật khẩu mỗi 3 tháng, không đặt mật khẩu mới có phần giống mật khẩu cũ, thành ra sau vài lần đổi mật khẩu là éo biết đặt mật khẩu mới như thế nào. Giải pháp là viết hàm tạo mật khẩu ngẫu nhiên rồi viết ra giấy. Ai đọc được thì kệ tía nó. Biết mật khẩu cũng chẳng đăng nhập được vì đã có xác thực 2 lớp rồi.</div></blockquote>\n\t</aside>\n</div></div>\n<span class=\"bdPostTree_ParentPoster\" data-hash=\"30b6eda5edb1aa5741f81ecd11818126\"><a href=\"https://tinhte.vn/profile/vanthoan.822959/\" class=\"username\" data-user=\"822959, @vanthoan\">@vanthoan</a></span>\ndùng password keeper của Blackberry là xong. nó cho mình lưu pass hoặc là tự tạo pass cho mình. nhớ cái pass login thôi hoặc dùng vân tay cũng tiện",
+        "post_body_plain_text": "dùng password keeper của Blackberry là xong. nó cho mình lưu pass hoặc là tự tạo pass cho mình. nhớ cái pass login thôi hoặc dùng vân tay cũng tiện",
+        "signature": "chưa có chữ ký vì ko nghĩ ra dc nội dung....",
+        "signature_html": "<span class=\"xf-body-paragraph\">chưa có chữ ký vì ko nghĩ ra dc nội dung....</span>",
+        "signature_plain_text": "chưa có chữ ký vì ko nghĩ ra dc nội dung....",
+        "post_like_count": 0,
+        "post_attachment_count": 0,
+        "user_is_ignored": false,
+        "post_is_published": true,
+        "post_is_deleted": false,
+        "post_update_date": 1692089291,
+        "post_is_first_post": false,
+        "post_is_liked": false,
+        "links": {
+          "permalink": "https://tinhte.vn/posts/64799257/",
+          "detail": "https://tinhte.vn/appforo/index.php?posts/64799257/",
+          "thread": "https://tinhte.vn/appforo/index.php?threads/3704463/",
+          "poster": "https://tinhte.vn/appforo/index.php?users/208066/",
+          "likes": "https://tinhte.vn/appforo/index.php?posts/64799257/likes",
+          "report": "https://tinhte.vn/appforo/index.php?posts/64799257/report",
+          "attachments": "https://tinhte.vn/appforo/index.php?posts/64799257/attachments",
+          "poster_avatar": "https://photo2.tinhte.vn/data/avatars/m/208/208066.jpg?1394077624"
+        },
+        "permissions": {
+          "view": true,
+          "edit": false,
+          "delete": false,
+          "reply": false,
+          "like": false,
+          "report": true,
+          "upload_attachment": false,
+          "vote": false
+        },
+        "poster_rank": {
+          "rank_level": 2,
+          "rank_name": "TÍCH CỰC",
+          "rank_group_id": 58,
+          "rank_points": 31019
+        },
+        "user_is_followed": false,
+        "fp_permissions": {
+          "delete": false
+        },
+        "poster_has_verified_badge": false,
+        "post_reaction_total": 0,
+        "post_reactions": {
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "post_visitor_reaction_id": 0,
+        "stickers": [],
+        "post_reply_to": 64797858,
+        "post_reply_depth": 1
+      },
+      {
+        "post_id": 64799350,
+        "thread_id": 3704463,
+        "poster_user_id": 2941009,
+        "poster_username": "Mysterio•",
+        "post_create_date": 1692091116,
+        "post_body": "[QUOTE=\"flower_cutter, post: 64798877, member: 72061\"]Cái ý là app nào đó như của GG hay MS. Nó có số thay đổi liên tục nhưng vẫn sau khi nhập pass.[/QUOTE]\nÝ bác là 2FA hả",
+        "post_body_html": "<!--<link rel=\"stylesheet\" href=\"https://tinhte.vn/css.php?css=bb_code&amp;style=85&amp;dir=LTR&amp;d=1690336507\" /><script src=\"https://tinhte.vn/js/bdPostTree/script.min.js?_v=60fe4ae3\"></script>--><div class=\"bdPostTree_ParentQuote hash-a3bd6c6a8be80b9720950099af000889\">\n\n\n<div class=\"bbCodeBlock bbCodeQuote\" data-author=\"flower_cutter\">\n\t<aside>\n\t\t\n\t\t\t<div class=\"attribution type\">flower_cutter đã nói:\n\t\t\t\t\n\t\t\t\t\t<a href=\"https://tinhte.vn/goto/post?id=64798877#post-64798877\" class=\"AttributionLink\">&uarr;</a>\n\t\t\t\t\n\t\t\t</div>\n\t\t\n\t\t<blockquote class=\"quoteContainer\"><div class=\"quote\">Cái ý là app nào đó như của GG hay MS. Nó có số thay đổi liên tục nhưng vẫn sau khi nhập pass.</div></blockquote>\n\t</aside>\n</div></div>\n<span class=\"bdPostTree_ParentPoster\" data-hash=\"a3bd6c6a8be80b9720950099af000889\"><a href=\"https://tinhte.vn/profile/flower_cutter.72061/\" class=\"username\" data-user=\"72061, @flower_cutter\">@flower_cutter</a></span>\nÝ bác là 2FA hả",
+        "post_body_plain_text": "Ý bác là 2FA hả",
+        "signature": "",
+        "signature_html": "",
+        "signature_plain_text": "",
+        "post_like_count": 0,
+        "post_attachment_count": 0,
+        "user_is_ignored": false,
+        "post_is_published": true,
+        "post_is_deleted": false,
+        "post_update_date": 1692091116,
+        "post_is_first_post": false,
+        "post_is_liked": false,
+        "links": {
+          "permalink": "https://tinhte.vn/posts/64799350/",
+          "detail": "https://tinhte.vn/appforo/index.php?posts/64799350/",
+          "thread": "https://tinhte.vn/appforo/index.php?threads/3704463/",
+          "poster": "https://tinhte.vn/appforo/index.php?users/2941009/",
+          "likes": "https://tinhte.vn/appforo/index.php?posts/64799350/likes",
+          "report": "https://tinhte.vn/appforo/index.php?posts/64799350/report",
+          "attachments": "https://tinhte.vn/appforo/index.php?posts/64799350/attachments",
+          "poster_avatar": "https://tinhte.vn/styles/default/TinhteMods/avatars/avatar_2.png"
+        },
+        "permissions": {
+          "view": true,
+          "edit": false,
+          "delete": false,
+          "reply": false,
+          "like": false,
+          "report": true,
+          "upload_attachment": false,
+          "vote": false
+        },
+        "poster_rank": {
+          "rank_level": 1,
+          "rank_name": "ĐẠI BÀNG",
+          "rank_group_id": 57,
+          "rank_points": 128
+        },
+        "user_is_followed": false,
+        "fp_permissions": {
+          "delete": false
+        },
+        "poster_has_verified_badge": false,
+        "post_reaction_total": 0,
+        "post_reactions": {
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "post_visitor_reaction_id": 0,
+        "stickers": [],
+        "post_reply_to": 64797906,
+        "post_reply_depth": 1
+      },
+      {
+        "post_id": 64799364,
+        "thread_id": 3704463,
+        "poster_user_id": 657571,
+        "poster_username": "lehman1",
+        "post_create_date": 1692091461,
+        "post_body": "[QUOTE=\"IIIIIIIIIIII, post: 64796743, member: 2353634\"]Lúc đầu việc thay đổi mật khẩu thường xuyên được các chuyên gia bảo mật khuyên với lý do như ở trong bài, nhưng trên thực tế, việc này sẽ khiến người dùng viết mật khẩu ra giấy hoặc đặt mật khẩu dễ nhớ làm cho việc bảo mật còn kém hơn là không đổi mật khẩu. Sau đó họ đã phải thay đổi lời khuyên thành chỉ đổi mật khẩu khi thấy có dấu hiệu của việc hacker xâm nhập tài khoản.[/QUOTE]\nmai cô sôp cũng khuyên ko đổi pass định kỳ mà dùng 2FA",
+        "post_body_html": "<!--<link rel=\"stylesheet\" href=\"https://tinhte.vn/css.php?css=bb_code&amp;style=85&amp;dir=LTR&amp;d=1690336507\" /><script src=\"https://tinhte.vn/js/bdPostTree/script.min.js?_v=60fe4ae3\"></script>--><div class=\"bdPostTree_ParentQuote hash-c24deb49ff057cc7868fb5e1f19ab536\">\n\n\n<div class=\"bbCodeBlock bbCodeQuote\" data-author=\"IIIIIIIIIIII\">\n\t<aside>\n\t\t\n\t\t\t<div class=\"attribution type\">IIIIIIIIIIII đã nói:\n\t\t\t\t\n\t\t\t\t\t<a href=\"https://tinhte.vn/goto/post?id=64796743#post-64796743\" class=\"AttributionLink\">&uarr;</a>\n\t\t\t\t\n\t\t\t</div>\n\t\t\n\t\t<blockquote class=\"quoteContainer\"><div class=\"quote\">Lúc đầu việc thay đổi mật khẩu thường xuyên được các chuyên gia bảo mật khuyên với lý do như ở trong bài, nhưng trên thực tế, việc này sẽ khiến người dùng viết mật khẩu ra giấy hoặc đặt mật khẩu dễ nhớ làm cho việc bảo mật còn kém hơn là không đổi mật khẩu. Sau đó họ đã phải thay đổi lời khuyên thành chỉ đổi mật khẩu khi thấy có dấu hiệu của việc hacker xâm nhập tài khoản.</div></blockquote>\n\t</aside>\n</div></div>\n<span class=\"bdPostTree_ParentPoster\" data-hash=\"c24deb49ff057cc7868fb5e1f19ab536\"><a href=\"https://tinhte.vn/profile/iiiiiiiiiiii.2353634/\" class=\"username\" data-user=\"2353634, @IIIIIIIIIIII\">@IIIIIIIIIIII</a></span>\nmai cô sôp cũng khuyên ko đổi pass định kỳ mà dùng 2FA",
+        "post_body_plain_text": "mai cô sôp cũng khuyên ko đổi pass định kỳ mà dùng 2FA",
+        "signature": "",
+        "signature_html": "",
+        "signature_plain_text": "",
+        "post_like_count": 0,
+        "post_attachment_count": 0,
+        "user_is_ignored": false,
+        "post_is_published": true,
+        "post_is_deleted": false,
+        "post_update_date": 1692091461,
+        "post_is_first_post": false,
+        "post_is_liked": false,
+        "links": {
+          "permalink": "https://tinhte.vn/posts/64799364/",
+          "detail": "https://tinhte.vn/appforo/index.php?posts/64799364/",
+          "thread": "https://tinhte.vn/appforo/index.php?threads/3704463/",
+          "poster": "https://tinhte.vn/appforo/index.php?users/657571/",
+          "likes": "https://tinhte.vn/appforo/index.php?posts/64799364/likes",
+          "report": "https://tinhte.vn/appforo/index.php?posts/64799364/report",
+          "attachments": "https://tinhte.vn/appforo/index.php?posts/64799364/attachments",
+          "poster_avatar": "https://photo2.tinhte.vn/data/avatars/m/657/657571.jpg?1512975385"
+        },
+        "permissions": {
+          "view": true,
+          "edit": false,
+          "delete": false,
+          "reply": false,
+          "like": false,
+          "report": true,
+          "upload_attachment": false,
+          "vote": false
+        },
+        "poster_rank": {
+          "rank_level": 1,
+          "rank_name": "ĐẠI BÀNG",
+          "rank_group_id": 57,
+          "rank_points": 5791
+        },
+        "user_is_followed": false,
+        "fp_permissions": {
+          "delete": false
+        },
+        "poster_has_verified_badge": false,
+        "post_reaction_total": 0,
+        "post_reactions": {
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "post_visitor_reaction_id": 0,
+        "stickers": [],
+        "post_reply_to": 64796743,
+        "post_reply_depth": 1
+      },
+      {
+        "post_id": 64799378,
+        "thread_id": 3704463,
+        "poster_user_id": 657571,
+        "poster_username": "lehman1",
+        "post_create_date": 1692091618,
+        "post_body": "[QUOTE=\"vanthoan, post: 64797858, member: 822959\"]Policy công ty là phải đổi mật khẩu mỗi 3 tháng, không đặt mật khẩu mới có phần giống mật khẩu cũ, thành ra sau vài lần đổi mật khẩu là éo biết đặt mật khẩu mới như thế nào. Giải pháp là viết hàm tạo mật khẩu ngẫu nhiên rồi viết ra giấy. Ai đọc được thì kệ tía nó. Biết mật khẩu cũng chẳng đăng nhập được vì đã có xác thực 2 lớp rồi.[/QUOTE]\ncty nó lưu pass thô hay sao mà nó biết mật khẩu mới có phần giống mật khẩu cũ",
+        "post_body_html": "<!--<link rel=\"stylesheet\" href=\"https://tinhte.vn/css.php?css=bb_code&amp;style=85&amp;dir=LTR&amp;d=1690336507\" /><script src=\"https://tinhte.vn/js/bdPostTree/script.min.js?_v=60fe4ae3\"></script>--><div class=\"bdPostTree_ParentQuote hash-30b6eda5edb1aa5741f81ecd11818126\">\n\n\n<div class=\"bbCodeBlock bbCodeQuote\" data-author=\"vanthoan\">\n\t<aside>\n\t\t\n\t\t\t<div class=\"attribution type\">vanthoan đã nói:\n\t\t\t\t\n\t\t\t\t\t<a href=\"https://tinhte.vn/goto/post?id=64797858#post-64797858\" class=\"AttributionLink\">&uarr;</a>\n\t\t\t\t\n\t\t\t</div>\n\t\t\n\t\t<blockquote class=\"quoteContainer\"><div class=\"quote\">Policy công ty là phải đổi mật khẩu mỗi 3 tháng, không đặt mật khẩu mới có phần giống mật khẩu cũ, thành ra sau vài lần đổi mật khẩu là éo biết đặt mật khẩu mới như thế nào. Giải pháp là viết hàm tạo mật khẩu ngẫu nhiên rồi viết ra giấy. Ai đọc được thì kệ tía nó. Biết mật khẩu cũng chẳng đăng nhập được vì đã có xác thực 2 lớp rồi.</div></blockquote>\n\t</aside>\n</div></div>\n<span class=\"bdPostTree_ParentPoster\" data-hash=\"30b6eda5edb1aa5741f81ecd11818126\"><a href=\"https://tinhte.vn/profile/vanthoan.822959/\" class=\"username\" data-user=\"822959, @vanthoan\">@vanthoan</a></span>\ncty nó lưu pass thô hay sao mà nó biết mật khẩu mới có phần giống mật khẩu cũ",
+        "post_body_plain_text": "cty nó lưu pass thô hay sao mà nó biết mật khẩu mới có phần giống mật khẩu cũ",
+        "signature": "",
+        "signature_html": "",
+        "signature_plain_text": "",
+        "post_like_count": 1,
+        "post_attachment_count": 0,
+        "like_users": [
+          {
+            "user_id": 21346,
+            "username": "Nam Air",
+            "reaction_id": 1
+          }
+        ],
+        "user_is_ignored": false,
+        "post_is_published": true,
+        "post_is_deleted": false,
+        "post_update_date": 1692091618,
+        "post_is_first_post": false,
+        "post_is_liked": false,
+        "links": {
+          "permalink": "https://tinhte.vn/posts/64799378/",
+          "detail": "https://tinhte.vn/appforo/index.php?posts/64799378/",
+          "thread": "https://tinhte.vn/appforo/index.php?threads/3704463/",
+          "poster": "https://tinhte.vn/appforo/index.php?users/657571/",
+          "likes": "https://tinhte.vn/appforo/index.php?posts/64799378/likes",
+          "report": "https://tinhte.vn/appforo/index.php?posts/64799378/report",
+          "attachments": "https://tinhte.vn/appforo/index.php?posts/64799378/attachments",
+          "poster_avatar": "https://photo2.tinhte.vn/data/avatars/m/657/657571.jpg?1512975385"
+        },
+        "permissions": {
+          "view": true,
+          "edit": false,
+          "delete": false,
+          "reply": false,
+          "like": false,
+          "report": true,
+          "upload_attachment": false,
+          "vote": false
+        },
+        "poster_rank": {
+          "rank_level": 1,
+          "rank_name": "ĐẠI BÀNG",
+          "rank_group_id": 57,
+          "rank_points": 5791
+        },
+        "user_is_followed": false,
+        "fp_permissions": {
+          "delete": false
+        },
+        "poster_has_verified_badge": false,
+        "post_reaction_total": 1,
+        "post_reactions": {
+          "1": 1,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "post_visitor_reaction_id": 0,
+        "stickers": [],
+        "post_reply_to": 64797858,
+        "post_reply_depth": 1
+      },
+      {
+        "post_id": 64799663,
+        "thread_id": 3704463,
+        "poster_user_id": 1990125,
+        "poster_username": "magez",
+        "post_create_date": 1692096822,
+        "post_body": "[QUOTE=\"IIIIIIIIIIII, post: 64796743, member: 2353634\"]Lúc đầu việc thay đổi mật khẩu thường xuyên được các chuyên gia bảo mật khuyên với lý do như ở trong bài, nhưng trên thực tế, việc này sẽ khiến người dùng viết mật khẩu ra giấy hoặc đặt mật khẩu dễ nhớ làm cho việc bảo mật còn kém hơn là không đổi mật khẩu. Sau đó họ đã phải thay đổi lời khuyên thành chỉ đổi mật khẩu khi thấy có dấu hiệu của việc hacker xâm nhập tài khoản.[/QUOTE]\nxu hướng tương lai là không còn mật khẩu nữa (passwordless), mà dựa vào sinh trắc học hết (vân tay, mắt, face id ở device local chính chủ). \nHiện tại Google, Microsoft, Apple và nhiều thằng khác đã đang triển khai rồi, cùng theo chuẩn chung là FIDO (Fast IDentity Online), vừa bảo mật & lại tiện lợi nữa.\nCó điều người dùng vẫn phải cần mật khẩu cho mấy account apple, google, ms trong trường hợp bị mất device xác thực, nhưng ít ra là có thể dùng các account này đăng nhập tất cả các trang web nào hỗ trợ FIDO hết",
+        "post_body_html": "<!--<link rel=\"stylesheet\" href=\"https://tinhte.vn/css.php?css=bb_code&amp;style=85&amp;dir=LTR&amp;d=1690336507\" /><script src=\"https://tinhte.vn/js/bdPostTree/script.min.js?_v=60fe4ae3\"></script>--><div class=\"bdPostTree_ParentQuote hash-c24deb49ff057cc7868fb5e1f19ab536\">\n\n\n<div class=\"bbCodeBlock bbCodeQuote\" data-author=\"IIIIIIIIIIII\">\n\t<aside>\n\t\t\n\t\t\t<div class=\"attribution type\">IIIIIIIIIIII đã nói:\n\t\t\t\t\n\t\t\t\t\t<a href=\"https://tinhte.vn/goto/post?id=64796743#post-64796743\" class=\"AttributionLink\">&uarr;</a>\n\t\t\t\t\n\t\t\t</div>\n\t\t\n\t\t<blockquote class=\"quoteContainer\"><div class=\"quote\">Lúc đầu việc thay đổi mật khẩu thường xuyên được các chuyên gia bảo mật khuyên với lý do như ở trong bài, nhưng trên thực tế, việc này sẽ khiến người dùng viết mật khẩu ra giấy hoặc đặt mật khẩu dễ nhớ làm cho việc bảo mật còn kém hơn là không đổi mật khẩu. Sau đó họ đã phải thay đổi lời khuyên thành chỉ đổi mật khẩu khi thấy có dấu hiệu của việc hacker xâm nhập tài khoản.</div></blockquote>\n\t</aside>\n</div></div>\n<span class=\"bdPostTree_ParentPoster\" data-hash=\"c24deb49ff057cc7868fb5e1f19ab536\"><a href=\"https://tinhte.vn/profile/iiiiiiiiiiii.2353634/\" class=\"username\" data-user=\"2353634, @IIIIIIIIIIII\">@IIIIIIIIIIII</a></span>\nxu hướng tương lai là không còn mật khẩu nữa (passwordless), mà dựa vào sinh trắc học hết (vân tay, mắt, face id ở device local chính chủ). <br />\nHiện tại Google, Microsoft, Apple và nhiều thằng khác đã đang triển khai rồi, cùng theo chuẩn chung là FIDO (Fast IDentity Online), vừa bảo mật &amp; lại tiện lợi nữa.<br />\nCó điều người dùng vẫn phải cần mật khẩu cho mấy account apple, google, ms trong trường hợp bị mất device xác thực, nhưng ít ra là có thể dùng các account này đăng nhập tất cả các trang web nào hỗ trợ FIDO hết",
+        "post_body_plain_text": "xu hướng tương lai là không còn mật khẩu nữa (passwordless), mà dựa vào sinh trắc học hết (vân tay, mắt, face id ở device local chính chủ). \nHiện tại Google, Microsoft, Apple và nhiều thằng khác đã đang triển khai rồi, cùng theo chuẩn chung là FIDO (Fast IDentity Online), vừa bảo mật & lại tiện lợi nữa.\nCó điều người dùng vẫn phải cần mật khẩu cho mấy account apple, google, ms trong trường hợp bị mất device xác thực, nhưng ít ra là có thể dùng các account này đăng nhập tất cả các trang web nào hỗ trợ FIDO hết",
+        "signature": "App hiệu ứng màn hình android hay: https://play.google.com/store/apps/details?id=com.magez.ScreenEffect",
+        "signature_html": "<span class=\"xf-body-paragraph\">App hiệu ứng màn hình android hay: https://play.google.com/store/apps/details?id=com.magez.ScreenEffect</span>",
+        "signature_plain_text": "App hiệu ứng màn hình android hay: https://play.google.com/store/apps/details?id=com.magez.ScreenEffect",
+        "post_like_count": 0,
+        "post_attachment_count": 0,
+        "user_is_ignored": false,
+        "post_is_published": true,
+        "post_is_deleted": false,
+        "post_update_date": 1692097240,
+        "post_is_first_post": false,
+        "post_is_liked": false,
+        "links": {
+          "permalink": "https://tinhte.vn/posts/64799663/",
+          "detail": "https://tinhte.vn/appforo/index.php?posts/64799663/",
+          "thread": "https://tinhte.vn/appforo/index.php?threads/3704463/",
+          "poster": "https://tinhte.vn/appforo/index.php?users/1990125/",
+          "likes": "https://tinhte.vn/appforo/index.php?posts/64799663/likes",
+          "report": "https://tinhte.vn/appforo/index.php?posts/64799663/report",
+          "attachments": "https://tinhte.vn/appforo/index.php?posts/64799663/attachments",
+          "poster_avatar": "https://photo2.tinhte.vn/data/avatars/m/1990/1990125.jpg?1420346941"
+        },
+        "permissions": {
+          "view": true,
+          "edit": false,
+          "delete": false,
+          "reply": false,
+          "like": false,
+          "report": true,
+          "upload_attachment": false,
+          "vote": false
+        },
+        "poster_rank": {
+          "rank_level": 2,
+          "rank_name": "TÍCH CỰC",
+          "rank_group_id": 58,
+          "rank_points": 24056
+        },
+        "user_is_followed": false,
+        "fp_permissions": {
+          "delete": false
+        },
+        "poster_has_verified_badge": false,
+        "post_reaction_total": 0,
+        "post_reactions": {
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "post_visitor_reaction_id": 0,
+        "stickers": [],
+        "post_reply_to": 64796743,
+        "post_reply_depth": 1
+      },
+      {
+        "post_id": 64800340,
+        "thread_id": 3704463,
+        "poster_user_id": 128741,
+        "poster_username": "locthuyforever",
+        "post_create_date": 1692112122,
+        "post_body": "[QUOTE=\"flower_cutter, post: 64798871, member: 72061\"]Hình như năm mới yc đổi lần mà nhỉ[/QUOTE]\nBọn BIDV yêu cầu 6 tháng đổi một lần",
+        "post_body_html": "<!--<link rel=\"stylesheet\" href=\"https://tinhte.vn/css.php?css=bb_code&amp;style=85&amp;dir=LTR&amp;d=1690336507\" /><script src=\"https://tinhte.vn/js/bdPostTree/script.min.js?_v=60fe4ae3\"></script>--><div class=\"bdPostTree_ParentQuote hash-f5024ec74f84206080866ac0bfb7b6d3\">\n\n\n<div class=\"bbCodeBlock bbCodeQuote\" data-author=\"flower_cutter\">\n\t<aside>\n\t\t\n\t\t\t<div class=\"attribution type\">flower_cutter đã nói:\n\t\t\t\t\n\t\t\t\t\t<a href=\"https://tinhte.vn/goto/post?id=64798871#post-64798871\" class=\"AttributionLink\">&uarr;</a>\n\t\t\t\t\n\t\t\t</div>\n\t\t\n\t\t<blockquote class=\"quoteContainer\"><div class=\"quote\">Hình như năm mới yc đổi lần mà nhỉ</div></blockquote>\n\t</aside>\n</div></div>\n<span class=\"bdPostTree_ParentPoster\" data-hash=\"f5024ec74f84206080866ac0bfb7b6d3\"><a href=\"https://tinhte.vn/profile/flower_cutter.72061/\" class=\"username\" data-user=\"72061, @flower_cutter\">@flower_cutter</a></span>\nBọn BIDV yêu cầu 6 tháng đổi một lần",
+        "post_body_plain_text": "Bọn BIDV yêu cầu 6 tháng đổi một lần",
+        "signature": "Hãy là người tiêu dùng thông minh, đừng bao giờ dùng hàng Trung Quốc!",
+        "signature_html": "<span class=\"xf-body-paragraph\">Hãy là người tiêu dùng thông minh, đừng bao giờ dùng hàng Trung Quốc!</span>",
+        "signature_plain_text": "Hãy là người tiêu dùng thông minh, đừng bao giờ dùng hàng Trung Quốc!",
+        "post_like_count": 2,
+        "post_attachment_count": 0,
+        "like_users": [
+          {
+            "user_id": 72061,
+            "username": "flower_cutter",
+            "reaction_id": 1
+          },
+          {
+            "user_id": 5751,
+            "username": "bestofstrongman",
+            "reaction_id": 4
+          }
+        ],
+        "user_is_ignored": false,
+        "post_is_published": true,
+        "post_is_deleted": false,
+        "post_update_date": 1692112122,
+        "post_is_first_post": false,
+        "post_is_liked": false,
+        "links": {
+          "permalink": "https://tinhte.vn/posts/64800340/",
+          "detail": "https://tinhte.vn/appforo/index.php?posts/64800340/",
+          "thread": "https://tinhte.vn/appforo/index.php?threads/3704463/",
+          "poster": "https://tinhte.vn/appforo/index.php?users/128741/",
+          "likes": "https://tinhte.vn/appforo/index.php?posts/64800340/likes",
+          "report": "https://tinhte.vn/appforo/index.php?posts/64800340/report",
+          "attachments": "https://tinhte.vn/appforo/index.php?posts/64800340/attachments",
+          "poster_avatar": "https://photo2.tinhte.vn/data/avatars/m/128/128741.jpg?1664985410"
+        },
+        "permissions": {
+          "view": true,
+          "edit": false,
+          "delete": false,
+          "reply": false,
+          "like": false,
+          "report": true,
+          "upload_attachment": false,
+          "vote": false
+        },
+        "poster_rank": {
+          "rank_level": 4,
+          "rank_name": "VIP",
+          "rank_group_id": 60,
+          "rank_points": 245160
+        },
+        "user_is_followed": false,
+        "fp_permissions": {
+          "delete": false
+        },
+        "poster_has_verified_badge": false,
+        "post_reaction_total": 2,
+        "post_reactions": {
+          "1": 1,
+          "2": 0,
+          "3": 0,
+          "4": 1,
+          "5": 0,
+          "6": 0
+        },
+        "post_visitor_reaction_id": 0,
+        "stickers": [],
+        "post_reply_to": 64796655,
+        "post_reply_depth": 1
+      },
+      {
+        "post_id": 64800492,
+        "thread_id": 3704463,
+        "poster_user_id": 2166670,
+        "poster_username": "HuynhNgLe",
+        "post_create_date": 1692114990,
+        "post_body": "[QUOTE=\"kekk, post: 64797902, member: 87692\"]Không nhé. Đổi mật khẩu thường xuyên chỉ giúp cho bạn mau quên mật khẩu mà thôi.[/QUOTE]\nĐúng rồi á, bây giờ mỗi chỗ đòi hỏi mật khẩu dài ngắn khác nhau, thời hạn mật khẩu cũng khác nhau, mà có quá nhiều mật khẩu thành ra mỗi chỗ một cái, nhớ hông hết nổi.",
+        "post_body_html": "<!--<link rel=\"stylesheet\" href=\"https://tinhte.vn/css.php?css=bb_code&amp;style=85&amp;dir=LTR&amp;d=1690336507\" /><script src=\"https://tinhte.vn/js/bdPostTree/script.min.js?_v=60fe4ae3\"></script>--><div class=\"bdPostTree_ParentQuote hash-cf46ae09f044f18eeb64df374401e9b6\">\n\n\n<div class=\"bbCodeBlock bbCodeQuote\" data-author=\"kekk\">\n\t<aside>\n\t\t\n\t\t\t<div class=\"attribution type\">kekk đã nói:\n\t\t\t\t\n\t\t\t\t\t<a href=\"https://tinhte.vn/goto/post?id=64797902#post-64797902\" class=\"AttributionLink\">&uarr;</a>\n\t\t\t\t\n\t\t\t</div>\n\t\t\n\t\t<blockquote class=\"quoteContainer\"><div class=\"quote\">Không nhé. Đổi mật khẩu thường xuyên chỉ giúp cho bạn mau quên mật khẩu mà thôi.</div></blockquote>\n\t</aside>\n</div></div>\n<span class=\"bdPostTree_ParentPoster\" data-hash=\"cf46ae09f044f18eeb64df374401e9b6\"><a href=\"https://tinhte.vn/profile/kekk.87692/\" class=\"username\" data-user=\"87692, @kekk\">@kekk</a></span>\nĐúng rồi á, bây giờ mỗi chỗ đòi hỏi mật khẩu dài ngắn khác nhau, thời hạn mật khẩu cũng khác nhau, mà có quá nhiều mật khẩu thành ra mỗi chỗ một cái, nhớ hông hết nổi.",
+        "post_body_plain_text": "Đúng rồi á, bây giờ mỗi chỗ đòi hỏi mật khẩu dài ngắn khác nhau, thời hạn mật khẩu cũng khác nhau, mà có quá nhiều mật khẩu thành ra mỗi chỗ một cái, nhớ hông hết nổi.",
+        "signature": "",
+        "signature_html": "",
+        "signature_plain_text": "",
+        "post_like_count": 1,
+        "post_attachment_count": 0,
+        "like_users": [
+          {
+            "user_id": 87692,
+            "username": "kekk",
+            "reaction_id": 1
+          }
+        ],
+        "user_is_ignored": false,
+        "post_is_published": true,
+        "post_is_deleted": false,
+        "post_update_date": 1692114990,
+        "post_is_first_post": false,
+        "post_is_liked": false,
+        "links": {
+          "permalink": "https://tinhte.vn/posts/64800492/",
+          "detail": "https://tinhte.vn/appforo/index.php?posts/64800492/",
+          "thread": "https://tinhte.vn/appforo/index.php?threads/3704463/",
+          "poster": "https://tinhte.vn/appforo/index.php?users/2166670/",
+          "likes": "https://tinhte.vn/appforo/index.php?posts/64800492/likes",
+          "report": "https://tinhte.vn/appforo/index.php?posts/64800492/report",
+          "attachments": "https://tinhte.vn/appforo/index.php?posts/64800492/attachments",
+          "poster_avatar": "https://photo2.tinhte.vn/data/avatars/m/2166/2166670.jpg?1459628133"
+        },
+        "permissions": {
+          "view": true,
+          "edit": false,
+          "delete": false,
+          "reply": false,
+          "like": false,
+          "report": true,
+          "upload_attachment": false,
+          "vote": false
+        },
+        "poster_rank": {
+          "rank_level": 2,
+          "rank_name": "TÍCH CỰC",
+          "rank_group_id": 58,
+          "rank_points": 12893
+        },
+        "user_is_followed": false,
+        "fp_permissions": {
+          "delete": false
+        },
+        "poster_has_verified_badge": false,
+        "post_reaction_total": 1,
+        "post_reactions": {
+          "1": 1,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "post_visitor_reaction_id": 0,
+        "stickers": [],
+        "post_reply_to": 64797902,
+        "post_reply_depth": 1
+      },
+      {
+        "post_id": 64800942,
+        "thread_id": 3704463,
+        "poster_user_id": 2351957,
+        "poster_username": "Kelvin1992",
+        "post_create_date": 1692143588,
+        "post_body": "[QUOTE=\"demen72, post: 64799349, member: 5061\"]Chuẩn luôn, thường mình quản lý ghi chép mk rất kỹ, nhưng cũng có lúc quên, ngân hàng ép đổi mk xong quên lưu lại, thế là hết đăng nhập được, VPBANK phải ra phòng giao dịch làm lại mất 40k, 2 tuần có mk mới:joy:[/QUOTE]\nThua bạn, tự nói là ghi chép rất kỹ mà cái quan trọng lại quên, đó hoàn toàn 1000% là lỗi của bạn chứ trách ai",
+        "post_body_html": "<!--<link rel=\"stylesheet\" href=\"https://tinhte.vn/css.php?css=bb_code&amp;style=85&amp;dir=LTR&amp;d=1690336507\" /><script src=\"https://tinhte.vn/js/bdPostTree/script.min.js?_v=60fe4ae3\"></script>--><div class=\"bdPostTree_ParentQuote hash-3fd844b621d95289e2e3b7ae1d3252a1\">\n\n\n<div class=\"bbCodeBlock bbCodeQuote\" data-author=\"demen72\">\n\t<aside>\n\t\t\n\t\t\t<div class=\"attribution type\">demen72 đã nói:\n\t\t\t\t\n\t\t\t\t\t<a href=\"https://tinhte.vn/goto/post?id=64799349#post-64799349\" class=\"AttributionLink\">&uarr;</a>\n\t\t\t\t\n\t\t\t</div>\n\t\t\n\t\t<blockquote class=\"quoteContainer\"><div class=\"quote\">Chuẩn luôn, thường mình quản lý ghi chép mk rất kỹ, nhưng cũng có lúc quên, ngân hàng ép đổi mk xong quên lưu lại, thế là hết đăng nhập được, VPBANK phải ra phòng giao dịch làm lại mất 40k, 2 tuần có mk mới😂</div></blockquote>\n\t</aside>\n</div></div>\n<span class=\"bdPostTree_ParentPoster\" data-hash=\"3fd844b621d95289e2e3b7ae1d3252a1\"><a href=\"https://tinhte.vn/profile/demen72.5061/\" class=\"username\" data-user=\"5061, @demen72\">@demen72</a></span>\nThua bạn, tự nói là ghi chép rất kỹ mà cái quan trọng lại quên, đó hoàn toàn 1000% là lỗi của bạn chứ trách ai",
+        "post_body_plain_text": "Thua bạn, tự nói là ghi chép rất kỹ mà cái quan trọng lại quên, đó hoàn toàn 1000% là lỗi của bạn chứ trách ai",
+        "signature": "",
+        "signature_html": "",
+        "signature_plain_text": "",
+        "post_like_count": 0,
+        "post_attachment_count": 0,
+        "user_is_ignored": false,
+        "post_is_published": true,
+        "post_is_deleted": false,
+        "post_update_date": 1692143588,
+        "post_is_first_post": false,
+        "post_is_liked": false,
+        "links": {
+          "permalink": "https://tinhte.vn/posts/64800942/",
+          "detail": "https://tinhte.vn/appforo/index.php?posts/64800942/",
+          "thread": "https://tinhte.vn/appforo/index.php?threads/3704463/",
+          "poster": "https://tinhte.vn/appforo/index.php?users/2351957/",
+          "likes": "https://tinhte.vn/appforo/index.php?posts/64800942/likes",
+          "report": "https://tinhte.vn/appforo/index.php?posts/64800942/report",
+          "attachments": "https://tinhte.vn/appforo/index.php?posts/64800942/attachments",
+          "poster_avatar": "https://tinhte.vn/styles/default/TinhteMods/avatars/avatar_6.png"
+        },
+        "permissions": {
+          "view": true,
+          "edit": false,
+          "delete": false,
+          "reply": false,
+          "like": false,
+          "report": true,
+          "upload_attachment": false,
+          "vote": false
+        },
+        "poster_rank": {
+          "rank_level": 2,
+          "rank_name": "TÍCH CỰC",
+          "rank_group_id": 58,
+          "rank_points": 11340
+        },
+        "user_is_followed": false,
+        "fp_permissions": {
+          "delete": false
+        },
+        "poster_has_verified_badge": false,
+        "post_reaction_total": 0,
+        "post_reactions": {
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "post_visitor_reaction_id": 0,
+        "stickers": [],
+        "post_reply_to": 64796655,
+        "post_reply_depth": 1
+      },
+      {
+        "post_id": 64800944,
+        "thread_id": 3704463,
+        "poster_user_id": 2351957,
+        "poster_username": "Kelvin1992",
+        "post_create_date": 1692143676,
+        "post_body": "[QUOTE=\"locthuyforever, post: 64800340, member: 128741\"]Bọn BIDV yêu cầu 6 tháng đổi một lần[/QUOTE]\nThua, ngân hàng mà sao tệ vậy, như cty mình phải đổi ít nhất 2 tháng. Ngân hàng 6 tháng là quá dỡ, lẽ ra phải 2,3 tháng là phải đổi",
+        "post_body_html": "<!--<link rel=\"stylesheet\" href=\"https://tinhte.vn/css.php?css=bb_code&amp;style=85&amp;dir=LTR&amp;d=1690336507\" /><script src=\"https://tinhte.vn/js/bdPostTree/script.min.js?_v=60fe4ae3\"></script>--><div class=\"bdPostTree_ParentQuote hash-357f4c43974c63053f9cea16315d0268\">\n\n\n<div class=\"bbCodeBlock bbCodeQuote\" data-author=\"locthuyforever\">\n\t<aside>\n\t\t\n\t\t\t<div class=\"attribution type\">locthuyforever đã nói:\n\t\t\t\t\n\t\t\t\t\t<a href=\"https://tinhte.vn/goto/post?id=64800340#post-64800340\" class=\"AttributionLink\">&uarr;</a>\n\t\t\t\t\n\t\t\t</div>\n\t\t\n\t\t<blockquote class=\"quoteContainer\"><div class=\"quote\">Bọn BIDV yêu cầu 6 tháng đổi một lần</div></blockquote>\n\t</aside>\n</div></div>\n<span class=\"bdPostTree_ParentPoster\" data-hash=\"357f4c43974c63053f9cea16315d0268\"><a href=\"https://tinhte.vn/profile/locthuyforever.128741/\" class=\"username\" data-user=\"128741, @locthuyforever\">@locthuyforever</a></span>\nThua, ngân hàng mà sao tệ vậy, như cty mình phải đổi ít nhất 2 tháng. Ngân hàng 6 tháng là quá dỡ, lẽ ra phải 2,3 tháng là phải đổi",
+        "post_body_plain_text": "Thua, ngân hàng mà sao tệ vậy, như cty mình phải đổi ít nhất 2 tháng. Ngân hàng 6 tháng là quá dỡ, lẽ ra phải 2,3 tháng là phải đổi",
+        "signature": "",
+        "signature_html": "",
+        "signature_plain_text": "",
+        "post_like_count": 0,
+        "post_attachment_count": 0,
+        "user_is_ignored": false,
+        "post_is_published": true,
+        "post_is_deleted": false,
+        "post_update_date": 1692143676,
+        "post_is_first_post": false,
+        "post_is_liked": false,
+        "links": {
+          "permalink": "https://tinhte.vn/posts/64800944/",
+          "detail": "https://tinhte.vn/appforo/index.php?posts/64800944/",
+          "thread": "https://tinhte.vn/appforo/index.php?threads/3704463/",
+          "poster": "https://tinhte.vn/appforo/index.php?users/2351957/",
+          "likes": "https://tinhte.vn/appforo/index.php?posts/64800944/likes",
+          "report": "https://tinhte.vn/appforo/index.php?posts/64800944/report",
+          "attachments": "https://tinhte.vn/appforo/index.php?posts/64800944/attachments",
+          "poster_avatar": "https://tinhte.vn/styles/default/TinhteMods/avatars/avatar_6.png"
+        },
+        "permissions": {
+          "view": true,
+          "edit": false,
+          "delete": false,
+          "reply": false,
+          "like": false,
+          "report": true,
+          "upload_attachment": false,
+          "vote": false
+        },
+        "poster_rank": {
+          "rank_level": 2,
+          "rank_name": "TÍCH CỰC",
+          "rank_group_id": 58,
+          "rank_points": 11340
+        },
+        "user_is_followed": false,
+        "fp_permissions": {
+          "delete": false
+        },
+        "poster_has_verified_badge": false,
+        "post_reaction_total": 0,
+        "post_reactions": {
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "post_visitor_reaction_id": 0,
+        "stickers": [],
+        "post_reply_to": 64796655,
+        "post_reply_depth": 1
+      },
+      {
+        "post_id": 64801075,
+        "thread_id": 3704463,
+        "poster_user_id": 2524984,
+        "poster_username": "haobcyqhdvb",
+        "post_create_date": 1692147078,
+        "post_body": "[QUOTE=\"magez, post: 64799663, member: 1990125\"]xu hướng tương lai là không còn mật khẩu nữa (passwordless), mà dựa vào sinh trắc học hết (vân tay, mắt, face id ở device local chính chủ). \nHiện tại Google, Microsoft, Apple và nhiều thằng khác đã đang triển khai rồi, cùng theo chuẩn chung là FIDO (Fast IDentity Online), vừa bảo mật & lại tiện lợi nữa.\nCó điều người dùng vẫn phải cần mật khẩu cho mấy account apple, google, ms trong trường hợp bị mất device xác thực, nhưng ít ra là có thể dùng các account này đăng nhập tất cả các trang web nào hỗ trợ FIDO hết[/QUOTE]\nfido 2 khác 2fa chỗ nào vậy bác nhỉ,hic",
+        "post_body_html": "<!--<link rel=\"stylesheet\" href=\"https://tinhte.vn/css.php?css=bb_code&amp;style=85&amp;dir=LTR&amp;d=1690336507\" /><script src=\"https://tinhte.vn/js/bdPostTree/script.min.js?_v=60fe4ae3\"></script>--><div class=\"bdPostTree_ParentQuote hash-30a3cc67ab4a84af5f8f83f79d69d276\">\n\n\n<div class=\"bbCodeBlock bbCodeQuote\" data-author=\"magez\">\n\t<aside>\n\t\t\n\t\t\t<div class=\"attribution type\">magez đã nói:\n\t\t\t\t\n\t\t\t\t\t<a href=\"https://tinhte.vn/goto/post?id=64799663#post-64799663\" class=\"AttributionLink\">&uarr;</a>\n\t\t\t\t\n\t\t\t</div>\n\t\t\n\t\t<blockquote class=\"quoteContainer\"><div class=\"quote\">xu hướng tương lai là không còn mật khẩu nữa (passwordless), mà dựa vào sinh trắc học hết (vân tay, mắt, face id ở device local chính chủ). <br />\nHiện tại Google, Microsoft, Apple và nhiều thằng khác đã đang triển khai rồi, cùng theo chuẩn chung là FIDO (Fast IDentity Online), vừa bảo mật &amp; lại tiện lợi nữa.<br />\nCó điều người dùng vẫn phải cần mật khẩu cho mấy account apple, google, ms trong trường hợp bị mất device xác thực, nhưng ít ra là có thể dùng các account này đăng nhập tất cả các trang web nào hỗ trợ FIDO hết</div></blockquote>\n\t</aside>\n</div></div>\n<span class=\"bdPostTree_ParentPoster\" data-hash=\"30a3cc67ab4a84af5f8f83f79d69d276\"><a href=\"https://tinhte.vn/profile/magez.1990125/\" class=\"username\" data-user=\"1990125, @magez\">@magez</a></span>\nfido 2 khác 2fa chỗ nào vậy bác nhỉ,hic",
+        "post_body_plain_text": "fido 2 khác 2fa chỗ nào vậy bác nhỉ,hic",
+        "signature": "",
+        "signature_html": "",
+        "signature_plain_text": "",
+        "post_like_count": 0,
+        "post_attachment_count": 0,
+        "user_is_ignored": false,
+        "post_is_published": true,
+        "post_is_deleted": false,
+        "post_update_date": 1692147078,
+        "post_is_first_post": false,
+        "post_is_liked": false,
+        "links": {
+          "permalink": "https://tinhte.vn/posts/64801075/",
+          "detail": "https://tinhte.vn/appforo/index.php?posts/64801075/",
+          "thread": "https://tinhte.vn/appforo/index.php?threads/3704463/",
+          "poster": "https://tinhte.vn/appforo/index.php?users/2524984/",
+          "likes": "https://tinhte.vn/appforo/index.php?posts/64801075/likes",
+          "report": "https://tinhte.vn/appforo/index.php?posts/64801075/report",
+          "attachments": "https://tinhte.vn/appforo/index.php?posts/64801075/attachments",
+          "poster_avatar": "https://photo2.tinhte.vn/data/avatars/m/2524/2524984.jpg?1690465575"
+        },
+        "permissions": {
+          "view": true,
+          "edit": false,
+          "delete": false,
+          "reply": false,
+          "like": false,
+          "report": true,
+          "upload_attachment": false,
+          "vote": false
+        },
+        "poster_rank": {
+          "rank_level": 3,
+          "rank_name": "CAO CẤP",
+          "rank_group_id": 59,
+          "rank_points": 37132
+        },
+        "user_is_followed": false,
+        "fp_permissions": {
+          "delete": false
+        },
+        "poster_has_verified_badge": false,
+        "post_reaction_total": 0,
+        "post_reactions": {
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "post_visitor_reaction_id": 0,
+        "stickers": [],
+        "post_reply_to": 64796743,
+        "post_reply_depth": 1
+      },
+      {
+        "post_id": 64801348,
+        "thread_id": 3704463,
+        "poster_user_id": 128741,
+        "poster_username": "locthuyforever",
+        "post_create_date": 1692151332,
+        "post_body": "[QUOTE=\"Kelvin1992, post: 64800944, member: 2351957\"]Thua, ngân hàng mà sao tệ vậy, như cty mình phải đổi ít nhất 2 tháng. Ngân hàng 6 tháng là quá dỡ, lẽ ra phải 2,3 tháng là phải đổi[/QUOTE]\nđổi mỗi ngày đi pro",
+        "post_body_html": "<!--<link rel=\"stylesheet\" href=\"https://tinhte.vn/css.php?css=bb_code&amp;style=85&amp;dir=LTR&amp;d=1690336507\" /><script src=\"https://tinhte.vn/js/bdPostTree/script.min.js?_v=60fe4ae3\"></script>--><div class=\"bdPostTree_ParentQuote hash-8a05d340dd99aa3648c25fe73278976d\">\n\n\n<div class=\"bbCodeBlock bbCodeQuote\" data-author=\"Kelvin1992\">\n\t<aside>\n\t\t\n\t\t\t<div class=\"attribution type\">Kelvin1992 đã nói:\n\t\t\t\t\n\t\t\t\t\t<a href=\"https://tinhte.vn/goto/post?id=64800944#post-64800944\" class=\"AttributionLink\">&uarr;</a>\n\t\t\t\t\n\t\t\t</div>\n\t\t\n\t\t<blockquote class=\"quoteContainer\"><div class=\"quote\">Thua, ngân hàng mà sao tệ vậy, như cty mình phải đổi ít nhất 2 tháng. Ngân hàng 6 tháng là quá dỡ, lẽ ra phải 2,3 tháng là phải đổi</div></blockquote>\n\t</aside>\n</div></div>\n<span class=\"bdPostTree_ParentPoster\" data-hash=\"8a05d340dd99aa3648c25fe73278976d\"><a href=\"https://tinhte.vn/profile/kelvin1992.2351957/\" class=\"username\" data-user=\"2351957, @Kelvin1992\">@Kelvin1992</a></span>\nđổi mỗi ngày đi pro",
+        "post_body_plain_text": "đổi mỗi ngày đi pro",
+        "signature": "Hãy là người tiêu dùng thông minh, đừng bao giờ dùng hàng Trung Quốc!",
+        "signature_html": "<span class=\"xf-body-paragraph\">Hãy là người tiêu dùng thông minh, đừng bao giờ dùng hàng Trung Quốc!</span>",
+        "signature_plain_text": "Hãy là người tiêu dùng thông minh, đừng bao giờ dùng hàng Trung Quốc!",
+        "post_like_count": 0,
+        "post_attachment_count": 0,
+        "user_is_ignored": false,
+        "post_is_published": true,
+        "post_is_deleted": false,
+        "post_update_date": 1692151332,
+        "post_is_first_post": false,
+        "post_is_liked": false,
+        "links": {
+          "permalink": "https://tinhte.vn/posts/64801348/",
+          "detail": "https://tinhte.vn/appforo/index.php?posts/64801348/",
+          "thread": "https://tinhte.vn/appforo/index.php?threads/3704463/",
+          "poster": "https://tinhte.vn/appforo/index.php?users/128741/",
+          "likes": "https://tinhte.vn/appforo/index.php?posts/64801348/likes",
+          "report": "https://tinhte.vn/appforo/index.php?posts/64801348/report",
+          "attachments": "https://tinhte.vn/appforo/index.php?posts/64801348/attachments",
+          "poster_avatar": "https://photo2.tinhte.vn/data/avatars/m/128/128741.jpg?1664985410"
+        },
+        "permissions": {
+          "view": true,
+          "edit": false,
+          "delete": false,
+          "reply": false,
+          "like": false,
+          "report": true,
+          "upload_attachment": false,
+          "vote": false
+        },
+        "poster_rank": {
+          "rank_level": 4,
+          "rank_name": "VIP",
+          "rank_group_id": 60,
+          "rank_points": 245160
+        },
+        "user_is_followed": false,
+        "fp_permissions": {
+          "delete": false
+        },
+        "poster_has_verified_badge": false,
+        "post_reaction_total": 0,
+        "post_reactions": {
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "post_visitor_reaction_id": 0,
+        "stickers": [],
+        "post_reply_to": 64796655,
+        "post_reply_depth": 1
+      }
+    ],
+    "thread": {
+      "thread_id": 3704463,
+      "forum_id": 201,
+      "thread_title": "Đổi mật khẩu thường xuyên có thực sự tăng cường bảo mật không?",
+      "thread_view_count": 2356,
+      "creator_user_id": 2545886,
+      "creator_username": "Lư Thế Nghĩa",
+      "thread_create_date": 1692022784,
+      "thread_update_date": 1692151332,
+      "thread_is_new": false,
+      "user_is_ignored": false,
+      "thread_post_count": 82,
+      "thread_is_published": true,
+      "thread_is_deleted": false,
+      "thread_is_sticky": false,
+      "thread_is_followed": false,
+      "thread_prefixes": [
+        {
+          "prefix_id": 126,
+          "prefix_title": "Phân tích"
+        }
+      ],
+      "thread_tags": {
+        "2379": "bảo mật",
+        "7759": "mật khẩu",
+        "7760": "password"
+      },
+      "links": {
+        "permalink": "https://tinhte.vn/thread/doi-mat-khau-thuong-xuyen-co-thuc-su-tang-cuong-bao-mat-khong.3704463/",
+        "detail": "https://tinhte.vn/appforo/index.php?threads/3704463/",
+        "followers": "https://tinhte.vn/appforo/index.php?threads/3704463/followers",
+        "forum": "https://tinhte.vn/appforo/index.php?forums/201/",
+        "posts": "https://tinhte.vn/appforo/index.php?posts/&thread_id=3704463",
+        "first_poster": "https://tinhte.vn/appforo/index.php?users/2545886/",
+        "first_poster_avatar": "https://photo2.tinhte.vn/data/avatars/m/2545/2545886.jpg?1690891245",
+        "first_post": "https://tinhte.vn/appforo/index.php?posts/64796568/",
+        "last_poster": "https://tinhte.vn/appforo/index.php?users/128741/",
+        "last_post": "https://tinhte.vn/appforo/index.php?posts/64801348/",
+        "image": "https://photo2.tinhte.vn/data/attachment-files/2023/08/7231196_cover-mat-khau.jpg"
+      },
+      "permissions": {
+        "view": true,
+        "delete": false,
+        "follow": false,
+        "post": false,
+        "upload_attachment": false,
+        "tinhtemods_redirect": false,
+        "reply_bans": false,
+        "edit_image": false
+      },
+      "tinhte_adsense_is_blocked": false,
+      "rating_total": 24,
+      "rating_count": 5,
+      "user_is_followed": false,
+      "user_thread_count": 790,
+      "user_follower_count": 140,
+      "user_like_count": 8589,
+      "fp_permissions": {
+        "stick": false,
+        "unstick": false,
+        "delete": false
+      },
+      "thread_tags_extended": [
+        {
+          "tag_id": 2379,
+          "tag": "bảo mật",
+          "tag_url": "bao-mat"
+        },
+        {
+          "tag_id": 7759,
+          "tag": "mật khẩu",
+          "tag_url": "mat-khau"
+        },
+        {
+          "tag_id": 7760,
+          "tag": "password",
+          "tag_url": "password"
+        }
+      ],
+      "creator_is_mod": true,
+      "creator_has_verified_badge": true,
+      "thread_image": {
+        "link": "https://photo2.tinhte.vn/data/attachment-files/2023/08/7231196_cover-mat-khau.jpg",
+        "width": 2048,
+        "height": 1268,
+        "display_mode": "cover"
+      },
+      "thread_thumbnail": {
+        "link": "https://imgproxy7.tinhte.vn/MY2DoXs4g7fk9oLwYnLvTeND00G0PpwcL7mvKFY9nVE/rs:fill:400:400:0/plain/https://photo2.tinhte.vn/data/attachment-files/2023/08/7231196_cover-mat-khau.jpg",
+        "width": 400,
+        "height": 400
+      },
+      "thread_is_bookmark": false,
+      "is_draft": false
+    },
+    "posts_total": 57,
+    "links": {
+      "pages": 3,
+      "page": 1,
+      "next": "https://tinhte.vn/appforo/index.php?posts/&thread_id=3704463&page=2",
+      "newer": "https://tinhte.vn/appforo/index.php?posts/&thread_id=3704463&page=2&_apiPostTree=1"
+    }
+  }
+}
