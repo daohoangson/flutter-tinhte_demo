@@ -24,6 +24,33 @@ upload the apps to GCS (automatically deleted after 30 days).
 - Developer hidden menu (tap "Version" thrice)
 - Android, iOS domain association with [built-in deep link support](https://docs.flutter.dev/ui/navigation/deep-linking)
 
+<details>
+<summary>Screenshots</summary>
+
+### Home
+
+| Wide                                              | Narrow                                              |
+|---------------------------------------------------|-----------------------------------------------------|
+| ![](test/src/widgets/home/goldens/top_5/wide.png) | ![](test/src/widgets/home/goldens/top_5/narrow.png) |
+
+### Thread view
+
+| Normal thread                                          | With post replies                                      | Poll                                                   |
+|--------------------------------------------------------|--------------------------------------------------------|--------------------------------------------------------|
+| ![](test/src/widgets/goldens/posts/thread_3704815.png) | ![](test/src/widgets/goldens/posts/thread_3704463.png) | ![](test/src/widgets/goldens/posts/thread_3441248.png) |
+
+| Tinhte Fact                                          | Background post                                          |
+|------------------------------------------------------|----------------------------------------------------------|
+| ![](test/src/widgets/tinhte/goldens/tinhte_fact.png) | ![](test/src/widgets/tinhte/goldens/background_post.png) |
+
+### Interactive UI
+
+| Compare                                        | Galleria                                        | YouTube                                        |
+|------------------------------------------------|-------------------------------------------------|------------------------------------------------|
+| ![](test/src/widgets/goldens/html/compare.png) | ![](test/src/widgets/goldens/html/galleria.png) | ![](test/src/widgets/goldens/html/youtube.png) |
+
+</details>
+
 ## FAQ
 
 ### How to build the app?

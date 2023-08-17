@@ -19,30 +19,20 @@ void main() {
     testGoldens('renders long thread', (tester) async {
       await tester.pumpMockedApiApp(
         const ThreadViewTestApp(threadId: 3704463),
-        surfaceSize: const Size(800, 8000),
-      );
-      await tester.waitForStuff();
-
-      await screenMatchesGolden(tester, 'posts/thread_3704463');
-    });
-
-    testGoldens('loads hidden replies', (tester) async {
-      await tester.pumpMockedApiApp(
-        const ThreadViewTestApp(threadId: 3704463),
         surfaceSize: const Size(800, 5000),
       );
       await tester.waitForStuff();
+      await screenMatchesGolden(tester, 'posts/thread_3704463');
 
       await tester.tap(find.text('Tap to load 7 hidden replies...'));
       await tester.waitForStuff();
-
       await screenMatchesGolden(tester, 'posts/thread_3704463_with_hidden');
     });
 
     testGoldens('renders poll', (tester) async {
       await tester.pumpMockedApiApp(
         const ThreadViewTestApp(threadId: 3441248),
-        surfaceSize: const Size(800, 1000),
+        surfaceSize: const Size(800, 5000),
       );
       await tester.waitForStuff();
 

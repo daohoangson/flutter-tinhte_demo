@@ -10,7 +10,7 @@ void main() {
     testGoldens('renders galleria', (tester) async {
       await tester.pumpMockedApiApp(
         const ThreadViewTestApp(threadId: 3703386),
-        surfaceSize: const Size(800, 6000),
+        surfaceSize: const Size(800, 2000),
       );
       await tester.waitForStuff();
 
@@ -20,7 +20,7 @@ void main() {
     testGoldens('renders compare', (tester) async {
       await tester.pumpMockedApiApp(
         const ThreadViewTestApp(threadId: 3682335),
-        surfaceSize: const Size(800, 6000),
+        surfaceSize: const Size(800, 2000),
       );
       await tester.waitForStuff();
 
@@ -35,6 +35,7 @@ void main() {
             lowresThumbnailUrl: 'https://img.youtube.com/vi/dQw4w9WgXcQ/0.jpg',
           ),
         ),
+        surfaceSize: const Size(800, 2000),
       );
       await tester.waitForStuff();
 
