@@ -29,11 +29,14 @@ void main() {
 
     testGoldens('renders YouTube', (tester) async {
       await tester.pumpMockedApiApp(
-        const Center(
-          child: YouTubeWidget(
-            'dQw4w9WgXcQ',
-            lowresThumbnailUrl: 'https://img.youtube.com/vi/dQw4w9WgXcQ/0.jpg',
-          ),
+        const Column(
+          children: [
+            YouTubeWidget(
+              'dQw4w9WgXcQ',
+              lowresThumbnailUrl:
+                  'https://img.youtube.com/vi/dQw4w9WgXcQ/0.jpg',
+            ),
+          ],
         ),
         surfaceSize: const Size(800, 2000),
       );
