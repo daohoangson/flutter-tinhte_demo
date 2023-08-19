@@ -21,7 +21,7 @@ upload the apps to GCS (automatically deleted after 30 days).
 - Render HTML with [flutter_widget_from_html](https://pub.dev/packages/flutter_widget_from_html)
 - Push notification via [firebase_messaging](https://pub.dev/packages/firebase_messaging)
 - Dark mode: on / off / auto
-- Developer hidden menu (tap "Version" thrice)
+- Developer hidden menu (tap version in about dialog thrice)
 - Android, iOS domain association with [built-in deep link support](https://docs.flutter.dev/ui/navigation/deep-linking)
 
 <details>

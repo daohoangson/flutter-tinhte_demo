@@ -94,17 +94,21 @@ class _PostActionsWidgetState extends State<_PostActionsWidget> {
         ),
       ),
       itemBuilder: (_) => _buildPopupMenuItems(post),
-      onSelected: (action) async {
+      onSelected: (action) {
         switch (action) {
           case _kPopupActionDelete:
-            final reason = await showDialog(
+            showDialog(
               context: context,
               builder: (context) => _PostActionsDialogReason(
                 button: l(context).postDelete,
                 hint: l(context).postDeleteReasonHint,
               ),
+            ).then(
+              (reason) {
+                if (reason == null) return;
+                _deletePost(post, reason);
+              },
             );
-            if (reason != null) _deletePost(post, reason);
             break;
           case _kPopupActionOpenInBrowser:
             final permalink = post.links?.permalink;
@@ -113,14 +117,16 @@ class _PostActionsWidgetState extends State<_PostActionsWidget> {
             }
             break;
           case _kPopupActionReport:
-            final message = await showDialog(
+            showDialog(
               context: context,
               builder: (context) => _PostActionsDialogReason(
                 button: l(context).postReport,
                 hint: l(context).postReportReasonHint,
               ),
-            );
-            if (message != null) _reportPost(post, message);
+            ).then((message) {
+              if (message == null) return;
+              _reportPost(post, message);
+            });
             break;
         }
       },
