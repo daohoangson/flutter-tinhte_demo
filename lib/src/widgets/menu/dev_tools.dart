@@ -9,14 +9,31 @@ import 'availability/error_reporting.dart';
 import 'availability/firebase.dart';
 import 'availability/push_notification.dart';
 
-class DevTools extends ChangeNotifier {
+abstract class DevTools extends ChangeNotifier {
+  bool get isDeveloper;
+  set isDeveloper(bool v);
+
+  bool get showPerformanceOverlay;
+  set showPerformanceOverlay(bool v);
+
+  static Future<DevTools> create() async {
+    final developer = _DevTools();
+    final prefs = await SharedPreferences.getInstance();
+    developer._isDeveloper = prefs.getBool(kPrefKeyDevToolIsDeveloper);
+    developer._showPerformanceOverlay =
+        prefs.getBool(kPrefKeyDevToolShowPerformanceOverlay);
+    return developer;
+  }
+}
+
+class _DevTools extends ChangeNotifier implements DevTools {
   bool? _isDeveloper;
   bool? _showPerformanceOverlay;
 
-  DevTools._();
-
+  @override
   bool get isDeveloper => _isDeveloper == true;
 
+  @override
   set isDeveloper(bool v) {
     _isDeveloper = v;
     notifyListeners();
@@ -25,23 +42,16 @@ class DevTools extends ChangeNotifier {
         .then((prefs) => prefs.setBool(kPrefKeyDevToolIsDeveloper, v));
   }
 
+  @override
   bool get showPerformanceOverlay => _showPerformanceOverlay == true;
 
+  @override
   set showPerformanceOverlay(bool v) {
     _showPerformanceOverlay = v;
     notifyListeners();
 
     SharedPreferences.getInstance().then(
         (prefs) => prefs.setBool(kPrefKeyDevToolShowPerformanceOverlay, v));
-  }
-
-  static Future<DevTools> create() async {
-    final developer = DevTools._();
-    final prefs = await SharedPreferences.getInstance();
-    developer._isDeveloper = prefs.getBool(kPrefKeyDevToolIsDeveloper);
-    developer._showPerformanceOverlay =
-        prefs.getBool(kPrefKeyDevToolShowPerformanceOverlay);
-    return developer;
   }
 }
 
