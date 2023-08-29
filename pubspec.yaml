@@ -31,7 +31,7 @@ dependencies:
   flutter_cache_manager: any
   flutter_localizations:
     sdk: flutter
-  flutter_secure_storage: ^8.0.0
+  flutter_secure_storage: ^9.0.0
   flutter_speed_dial: ^7.0.0
   font_awesome_flutter: ^10.0.0
   google_sign_in: ^6.0.0
