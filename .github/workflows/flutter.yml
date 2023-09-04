@@ -14,7 +14,7 @@ jobs:
     if: ${{ startsWith(github.ref, 'refs/heads/') }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Prepare repo
         run: |
           set -e
@@ -46,7 +46,7 @@ jobs:
     if: ${{ github.ref == 'refs/heads/master' || contains(github.ref, 'android') }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Prepare repo
         run: |
           set -e
@@ -103,7 +103,7 @@ jobs:
     if: ${{ github.ref == 'refs/heads/master' || contains(github.ref, 'ios') }}
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Prepare repo
         run: bash ./.github/workflows/prepare.sh
 
@@ -166,7 +166,7 @@ jobs:
     if: ${{ github.ref == 'refs/heads/master' || contains(github.ref, 'linux') }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Prepare repo
         run: |
           set -e
@@ -235,7 +235,7 @@ jobs:
     if: ${{ github.ref == 'refs/heads/master' || contains(github.ref, 'macos') }}
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Prepare repo
         run: bash ./.github/workflows/prepare.sh
 
@@ -301,7 +301,7 @@ jobs:
       run:
         shell: bash
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: Vampire/setup-wsl@v2
         with:
           additional-packages: bash file git-crypt yq
