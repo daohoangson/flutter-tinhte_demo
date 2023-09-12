@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_renaming_method_parameters, deprecated_member_use
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -140,19 +142,14 @@ class TinhteWidgetFactory extends WidgetFactory {
   }
 
   BuildOp get smilieOp {
-    return _smilieOp ??= BuildOp(
-      onTree: (meta, tree) {
-        final a = meta.element.attributes;
+    return _smilieOp ??= BuildOp.v1(
+      onParsed: (tree) {
+        final a = tree.element.attributes;
         final title = a['data-title'];
-        if (title == null) return;
+        if (title == null) return tree;
         final smilie = _kSmilies[title];
-        if (smilie == null) return;
-        final parentTree = tree.parent;
-        if (parentTree == null) return;
-
-        // TODO: use `replaceWith` when it comes back in v0.9
-        TextBit(parentTree, smilie).insertBefore(tree);
-        tree.detach();
+        if (smilie == null) return tree;
+        return tree.parent.sub()..addText(smilie);
       },
     );
   }
