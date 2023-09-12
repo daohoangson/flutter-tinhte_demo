@@ -8,41 +8,61 @@ class PhotoCompare {
 
   PhotoCompare(this.wf);
 
-  BuildOp get buildOp => BuildOp(
+  BuildOp get buildOp => BuildOp.v1(
         defaultStyles: (_) => {'margin': '0.5em 0'},
-        onChild: (childMeta) {
-          if (childMeta.element.localName == 'img') {
-            childMeta['display'] = 'block';
+        onChild: (tree, subTree) {
+          if (subTree.element.localName == 'img') {
+            subTree.register(
+              BuildOp.v1(
+                onRenderBlock: (_, placeholder) {
+                  final child = placeholder.firstChild;
+                  if (child != null) {
+                    final value = tree.value<_Images>();
+                    if (value == null) {
+                      tree.value(_Images([child]));
+                    } else {
+                      value.widgets.add(child);
+                    }
+                  }
+                  return placeholder;
+                },
+                priority: 5000000000000000, // Priority._baseBoxModel
+              ),
+            );
           }
         },
-        onWidgets: (meta, widgets) {
-          final images = <Widget>[];
-          for (final widget in widgets) {
-            if (widget is WidgetPlaceholder<ImageMetadata>) {
-              images.add(widget);
-            }
-          }
+        onParsed: (tree) {
+          final replacement = tree.parent.sub();
+          final images = tree.value<_Images>()?.widgets;
+          if (images == null || images.length != 2) return tree;
 
-          if (images.length != 2) return widgets;
-
-          final a = meta.element.attributes;
+          final a = tree.element.attributes;
           final configJson = a['data-config'] ?? '';
-          if (configJson.isEmpty) return widgets;
+          if (configJson.isEmpty) return tree;
 
           final Map config = json.decode(configJson);
           final width = (config['width'] as num?)?.toDouble();
           final height = (config['height'] as num?)?.toDouble();
-          if (width == null || height == null) return widgets;
+          if (width == null || height == null) return tree;
 
-          return [
-            _PhotoCompareWidget(
-              aspectRatio: width / height,
-              image0: images[0],
-              image1: images[1],
-            ),
-          ];
+          return replacement
+            ..append(
+              WidgetBit.block(
+                tree.parent,
+                _PhotoCompareWidget(
+                  aspectRatio: width / height,
+                  image0: images[0],
+                  image1: images[1],
+                ),
+              ),
+            );
         },
       );
+}
+
+class _Images {
+  final List<Widget> widgets;
+  const _Images(this.widgets);
 }
 
 class _PhotoCompareWidget extends StatefulWidget {
