@@ -1,7 +1,7 @@
 name: the_api
 
 environment:
-  sdk: ">=2.18.4 <3.0.0"
+  sdk: "<4.0.0"
 
 dependencies:
   async:
