@@ -43,7 +43,7 @@ jobs:
       - uses: codecov/codecov-action@v3
 
   build_apk:
-    if: ${{ github.ref == 'refs/heads/master' || contains(github.ref, 'android') }}
+    if: ${{ github.ref == 'refs/heads/master' || contains(github.ref, 'android') || startsWith(github.ref, 'renovate/flutter-') }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -100,7 +100,7 @@ jobs:
           fingerprint: <!-- ${{ github.sha }} -->
 
   build_ipa:
-    if: ${{ github.ref == 'refs/heads/master' || contains(github.ref, 'ios') }}
+    if: ${{ github.ref == 'refs/heads/master' || contains(github.ref, 'ios') || startsWith(github.ref, 'renovate/flutter-') }}
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
@@ -232,7 +232,7 @@ jobs:
           fingerprint: <!-- ${{ github.sha }} -->
 
   build_macos:
-    if: ${{ github.ref == 'refs/heads/master' || contains(github.ref, 'macos') }}
+    if: ${{ github.ref == 'refs/heads/master' || contains(github.ref, 'macos') || startsWith(github.ref, 'renovate/flutter-') }}
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
