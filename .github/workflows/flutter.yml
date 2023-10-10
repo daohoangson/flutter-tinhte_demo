@@ -62,7 +62,14 @@ jobs:
       - name: Prepare packages/api
         run: ./packages/api/tool/build.sh
       - run: flutter pub get
-      - run: flutter build apk --split-per-abi
+      - name: Run flutter build apk
+        run: |
+          set -e
+
+          export JAVA_HOME=$JAVA_HOME_17_X64
+          flutter doctor -v
+
+          flutter build apk --split-per-abi
 
       - name: Setup GCP authentication
         uses: google-github-actions/auth@v1
