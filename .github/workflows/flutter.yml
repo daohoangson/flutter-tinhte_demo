@@ -76,7 +76,7 @@ jobs:
         with:
           credentials_json: ${{ secrets.GCP_UPLOADER_SA_KEY }}
       - name: Setup gcloud
-        uses: google-github-actions/setup-gcloud@v1
+        uses: google-github-actions/setup-gcloud@v2
       - name: Run gsutil cp
         run: gsutil cp build/app/outputs/apk/release/*.apk "${GCS_PATH}/apk"
 
@@ -134,7 +134,7 @@ jobs:
         with:
           credentials_json: ${{ secrets.GCP_UPLOADER_SA_KEY }}
       - name: Setup gcloud
-        uses: google-github-actions/setup-gcloud@v1
+        uses: google-github-actions/setup-gcloud@v2
       - name: Run gsutil cp
         run: |
           set -e
@@ -210,7 +210,7 @@ jobs:
         with:
           credentials_json: ${{ secrets.GCP_UPLOADER_SA_KEY }}
       - name: Setup gcloud
-        uses: google-github-actions/setup-gcloud@v1
+        uses: google-github-actions/setup-gcloud@v2
       - name: Run gsutil cp
         run: gsutil cp build/linux/x64/release/bundle.zip "${GCS_PATH}/linux/bundle.zip"
 
@@ -271,7 +271,7 @@ jobs:
         with:
           credentials_json: ${{ secrets.GCP_UPLOADER_SA_KEY }}
       - name: Setup gcloud
-        uses: google-github-actions/setup-gcloud@v1
+        uses: google-github-actions/setup-gcloud@v2
       - name: Run gsutil cp
         run: gsutil cp build/app/outputs/macos/release/* "${GCS_PATH}/macos"
 
@@ -335,7 +335,7 @@ jobs:
         with:
           credentials_json: ${{ secrets.GCP_UPLOADER_SA_KEY }}
       - name: Setup gcloud
-        uses: google-github-actions/setup-gcloud@v1
+        uses: google-github-actions/setup-gcloud@v2
       - name: Run gsutil cp
         run: |
           set -e
