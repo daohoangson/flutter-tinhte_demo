@@ -72,7 +72,7 @@ jobs:
           flutter build apk --split-per-abi
 
       - name: Setup GCP authentication
-        uses: google-github-actions/auth@v1
+        uses: google-github-actions/auth@v2
         with:
           credentials_json: ${{ secrets.GCP_UPLOADER_SA_KEY }}
       - name: Setup gcloud
@@ -130,7 +130,7 @@ jobs:
           ( cd ios && fastlane build_ipa )
 
       - name: Setup GCP authentication
-        uses: google-github-actions/auth@v1
+        uses: google-github-actions/auth@v2
         with:
           credentials_json: ${{ secrets.GCP_UPLOADER_SA_KEY }}
       - name: Setup gcloud
@@ -206,7 +206,7 @@ jobs:
           zip -r bundle.zip bundle/*
 
       - name: Setup GCP authentication
-        uses: google-github-actions/auth@v1
+        uses: google-github-actions/auth@v2
         with:
           credentials_json: ${{ secrets.GCP_UPLOADER_SA_KEY }}
       - name: Setup gcloud
@@ -267,7 +267,7 @@ jobs:
           ditto -c -k --keepParent "${_appBasename}" "${_appBasename}.zip"
 
       - name: Setup GCP authentication
-        uses: google-github-actions/auth@v1
+        uses: google-github-actions/auth@v2
         with:
           credentials_json: ${{ secrets.GCP_UPLOADER_SA_KEY }}
       - name: Setup gcloud
@@ -331,7 +331,7 @@ jobs:
         run: flutter pub run msix:create --install-certificate=false
 
       - name: Setup GCP authentication
-        uses: google-github-actions/auth@v1
+        uses: google-github-actions/auth@v2
         with:
           credentials_json: ${{ secrets.GCP_UPLOADER_SA_KEY }}
       - name: Setup gcloud
