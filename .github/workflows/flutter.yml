@@ -40,7 +40,7 @@ jobs:
         with:
           name: failures
           path: "**/failures/*.png"
-      - uses: codecov/codecov-action@v3
+      - uses: codecov/codecov-action@v4
 
   build_apk:
     if: ${{ github.ref == 'refs/heads/master' || contains(github.ref, 'android') || startsWith(github.ref, 'refs/heads/renovate/flutter-') }}
