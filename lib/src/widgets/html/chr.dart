@@ -33,7 +33,6 @@ class _ChrWidget extends StatefulWidget {
   final WidgetFactory wf;
 
   const _ChrWidget({
-    super.key,
     required this.meta,
     required this.url,
     required this.wf,

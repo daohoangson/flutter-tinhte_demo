@@ -184,7 +184,7 @@ class ThreadWidget extends StatelessWidget {
 class _ThreadWidgetActions extends StatefulWidget {
   final Thread thread;
 
-  const _ThreadWidgetActions(this.thread, {super.key});
+  const _ThreadWidgetActions(this.thread);
 
   @override
   State<StatefulWidget> createState() => _ThreadWidgetActionsState();

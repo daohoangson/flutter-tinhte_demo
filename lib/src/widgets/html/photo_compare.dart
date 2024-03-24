@@ -137,7 +137,7 @@ class _PhotoCompareHandler extends StatefulWidget {
 
   final bool animate;
 
-  const _PhotoCompareHandler({super.key, required this.animate});
+  const _PhotoCompareHandler({required this.animate});
 
   @override
   _PhotoCompareHandlerState createState() => _PhotoCompareHandlerState();

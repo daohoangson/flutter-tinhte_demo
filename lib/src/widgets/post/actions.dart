@@ -9,10 +9,9 @@ class _PostActionsWidget extends StatefulWidget {
   final bool showPostCreateDate;
 
   const _PostActionsWidget({
-    Key? key,
     required this.post,
     this.showPostCreateDate = true,
-  }) : super(key: key);
+  });
 
   @override
   State<StatefulWidget> createState() => _PostActionsWidgetState();
@@ -210,8 +209,7 @@ class _PostActionsDialogReason extends StatelessWidget {
 
   final _controller = TextEditingController();
 
-  _PostActionsDialogReason({required this.button, required this.hint, Key? key})
-      : super(key: key);
+  _PostActionsDialogReason({required this.button, required this.hint});
 
   @override
   Widget build(BuildContext context) => AlertDialog(

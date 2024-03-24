@@ -10,9 +10,9 @@ class PostsWidget extends StatefulWidget {
   const PostsWidget(
     this.thread, {
     this.initialJson,
-    Key? key,
     this.path,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   State<StatefulWidget> createState() => PostsState();

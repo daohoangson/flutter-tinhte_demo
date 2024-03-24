@@ -3,7 +3,7 @@ part of '../posts.dart';
 class _PostBodyWidget extends StatelessWidget {
   final Post post;
 
-  const _PostBodyWidget({Key? key, required this.post}) : super(key: key);
+  const _PostBodyWidget({required this.post});
 
   @override
   Widget build(BuildContext context) => AnimatedBuilder(
