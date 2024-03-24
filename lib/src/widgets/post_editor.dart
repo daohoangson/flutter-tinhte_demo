@@ -17,10 +17,10 @@ class PostEditorWidget extends StatefulWidget {
 
   const PostEditorWidget({
     required this.callback,
-    Key? key,
+    super.key,
     required this.paddingHorizontal,
     required this.paddingVertical,
-  }) : super(key: key);
+  });
 
   @override
   State<StatefulWidget> createState() => _PostEditorState();
@@ -106,7 +106,10 @@ class _PostEditorState extends State<PostEditorWidget> {
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 8, vertical: 2),
-                        child: Text(entry.key, textScaleFactor: 2),
+                        child: Text(
+                          entry.key,
+                          textScaler: const TextScaler.linear(2),
+                        ),
                       ),
                     ),
                     onTap: () {

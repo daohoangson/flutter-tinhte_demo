@@ -10,7 +10,7 @@ class FpWidget extends StatelessWidget {
 
   final FeaturePage? fp;
 
-  const FpWidget(this.fp, {Key? key}) : super(key: key);
+  const FpWidget(this.fp, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -35,10 +35,10 @@ class TagWidget extends StatelessWidget {
 
   const TagWidget({
     this.image,
-    Key? key,
+    super.key,
     this.label,
     this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

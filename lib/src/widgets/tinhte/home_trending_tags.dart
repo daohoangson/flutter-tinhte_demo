@@ -10,7 +10,7 @@ import 'package:the_app/src/link.dart';
 const _kTrendingTagsMax = 6;
 
 class TrendingTagsWidget extends StatelessWidget {
-  const TrendingTagsWidget({Key? key}) : super(key: key);
+  const TrendingTagsWidget({super.key});
 
   @override
   Widget build(BuildContext context) => LayoutBuilder(

@@ -29,7 +29,7 @@ class DarkTheme extends ChangeNotifier {
 }
 
 class MenuDarkTheme extends StatelessWidget {
-  const MenuDarkTheme({Key? key}) : super(key: key);
+  const MenuDarkTheme({super.key});
 
   @override
   Widget build(BuildContext context) => Consumer<DarkTheme>(

@@ -7,7 +7,7 @@ import 'package:the_app/src/intl.dart';
 import 'dev_tools.dart';
 
 class PackageInfoWidget extends StatefulWidget {
-  const PackageInfoWidget({Key? key}) : super(key: key);
+  const PackageInfoWidget({super.key});
 
   @override
   State<StatefulWidget> createState() => _PackageInfoState();

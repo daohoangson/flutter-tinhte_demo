@@ -24,8 +24,8 @@ class ThreadViewScreen extends StatefulWidget {
     this.thread, {
     this.enablePostEditor = false,
     this.initialJson,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   State<StatefulWidget> createState() => _ThreadViewState();
@@ -122,7 +122,7 @@ class _ThreadViewState extends State<ThreadViewScreen> {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(fontSize: (kToolbarHeight - 10) / 4),
-                  textScaleFactor: 1,
+                  textScaler: TextScaler.noScaling,
                 ),
               ],
             ),

@@ -7,18 +7,16 @@ class SignInButton extends StatelessWidget {
   final _SignInButtonType _type;
 
   const SignInButton.apple({
-    Key? key,
+    super.key,
     required this.onPressed,
     required this.text,
-  })  : _type = _SignInButtonType.apple,
-        super(key: key);
+  })  : _type = _SignInButtonType.apple;
 
   const SignInButton.google({
-    Key? key,
+    super.key,
     required this.onPressed,
     required this.text,
-  })  : _type = _SignInButtonType.google,
-        super(key: key);
+  })  : _type = _SignInButtonType.google;
 
   @override
   Widget build(BuildContext context) {

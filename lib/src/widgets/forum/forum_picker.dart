@@ -6,7 +6,7 @@ import 'package:the_app/src/intl.dart';
 import 'package:the_app/src/widgets/super_list.dart';
 
 class ForumPickerWidget extends StatelessWidget {
-  const ForumPickerWidget({Key? key}) : super(key: key);
+  const ForumPickerWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

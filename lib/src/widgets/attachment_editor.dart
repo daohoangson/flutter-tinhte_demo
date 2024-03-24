@@ -18,9 +18,9 @@ class AttachmentEditorWidget extends StatefulWidget {
   const AttachmentEditorWidget({
     this.apiPostPath,
     this.height = 50,
-    Key? key,
+    super.key,
     this.showPickIcon = false,
-  }) : super(key: key);
+  });
 
   @override
   State<StatefulWidget> createState() => AttachmentEditorState();

@@ -9,7 +9,7 @@ import 'package:the_app/src/widgets/tag/follow_button.dart';
 class MemberViewHeader extends StatelessWidget {
   final User user;
 
-  const MemberViewHeader(this.user, {Key? key}) : super(key: key);
+  const MemberViewHeader(this.user, {super.key});
 
   @override
   Widget build(BuildContext context) => Padding(

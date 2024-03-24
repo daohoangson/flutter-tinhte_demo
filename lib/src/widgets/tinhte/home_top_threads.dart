@@ -12,7 +12,7 @@ const _kTopThreadHeight = 200.0;
 const _kTopThreadPadding = 5.0;
 
 class TopThreadsWidget extends StatelessWidget {
-  const TopThreadsWidget({Key? key}) : super(key: key);
+  const TopThreadsWidget({super.key});
 
   @override
   Widget build(BuildContext context) => Consumer<_TopThreadsData>(
@@ -95,8 +95,7 @@ class _ThreadWidget extends StatelessWidget {
     required this.height,
     required this.isWide,
     required this.width,
-    Key? key,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

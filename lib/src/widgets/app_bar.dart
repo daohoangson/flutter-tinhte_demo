@@ -8,7 +8,7 @@ import 'package:the_app/src/api.dart';
 import 'package:the_app/src/link.dart';
 
 class AppBarDrawerHeader extends StatelessWidget {
-  const AppBarDrawerHeader({Key? key}) : super(key: key);
+  const AppBarDrawerHeader({super.key});
 
   @override
   Widget build(BuildContext context) => Consumer<User>(
@@ -82,7 +82,7 @@ class AppBarDrawerHeader extends StatelessWidget {
 }
 
 class AppBarDrawerFooter extends StatelessWidget {
-  const AppBarDrawerFooter({Key? key}) : super(key: key);
+  const AppBarDrawerFooter({super.key});
 
   @override
   Widget build(BuildContext context) => Consumer<ApiAuth>(

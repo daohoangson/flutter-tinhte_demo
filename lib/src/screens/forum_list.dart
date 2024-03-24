@@ -3,7 +3,7 @@ import 'package:the_app/src/intl.dart';
 import 'package:the_app/src/widgets/navigation.dart';
 
 class ForumListScreen extends StatelessWidget {
-  const ForumListScreen({Key? key}) : super(key: key);
+  const ForumListScreen({super.key});
 
   @override
   Widget build(BuildContext context) => Scaffold(

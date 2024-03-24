@@ -6,7 +6,7 @@ const _kThreadWidgetSpacing = SizedBox(height: _kThreadWidgetPadding);
 class ThreadWidget extends StatelessWidget {
   final Thread thread;
 
-  const ThreadWidget(this.thread, {Key? key}) : super(key: key);
+  const ThreadWidget(this.thread, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -126,7 +126,7 @@ class ThreadWidget extends StatelessWidget {
               Text(
                 formatTimestamp(context, thread.threadCreateDate),
                 style: theme.textTheme.bodySmall,
-                textScaleFactor: 1,
+                textScaler: TextScaler.noScaling,
               ),
             ],
           ),
@@ -184,7 +184,7 @@ class ThreadWidget extends StatelessWidget {
 class _ThreadWidgetActions extends StatefulWidget {
   final Thread thread;
 
-  const _ThreadWidgetActions(this.thread, {Key? key}) : super(key: key);
+  const _ThreadWidgetActions(this.thread);
 
   @override
   State<StatefulWidget> createState() => _ThreadWidgetActionsState();
@@ -314,7 +314,7 @@ class _ThreadWidgetActionsState extends State<_ThreadWidgetActions> {
         ? Text(
             l(context).statsXReplies(replyCount),
             style: textStyle,
-            textScaleFactor: 1,
+            textScaler: TextScaler.noScaling,
           )
         : null;
   }

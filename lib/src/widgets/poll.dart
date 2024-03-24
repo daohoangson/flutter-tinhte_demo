@@ -8,7 +8,7 @@ import 'package:the_app/src/intl.dart';
 class PollWidget extends StatefulWidget {
   final PollOwner owner;
 
-  const PollWidget(this.owner, {Key? key}) : super(key: key);
+  const PollWidget(this.owner, {super.key});
 
   @override
   State<PollWidget> createState() => _PollState();
@@ -114,10 +114,10 @@ class _PollResponsesWidget extends StatefulWidget {
   const _PollResponsesWidget({
     required this.canVote,
     required this.hasResults,
-    Key? key,
+    super.key,
     required this.maxVotes,
     required this.poll,
-  }) : super(key: key);
+  });
 
   @override
   State<StatefulWidget> createState() => _PollResponsesState();

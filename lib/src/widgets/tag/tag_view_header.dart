@@ -6,7 +6,7 @@ import 'package:the_app/src/intl.dart';
 class TagViewHeader extends StatelessWidget {
   final Tag tag;
 
-  const TagViewHeader(this.tag, {Key? key}) : super(key: key);
+  const TagViewHeader(this.tag, {super.key});
 
   @override
   Widget build(BuildContext context) => Row(

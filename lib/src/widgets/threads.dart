@@ -33,10 +33,10 @@ class ThreadsWidget extends StatelessWidget {
     this.forum,
     this.header,
     this.initialJson,
-    Key? key,
+    super.key,
     this.path,
     this.threadsKey = 'threads',
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) => SuperListView<Thread>(

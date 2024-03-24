@@ -12,7 +12,7 @@ import 'package:the_app/src/widgets/menu/dev_tools.dart';
 import 'package:the_app/src/widgets/menu/package_info.dart';
 
 class MenuScreen extends StatelessWidget {
-  const MenuScreen({Key? key}) : super(key: key);
+  const MenuScreen({super.key});
 
   @override
   Widget build(BuildContext context) => Consumer<User>(

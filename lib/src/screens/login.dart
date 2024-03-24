@@ -26,7 +26,7 @@ void logout(BuildContext context) {
 }
 
 class LoginForm extends StatefulWidget {
-  const LoginForm({Key? key}) : super(key: key);
+  const LoginForm({super.key});
 
   @override
   State<StatefulWidget> createState() => _LoginFormState();
@@ -143,7 +143,7 @@ class _LoginFormState extends State<LoginForm> {
                             : provider),
                 onPressed: _isLoggingIn ? null : () => _tfaTrigger(provider),
               ))
-          .toList(growable: false),
+          ,
       tfa.triggeredProvider != null
           ? _buildInputPadding(_buildTfaCode())
           : const SizedBox.shrink(),

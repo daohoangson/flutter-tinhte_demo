@@ -33,7 +33,7 @@ void main() {
 typedef _Top5 = List<SearchResult<Thread>>;
 
 class _HomeTop5TestApp extends StatelessWidget {
-  const _HomeTop5TestApp({Key? key}) : super(key: key);
+  const _HomeTop5TestApp();
 
   @override
   Widget build(BuildContext context) => Scaffold(

@@ -21,7 +21,7 @@ void main() {
 }
 
 class _HomeThreadTestApp extends StatelessWidget {
-  const _HomeThreadTestApp({Key? key}) : super(key: key);
+  const _HomeThreadTestApp();
 
   @override
   Widget build(BuildContext context) => Scaffold(

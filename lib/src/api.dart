@@ -179,8 +179,8 @@ class ApiApp extends StatefulWidget {
   const ApiApp({
     required this.child,
     this.enableBatch = true,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   State<ApiApp> createState() => _ApiAppState();

@@ -9,9 +9,8 @@ import 'package:the_app/src/widgets/image.dart';
 class HomeTop5Widget extends StatelessWidget {
   final List<SearchResult<Thread>> items;
 
-  const HomeTop5Widget(this.items, {Key? key})
-      : assert(items.length == 5),
-        super(key: key);
+  const HomeTop5Widget(this.items, {super.key})
+      : assert(items.length == 5);
 
   @override
   Widget build(BuildContext context) => Padding(
@@ -92,11 +91,10 @@ class _HomeTop5WidgetThread extends StatelessWidget {
   final ContentListItem? item;
   final Thread thread;
 
-  _HomeTop5WidgetThread(SearchResult<Thread> srt, {Key? key})
+  _HomeTop5WidgetThread(SearchResult<Thread> srt)
       : assert(srt.content != null),
         item = srt.listItem,
-        thread = srt.content!,
-        super(key: key);
+        thread = srt.content!;
 
   @override
   Widget build(BuildContext context) => _buildBox(

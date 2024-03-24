@@ -8,7 +8,7 @@ import 'package:the_app/src/screens/search/thread.dart';
 class HomeBottomBar extends StatelessWidget {
   final VoidCallback? onHomeTap;
 
-  const HomeBottomBar({Key? key, this.onHomeTap}) : super(key: key);
+  const HomeBottomBar({super.key, this.onHomeTap});
 
   @override
   Widget build(BuildContext context) => BottomAppBar(
@@ -60,11 +60,10 @@ class _BottomBarItem extends StatelessWidget {
   final String tooltip;
 
   const _BottomBarItem({
-    Key? key,
     this.icon,
     this.onTap,
     required this.tooltip,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) => InkWell(

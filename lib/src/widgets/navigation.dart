@@ -11,11 +11,11 @@ class NavigationWidget extends StatelessWidget {
   final bool? shrinkWrap;
 
   const NavigationWidget({
-    Key? key,
+    super.key,
     required this.path,
     this.progressIndicator,
     this.shrinkWrap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) => SuperListView<Node>(

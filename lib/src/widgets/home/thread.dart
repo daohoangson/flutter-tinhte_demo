@@ -13,11 +13,10 @@ class HomeThreadWidget extends StatelessWidget {
 
   HomeThreadWidget(
     SearchResult<Thread> srt, {
-    Key? key,
+    super.key,
   })  : assert(srt.content != null),
         item = srt.listItem,
-        thread = srt.content!,
-        super(key: key);
+        thread = srt.content!;
 
   @override
   Widget build(BuildContext context) => LayoutBuilder(

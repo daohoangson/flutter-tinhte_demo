@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 class DismissKeyboard extends StatelessWidget {
   final Widget child;
 
-  const DismissKeyboard(this.child, {Key? key}) : super(key: key);
+  const DismissKeyboard(this.child, {super.key});
 
   @override
   Widget build(BuildContext context) => GestureDetector(

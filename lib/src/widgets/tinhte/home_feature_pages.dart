@@ -9,7 +9,7 @@ import 'package:the_app/src/widgets/super_list.dart';
 import 'package:the_app/src/api.dart';
 
 class FeaturePagesWidget extends StatelessWidget {
-  const FeaturePagesWidget({Key? key}) : super(key: key);
+  const FeaturePagesWidget({super.key});
 
   @override
   Widget build(BuildContext context) => LayoutBuilder(
