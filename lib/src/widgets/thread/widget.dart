@@ -126,7 +126,7 @@ class ThreadWidget extends StatelessWidget {
               Text(
                 formatTimestamp(context, thread.threadCreateDate),
                 style: theme.textTheme.bodySmall,
-                textScaleFactor: 1,
+                textScaler: TextScaler.noScaling,
               ),
             ],
           ),
@@ -314,7 +314,7 @@ class _ThreadWidgetActionsState extends State<_ThreadWidgetActions> {
         ? Text(
             l(context).statsXReplies(replyCount),
             style: textStyle,
-            textScaleFactor: 1,
+            textScaler: TextScaler.noScaling,
           )
         : null;
   }

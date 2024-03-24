@@ -87,7 +87,7 @@ class _YouTubeState extends State<YouTubeWidget> {
           color: const Color.fromRGBO(241, 241, 241, 1),
           fontSize: fontSize,
         ),
-        textScaleFactor: 1,
+        textScaler: TextScaler.noScaling,
       ),
     );
   }

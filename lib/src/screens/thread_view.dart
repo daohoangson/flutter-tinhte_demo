@@ -122,7 +122,7 @@ class _ThreadViewState extends State<ThreadViewScreen> {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(fontSize: (kToolbarHeight - 10) / 4),
-                  textScaleFactor: 1,
+                  textScaler: TextScaler.noScaling,
                 ),
               ],
             ),
