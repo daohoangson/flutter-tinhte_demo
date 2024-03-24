@@ -38,11 +38,10 @@ class ThreadImageWidget extends StatelessWidget {
 
   const ThreadImageWidget._({
     required this.image,
-    Key? key,
     this.placeholder,
     required this.threadId,
     this.useImageRatio = false,
-  }) : super(key: key);
+  });
 
   factory ThreadImageWidget.small(Thread thread, ThreadImage? image,
       {bool useImageRatio = false}) {

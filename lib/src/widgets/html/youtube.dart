@@ -12,9 +12,9 @@ class YouTubeWidget extends StatefulWidget {
 
   const YouTubeWidget(
     this.id, {
-    Key? key,
+    super.key,
     required this.lowresThumbnailUrl,
-  }) : super(key: key);
+  });
 
   @override
   State<StatefulWidget> createState() => _YouTubeState();

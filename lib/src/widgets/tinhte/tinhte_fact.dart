@@ -29,9 +29,9 @@ class TinhteFact extends StatelessWidget {
   const TinhteFact(
     this.thread, {
     this.autoPlayVideo = false,
-    Key? key,
+    super.key,
     this.post,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

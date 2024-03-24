@@ -17,10 +17,10 @@ class PostEditorWidget extends StatefulWidget {
 
   const PostEditorWidget({
     required this.callback,
-    Key? key,
+    super.key,
     required this.paddingHorizontal,
     required this.paddingVertical,
-  }) : super(key: key);
+  });
 
   @override
   State<StatefulWidget> createState() => _PostEditorState();

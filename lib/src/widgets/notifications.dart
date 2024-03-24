@@ -17,7 +17,7 @@ import 'package:the_app/src/push_notification.dart';
 int _subscribedUserId = 0;
 
 class NotificationsWidget extends StatefulWidget {
-  const NotificationsWidget({Key? key}) : super(key: key);
+  const NotificationsWidget({super.key});
 
   @override
   State<NotificationsWidget> createState() => _NotificationsState();

@@ -4,7 +4,7 @@ import 'package:the_app/src/widgets/threads.dart';
 import 'package:the_app/src/config.dart';
 
 class BookmarkListScreen extends StatelessWidget {
-  const BookmarkListScreen({Key? key}) : super(key: key);
+  const BookmarkListScreen({super.key});
 
   @override
   Widget build(BuildContext context) => Scaffold(

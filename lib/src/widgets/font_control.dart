@@ -39,7 +39,7 @@ class _FontScale extends ChangeNotifier implements FontScale {
 }
 
 class FontControlWidget extends StatelessWidget {
-  const FontControlWidget({Key? key}) : super(key: key);
+  const FontControlWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

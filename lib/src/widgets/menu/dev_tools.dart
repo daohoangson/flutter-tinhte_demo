@@ -56,7 +56,7 @@ class _DevTools extends ChangeNotifier implements DevTools {
 }
 
 class DeveloperMenu extends StatelessWidget {
-  const DeveloperMenu({Key? key}) : super(key: key);
+  const DeveloperMenu({super.key});
 
   @override
   Widget build(BuildContext context) => Consumer<DevTools>(
@@ -71,7 +71,7 @@ class DeveloperMenu extends StatelessWidget {
 }
 
 class DeveloperMenuScreen extends StatelessWidget {
-  const DeveloperMenuScreen({Key? key}) : super(key: key);
+  const DeveloperMenuScreen({super.key});
 
   @override
   Widget build(BuildContext context) => Scaffold(

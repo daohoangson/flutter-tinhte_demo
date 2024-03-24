@@ -61,7 +61,7 @@ extension ApiAppTester on WidgetTester {
 class ThreadViewTestApp extends StatefulWidget {
   final int threadId;
 
-  const ThreadViewTestApp({Key? key, required this.threadId}) : super(key: key);
+  const ThreadViewTestApp({super.key, required this.threadId});
 
   @override
   State<ThreadViewTestApp> createState() => _ThreadViewTestAppState();

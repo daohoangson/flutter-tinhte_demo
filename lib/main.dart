@@ -65,9 +65,9 @@ class MyApp extends StatelessWidget {
     required this.darkTheme,
     required this.devTools,
     required this.fontScale,
-    Key? key,
+    super.key,
     required this.home,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) => MultiProvider(

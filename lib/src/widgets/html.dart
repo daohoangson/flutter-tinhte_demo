@@ -47,10 +47,10 @@ class TinhteHtmlWidget extends StatelessWidget {
 
   const TinhteHtmlWidget(
     this.html, {
-    Key? key,
+    super.key,
     this.textPadding = kPostBodyPadding,
     this.textStyle,
-  }) : super(key: key);
+  });
 
   bool get enableCaching {
     var skipCaching = false;

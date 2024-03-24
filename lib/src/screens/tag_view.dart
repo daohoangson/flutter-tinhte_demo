@@ -10,8 +10,8 @@ class TagViewScreen extends StatelessWidget {
   const TagViewScreen(
     this.tag, {
     this.initialJson,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) => Scaffold(

@@ -8,7 +8,7 @@ import 'package:the_app/src/intl.dart';
 class ThreadBookmarkWidget extends StatefulWidget {
   final Thread thread;
 
-  const ThreadBookmarkWidget(this.thread, {Key? key}) : super(key: key);
+  const ThreadBookmarkWidget(this.thread, {super.key});
 
   @override
   State<StatefulWidget> createState() => _ThreadBookmarkState();

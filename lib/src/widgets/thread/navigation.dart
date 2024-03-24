@@ -7,7 +7,7 @@ const _kThreadNavigationSeparatorPadding = 2.0;
 class ThreadNavigationWidget extends StatefulWidget {
   final Thread thread;
 
-  const ThreadNavigationWidget(this.thread, {Key? key}) : super(key: key);
+  const ThreadNavigationWidget(this.thread, {super.key});
 
   @override
   State<ThreadNavigationWidget> createState() => _ThreadNavigationState();

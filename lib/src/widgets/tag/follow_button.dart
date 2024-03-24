@@ -9,7 +9,7 @@ import 'package:the_app/src/intl.dart';
 class FollowButton extends StatefulWidget {
   final Followable followable;
 
-  const FollowButton(this.followable, {Key? key}) : super(key: key);
+  const FollowButton(this.followable, {super.key});
 
   @override
   State<StatefulWidget> createState() => _FollowState();
@@ -158,8 +158,7 @@ class _FollowOptionsDialog extends StatefulWidget {
   final _FollowOptions fo;
   final Followable followable;
 
-  const _FollowOptionsDialog(this.followable, this.fo, {Key? key})
-      : super(key: key);
+  const _FollowOptionsDialog(this.followable, this.fo);
 
   @override
   State<_FollowOptionsDialog> createState() => _FollowOptionsState();

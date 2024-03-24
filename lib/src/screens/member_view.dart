@@ -9,7 +9,7 @@ import 'package:the_app/src/api.dart';
 class MemberViewScreen extends StatefulWidget {
   final User user;
 
-  const MemberViewScreen(this.user, {Key? key}) : super(key: key);
+  const MemberViewScreen(this.user, {super.key});
 
   @override
   State<StatefulWidget> createState() => _MemberViewScreenState();

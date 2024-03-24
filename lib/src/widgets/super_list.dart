@@ -37,11 +37,10 @@ class SuperListView<T> extends StatefulWidget {
     this.initialItems,
     required this.itemBuilder,
     this.itemMaxWidth = 600,
-    Key? key,
+    super.key,
     this.progressIndicator,
     this.shrinkWrap,
-  })  : assert((fetchPathInitial != null) || (initialJson != null)),
-        super(key: key);
+  })  : assert((fetchPathInitial != null) || (initialJson != null));
 
   @override
   State<StatefulWidget> createState() => SuperListState<T>();
@@ -75,8 +74,8 @@ class SuperListItemFullWidth extends StatelessWidget {
 
   const SuperListItemFullWidth({
     required this.child,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) => child;

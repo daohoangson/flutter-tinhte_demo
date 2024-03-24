@@ -12,7 +12,7 @@ import 'package:the_app/src/widgets/forum/forum_picker.dart';
 class ThreadCreateScreen extends StatefulWidget {
   final Forum? forum;
 
-  const ThreadCreateScreen({Key? key, this.forum}) : super(key: key);
+  const ThreadCreateScreen({super.key, this.forum});
 
   @override
   State<ThreadCreateScreen> createState() => _ThreadCreateScreenState();

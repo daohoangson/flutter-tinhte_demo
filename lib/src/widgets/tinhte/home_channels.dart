@@ -5,7 +5,7 @@ import 'package:the_app/src/widgets/home/header.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ChannelsWidget extends StatelessWidget {
-  const ChannelsWidget({Key? key}) : super(key: key);
+  const ChannelsWidget({super.key});
 
   @override
   Widget build(BuildContext context) => Card(

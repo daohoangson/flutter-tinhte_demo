@@ -11,9 +11,9 @@ class VideoPlayer extends StatefulWidget {
   const VideoPlayer({
     required this.aspectRatio,
     required this.autoPlay,
-    Key? key,
+    super.key,
     required this.uri,
-  }) : super(key: key);
+  });
 
   @override
   State<VideoPlayer> createState() => _VideoState();

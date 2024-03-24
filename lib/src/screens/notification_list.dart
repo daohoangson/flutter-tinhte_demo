@@ -3,7 +3,7 @@ import 'package:the_app/src/intl.dart';
 import 'package:the_app/src/widgets/notifications.dart';
 
 class NotificationListScreen extends StatelessWidget {
-  const NotificationListScreen({Key? key}) : super(key: key);
+  const NotificationListScreen({super.key});
 
   @override
   Widget build(BuildContext context) => Scaffold(

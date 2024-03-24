@@ -12,7 +12,7 @@ import 'package:the_app/src/intl.dart';
 class HomeScreen extends StatelessWidget {
   final superList = GlobalKey<SuperListState>();
 
-  HomeScreen({Key? key}) : super(key: key);
+  HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) => Scaffold(

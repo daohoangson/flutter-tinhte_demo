@@ -11,7 +11,7 @@ import 'package:the_app/src/widgets/threads.dart';
 class ForumViewScreen extends StatefulWidget {
   final Forum forum;
 
-  const ForumViewScreen(this.forum, {Key? key}) : super(key: key);
+  const ForumViewScreen(this.forum, {super.key});
 
   @override
   State<StatefulWidget> createState() => _ForumViewScreenState();

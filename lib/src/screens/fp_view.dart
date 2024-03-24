@@ -6,7 +6,7 @@ import 'package:the_app/src/widgets/threads.dart';
 class FpViewScreen extends StatelessWidget {
   final FeaturePage fp;
 
-  const FpViewScreen(this.fp, {Key? key}) : super(key: key);
+  const FpViewScreen(this.fp, {super.key});
 
   @override
   Widget build(BuildContext context) => Scaffold(
