@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 part of '../html.dart';
 
 const kLinkExpanderSquareThumbnailSize = 120.0;
@@ -45,8 +47,11 @@ class LinkExpander {
         break;
       case 'span':
         if (e.classes.contains('host')) {
-          childMeta.tsb.enqueue((p, dynamic _) =>
-              p.copyWith(style: p.style.copyWith(color: Colors.grey)));
+          childMeta.tsb.enqueue(
+            (p, dynamic _) =>
+                p.copyWith(style: p.style.copyWith(color: Colors.grey)),
+            null,
+          );
         }
         break;
     }
@@ -68,9 +73,10 @@ class LinkExpander {
     final a = meta.element.attributes;
     final fullUrl = wf.urlFull(a['href'] ?? '');
     final onTap = fullUrl != null ? wf.gestureTapCallback(fullUrl) : null;
+    final recognizer = wf.buildGestureRecognizer(meta, onTap: onTap);
 
-    return WidgetPlaceholder<LinkExpander>(this)
-      ..wrapWith((context, previous) {
+    return WidgetPlaceholder(
+      builder: (context, previous) {
         final decoBox =
             wf.buildDecoration(meta, child, color: Theme.of(context).cardColor);
         if (decoBox == null) return previous;
@@ -84,12 +90,13 @@ class LinkExpander {
           );
         }
 
-        if (onTap != null) {
-          built = wf.buildGestureDetector(meta, built, onTap) ?? built;
+        if (recognizer != null) {
+          built = wf.buildGestureDetector(meta, built, recognizer) ?? built;
         }
 
         return built;
-      });
+      },
+    );
   }
 
   Widget _buildSquare(Widget left, Widget right) => _buildBox(
@@ -196,8 +203,7 @@ class _LinkExpanderInfo {
   Iterable<Widget> onWidgets(
       BuildMetadata _, Iterable<WidgetPlaceholder> widgets) {
     final scopedDescription = _description;
-    final widget = le._info = WidgetPlaceholder<_LinkExpanderInfo>(
-      this,
+    final widget = le._info = WidgetPlaceholder(
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: kPostBodyPadding),
         child: LayoutBuilder(

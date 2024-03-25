@@ -1,8 +1,13 @@
+// ignore_for_file: avoid_renaming_method_parameters, deprecated_member_use
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
+// ignore: implementation_imports
+import 'package:flutter_widget_from_html_core/src/internal/core_ops.dart'
+    show Priority;
 import 'package:fwfh_webview/fwfh_webview.dart';
 import 'package:html_unescape/html_unescape.dart';
 import 'package:http/http.dart';
@@ -141,18 +146,13 @@ class TinhteWidgetFactory extends WidgetFactory {
 
   BuildOp get smilieOp {
     return _smilieOp ??= BuildOp(
-      onTree: (meta, tree) {
-        final a = meta.element.attributes;
+      onParsed: (tree) {
+        final a = tree.element.attributes;
         final title = a['data-title'];
-        if (title == null) return;
+        if (title == null) return tree;
         final smilie = _kSmilies[title];
-        if (smilie == null) return;
-        final parentTree = tree.parent;
-        if (parentTree == null) return;
-
-        // TODO: use `replaceWith` when it comes back in v0.9
-        TextBit(parentTree, smilie).insertBefore(tree);
-        tree.detach();
+        if (smilie == null) return tree;
+        return tree.parent.sub()..addText(smilie);
       },
     );
   }

@@ -4,108 +4,110 @@ const kColumns = 3;
 const kSpacing = 3.0;
 
 class Galleria {
-  final BuildMetadata galleryMeta;
+  final BuildTree galleryTree;
   final TinhteWidgetFactory wf;
 
+  final _items = <WidgetPlaceholder>[];
   final _lb = LbTrigger();
 
-  Galleria(this.wf, this.galleryMeta);
+  Galleria(this.wf, this.galleryTree);
 
   BuildOp? _galleriaOp;
   BuildOp get op {
     return _galleriaOp ??= BuildOp(
-      onChild: onChild,
-      onWidgets: onWidgets,
+      onVisitChild: onVisitChild,
+      onRenderBlock: onRenderBlock,
     );
   }
 
-  void onChild(BuildMetadata childMeta) {
-    final e = childMeta.element;
-    if (e.parent != galleryMeta.element) return;
+  void onVisitChild(BuildTree _, BuildTree subTree) {
+    final e = subTree.element;
+    if (e.parent != galleryTree.element) return;
     if (e.localName != 'li') return;
-
-    childMeta.register(_GalleriaItem(wf, this, childMeta).op);
+    subTree.register(_GalleriaItem(wf, this, subTree).op);
   }
 
-  Iterable<Widget> onWidgets(
-          BuildMetadata _, Iterable<WidgetPlaceholder> widgets) =>
-      [
-        WidgetPlaceholder<Galleria>(this,
-            child: _GalleriaGrid(widgets.toList(growable: false)))
-      ];
+  Widget onRenderBlock(BuildTree _, WidgetPlaceholder placeholder) =>
+      _items.isNotEmpty ? _GalleriaGrid(_items) : placeholder;
 }
 
 class _GalleriaItem {
-  final BuildMetadata itemMeta;
+  final BuildTree itemTree;
   final Galleria galleria;
   final WidgetFactory wf;
 
   Widget? _description;
   BuildOp? _descriptionOp;
   String? _source;
-  WidgetPlaceholder? _trigger;
+  Widget? _trigger;
   BuildOp? _triggerOp;
 
-  _GalleriaItem(this.wf, this.galleria, this.itemMeta);
+  _GalleriaItem(this.wf, this.galleria, this.itemTree);
 
   BuildOp? _itemOp;
   BuildOp get op {
     return _itemOp ??= BuildOp(
-      onChild: onChild,
-      onWidgets: onWidgets,
+      onVisitChild: onVisitChild,
+      onRenderBlock: onRenderBlock,
     );
   }
 
-  void onChild(BuildMetadata childMeta) {
-    final e = childMeta.element;
-    if (e.parent != itemMeta.element) return;
+  void onVisitChild(BuildTree _, BuildTree subSubTree) {
+    final e = subSubTree.element;
+    if (e.parent != itemTree.element) return;
 
     switch (e.className) {
       case 'LbTrigger':
         _source ??= wf.urlFull(e.attributes['href'] ?? '');
         final triggerOp = _triggerOp ??= BuildOp(
-          onWidgets: (meta, widgets) {
-            // bypass built-in A tag handling with 0 priority
-            // and NOT returning anything in `onWidgets`
-            _trigger = wf.buildColumnPlaceholder(meta, widgets);
-            return [];
-          },
-          priority: 0,
+          alwaysRenderBlock: true,
+          onRenderedBlock: (_, block) => _trigger = block,
         );
-        childMeta.register(triggerOp);
+        subSubTree.register(triggerOp);
         break;
       case 'Tinhte_Gallery_Description':
         final descriptionOp = _descriptionOp ??= BuildOp(
-          onWidgets: (meta, widgets) {
-            meta.tsb.enqueue((p, dynamic _) => p.copyWith(
-                style: p
-                    .getDependency<ThemeData>()
-                    .textTheme
-                    .bodySmall
-                    ?.copyWith(color: kCaptionColor)));
-            _description = wf.buildColumnPlaceholder(meta, widgets);
-            return [];
+          alwaysRenderBlock: true,
+          onParsed: (descriptionTree) {
+            return descriptionTree
+              ..inheritanceResolvers.enqueue<BuildContext?>(
+                (style, context) => style.copyWith(
+                  style: Theme.of(context!)
+                      .textTheme
+                      .bodySmall
+                      ?.copyWith(color: kCaptionColor),
+                ),
+                null,
+              );
           },
+          onRenderedBlock: (_, block) => _description = block,
         );
-        childMeta.register(descriptionOp);
+        subSubTree.register(descriptionOp);
         break;
     }
   }
 
-  Iterable<Widget> onWidgets(
-      BuildMetadata _, Iterable<WidgetPlaceholder> widgets) {
+  Widget onRenderBlock(BuildTree _, WidgetPlaceholder placeholder) {
     final scopedSource = _source;
     final scopedTrigger = _trigger;
-    if (scopedSource == null || scopedTrigger == null) return widgets;
+    if (scopedSource == null || scopedTrigger == null) return placeholder;
 
     final index = galleria._lb.addSource(
       LbTriggerSource.image(scopedSource),
       caption: _description,
     );
-    scopedTrigger.wrapWith((context, child) =>
-        galleria._lb.buildGestureDetector(context, child, index));
 
-    return [scopedTrigger];
+    galleria._items.add(
+      WidgetPlaceholder.lazy(
+        scopedTrigger,
+        debugLabel: '${itemTree.element.localName}--galleriaItem',
+      ).wrapWith(
+        (context, child) =>
+            galleria._lb.buildGestureDetector(context, child, index),
+      ),
+    );
+
+    return widget0;
   }
 }
 
