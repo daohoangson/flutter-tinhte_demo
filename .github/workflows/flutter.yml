@@ -349,7 +349,7 @@ jobs:
         run: |
           set -e
 
-          gsutil cp build/windows/runner/Release/the_app.msix "${GCS_PATH}/windows/the_app.msix"
+          gsutil cp build/windows/x64/runner/Release/the_app.msix "${GCS_PATH}/windows/the_app.msix"
 
       - name: Prepare markdown
         id: markdown
