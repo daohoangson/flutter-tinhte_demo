@@ -8,18 +8,18 @@ class PhotoCompare {
 
   PhotoCompare(this.wf);
 
-  BuildOp get buildOp => BuildOp.v1(
+  BuildOp get buildOp => BuildOp(
         defaultStyles: (_) => {'margin': '0.5em 0'},
-        onChild: (tree, subTree) {
+        onVisitChild: (tree, subTree) {
           if (subTree.element.localName == 'img') {
             subTree.register(
-              BuildOp.v1(
+              BuildOp(
                 onRenderBlock: (_, placeholder) {
                   final child = placeholder.firstChild;
                   if (child != null) {
-                    final value = tree.value<_Images>();
+                    final value = tree.getNonInherited<_Images>();
                     if (value == null) {
-                      tree.value(_Images([child]));
+                      tree.setNonInherited(_Images([child]));
                     } else {
                       value.widgets.add(child);
                     }
@@ -33,7 +33,7 @@ class PhotoCompare {
         },
         onParsed: (tree) {
           final replacement = tree.parent.sub();
-          final images = tree.value<_Images>()?.widgets;
+          final images = tree.getNonInherited<_Images>()?.widgets;
           if (images == null || images.length != 2) return tree;
 
           final a = tree.element.attributes;

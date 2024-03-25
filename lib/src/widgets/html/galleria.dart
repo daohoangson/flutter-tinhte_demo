@@ -14,13 +14,13 @@ class Galleria {
 
   BuildOp? _galleriaOp;
   BuildOp get op {
-    return _galleriaOp ??= BuildOp.v1(
-      onChild: onChild,
+    return _galleriaOp ??= BuildOp(
+      onVisitChild: onVisitChild,
       onRenderBlock: onRenderBlock,
     );
   }
 
-  void onChild(BuildTree _, BuildTree subTree) {
+  void onVisitChild(BuildTree _, BuildTree subTree) {
     final e = subTree.element;
     if (e.parent != galleryTree.element) return;
     if (e.localName != 'li') return;
@@ -46,33 +46,33 @@ class _GalleriaItem {
 
   BuildOp? _itemOp;
   BuildOp get op {
-    return _itemOp ??= BuildOp.v1(
-      onChild: onChild,
+    return _itemOp ??= BuildOp(
+      onVisitChild: onVisitChild,
       onRenderBlock: onRenderBlock,
     );
   }
 
-  void onChild(BuildTree _, BuildTree subSubTree) {
+  void onVisitChild(BuildTree _, BuildTree subSubTree) {
     final e = subSubTree.element;
     if (e.parent != itemTree.element) return;
 
     switch (e.className) {
       case 'LbTrigger':
         _source ??= wf.urlFull(e.attributes['href'] ?? '');
-        final triggerOp = _triggerOp ??= BuildOp.v1(
+        final triggerOp = _triggerOp ??= BuildOp(
           alwaysRenderBlock: true,
           onRenderedBlock: (_, block) => _trigger = block,
         );
         subSubTree.register(triggerOp);
         break;
       case 'Tinhte_Gallery_Description':
-        final descriptionOp = _descriptionOp ??= BuildOp.v1(
+        final descriptionOp = _descriptionOp ??= BuildOp(
           alwaysRenderBlock: true,
           onParsed: (descriptionTree) {
             return descriptionTree
-              ..apply<BuildContext?>(
+              ..inheritanceResolvers.enqueue<BuildContext?>(
                 (style, context) => style.copyWith(
-                  textStyle: Theme.of(context!)
+                  style: Theme.of(context!)
                       .textTheme
                       .bodySmall
                       ?.copyWith(color: kCaptionColor),

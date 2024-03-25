@@ -142,7 +142,7 @@ class TinhteWidgetFactory extends WidgetFactory {
   }
 
   BuildOp get smilieOp {
-    return _smilieOp ??= BuildOp.v1(
+    return _smilieOp ??= BuildOp(
       onParsed: (tree) {
         final a = tree.element.attributes;
         final title = a['data-title'];
