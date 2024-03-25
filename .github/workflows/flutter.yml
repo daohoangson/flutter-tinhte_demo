@@ -312,7 +312,7 @@ jobs:
         shell: bash
     steps:
       - uses: actions/checkout@v4
-      - uses: Vampire/setup-wsl@v2
+      - uses: Vampire/setup-wsl@v3
         with:
           additional-packages: bash file git-crypt yq
           distribution: Alpine
