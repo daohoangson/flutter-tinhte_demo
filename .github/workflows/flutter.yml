@@ -322,7 +322,7 @@ jobs:
         run: |
           set -e
 
-          snap install yq
+          wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq && chmod +x /usr/bin/yq
           bash ./.github/workflows/prepare.sh
         env:
           WSLENV: GITHUB_ENV:GITHUB_RUN_ATTEMPT:GITHUB_RUN_NUMBER:GIT_CRYPT_KEY
