@@ -433,18 +433,18 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_widget_from_html
-      sha256: "7b290290bfe34fe95d8b64aa5420746e5ae214862465399c682e8da87bc1759d"
+      sha256: "22c911b6ccf82b83e0c457d987bac4e703440fea0fc88dab24f4dfe995a5f33f"
       url: "https://pub.dev"
     source: hosted
-    version: "0.13.1-alpha.2"
+    version: "0.14.11"
   flutter_widget_from_html_core:
     dependency: transitive
     description:
       name: flutter_widget_from_html_core
-      sha256: "2dba32b7dbd2134af46138f6171683aff51b888c4d0b3efe289a79e3322f172e"
+      sha256: "028f4989b9ff4907466af233d50146d807772600d98a3e895662fbdb09c39225"
       url: "https://pub.dev"
     source: hosted
-    version: "0.13.1-alpha.2"
+    version: "0.14.11"
   font_awesome_flutter:
     dependency: "direct main"
     description:
@@ -473,50 +473,50 @@ packages:
     dependency: transitive
     description:
       name: fwfh_cached_network_image
-      sha256: "5ef697aa59ab5c5343ade651ae503fe920ad9fc5a08f42ed11b77b0bf8064664"
+      sha256: "952aea958a5fda7d616cc297ba4bc08427e381459e75526fa375d6d8345630d3"
       url: "https://pub.dev"
     source: hosted
-    version: "0.13.0-alpha.1"
+    version: "0.14.2"
   fwfh_chewie:
     dependency: transitive
     description:
       name: fwfh_chewie
-      sha256: c0dbfe12f04bf54eef8e93718ae5b7f177d477513d7ed670a2d896e2bbb7e5b8
+      sha256: bbb036cd322ab77dc0edd34cbbf76181681f5e414987ece38745dc4f3d7408ed
       url: "https://pub.dev"
     source: hosted
-    version: "0.13.1-alpha.2"
+    version: "0.14.7"
   fwfh_just_audio:
     dependency: transitive
     description:
       name: fwfh_just_audio
-      sha256: "7f3aa6a9a80461cea044f4d19e53175306b761c2f713ddaebdb1d5f81002f9be"
+      sha256: "4962bc59cf8bbb0a77a55ff56a7b925612b0d8263bc2ede3636b9c86113cb493"
       url: "https://pub.dev"
     source: hosted
-    version: "0.13.1-alpha.2"
+    version: "0.14.2"
   fwfh_svg:
     dependency: transitive
     description:
       name: fwfh_svg
-      sha256: a7257a6128fa2853dbb080ba1cf48a9fde3e6091ed493ea95966f9e5bdc7d841
+      sha256: "3fd83926b7245d287f133a437ef430befd99d3b00ba8c600f26cc324af281f72"
       url: "https://pub.dev"
     source: hosted
-    version: "0.13.1-alpha.2"
+    version: "0.8.1"
   fwfh_url_launcher:
     dependency: transitive
     description:
       name: fwfh_url_launcher
-      sha256: "5d30a71e01d9a2eb1f4b971588665d3af00f49b7b7aa307451e3e6d758995729"
+      sha256: "2a526c9819f74b4106ba2fba4dac79f0082deecd8d2c7011cd0471cb710e3eff"
       url: "https://pub.dev"
     source: hosted
-    version: "0.13.0-alpha.1"
+    version: "0.9.0+4"
   fwfh_webview:
     dependency: "direct main"
     description:
       name: fwfh_webview
-      sha256: "16e4d0fd65b28dd04790c355415891543f88f287cf2837d0d4d05ceefd774e8b"
+      sha256: b828bb5ddd4361a866cdb8f1b0de4f3348f332915ecf2f4215ba17e46c656adc
       url: "https://pub.dev"
     source: hosted
-    version: "0.13.1-alpha.2"
+    version: "0.14.8"
   get_it:
     dependency: transitive
     description:
