@@ -314,8 +314,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: Vampire/setup-wsl@v3
         with:
-          additional-packages: git-crypt
-          distribution: Ubuntu-22.04
+          wsl-shell-user: linuxbrew
       - name: Prepare repo
         run: bash ./.github/workflows/prepare.sh
         shell: wsl-bash {0}
