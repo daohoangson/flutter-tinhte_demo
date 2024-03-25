@@ -15,18 +15,15 @@ class PhotoCompare {
             subTree.register(
               BuildOp(
                 onRenderBlock: (_, placeholder) {
-                  final child = placeholder.firstChild;
-                  if (child != null) {
-                    final value = tree.getNonInherited<_Images>();
-                    if (value == null) {
-                      tree.setNonInherited(_Images([child]));
-                    } else {
-                      value.widgets.add(child);
-                    }
+                  final value = tree.getNonInherited<_Images>();
+                  if (value == null) {
+                    tree.setNonInherited(_Images([placeholder]));
+                  } else {
+                    value.widgets.add(placeholder);
                   }
-                  return placeholder;
+                  return widget0;
                 },
-                priority: 5000000000000000, // Priority._baseBoxModel
+                priority: Priority.tagImg + 1,
               ),
             );
           }

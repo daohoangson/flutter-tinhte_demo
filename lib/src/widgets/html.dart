@@ -5,6 +5,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
+// ignore: implementation_imports
+import 'package:flutter_widget_from_html_core/src/internal/core_ops.dart'
+    show Priority;
 import 'package:fwfh_webview/fwfh_webview.dart';
 import 'package:html_unescape/html_unescape.dart';
 import 'package:http/http.dart';
