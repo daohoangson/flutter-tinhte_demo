@@ -316,8 +316,13 @@ jobs:
         with:
           wsl-shell-user: linuxbrew
       - name: Prepare repo
-        run: bash ./.github/workflows/prepare.sh
-        shell: wsl-bash {0}
+        shell: wsl-bash -u linuxbrew {0}
+        run: |
+          set -e
+
+          bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+          export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
+          bash ./.github/workflows/prepare.sh
         env:
           WSLENV: GITHUB_ENV:GITHUB_RUN_ATTEMPT:GITHUB_RUN_NUMBER:GIT_CRYPT_KEY
 
