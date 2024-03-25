@@ -21,6 +21,7 @@ jobs:
 
           eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
           bash ./.github/workflows/prepare.sh
+
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
@@ -312,13 +313,17 @@ jobs:
         shell: bash
     steps:
       - uses: actions/checkout@v4
-      - uses: Vampire/setup-wsl@v2
+      - uses: Vampire/setup-wsl@v3
         with:
-          additional-packages: bash file git-crypt yq
-          distribution: Alpine
+          additional-packages: git-crypt
+          distribution: Ubuntu-22.04
       - name: Prepare repo
-        run: bash ./.github/workflows/prepare.sh
         shell: wsl-bash {0}
+        run: |
+          set -e
+
+          wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq && chmod +x /usr/bin/yq
+          bash ./.github/workflows/prepare.sh
         env:
           WSLENV: GITHUB_ENV:GITHUB_RUN_ATTEMPT:GITHUB_RUN_NUMBER:GIT_CRYPT_KEY
 
@@ -330,6 +335,7 @@ jobs:
       - name: Prepare packages/api
         run: ./packages/api/tool/build.sh
       - run: flutter pub get
+      - run: flutter build windows
       - name: Run flutter pub run msix:create
         run: flutter pub run msix:create --install-certificate=false
 
@@ -343,7 +349,7 @@ jobs:
         run: |
           set -e
 
-          gsutil cp build/windows/runner/Release/the_app.msix "${GCS_PATH}/windows/the_app.msix"
+          gsutil cp build/windows/x64/runner/Release/the_app.msix "${GCS_PATH}/windows/the_app.msix"
 
       - name: Prepare markdown
         id: markdown
