@@ -21,6 +21,7 @@ jobs:
 
           eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
           bash ./.github/workflows/prepare.sh
+
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
@@ -306,7 +307,7 @@ jobs:
 
   build_windows:
     if: ${{ github.ref == 'refs/heads/master' || contains(github.ref, 'windows') }}
-    runs-on: windows-latest
+    runs-on: windows-2022
     defaults:
       run:
         shell: bash
@@ -315,13 +316,16 @@ jobs:
       - uses: Vampire/setup-wsl@v3
         with:
           wsl-shell-user: linuxbrew
+      - name: Install dependencies for Homebrew on Linux
+        shell: wsl-bash -u root {0}
+        run: apt update && apt-get install --yes build-essential procps curl file git
       - name: Prepare repo
         shell: wsl-bash -u linuxbrew {0}
         run: |
           set -e
 
-          bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
-          export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
+          bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
           bash ./.github/workflows/prepare.sh
         env:
           WSLENV: GITHUB_ENV:GITHUB_RUN_ATTEMPT:GITHUB_RUN_NUMBER:GIT_CRYPT_KEY
