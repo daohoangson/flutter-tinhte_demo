@@ -47,7 +47,7 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
 
   build_apk:
-    if: ${{ github.ref == 'refs/heads/master' || contains(github.ref, 'android') || startsWith(github.ref, 'refs/heads/renovate/flutter-') }}
+    if: ${{ github.ref == 'refs/heads/master' || contains(github.ref, 'android') || startsWith(github.ref, 'refs/heads/renovate/flutter-') || contains(github.ref, 'fwfh') }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -111,7 +111,7 @@ jobs:
           fingerprint: <!-- ${{ github.sha }} -->
 
   build_ipa:
-    if: ${{ github.ref == 'refs/heads/master' || contains(github.ref, 'ios') }}
+    if: ${{ github.ref == 'refs/heads/master' || contains(github.ref, 'ios') || contains(github.ref, 'fwfh') }}
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
@@ -243,7 +243,7 @@ jobs:
           fingerprint: <!-- ${{ github.sha }} -->
 
   build_macos:
-    if: ${{ github.ref == 'refs/heads/master' || contains(github.ref, 'macos') || startsWith(github.ref, 'refs/heads/renovate/flutter-') }}
+    if: ${{ github.ref == 'refs/heads/master' || contains(github.ref, 'macos') || startsWith(github.ref, 'refs/heads/renovate/flutter-') || contains(github.ref, 'fwfh') }}
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
