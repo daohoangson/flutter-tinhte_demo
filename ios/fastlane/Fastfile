@@ -1,9 +1,18 @@
 default_platform(:ios)
 
+api_key_path = 'fastlane/4TV2PTBPVG.json'
+
 platform :ios do
   lane :devices do
-    register_devices(devices_file: "./fastlane/devices.txt")
-    match(type: "adhoc", force_for_new_devices: true)
+    register_devices(
+      api_key_path: api_key_path,
+      devices_file: "./fastlane/devices.txt"
+    )
+    match(
+      api_key_path: api_key_path,
+      type: "adhoc",
+      force_for_new_devices: true
+    )
   end
 
   lane :build_ipa do
@@ -51,7 +60,7 @@ platform :ios do
 
     commit = last_git_commit
     upload_to_testflight(
-      api_key_path: "fastlane/4TV2PTBPVG.json",
+      api_key_path: api_key_path,
       changelog: commit[:message],
       distribute_external: true,
       groups: "Public group"
