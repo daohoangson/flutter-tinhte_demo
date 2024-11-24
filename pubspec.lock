@@ -433,18 +433,18 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_widget_from_html
-      sha256: "8d2a9a7979a9c1a5d866d1f4134d2ec2cca78716c112c76803d6a552281405cc"
+      sha256: b931148824bcfc24c7be6f2daeabf549e237c9e617e93cd63256d924884ce423
       url: "https://pub.dev"
     source: hosted
-    version: "0.10.6"
+    version: "0.15.0"
   flutter_widget_from_html_core:
     dependency: transitive
     description:
       name: flutter_widget_from_html_core
-      sha256: "22140caa191cb4bba0fe4d5e4ad875c7e8a9ba47d61517f56d733019cf76396d"
+      sha256: cc1d9be3d187ce668ee02091cd5442dfb050cdaf98e0ab9a4d12ad008f966979
       url: "https://pub.dev"
     source: hosted
-    version: "0.10.6"
+    version: "0.14.12"
   font_awesome_flutter:
     dependency: "direct main"
     description:
@@ -473,26 +473,26 @@ packages:
     dependency: transitive
     description:
       name: fwfh_cached_network_image
-      sha256: "3de22aa3a6943c968e0d9fbcba4463b3dbbf7103171d62c84b6c672fb83eebdf"
+      sha256: "952aea958a5fda7d616cc297ba4bc08427e381459e75526fa375d6d8345630d3"
       url: "https://pub.dev"
     source: hosted
-    version: "0.7.0+7"
+    version: "0.14.2"
   fwfh_chewie:
     dependency: transitive
     description:
       name: fwfh_chewie
-      sha256: "0b51a1c976bb74da5e8e45d545c74cb54a7168ad3938dd77103a7aee485f55fa"
+      sha256: bbb036cd322ab77dc0edd34cbbf76181681f5e414987ece38745dc4f3d7408ed
       url: "https://pub.dev"
     source: hosted
-    version: "0.7.1+4"
+    version: "0.14.7"
   fwfh_just_audio:
     dependency: transitive
     description:
       name: fwfh_just_audio
-      sha256: "237b93a4cb9f0495a4b51940f361adda2a5abd57231dd44f07459db00144a6cd"
+      sha256: "209cf9644599e37b0edb6961c4f30ce80d156f5a53a50355f75fb4a22f9fdb0a"
       url: "https://pub.dev"
     source: hosted
-    version: "0.9.0+3"
+    version: "0.14.3"
   fwfh_svg:
     dependency: transitive
     description:
@@ -513,10 +513,10 @@ packages:
     dependency: "direct main"
     description:
       name: fwfh_webview
-      sha256: "90a8dda0695403cf57abd7e8b83f6fb1f1a12933930a0bf9cac7cafb06e06a18"
+      sha256: "63fa69577d5cbed5603cc91d6a7eca62472a852db14225da2f4ec6839c2f59e6"
       url: "https://pub.dev"
     source: hosted
-    version: "0.9.0+2"
+    version: "0.15.0"
   get_it:
     dependency: transitive
     description:
@@ -1496,6 +1496,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.0"
+  web:
+    dependency: transitive
+    description:
+      name: web
+      sha256: "97da13628db363c635202ad97068d47c5b8aa555808e7a9411963c533b449b27"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.5.1"
   web_socket_channel:
     dependency: transitive
     description:
