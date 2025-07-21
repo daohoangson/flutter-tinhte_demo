@@ -12,7 +12,7 @@ dependencies:
   firebase_core: ^2.15.0
   firebase_core_platform_interface: ^5.0.0
   firebase_crashlytics: ^3.3.4
-  firebase_messaging: ^14.6.5
+  firebase_messaging: ^15.0.0
 
   # ours
   flutter_widget_from_html: ^0.10.6
